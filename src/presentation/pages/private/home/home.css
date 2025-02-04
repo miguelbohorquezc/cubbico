@@ -1,0 +1,9 @@
+.home-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-container .homeVector{
+    width: 25em;
+}

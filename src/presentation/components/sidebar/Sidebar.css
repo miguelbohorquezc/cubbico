@@ -1,0 +1,129 @@
+/* Estilo para el contenedor del sidebar */
+.sidebar-container {
+  display: flex;
+  height: 100vh;
+  justify-content: flex-start;
+}
+
+.sidebar {
+  transition: width 0.3s ease;
+  background-color: #343a40;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 10px;
+}
+
+.icon .sidebar-icons{
+  width: 1.5em;
+}
+
+.sidebar.open {
+  width: 250px;
+}
+
+.sidebar.closed {
+  width: 52px;
+}
+
+.toggle-button{
+  display: flex;
+  gap: 9em;
+}
+
+/* Submenú con efecto de expansión */
+.submenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.submenu-item {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.submenu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Submenú activo */
+.sidebar.open .submenu-active {
+  max-height: 200px; /* Ajusta según el contenido del submenú */
+  opacity: 1;
+}
+
+/* Iconos e interacciones */
+.icon-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  width: 14.3em;
+  align-items: flex-start;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  
+  width: 14em;
+  height: 2.5em;
+  border-radius: 9px;
+  margin-bottom: 0.5em;
+  justify-content: space-between;
+}
+
+.icon-collapse{
+  display: flex;
+  align-items: center;
+  padding-bottom: 16px;
+  padding-right: 7px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 14.5em;
+  border-radius: 9px;
+  margin-bottom: 0.5em;
+  flex-direction: row-reverse;
+}
+
+.icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.icon-text {
+  margin-left: 10px;
+  font-size: 15px;
+  transition: opacity 0.3s ease;
+  padding-right: 2em;
+}
+
+/* Ocultar texto en estado cerrado */
+.sidebar.closed .icon-text {
+  display: none;
+}
+
+.sidebar-icons-option{
+  padding-right: 3px;
+}
+
+.sidebar-icons-option:hover{
+  background-color: #ffffff0f;
+  border-radius: 5px;
+}

@@ -1,0 +1,67 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+}
+
+/* Contenedor principal */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+/* Columnas */
+.sidebar-left,
+.sidebar-right,
+.content {
+  overflow-y: auto;
+}
+
+.sidebar-left {
+  flex: 1;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ddd;
+}
+
+.sidebar-right {
+  flex: 1;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+}
+
+.content {
+  flex: 3;
+  background-color: #fff;
+}
+
+/* Diseño responsivo */
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row; /* Columnas horizontales en pantallas grandes */
+  }
+
+  .sidebar-left,
+  .content,
+  .sidebar-right {
+    flex: unset;
+  }
+
+  .sidebar-left {
+    flex-basis: auto; /* 20% del ancho total */
+  }
+
+  .content {
+    flex-basis: auto; /* 60% del ancho total */
+  }
+
+  .sidebar-right {
+    flex-basis: 20%; /* 20% del ancho total */
+  }
+}
