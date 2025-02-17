@@ -7,7 +7,7 @@ import RoutesWithNotFound from '../shared/utils/routesWithNotFound'
 import { PrivateRoutes, PublicRoutes } from './routes/routes'
 import AuthGuard from './guard/auth.guard'
 
-const Login = lazy(()=> import('../presentation/features/auth/Login'))
+const Login = lazy(()=> import('../presentation/features/auth/LoginForm'))
 const Private = lazy(()=> import('../presentation/pages/private/Private'))
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
       <Provider store={store}>
         <BrowserRouter>
           <RoutesWithNotFound>     
-            <Route path='/' element={<Navigate to={PrivateRoutes.PRIVATE}/>}/>
+            <Route path='/' element={<Navigate to={PublicRoutes.LOGIN}/>}/>
             <Route path={PublicRoutes.LOGIN} element={<Login/>}/>
             <Route element={<AuthGuard/>}>
               <Route path={`${PrivateRoutes.PRIVATE}/*`} element={ <Private/>}/>

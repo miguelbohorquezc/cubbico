@@ -1,46 +1,58 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FirebaseUser } from "../../../domain/entities/firebaseUser";
 
-// Estado vacío inicial
-export const EmptyUserState: FirebaseUser = {} as FirebaseUser;
-
-// Funciones auxiliares para sincronizar `sessionStorage`
-const saveUserToSession = (user: FirebaseUser) => {
-    sessionStorage.setItem('user', JSON.stringify(user));
-};
-
-const clearSessionPersistence = () => {
-    sessionStorage.removeItem('user');
-    localStorage.removeItem('user');
-};
-
-// Estado inicial desde `sessionStorage`
-const getInitialUserState = (): FirebaseUser => {
+// Estado inicial mejor tipado
+const getInitialUserState = (): FirebaseUser | null => {
+  try {
     const storedUser = sessionStorage.getItem('user');
-    return storedUser ? JSON.parse(storedUser) : EmptyUserState;
+    return storedUser ? JSON.parse(storedUser) as FirebaseUser : null;
+  } catch (error) {
+    console.error('Error parsing user from sessionStorage:', error);
+    return null;
+  }
 };
 
-// Slice de usuario
-export const userSlice = createSlice({
-    name: 'user',
-    initialState: getInitialUserState(),
-    reducers: {
-        createUser: (_state, action: PayloadAction<FirebaseUser>) => {
-            saveUserToSession(action.payload);
-            return action.payload;
-        },
-        updateUser: (state, action: PayloadAction<Partial<FirebaseUser>>) => {
-            const updatedUser = { ...state, ...action.payload };
-            saveUserToSession(updatedUser);
-            return updatedUser;
-        },
-        resetUser: () => {
-            clearSessionPersistence();
-            return EmptyUserState;
-        }
+// Estado inicial
+const initialState: FirebaseUser | null = getInitialUserState();
+
+// Helper functions mejoradas con manejo de errores
+const sessionStorageManager = {
+  set: (user: FirebaseUser) => {
+    try {
+      sessionStorage.setItem('user', JSON.stringify(user));
+    } catch (error) {
+      console.error('Error saving user to sessionStorage:', error);
     }
+  },
+  clear: () => {
+    try {
+      sessionStorage.removeItem('user');
+    } catch (error) {
+      console.error('Error clearing user from sessionStorage:', error);
+    }
+  }
+};
+
+export const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    createUser: (_, action: PayloadAction<FirebaseUser>) => {
+      sessionStorageManager.set(action.payload);
+      return action.payload;
+    },
+    updateUser: (state, action: PayloadAction<Partial<FirebaseUser>>) => {
+      if (!state) return null;
+      const updatedUser = { ...state, ...action.payload };
+      sessionStorageManager.set(updatedUser);
+      return updatedUser;
+    },
+    resetUser: () => {
+      sessionStorageManager.clear();
+      return null;
+    }
+  }
 });
 
-// Exportación de acciones y reducer
 export const { createUser, updateUser, resetUser } = userSlice.actions;
 export default userSlice.reducer;
