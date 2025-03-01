@@ -1,21 +1,33 @@
+// src/infrastructure/store.ts
 import { configureStore } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import userReducer from "./states/user";
-import { FirebaseUser } from "../../domain/entities/firebaseUser";  
+import studentReducer from "./states/student.slice";
+import { FirebaseUser } from "../../domain/entities/firebaseUser";
+import { studentInfo } from "../../domain/entities/user.student";
 
-// Definir la interfaz del estado global
 export interface AppState {
-    user: FirebaseUser;
+  user: FirebaseUser;
+  students: {
+    students: studentInfo[];
+    loading: boolean;
+    error: string | null;
+  };
 }
 
-// Configurar la store con tipado correcto
 export const appStore = configureStore({
   reducer: {
-    user: userReducer
+    user: userReducer,
+    students: studentReducer
   }
 });
 
-// Inferir los tipos de `dispatch` y `useSelector`
+// Tipos inferidos
 export type AppDispatch = typeof appStore.dispatch;
 export type RootState = ReturnType<typeof appStore.getState>;
+
+// Hooks personalizados tipados
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default appStore;

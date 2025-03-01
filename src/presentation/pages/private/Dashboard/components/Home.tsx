@@ -1,68 +1,38 @@
 
 import DataTable from "../../../../components/datatable/DataTable"
+import { useStudents } from "../../../../components/datatable/useStudents";
 import Sidebar from "../../../../components/sidebar/Sidebar"
+import StudentForm from "../../../../components/studentForm/StudentForm";
 
-const data = [
-  { id: 1, nombre: "Miguel Angel Bohorquez", edad: 25 },
-  { id: 2, nombre: "Ana", edad: 30 },
-  { id: 3, nombre: "Carlos", edad: 28 },
-  { id: 4, nombre: "Sofía", edad: 22 },
-  { id: 5, nombre: "Luis", edad: 35 },
-  { id: 6, nombre: "Elena", edad: 27 },
-  { id: 2, nombre: "Ana", edad: 30 },
-  { id: 3, nombre: "Carlos", edad: 28 },
-  { id: 4, nombre: "Sofía", edad: 22 },
-  { id: 5, nombre: "Luis", edad: 35 },
-  { id: 6, nombre: "Elena", edad: 27 },
-  { id: 2, nombre: "Ana", edad: 30 },
-  { id: 3, nombre: "Carlos", edad: 28 },
-  { id: 4, nombre: "Sofía", edad: 22 },
-  { id: 5, nombre: "Luis", edad: 35 },
-  { id: 6, nombre: "Elena", edad: 27 },
-  { id: 2, nombre: "Ana", edad: 30 },
-  { id: 3, nombre: "Carlos", edad: 28 },
-  { id: 4, nombre: "Sofía", edad: 22 },
-  { id: 5, nombre: "Luis", edad: 35 },
-  { id: 6, nombre: "Elena", edad: 27 },
-  { id: 2, nombre: "Ana", edad: 30 },
-  { id: 3, nombre: "Carlos", edad: 28 },
-  { id: 4, nombre: "Sofía", edad: 22 },
-  { id: 5, nombre: "Luis", edad: 35 },
-  { id: 6, nombre: "Elena", edad: 27 },
-  { id: 2, nombre: "Ana", edad: 30 },
-  { id: 3, nombre: "Carlos", edad: 28 },
-  { id: 4, nombre: "Sofía", edad: 22 },
-  { id: 5, nombre: "Luis", edad: 35 },
-  { id: 6, nombre: "Elena", edad: 27 },
-  { id: 2, nombre: "Ana", edad: 30 },
-  { id: 3, nombre: "Carlos", edad: 28 },
-  { id: 4, nombre: "Sofía", edad: 22 },
-  { id: 5, nombre: "Luis", edad: 35 },
-  { id: 6, nombre: "Elena", edad: 27 },
-];
 
-const columns: { key: "id" | "nombre" | "edad"; label: string }[] = [
-  { key: "id", label: "ID" },
-  { key: "nombre", label: "Nombre" },
-  { key: "edad", label: "Edad" },
-]; 
 
 function Home() {
+  const { students, loading } = useStudents();
+  
+  const columns = [
+    { key: "document", label: "Documento" },
+    { key: "name", label: "Nombre" },
+    { key: "lastName", label: "Apellido" },
+    { key: "classRoom", label: "Salón" },
+    { key: "className", label: "Clase" },
+    { key: "caracter", label: "Carácter" }
+  ];
   return (
     <>
       <Sidebar/>
-      {/* <StudentForm/>
-      <AreaForm/>
+      <StudentForm/>
+      {/* <AreaForm/>
       <ClassRoomForm/>
       <GradeManager/> */}
       <DataTable
-        data={data}
+        data={students}
         columns={columns}
         initialItemsPerPage={10}
-        isLoading={false}
+        isLoading={loading}
         exportFileName="mi-tabla"
       />
     </>
   )
 }
+
 export default Home
