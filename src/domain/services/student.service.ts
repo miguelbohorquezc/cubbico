@@ -1,4 +1,4 @@
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "./firebase/firebase";
 import { studentInfo } from "../../domain/entities/user.student";
 
@@ -17,6 +17,15 @@ export const addStudent = async (student: studentInfo ) =>{
     
     alert(`El estudiante: ${student.name} ${student.lastName} Ha sido matriculado en el salón ${student.classRoom}.`);
 }
+
+// Nueva función para obtener estudiantes
+export const getStudents = async (): Promise<studentInfo[]> => {
+    const querySnapshot = await getDocs(collection(db, "student"));
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }) as studentInfo);
+  };
 
 
 
