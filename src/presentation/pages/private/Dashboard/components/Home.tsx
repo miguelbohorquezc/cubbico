@@ -3,6 +3,7 @@ import DataTable from "../../../../components/datatable/DataTable"
 import { useStudents } from "../../../../components/datatable/useStudents";
 import Sidebar from "../../../../components/sidebar/Sidebar"
 import StudentForm from "../../../../components/studentForm/StudentForm";
+import CreateUserForm from "../../../../components/userForm/CreateUserForm";
 
 
 
@@ -21,6 +22,7 @@ function Home() {
     <>
       <Sidebar/>
       <StudentForm/>
+      <CreateUserForm/>
       {/* <AreaForm/>
       <ClassRoomForm/>
       <GradeManager/> */}
