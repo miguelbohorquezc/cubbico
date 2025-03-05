@@ -44,7 +44,7 @@ function Home() {
   return (
     <>
       <Sidebar/>
-      <StudentForm/>
+      {/* <StudentForm/>
       <CreateUserForm/>
       <AreaForm/>
       <ClassRoomForm/>
@@ -62,7 +62,7 @@ function Home() {
         initialItemsPerPage={10}
         exportFileName="usuarios"
         isLoading={loadingUsers}
-      />
+      /> */}
     </>
   )
 }

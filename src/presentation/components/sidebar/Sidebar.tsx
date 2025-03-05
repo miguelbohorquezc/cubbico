@@ -9,7 +9,9 @@ import dateIcon from '../../../assets/sidebarIcons/icon-date.svg';
 import colapsarIcon from '../../../assets/sidebarIcons/colapsar.svg';
 import sidebarExpand from '../../../assets/sidebarIcons/sidebar-left-expand-filled.svg';
 import sidebarCollapse from '../../../assets/sidebarIcons/sidebar-left-collapse-filled.svg';
+import {PrivateRoutes} from '../../../app/routes/routes';
 import "./Sidebar.css"; // Importamos los estilos CSS
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const { isOpen, activeSubmenu, toggleSidebar, toggleSubmenu } = useSidebar();
@@ -104,13 +106,13 @@ const Sidebar = () => {
             <span className="icon-text"></span>
           </div>
           {/* ---------------------------------------------- */}
-          <div className={isOpen ? "icon": "icon-collapse"}
-            
-          >
-            <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
-            {isOpen && <span className="icon-text"><p>Evaluaciones</p></span>}
-            <span className="icon-text"></span>
+              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}`} >
+          <div className={isOpen ? "icon": "icon-collapse"}>
+                <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
+                {isOpen && <span className="icon-text"><p>Evaluaciones</p></span>}
+                <span className="icon-text"></span>
           </div>
+              </Link>
           {/* ---------------------------------------------- */}
         </div>
       </div>
