@@ -1,4 +1,3 @@
-// src/hooks/useUserForm.ts
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
@@ -19,10 +18,18 @@ export const useUserForm = () => {
   const [classRooms, setClassRooms] = useState<ClassRoom[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    hasLength: false,
+    hasUppercase: false,
+    hasNumber: false,
+    hasSpecialChar: false
+  });
   
   const [form, setForm] = useState<UserFormData>({
     email: '',
     password: '',
+    confirmPassword: '',
     role: '',
     areas: {},
     salones: {},
@@ -49,6 +56,17 @@ export const useUserForm = () => {
     loadInitialData();
   }, []);
 
+  const validatePassword = (password: string) => {
+    const requirements = {
+      hasLength: password.length >= 8,
+      hasUppercase: /[A-Z]/.test(password),
+      hasNumber: /\d/.test(password),
+      hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    };
+    setPasswordRequirements(requirements);
+    return requirements;
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -57,6 +75,17 @@ export const useUserForm = () => {
       newErrors.email = 'Email es requerido';
     } else if (!emailRegex.test(form.email)) {
       newErrors.email = 'Email inválido';
+    }
+
+    const passwordValid = validatePassword(form.password);
+    if (!form.password) {
+      newErrors.password = 'Contraseña requerida';
+    } else if (!Object.values(passwordValid).every(v => v)) {
+      newErrors.password = 'La contraseña no cumple los requisitos';
+    }
+
+    if (form.password !== form.confirmPassword) {
+      newErrors.confirmPassword = 'Las contraseñas no coinciden';
     }
 
     if (!form.role) {
@@ -73,6 +102,11 @@ export const useUserForm = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    if (name === 'password') {
+      validatePassword(value);
+    }
+    
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
@@ -106,6 +140,7 @@ export const useUserForm = () => {
       setForm({
         email: '',
         password: '',
+        confirmPassword: '',
         role: '',
         areas: {},
         salones: {},
@@ -136,6 +171,9 @@ export const useUserForm = () => {
     loading,
     areas,
     classRooms,
+    showPassword,
+    passwordRequirements,
+    setShowPassword,
     handleInputChange,
     handleCheckboxChange,
     handleSubmit,

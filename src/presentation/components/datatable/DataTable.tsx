@@ -7,6 +7,7 @@ import "./DataTable.css";
 interface Column<T> {
   key: keyof T;
   label: string;
+  render?: (row: T) => React.ReactNode;
 }
 
 interface DataTableProps<T> {
@@ -135,7 +136,9 @@ function DataTable<T>({
             >
               {columns.map((col) => (
                 <td key={String(col.key)} className="table-cell">
-                  {String(row[col.key])}
+                  {col.render 
+                    ? col.render(row) 
+                    : String(row[col.key as keyof typeof row])}
                 </td>
               ))}
             </tr>

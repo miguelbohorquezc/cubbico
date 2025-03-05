@@ -5,6 +5,7 @@ import userReducer from "./states/user";
 import studentReducer from "./states/student.slice";
 import { FirebaseUser } from "../../domain/entities/firebaseUser";
 import { studentInfo } from "../../domain/entities/user.student";
+import usersReducer from "./states/user.slice";
 
 export interface AppState {
   user: FirebaseUser;
@@ -18,7 +19,8 @@ export interface AppState {
 export const appStore = configureStore({
   reducer: {
     user: userReducer,
-    students: studentReducer
+    students: studentReducer,
+    users: usersReducer,
   }
 });
 
