@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { deleteDoc, doc, getDocs, collection } from "firebase/firestore";
-import { db } from "../../../domain/services/firebase/firebase";
+import { db } from "../../../infrastructure/firebase/firebase"; 
 import { FirebaseUser } from "../../../domain/entities/firebaseUser";
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from "../store";

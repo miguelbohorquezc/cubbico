@@ -1,6 +1,6 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { StudentFormState } from '../../../shared/types/studentTypes';
-import { addStudent } from '../../../domain/services/student.service';
+import { addStudent } from '../../../infrastructure/student.service';
 import { validationsForm } from './formConfig';
 
 const initialFormState: StudentFormState = {

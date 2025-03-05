@@ -1,7 +1,7 @@
 // src/domain/states/student.slice.ts
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getDocs, collection } from "firebase/firestore";
-import { db } from "../../../domain/services/firebase/firebase";
+import { db } from "../../../infrastructure/firebase/firebase";
 import { studentInfo } from "../../../domain/entities/user.student";
 // src/domain/states/student.slice.ts
 import { createSelector } from '@reduxjs/toolkit';

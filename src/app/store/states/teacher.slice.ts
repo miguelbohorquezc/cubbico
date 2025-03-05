@@ -1,6 +1,7 @@
 // teacher.slice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ClassRoom, Area } from "../../../domain/services/user.service";
+import { Area } from "../../../domain/entities/area";
+import { ClassRoom } from "../../../domain/entities/classRoom";
 
 interface TeacherState {
   classrooms: ClassRoom[];

@@ -5,7 +5,8 @@ import studentReducer from "./states/student.slice";
 import { FirebaseUser } from "../../domain/entities/firebaseUser";
 import { studentInfo } from "../../domain/entities/user.student";
 import usersReducer from "./states/user.slice";
-import { Area, ClassRoom } from "../../domain/services/user.service";
+import { Area } from "../../domain/entities/area";
+import { ClassRoom } from "../../domain/entities/classRoom";
 import teacherReducer from "./states/teacher.slice";
 
 export interface AppState {
