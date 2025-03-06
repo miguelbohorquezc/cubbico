@@ -1,7 +1,7 @@
 // useClassRoomForm.ts
 import { useState, useCallback, FormEvent } from 'react';
 import { SalonFormState } from '../../../shared/types/classRoomTypes'; 
-import { addClassroom } from '../../../domain/services/classRoom.service';
+import { addClassroom } from '../../../infrastructure/classRoom.service';
 import { validationsForm } from './formConfig';
 
 const initialForm: SalonFormState = {

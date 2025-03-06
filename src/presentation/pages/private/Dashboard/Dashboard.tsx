@@ -9,9 +9,10 @@ function Dashboard() {
   return (
     <RoutesWithNotFound>
       <Route path="/" element={<Navigate to={PrivateRoutes.HISTORY}/>}/>
-      <Route path={PrivateRoutes.HISTORY}     element={<Home/>}/>
-      <Route path={PrivateRoutes.ACADEMY}     element={<Academy/>}/>
-      <Route path={PrivateRoutes.STUDENT}     element={<StudentsPage/>}/>
+      <Route path={PrivateRoutes.HISTORY}                     element={<Home/>}/>
+      <Route path={`${PrivateRoutes.ACADEMY}/:classroomId`}   element={<Academy/>}/>
+      <Route path={PrivateRoutes.ACADEMY}                     element={<Academy/>}/>
+      <Route path={PrivateRoutes.STUDENT}                     element={<StudentsPage/>}/>
     </RoutesWithNotFound> 
   )
 }
