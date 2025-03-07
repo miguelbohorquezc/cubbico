@@ -11,7 +11,7 @@ function Academy() {
       <TeacherDataLoader/>
       <Sidebar/>
       <TeacherClassrooms/>
-      <TeacherAreas/>
+      {/* <TeacherAreas/> */}
     </>
   )
 }

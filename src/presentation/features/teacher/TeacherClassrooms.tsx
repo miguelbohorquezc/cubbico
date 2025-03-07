@@ -13,8 +13,23 @@ const TeacherClassrooms = () => {
   };
 
   const columns = [
-    { key: "nombreSalon", label: "Salón" },
-    { key: "nivel", label: "Nivel" },
+    { key: "nombreSalon", 
+      label: "Salón",
+      render: (row: any) => (
+        //@ts-ignore
+        <p className={"classroom-name"}>
+          {row.nombreSalon.toUpperCase()}
+        </p>
+      )
+       },
+    { key: "nivel", 
+      label: "Nivel",
+      render: (row: any) => (
+        //@ts-ignore
+        <span className={`status-badge ${columns.activo ? 'inactive-badge' : 'active-badge'}`}>
+          {row.nivel}
+        </span>
+      ) },
     { 
       key: 'actions', 
       label: 'Acciones',
@@ -40,7 +55,7 @@ const TeacherClassrooms = () => {
       enableExport={false}
       enablePagination={false}
       enableSearch={true}
-      skeletonCount={4}
+      skeletonCount={10}
     />
   );
 };

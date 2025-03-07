@@ -9,3 +9,9 @@ body {
 h1, h2, h3, p {
     font-family: 'Nunito', sans-serif;
   }
+
+.classroom-name{
+  font-size: 10pt;
+  font-weight: 800;
+  color: #3e3e3e;
+}
