@@ -1,6 +1,6 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { AreaFormState, AreaServiceData } from '../../../shared/types/areaTypes';
-import { addArea } from '../../../domain/services/area.service';
+import { addArea } from '../../../infrastructure/area.service';
 import { validationsForm } from './formConfig';
 
 const initialFormState: AreaFormState = {

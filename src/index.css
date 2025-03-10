@@ -15,3 +15,22 @@ h1, h2, h3, p {
   font-weight: 800;
   color: #3e3e3e;
 }
+
+/* Estilos para botones de acción */
+
+.custom-icon {
+  /* Color del ícono (heredado por currentColor) */
+  color: #3b82f6; /* Azillo moderno */
+  cursor: pointer;
+  /* Tamaño */
+  width: 40px;
+  height: 40px;
+  
+  /* Transición suave para efectos hover */
+  transition: color 0.3s ease;
+}
+
+/* Cambiar color al pasar el mouse */
+.custom-icon:hover {
+  color: #1dc2d8; /* Azul más oscuro */
+}

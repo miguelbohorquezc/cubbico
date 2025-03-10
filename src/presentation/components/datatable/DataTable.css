@@ -315,11 +315,40 @@
 .active-badge {
   font-weight: 500;
   padding: 5px 10px;
-  background-color: #c8e6c9;
-  color: #2e7d32;
+  background-color: #ccdfff;
+  color: #578ae1;
+}
+
+.active-badge-asignatura {
+  font-weight: 500;
+  padding: 5px 10px;
+  background-color: #ccffd5;
+  color: #29b641;
+}
+
+.primaria-badge {
+  font-weight: 500;
+  padding: 5px 10px;
+  background-color: #fdccff;
+  color: #8e29b6;
+}
+
+.preescolar-badge {
+  font-weight: 500;
+  padding: 5px 10px;
+  background-color: #ccfffc;
+  color: #29a1b6;
+}
+
+.secundaria-badge {
+  font-weight: 500;
+  padding: 5px 10px;
+  background-color: #ffebcc;
+  color: #b65d29;
 }
 
 .inactive-badge {
   background-color: #ffcdd2;
   color: #c62828;
 }
+

@@ -8,5 +8,6 @@ export const PrivateRoutes = {
     HOME:       'home',
     STUDENT:    'student',
     HISTORY:    'history',
-    ACADEMY :   'academy'
+    ACADEMY :   'academy',
+    NOTES:      'notes'
 }
