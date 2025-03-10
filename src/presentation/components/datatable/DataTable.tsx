@@ -7,6 +7,7 @@ import "./DataTable.css";
 interface Column<T> {
   key: keyof T;
   label: string;
+  render?: (row: T) => React.ReactNode;
 }
 
 interface DataTableProps<T> {
@@ -15,6 +16,11 @@ interface DataTableProps<T> {
   initialItemsPerPage?: number;
   exportFileName?: string;
   isLoading?: boolean;
+  // Nuevas props
+  enableExport?: boolean;
+  enablePagination?: boolean;
+  enableSearch?: boolean;
+  skeletonCount?: number;
 }
 
 function DataTable<T>({ 
@@ -22,7 +28,11 @@ function DataTable<T>({
   columns, 
   initialItemsPerPage = 5,
   exportFileName = "export",
-  isLoading = false
+  isLoading = false,
+  enableExport = true,
+  enablePagination = true,
+  enableSearch = true,
+  skeletonCount = 5
 }: DataTableProps<T>) {
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
   const {
@@ -80,22 +90,26 @@ function DataTable<T>({
         </div>
 
         <div className="right-controls">
-          <input
-            type="text"
-            placeholder="Buscar..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="search-input"
-          />
+          {enableSearch && (
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="search-input"
+            />
+          )}
           
-          <CSVLink
-            data={csvData}
-            headers={csvHeaders}
-            filename={`${exportFileName}-${new Date().toISOString().slice(0,10)}.csv`}
-            className="export-button"
-          >
-            📊 Exportar
-          </CSVLink>
+          {enableExport && (
+            <CSVLink
+              data={csvData}
+              headers={csvHeaders}
+              filename={`${exportFileName}-${new Date().toISOString().slice(0,10)}.csv`}
+              className="export-button"
+            >
+              📊 Exportar
+            </CSVLink>
+          )}
         </div>
       </div>
 
@@ -128,64 +142,87 @@ function DataTable<T>({
         </thead>
         
         <tbody>
-          {!isLoading && paginatedData.map((row, index) => (
-            <tr 
-              key={index} 
-              className={`table-row ${index % 2 === 0 ? 'even-row' : 'odd-row'}`}
-            >
-              {columns.map((col) => (
-                <td key={String(col.key)} className="table-cell">
-                  {String(row[col.key])}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
+  {isLoading ? (
+    // Esqueleto de carga
+    Array.from({ length: enablePagination ? itemsPerPage : skeletonCount }).map((_, index) => (
+      <tr 
+        key={`skeleton-${index}`}
+        className={`table-row ${index % 2 === 0 ? 'even-row' : 'odd-row'}`}
+      >
+        {columns.map((col) => (
+          <td key={String(col.key)} className="table-cell">
+            <div className="skeleton-loader"></div>
+          </td>
+        ))}
+      </tr>
+    ))
+  ) : (
+    // Datos reales
+    (enablePagination ? paginatedData : sortedData).map((row, index) => (
+      <tr 
+        key={index} 
+        className={`table-row ${index % 2 === 0 ? 'even-row' : 'odd-row'}`}
+      >
+        {columns.map((col) => (
+          <td key={String(col.key)} className="table-cell">
+            {col.render 
+              ? col.render(row) 
+              : String(row[col.key as keyof typeof row])}
+          </td>
+        ))}
+      </tr>
+    ))
+  )}
+</tbody>
       </table>
-
-      {!isLoading && paginatedData.length === 0 && (
-        <div className="no-results">No se encontraron resultados</div>
-      )}
-
-      {!isLoading && totalPages > 0 && (
-        <div className="pagination-controls">
-          <div className="pagination-buttons">
-            <button
-              onClick={() => setCurrentPage(1)}
-              disabled={currentPage === 1}
-              className="pagination-button"
-            >
-              ⏮️
-            </button>
-            <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="pagination-button"
-            >
-              ◀️
-            </button>
-            
-            <span className="page-info">
-              Página {currentPage} de {totalPages}
-            </span>
-            
-            <button
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className="pagination-button"
-            >
-              ▶️
-            </button>
-            <button
-              onClick={() => setCurrentPage(totalPages)}
-              disabled={currentPage === totalPages}
-              className="pagination-button"
-            >
-              ⏭️
-            </button>
+      {!isLoading && enablePagination && totalPages > 0 && (
+      <div className="pagination-controls">
+        {!isLoading && paginatedData.length === 0 && (
+          <div className="no-results">No se encontraron resultados</div>
+        )}
+  
+        {!isLoading && totalPages > 0 && (
+          <div className="pagination-controls">
+            <div className="pagination-buttons">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="pagination-button"
+              >
+                ⏮️
+              </button>
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="pagination-button"
+              >
+                ◀️
+              </button>
+              
+              <span className="page-info">
+                Página {currentPage} de {totalPages}
+              </span>
+              
+              <button
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="pagination-button"
+              >
+                ▶️
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="pagination-button"
+              >
+                ⏭️
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+    )}
+
     </div>
   );
 };

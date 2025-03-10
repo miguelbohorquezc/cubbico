@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../app/store/store";
-import { auth } from "../../../domain/services/firebase/firebase";
+import { auth } from "../../../infrastructure/firebase/firebase";
 import { createUser } from "../../../app/store/states/user";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";

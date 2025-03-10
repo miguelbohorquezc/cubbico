@@ -1,10 +1,13 @@
-// src/infrastructure/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import userReducer from "./states/user";
 import studentReducer from "./states/student.slice";
 import { FirebaseUser } from "../../domain/entities/firebaseUser";
 import { studentInfo } from "../../domain/entities/user.student";
+import usersReducer from "./states/user.slice";
+import { Area } from "../../domain/entities/area";
+import { ClassRoom } from "../../domain/entities/classRoom";
+import teacherReducer from "./states/teacher.slice";
 
 export interface AppState {
   user: FirebaseUser;
@@ -13,12 +16,21 @@ export interface AppState {
     loading: boolean;
     error: string | null;
   };
+  
+  teacherData: {
+    classrooms: ClassRoom[];
+    areas: Area[];
+    loading: boolean;
+    error: string | null;
+  };
 }
 
 export const appStore = configureStore({
   reducer: {
     user: userReducer,
-    students: studentReducer
+    students: studentReducer,
+    users: usersReducer,
+    teacherData: teacherReducer,
   }
 });
 

@@ -2,7 +2,7 @@ import { ChangeEvent, FocusEvent } from 'react';
 import { Option } from '../../shared/types/studentTypes';
 
 type FormFieldProps = {
-  type: 'text' | 'number' | 'select';
+  type: 'text' | 'number' | 'select' | 'password' |"email";
   name: string;
   value: string;
   placeholder?: string;
