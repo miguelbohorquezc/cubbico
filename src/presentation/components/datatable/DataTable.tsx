@@ -143,7 +143,6 @@ function DataTable<T>({
         
         <tbody>
   {isLoading ? (
-    // Esqueleto de carga
     Array.from({ length: enablePagination ? itemsPerPage : skeletonCount }).map((_, index) => (
       <tr 
         key={`skeleton-${index}`}
@@ -157,21 +156,29 @@ function DataTable<T>({
       </tr>
     ))
   ) : (
-    // Datos reales
-    (enablePagination ? paginatedData : sortedData).map((row, index) => (
-      <tr 
-        key={index} 
-        className={`table-row ${index % 2 === 0 ? 'even-row' : 'odd-row'}`}
-      >
-        {columns.map((col) => (
-          <td key={String(col.key)} className="table-cell">
-            {col.render 
-              ? col.render(row) 
-              : String(row[col.key as keyof typeof row])}
-          </td>
-        ))}
+    // Verificar si hay datos después de filtrar/ordenar
+    sortedData.length === 0 ? (
+      <tr className="no-data-row">
+        <td colSpan={columns.length} className="no-data-message">
+          No hay asignaturas registradas para este nivel
+        </td>
       </tr>
-    ))
+    ) : (
+      (enablePagination ? paginatedData : sortedData).map((row, index) => (
+        <tr 
+          key={index} 
+          className={`table-row ${index % 2 === 0 ? 'even-row' : 'odd-row'}`}
+        >
+          {columns.map((col) => (
+            <td key={String(col.key)} className="table-cell">
+              {col.render 
+                ? col.render(row) 
+                : String(row[col.key as keyof typeof row])}
+            </td>
+          ))}
+        </tr>
+      ))
+    )
   )}
 </tbody>
       </table>

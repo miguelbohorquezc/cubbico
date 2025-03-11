@@ -352,3 +352,14 @@
   color: #c62828;
 }
 
+.no-data-row {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.no-data-message {
+  padding: 2rem;
+  font-style: italic;
+}
+

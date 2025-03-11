@@ -8,11 +8,11 @@ import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.sv
 
 const TeacherAreas = () => {
   const { areas, loading } = useAppSelector((state) => state.teacherData);
-  const { classroomId, classroomNivel } = useParams();
+  const {periodId ,classroomId, classroomNivel } = useParams();
   const navigate = useNavigate();
 
   const handleSelectClassRoom = (areaId: string) => {
-    navigate(`/private/dashboard/notes/${classroomId}/${areaId}`);
+    navigate(`/private/dashboard/notes/${1}/${classroomId}/${areaId}`);
   };
 
   const columns = [

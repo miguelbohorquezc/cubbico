@@ -13,7 +13,7 @@ function Dashboard() {
       <Route path={PrivateRoutes.HISTORY}                                     element={<Home/>}/>
       <Route path={`${PrivateRoutes.ACADEMY}/:classroomNivel/:classroomId`}   element={<Academy/>}/>
       <Route path={`${PrivateRoutes.ACADEMY}/:classroomId/:areaId`}           element={<Academy/>}/>
-      <Route path={`${PrivateRoutes.NOTES}/:classroomId/:areaId`}             element={<Notes/>}/>
+      <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`}   element={<Notes/>}/>
       <Route path={PrivateRoutes.ACADEMY}                                     element={<Academy/>}/>
       <Route path={PrivateRoutes.STUDENT}                                     element={<StudentsPage/>}/>
     </RoutesWithNotFound> 
