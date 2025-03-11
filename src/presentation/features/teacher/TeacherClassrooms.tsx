@@ -38,7 +38,7 @@ const TeacherClassrooms = () => {
             badgeClass = "status-badge preescolar-badge";
             label = "Preescolar";
             break;
-          case "secundaria":
+          case "bsecundaria":
             badgeClass = "status-badge secundaria-badge";
             label = "Secundaria";
             break;

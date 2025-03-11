@@ -2,8 +2,8 @@
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { Area } from "../entities/area";
-import { ClassRoom } from "../entities/classRoom";
+import { Area } from "../domain/entities/area";
+import { ClassRoom } from "../domain/entities/classRoom";
 
 export interface UserFormData {
   email: string;

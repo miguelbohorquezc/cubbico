@@ -47,10 +47,10 @@ const TeacherAreas = () => {
             badgeClass = "status-badge preescolar-badge";
             label = "Preescolar";
             break;
-          case "secundaria":
-            badgeClass = "status-badge secundaria-badge";
-            label = "Secundaria";
-            break;
+            case "bsecundaria":
+              badgeClass = "status-badge secundaria-badge";
+              label = "Secundaria";
+              break;
           default:
             badgeClass = "status-badge default-badge";
             label = row.nivel; // Si es otro valor
@@ -72,7 +72,7 @@ const TeacherAreas = () => {
 
   return (
     <DataTable
-      data={areas.filter((area: any) => area.nivel === /* classroomNivel?.toLowerCase() */ "secundaria")}
+      data={areas.filter((area: any) => area.nivel === classroomNivel?.toLowerCase())}
       //@ts-ignore
       columns={columns}
       isLoading={loading}
