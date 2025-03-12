@@ -10,6 +10,14 @@ h1, h2, h3, p {
     font-family: 'Nunito', sans-serif;
   }
 
+h2{
+  font-size: 14pt;
+}
+
+h3{
+  font-size: 11pt;
+}
+
 .classroom-name{
   font-size: 10pt;
   font-weight: 800;
@@ -33,4 +41,54 @@ h1, h2, h3, p {
 /* Cambiar color al pasar el mouse */
 .custom-icon:hover {
   color: #1dc2d8; /* Azul más oscuro */
+}
+
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.container-notes{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.5em;
+}
+
+.container-notes .container-notes-title{
+  margin-top: 1em;
+  padding-left: 30px;
+  padding-top: 10px;
+}
+
+.container-notes .header-container .btn-addLogros{
+  margin-top: 10px;
+  margin-left: 30px;
+  padding: 0.5rem 2rem;
+  border-radius: 20px;
+  
+  font-size: 11pt;
+  font-weight: 750;
+
+  font-family: 'Nunito', sans-serif;
+  
+  color: #4dafff;
+  background: rgba(52, 144, 219, 0.08);
+  border: 2px solid rgba(52, 166, 219, 0.15);
+}
+
+.container-notes .header-container .btn-addLogros:hover{
+  cursor: pointer;
+  color: #ffffff;
+  background: rgb(52, 180, 219);
+  border: 2px solid rgb(52, 166, 219);
+}
+
+.container-notes .body-container{
+  display: flex;
+  flex-direction: column;
 }

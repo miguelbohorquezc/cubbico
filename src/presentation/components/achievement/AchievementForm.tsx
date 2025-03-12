@@ -24,9 +24,7 @@ const AchievementForm = () => {
   return (
     <div className="achievement-container">
       <div className="form-header">
-        <h2 className="form-title">
-          {docId ? 'Editar Logros' : 'Nuevos Logros'}
-        </h2>
+        <div className="title-badge">{docId ? 'Editar Logros académicos' : 'Nuevos Logros académicos'}</div>
         <div className="period-badge">Periodo {periodId}</div>
       </div>
 
@@ -36,7 +34,7 @@ const AchievementForm = () => {
           return (
             <div key={num} className="logro-group">
               <label className="logro-label">
-                Logro Académico #{num}
+                <h3>Logro Académico: {num}</h3>
                 <div className="progress-container">
                   <div className="progress-bar">
                     <div 
@@ -54,7 +52,7 @@ const AchievementForm = () => {
                 value={form[fieldName]}
                 onChange={handleChange}
                 placeholder={`Ejemplo de logro ${num}...`}
-                rows={4}
+                rows={2}
                 maxLength={200}
                 className={`logro-textarea ${error[fieldName] ? 'input-error' : ''}`}
               />

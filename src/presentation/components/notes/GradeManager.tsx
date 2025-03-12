@@ -38,8 +38,6 @@ const GradeManager: React.FC = () => {
 
   return (
     <div className="grade-manager">
-      <h2 className="title">Registro de Calificaciones</h2>
-      
       <table className="grades-table">
         <thead>
           <tr>
