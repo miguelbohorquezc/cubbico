@@ -1,87 +1,74 @@
-// TeacherAreas.tsx
-import React from "react";
+// TeacherAchievements.tsx
+import React, { useMemo } from "react";
 import { useAppSelector } from "../../../app/store/store";
 import { useNavigate, useParams } from "react-router-dom";
 import DataTable from "../../components/datatable/DataTable";
-import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
-
+import { useAchievementForm } from "../../components/achievement/useAchievementForm";
 
 const TeacherAchievements = () => {
-  const { areas, loading } = useAppSelector((state) => state.teacherData);
-  const {periodId ,classroomId, classroomNivel } = useParams();
+  const { achievements, loading } = useAppSelector((state) => state.teacherData);
+  const { periodId, classroomId, areaId } = useParams();
   const navigate = useNavigate();
+  const getLogros = useAchievementForm();
 
-  const handleSelectClassRoom = (areaId: string) => {
-    navigate(`/private/dashboard/notes/${1}/${classroomId}/${areaId}`);
+  // Filtrar logros por classroomId y areaId
+  const filteredAchievements = useMemo(() => 
+    achievements.filter(achievement => 
+      achievement.classroomId === classroomId && 
+      achievement.areaId === areaId &&
+      achievement.period === Number(periodId)
+    ), [achievements, classroomId, areaId, periodId]);
+
+  const handleViewDetails = (achievementId: string) => {
+    navigate(`/private/dashboard/achievements/${achievementId}`);
   };
 
   const columns = [
-    { key: "area", 
-      label: "Área",
+    { 
+      key: "period", 
+      label: "Periodo",
       render: (row: any) => (
-        //@ts-ignore
-        <p className={"classroom-name"}>
-          {row.area.toUpperCase()}
-        </p>
-      ) },
-    { key: "asignatura", 
-      label: "Asignatura",
-      render: (row: any) => (
-        //@ts-ignore
-        <span className={`status-badge active-badge-asignatura`}>
-          {row.asignatura}
+        <span className="period-badge">
+          {row.period}
         </span>
-      ) },
-    { key: "nivel", 
-      label: "Nivel",
-      render: (row: any) => {
-        let badgeClass = "";
-        let label = "";
-      
-        switch (row.nivel.toLowerCase()) {
-          case "primaria":
-            badgeClass = "status-badge primaria-badge";
-            label = "Primaria";
-            break;
-          case "preescolar":
-            badgeClass = "status-badge preescolar-badge";
-            label = "Preescolar";
-            break;
-            case "bsecundaria":
-              badgeClass = "status-badge secundaria-badge";
-              label = "Secundaria";
-              break;
-          default:
-            badgeClass = "status-badge default-badge";
-            label = row.nivel; // Si es otro valor
-            break;
-        }
-      
-        return (
-          <span className={badgeClass}>
-            {label}
-          </span>
-        );  
-    }},
-    { key: "actions", 
-      label: "Acciones",
-      render: (area: any) => (
-        <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
-      )}
+      )
+    },
+    { 
+      key: "logro1", 
+      label: "Logros Académicos",
+      render: (row: any) => (
+        <>
+        <div className="achievements-badge">
+          {row.logros.logro1 || <em>Sin registrar</em>}
+        </div>
+        <div className="achievements-badge">
+          {row.logros.logro2 || <em>Sin registrar</em>}
+        </div>
+        <div className="achievements-badge">
+          {row.logros.logro3 || <em>Sin registrar</em>}
+        </div>
+        </>
+      )
+    }
   ];
 
   return (
     <DataTable
-      data={areas.filter((area: any) => area.nivel === classroomNivel?.toLowerCase())}
+      data={filteredAchievements}
       //@ts-ignore
       columns={columns}
       isLoading={loading}
-      exportFileName="mis-areas"
-      initialItemsPerPage={10}
+      exportFileName={`logros-${classroomId}-${areaId}-P${periodId}`}
+      initialItemsPerPage={5}
       enableExport={false}
       enablePagination={false}
-      enableSearch={true}
-      skeletonCount={10}
+      enableSearch={false}
+      skeletonCount={3}
+      tableSize={{ 
+        width: "25rem", 
+        maxHeight: "70vh" 
+      }}
+      tableClassName="compact-table"
     />
   );
 };

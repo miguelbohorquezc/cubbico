@@ -27,26 +27,12 @@ h3{
 /* Estilos para botones de acción */
 
 .custom-icon {
-  /* Color del ícono (heredado por currentColor) */
-  color: #3b82f6; /* Azillo moderno */
-  cursor: pointer;
-  /* Tamaño */
   width: 40px;
   height: 40px;
   
-  /* Transición suave para efectos hover */
+  color: #3b82f6;
+  cursor: pointer;
   transition: color 0.3s ease;
-}
-
-/* Cambiar color al pasar el mouse */
-.custom-icon:hover {
-  color: #1dc2d8; /* Azul más oscuro */
-}
-
-textarea {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
 }
 
 .container-notes{
@@ -63,6 +49,12 @@ textarea {
   margin-top: 1em;
   padding-left: 30px;
   padding-top: 10px;
+}
+
+.container-notes .body-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 .container-notes .header-container .btn-addLogros{
@@ -88,7 +80,3 @@ textarea {
   border: 2px solid rgb(52, 166, 219);
 }
 
-.container-notes .body-container{
-  display: flex;
-  flex-direction: column;
-}

@@ -21,6 +21,12 @@ interface DataTableProps<T> {
   enablePagination?: boolean;
   enableSearch?: boolean;
   skeletonCount?: number;
+  tableSize?: {
+    width?: string | number;
+    height?: string | number;
+    maxHeight?: string | number;
+  };
+  tableClassName?: string;
 }
 
 function DataTable<T>({ 
@@ -32,7 +38,9 @@ function DataTable<T>({
   enableExport = true,
   enablePagination = true,
   enableSearch = true,
-  skeletonCount = 5
+  skeletonCount = 5,
+  tableSize = { width: "100%", height: "auto" },
+  tableClassName = ""
 }: DataTableProps<T>) {
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
   const {
@@ -73,8 +81,14 @@ function DataTable<T>({
   };
 
   return (
-    <div className="data-table-container">
+    <div className="data-table-container"
+    style={{ 
+      width: tableSize.width,
+      height: tableSize.height,
+      maxHeight: tableSize.maxHeight
+    }}>
       <div className="table-controls">
+      {enableSearch && (
         <div className="left-controls">
           <select 
             value={itemsPerPage}
@@ -88,6 +102,7 @@ function DataTable<T>({
             ))}
           </select>
         </div>
+        )}
 
         <div className="right-controls">
           {enableSearch && (
@@ -119,7 +134,7 @@ function DataTable<T>({
         </div>
       )}
 
-      <table className="data-table">
+      <table className={`data-table ${tableClassName}`}>
         <thead>
           <tr>
             {columns.map((col) => (
