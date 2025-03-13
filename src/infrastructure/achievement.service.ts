@@ -1,7 +1,9 @@
+// achievement.service.ts
 import { addDoc, collection, doc, setDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase/firebase";
 
 export interface AchievementData {
+  id?: string;
   classroomId: string;
   areaId: string;
   period: number;
@@ -22,14 +24,20 @@ export const getAchievement = async (classroomId: string, areaId: string, period
     );
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs[0] || null;
+    if (querySnapshot.empty) return null;
+    
+    const docData = querySnapshot.docs[0].data();
+    return {
+      id: querySnapshot.docs[0].id,
+      ...docData
+    } as AchievementData;
   } catch (error) {
     console.error('Error fetching achievement:', error);
     throw error;
   }
 };
 
-export const addAchievement = async (achievement: AchievementData) => {
+export const addAchievement = async (achievement: Omit<AchievementData, 'id'>) => {
   try {
     const docRef = await addDoc(collection(db, "achievements"), {
       ...achievement,
@@ -42,12 +50,32 @@ export const addAchievement = async (achievement: AchievementData) => {
   }
 };
 
-export const updateAchievement = async (docId: string, achievement: AchievementData) => {
+export const updateAchievement = async (docId: string, achievement: Partial<AchievementData>) => {
   try {
-    await setDoc(doc(db, "achievements", docId), achievement, { merge: true });
+    await setDoc(doc(db, "achievements", docId), 
+    achievement,
+    { merge: true });
     return docId;
   } catch (error) {
     console.error('Error updating achievements:', error);
+    throw error;
+  }
+};
+
+export const fetchAllAchievements = async (teacherId: string) => {
+  try {
+    const q = query(
+      collection(db, "achievements"),
+      where("teacherId", "==", teacherId)
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as AchievementData[];
+  } catch (error) {
+    console.error('Error fetching achievements:', error);
     throw error;
   }
 };

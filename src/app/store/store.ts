@@ -1,3 +1,4 @@
+// store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import userReducer from "./states/user";
@@ -8,6 +9,7 @@ import usersReducer from "./states/user.slice";
 import { Area } from "../../domain/entities/area";
 import { ClassRoom } from "../../domain/entities/classRoom";
 import teacherReducer from "./states/teacher.slice";
+import { AchievementData } from "../../infrastructure/achievement.service";
 
 export interface AppState {
   user: FirebaseUser;
@@ -16,10 +18,15 @@ export interface AppState {
     loading: boolean;
     error: string | null;
   };
-  
   teacherData: {
     classrooms: ClassRoom[];
     areas: Area[];
+    achievements: AchievementData[];
+    loading: boolean;
+    error: string | null;
+  };
+  users: {
+    list: FirebaseUser[];
     loading: boolean;
     error: string | null;
   };
@@ -31,7 +38,14 @@ export const appStore = configureStore({
     students: studentReducer,
     users: usersReducer,
     teacherData: teacherReducer,
-  }
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['teacherData/upsertAchievement'],
+        ignoredPaths: ['teacherData.achievements']
+      }
+    })
 });
 
 // Tipos inferidos

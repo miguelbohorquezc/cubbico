@@ -1,36 +1,43 @@
 // TeacherDataLoader.tsx
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-import { setClassrooms, setAreas, setLoading, setError } from "../../../app/store/states/teacher.slice";
+import { teacherActions } from "../../../app/store/states/teacher.slice"; // Importación corregida
 import { fetchTeacherData } from "../../../infrastructure/teacher.service";
 
 const TeacherDataLoader = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const { loading } = useAppSelector((state) => state.teacherData);
+  const { loading, error } = useAppSelector((state) => state.teacherData);
 
   useEffect(() => {
-    const loadData = async () => {
-      if (user?.uid) {
-        try {
-          dispatch(setLoading(true));
-          const data = await fetchTeacherData(user.uid);
-          dispatch(setClassrooms(data.classrooms));
-          dispatch(setAreas(data.areas));
-        } catch (error) {
-          if (error instanceof Error) {
-            dispatch(setError(error.message));
-          } else {
-            dispatch(setError("An unknown error occurred"));
-          }
-        } finally {
-          dispatch(setLoading(false));
-        }
+    const loadTeacherData = async () => {
+      if (!user?.uid) return;
+
+      try {
+        dispatch(teacherActions.setLoading(true));
+        const teacherData = await fetchTeacherData(user.uid);
+        
+        // Actualizar el store con los datos obtenidos
+        dispatch(teacherActions.setClassrooms(teacherData.classrooms));
+        dispatch(teacherActions.setAreas(teacherData.areas));
+        
+        // Resetear error si tuvo éxito
+        if (error) dispatch(teacherActions.setError(null));
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Error desconocido";
+        dispatch(teacherActions.setError(errorMessage));
+        console.error("Error loading teacher data:", errorMessage);
+      } finally {
+        dispatch(teacherActions.setLoading(false));
       }
     };
 
-    loadData();
-  }, [user?.uid, dispatch]);
+    loadTeacherData();
+  }, [user?.uid, dispatch, error]);
+
+  // Renderizar estados de carga/error si es necesario
+  if (loading) return <div className="loading-indicator">Cargando datos...</div>;
+  if (error) return <div className="error-message">Error: {error}</div>;
 
   return null;
 };
