@@ -1,21 +1,63 @@
-import { useState, useCallback } from 'react';
-import { Student, Grade, GradeField } from './types';
+import { useState, useCallback, useEffect } from 'react';
+import { Student, Grade, GradeField, AcademicRecord } from './types';
+import { AchievementData } from "../../../infrastructure/achievement.service";
 
-const useGradeManager = (initialStudents: Student[]) => {
-  const [grades, setGrades] = useState<Record<number, Grade>>(() =>
-    initialStudents.reduce((acc, student) => ({
+interface GradeManagerParams {
+  currentYear: string;
+  currentPeriod: string;
+  currentAreaId: string;
+  currentClassroomId: string;
+}
+
+const useGradeManager = (
+  students: Student[],
+  achievements: AchievementData[],
+  { currentYear, currentPeriod, currentAreaId, currentClassroomId }: GradeManagerParams
+) => {
+  const [academicRecords, setAcademicRecords] = useState<Record<string, AcademicRecord>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Inicializar estructura académica
+  useEffect(() => {
+    if (students.length === 0 || achievements.length === 0) return;
+
+    const initialRecords = students.reduce((acc, student) => ({
       ...acc,
       [student.id]: {
-        l1: '',
-        l2: '',
-        l3: '',
-        fallas: '',
-        promedio: 0.00
+        [currentYear]: {
+          periods: {
+            [currentPeriod]: {
+              areas: {
+                [currentAreaId]: {
+                  grades: {
+                    l1: '',
+                    l2: '',
+                    l3: '',
+                    fallas: ''
+                  },
+                  logros: achievements.reduce((logrosAcc, logro) => ({
+                    ...logrosAcc,
+                    [logro.id]: {
+                      id: logro.id,
+                      numero: logro.numero || 0,
+                      descripcion: logro.descripcion || 'Sin descripción',
+                      cumplido: false
+                    }
+                  }), {}),
+                  metadata: {
+                    classroomId: currentClassroomId,
+                    lastUpdate: new Date().toISOString()
+                  }
+                }
+              }
+            }
+          }
+        }
       }
-    }), {})
-  );
+    }), {});
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+    setAcademicRecords(initialRecords);
+  }, [students, achievements, currentYear, currentPeriod, currentAreaId, currentClassroomId]);
 
   const validateGrade = useCallback((value: string): boolean => {
     const num = parseFloat(value);
@@ -27,60 +69,124 @@ const useGradeManager = (initialStudents: Student[]) => {
     return !isNaN(num) && num >= 0 && num < 100 && /^\d+$/.test(value);
   }, []);
 
-  const calculateAverage = useCallback((currentGrade: Grade): number => {
-    const values = [currentGrade.l1, currentGrade.l2, currentGrade.l3]
+  const calculateAverage = useCallback((grades: { l1: string; l2: string; l3: string }): number => {
+    const values = [grades.l1, grades.l2, grades.l3]
       .map(parseFloat)
       .filter(v => !isNaN(v));
-      
+    
     return values.length > 0 
       ? Number((values.reduce((a, b) => a + b, 0) / values.length).toFixed(2))
       : 0.00;
   }, []);
 
-  const handleGradeChange = useCallback((studentId: number, field: GradeField, value: string) => {
-    setGrades(prev => ({
-      ...prev,
-      [studentId]: {
-        ...prev[studentId],
-        [field]: value,
-        promedio: calculateAverage({
-          ...prev[studentId],
-          [field]: value
-        })
-      }
-    }));
-  }, [calculateAverage]);
+  const handleGradeChange = useCallback((
+    studentId: string,
+    field: GradeField,
+    value: string
+  ) => {
+    setAcademicRecords(prev => {
+      const studentRecord = prev[studentId] || {
+        [currentYear]: {
+          periods: {
+            [currentPeriod]: {
+              areas: {
+                [currentAreaId]: {
+                  grades: { l1: '', l2: '', l3: '', fallas: '' },
+                  logros: {},
+                  metadata: {
+                    classroomId: currentClassroomId,
+                    lastUpdate: new Date().toISOString()
+                  }
+                }
+              }
+            }
+          }
+        }
+      };
 
-  const validateAllGrades = useCallback(() => {
-    return Object.values(grades).every(grade => {
-      const validGrades = ['l1', 'l2', 'l3'].every(field => 
-        validateGrade(grade[field as GradeField])
-      );
-      const validFaults = validateFaults(grade.fallas);
-      return validGrades && validFaults;
+      const newGrades = {
+        ...studentRecord[currentYear].periods[currentPeriod].areas[currentAreaId].grades,
+        [field]: value
+      };
+
+      const newAverage = calculateAverage(newGrades);
+
+      return {
+        ...prev,
+        [studentId]: {
+          ...studentRecord,
+          [currentYear]: {
+            ...studentRecord[currentYear],
+            periods: {
+              ...studentRecord[currentYear].periods,
+              [currentPeriod]: {
+                ...studentRecord[currentYear].periods[currentPeriod],
+                areas: {
+                  ...studentRecord[currentYear].periods[currentPeriod].areas,
+                  [currentAreaId]: {
+                    ...studentRecord[currentYear].periods[currentPeriod].areas[currentAreaId],
+                    grades: {
+                      ...newGrades,
+                      promedio: newAverage
+                    },
+                    metadata: {
+                      ...studentRecord[currentYear].periods[currentPeriod].areas[currentAreaId].metadata,
+                      lastUpdate: new Date().toISOString()
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      };
     });
-  }, [grades, validateGrade, validateFaults]);
+  }, [calculateAverage, currentYear, currentPeriod, currentAreaId, currentClassroomId]);
 
-  const handleSubmit = useCallback(async () => {
-    if (!validateAllGrades()) {
-      return false;
-    }
+  const validateAllRecords = useCallback(() => {
+    return Object.values(academicRecords).every(record => {
+      const areaData = record[currentYear]?.periods[currentPeriod]?.areas[currentAreaId];
+      if (!areaData) return false;
 
-    setIsSubmitting(true);
-    console.log('Submitting valid grades:', grades);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    return true;
-  }, [grades, validateAllGrades]);
+      const validGrades = ['l1', 'l2', 'l3'].every(field => 
+        validateGrade(areaData.grades[field as GradeField])
+      );
+      
+      const validFaults = validateFaults(areaData.grades.fallas);
+      const validLogros = Object.values(areaData.logros).every(logro => 
+        typeof logro.numero === 'number' && logro.descripcion.length > 0
+      );
+
+      return validGrades && validFaults && validLogros;
+    });
+  }, [academicRecords, currentYear, currentPeriod, currentAreaId, validateGrade, validateFaults]);
+
+  const prepareBatchData = useCallback(() => {
+    return Object.entries(academicRecords).map(([studentId, record]) => ({
+      studentId,
+      year: currentYear,
+      period: currentPeriod,
+      areaId: currentAreaId,
+      grades: {
+        l1: parseFloat(record[currentYear].periods[currentPeriod].areas[currentAreaId].grades.l1),
+        l2: parseFloat(record[currentYear].periods[currentPeriod].areas[currentAreaId].grades.l2),
+        l3: parseFloat(record[currentYear].periods[currentPeriod].areas[currentAreaId].grades.l3),
+        fallas: parseInt(record[currentYear].periods[currentPeriod].areas[currentAreaId].grades.fallas)
+      },
+      logros: Object.values(record[currentYear].periods[currentPeriod].areas[currentAreaId].logros),
+      teacherId: "current_user_id", // Debes inyectar esto desde tu auth
+      classroomId: currentClassroomId
+    }));
+  }, [academicRecords, currentYear, currentPeriod, currentAreaId, currentClassroomId]);
 
   return {
-    grades,
+    academicRecords,
     isSubmitting,
     validateGrade,
     validateFaults,
     handleGradeChange,
-    handleSubmit,
-    validateAllGrades
+    validateAllRecords,
+    prepareBatchData
   };
 };
 

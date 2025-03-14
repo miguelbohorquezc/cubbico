@@ -44,10 +44,11 @@ function Home() {
   return (
     <>
       <Sidebar/>
-      <ClassRoomForm/>
+      {/* <ClassRoomForm/> */}
+      <AreaForm/>
+      <CreateUserForm/>
       {/* <StudentForm/>
       <CreateUserForm/>
-      <AreaForm/>
       <GradeManager/>
       <DataTable
         data={students}
