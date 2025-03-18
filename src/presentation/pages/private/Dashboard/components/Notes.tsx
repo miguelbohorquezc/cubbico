@@ -4,7 +4,7 @@ import Sidebar from '../../../../components/sidebar/Sidebar';
 import { useState } from 'react';
 import Modal from '../../../../components/modal/Modal';
 import AchievementForm from '../../../../components/achievement/AchievementForm';
-import GradeManager from '../../../../components/notes/GradeManager';
+import GradeManager from '../../../../components/unifiedNotes/GradeManager';
 import TeacherAchievements from '../../../../features/teacher/TeacherAchivement';
 
 function Academy() {

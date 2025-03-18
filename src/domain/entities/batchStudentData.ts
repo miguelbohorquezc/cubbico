@@ -9,11 +9,14 @@ export interface BatchStudentData {
       l3: number;
       fallas: number;
     };
-    logros: Array<{
-      id: string;
-      numero: number;
-      descripcion: string;
-    }>;
+    
     teacherId: string;
     classroomId: string;
   }
+
+
+ /*  logros: Array<{
+    id: string;
+    numero: number;
+    descripcion: string;
+  }>; */
