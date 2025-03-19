@@ -11,7 +11,8 @@ export interface BatchStudentData {
     };
     
     teacherId: string;
-    classroomId: string;
+    classroomId: string;  
+    achievementId?: string; // Campo nuevo para la referencia
   }
 
 

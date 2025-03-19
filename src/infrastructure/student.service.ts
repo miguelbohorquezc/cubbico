@@ -91,6 +91,7 @@ export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
                     metadata: {
                       teacherId: studentData.teacherId,
                       classroomId: studentData.classroomId,
+                      achievementId: studentData.achievementId, // Nuevo campo
                       lastUpdate: timestamp
                     }
                   }

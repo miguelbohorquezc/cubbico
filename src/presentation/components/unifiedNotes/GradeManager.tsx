@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { bulkSaveStudents, fetchStudentsByClassroom, fetchStudentGrades } from '../../../infrastructure/student.service';
+import { getAchievement } from '../../../infrastructure/achievement.service';
 import { Student } from './types';
 import InputField from './InputField';
 import './GradeManagerStyle.css';
@@ -17,6 +18,7 @@ const GradeManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showErrors, setShowErrors] = useState(false);
+  const [hasAchievements, setHasAchievements] = useState(false);
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -71,6 +73,21 @@ const GradeManager: React.FC = () => {
     loadStudents();
   }, [classroomId, periodId, areaId]);
 
+  useEffect(() => {
+    const checkAchievements = async () => {
+      if (classroomId && areaId && periodId) {
+        const achievement = await getAchievement(
+          classroomId,
+          areaId,
+          parseInt(periodId)
+        );
+        console.log(achievement);
+        setHasAchievements(!!achievement);
+      }
+    };
+    checkAchievements();
+  }, [classroomId, areaId, periodId]);
+
   const calculateAverage = (l1: string, l2: string, l3: string): string => {
     const num1 = parseFloat(l1);
     const num2 = parseFloat(l2);
@@ -123,6 +140,16 @@ const GradeManager: React.FC = () => {
     }
 
     try {
+      const currentPeriod = parseInt(periodId);
+      const achievementDoc = await getAchievement(classroomId!, areaId!, currentPeriod);
+    
+      if (!achievementDoc) {
+        alert('Primero debes registrar los logros para este periodo');
+        return;
+      }
+
+
+
       const batchData = students.map(student => ({
         studentId: student.id,
         year: new Date().getFullYear().toString(),
@@ -135,7 +162,8 @@ const GradeManager: React.FC = () => {
           fallas: parseInt(grades[student.id].fallas)
         },
         classroomId: classroomId,
-        teacherId: "current_user_id"
+        teacherId: "current_user_id",
+        achievementId: achievementDoc.id, // ID del documento de logros
       }));
       
       await bulkSaveStudents(batchData);
@@ -160,7 +188,7 @@ const GradeManager: React.FC = () => {
             <th><h3>L2</h3></th>
             <th><h3>L3</h3></th>
             <th><h3>Fallas</h3></th>
-            <th><h3>Promedio</h3></th> {/* Nueva columna */}
+            <th><h3>Promedio</h3></th>
           </tr>
         </thead>
         <tbody>
@@ -175,7 +203,6 @@ const GradeManager: React.FC = () => {
                     <span><p>{student.id}</p></span>
                   </div>
                 </td>
-                
                 {['l1', 'l2', 'l3'].map(field => (
                   <td key={field}>
                     <InputField
@@ -211,9 +238,16 @@ const GradeManager: React.FC = () => {
         </tbody>
       </table>
 
+      {!hasAchievements && (
+  <div className="warning-message">
+    ⚠️ Debes registrar los logros académicos antes de ingresar notas
+  </div>
+)}
+
       <button 
         onClick={handleSubmit}
         className="submit-button"
+        disabled={!hasAchievements || loading}
       >
         Guardar Calificaciones
       </button>

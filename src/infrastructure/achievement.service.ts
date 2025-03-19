@@ -43,6 +43,8 @@ export const addAchievement = async (achievement: Omit<AchievementData, 'id'>) =
       ...achievement,
       createdAt: new Date()
     });
+    console.log('Document written with ID: ', docRef.id);
+    updateAchievement(docRef.id, { id: docRef.id });
     return docRef.id;
   } catch (error) {
     console.error('Error saving achievements:', error);
