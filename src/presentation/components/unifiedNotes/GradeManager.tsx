@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { bulkSaveStudents, fetchStudentsByClassroom, fetchStudentGrades } from '../../../infrastructure/student.service';
 import { Student } from './types';
 import InputField from './InputField';
+import './GradeManagerStyle.css';
 
 const GradeManager: React.FC = () => {
   const { periodId, classroomId, areaId } = useParams<{
@@ -69,6 +70,19 @@ const GradeManager: React.FC = () => {
     
     loadStudents();
   }, [classroomId, periodId, areaId]);
+
+  const calculateAverage = (l1: string, l2: string, l3: string): string => {
+    const num1 = parseFloat(l1);
+    const num2 = parseFloat(l2);
+    const num3 = parseFloat(l3);
+  
+    if ([num1, num2, num3].some(isNaN)) {
+      return 'N/A';
+    }
+  
+    const average = (num1 + num2 + num3) / 3;
+    return average.toFixed(2);
+  };
 
   const validateGrade = (value: string): boolean => {
     const num = parseFloat(value);
@@ -137,16 +151,16 @@ const GradeManager: React.FC = () => {
 
   return (
     <div className="grade-manager">
-      <h1 className="title">Registro de Calificaciones</h1>
       
       <table className="grades-table">
         <thead>
           <tr>
-            <th>Estudiante</th>
-            <th>L1</th>
-            <th>L2</th>
-            <th>L3</th>
-            <th>Fallas</th>
+            <th><h3>Estudiante</h3></th>
+            <th><h3>L1</h3></th>
+            <th><h3>L2</h3></th>
+            <th><h3>L3</h3></th>
+            <th><h3>Fallas</h3></th>
+            <th><h3>Promedio</h3></th> {/* Nueva columna */}
           </tr>
         </thead>
         <tbody>
@@ -156,9 +170,9 @@ const GradeManager: React.FC = () => {
             return (
               <tr key={student.id}>
                 <td className="student-info">
-                  {`${student.name} ${student.lastName}`.toUpperCase()}
+                  <p>{`${student.name} ${student.lastName}`.toUpperCase()}</p>
                   <div className="student-details">
-                    <span>{student.document}</span>
+                    <span><p>{student.id}</p></span>
                   </div>
                 </td>
                 
@@ -187,6 +201,9 @@ const GradeManager: React.FC = () => {
                     isValid={!showErrors || validateFaults(studentGrades.fallas)}
                     errorMessage="Máx. 99"
                   />
+                </td>
+                <td className="average-cell">
+                    {calculateAverage(studentGrades.l1, studentGrades.l2, studentGrades.l3)}
                 </td>
               </tr>
             );

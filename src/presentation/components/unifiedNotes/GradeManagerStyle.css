@@ -1,0 +1,239 @@
+/* styles.css */
+:root {
+    /* Paleta de colores */
+    --color-valid: #28a745;    /* Verde */
+    --color-invalid: #dc3545;  /* Rojo */
+    --color-warning: #ffc107;  /* Amarillo */
+    --color-active: #007bff;   /* Azul */
+    --color-neutral: #6c757d;  /* Gris */
+    --color-bg-light: #f8f9fa; /* Fondo claro */
+  }
+
+  .average-cell {
+    text-align: center;
+    font-weight: 500;
+    color: #2c3e50;
+    background: #f8f9fa;
+  }
+  
+  /* Estructura principal */
+  .grade-manager {
+    padding: 2rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+  
+  .title {
+    color: var(--color-neutral);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+  
+  /* Tabla de calificaciones */
+  .grades-table {
+    width: 90%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .grades-table th {
+    background: var(--color-bg-light);
+    color: var(--color-neutral);
+    font-weight: 600;
+    padding: 1.2rem;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .grades-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+    position: relative;
+    padding-top: 50px; /* Espacio para mensajes */
+  }
+  
+  .student-info {
+    min-width: 150px;
+  }
+
+  .student-info p{
+    font-size: 10pt;
+  }
+  
+  .student-info span {
+    display: block;
+    font-size: 0.9rem;
+    color: #868e96;
+    margin-top: 0.3rem;
+  }
+  
+  /* Inputs y validación */
+  .input-container {
+    position: relative;
+    display: inline-block;
+    margin: 0 0.5rem;
+  }
+  
+  .grade-input {
+    width: 115px;
+    padding: 0.8rem 1.2rem;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background-color: white;
+    text-align: center;
+  }
+  
+  .grade-input:focus {
+    outline: none;
+    border-color: var(--color-active);
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+  }
+  
+  /* Estados de validación */
+  .grade-input.valid {
+    border-color: var(--color-valid);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2328a745" width="20" height="20"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    padding-right: 40px;
+  }
+  
+  .grade-input.invalid {
+    border-color: var(--color-invalid);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23dc3545" width="20" height="20"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    padding-right: 40px;
+  }
+  
+  /* Mensajes de error */
+  .error-message {
+    position: absolute;
+    top: 10px;  /* Posición sobre el input */
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 200px;
+    font-size: 0.8rem;
+    color: white;
+    background: var(--color-invalid);
+    padding: 6px 12px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    text-align: center;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .error-message::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px 6px 0;
+    border-style: solid;
+    border-color: var(--color-invalid) transparent transparent;
+  }
+  
+  .grade-input.invalid + .error-message {
+    opacity: 1;
+    top: -30px;
+  }
+  
+  /* Botón de envío */
+  .submit-button {
+    background: var(--color-active);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 2rem auto 0;
+  }
+  
+  .submit-button:hover {
+    background: #0069d9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,123,255,0.3);
+  }
+  
+  /* Estados de carga y mensajes */
+  .loading,
+  .error,
+  .empty {
+    padding: 2rem;
+    text-align: center;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 500px;
+    font-weight: 500;
+  }
+  
+  .loading {
+    background: rgba(0,123,255,0.1);
+    color: var(--color-active);
+  }
+  
+  .error {
+    background: rgba(220,53,69,0.1);
+    color: var(--color-invalid);
+    border: 1px solid rgba(220,53,69,0.2);
+  }
+  
+  .empty {
+    background: rgba(255,193,7,0.1);
+    color: var(--color-warning);
+  }
+  
+  /* Animaciones */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+  
+  .grade-input.invalid {
+    animation: shake 0.4s ease-in-out;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 768px) {
+    .grade-manager {
+      padding: 1rem;
+    }
+    
+    .grades-table {
+      display: block;
+      overflow-x: auto;
+    }
+    
+    .grade-input {
+      width: 70px;
+      padding: 0.6rem;
+    }
+    
+    .error-message {
+      font-size: 0.7rem;
+      max-width: 150px;
+    }
+  }
