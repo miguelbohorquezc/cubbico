@@ -75,6 +75,10 @@ const TeacherClassrooms = () => {
       enablePagination={false}
       enableSearch={true}
       skeletonCount={10}
+      tableSize={{ 
+        width: "27rem", 
+        maxHeight: "100vh" 
+      }}
     />
   );
 };

@@ -82,6 +82,10 @@ const TeacherAreas = () => {
       enablePagination={false}
       enableSearch={true}
       skeletonCount={10}
+      tableSize={{ 
+        width: "33rem", 
+        maxHeight: "100vh" 
+      }}
     />
   );
 };

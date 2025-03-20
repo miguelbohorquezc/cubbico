@@ -36,7 +36,7 @@ const TeacherDataLoader = () => {
   }, [user?.uid, dispatch, error]);
 
   // Renderizar estados de carga/error si es necesario
-  if (loading) return <div className="loading-indicator">Cargando datos...</div>;
+  if (loading) return <div className="loading-indicator"></div>;
   if (error) return <div className="error-message">Error: {error}</div>;
 
   return null;
