@@ -1,11 +1,12 @@
 
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Sidebar from '../../../../components/sidebar/Sidebar';
 import { useState } from 'react';
 import Modal from '../../../../components/modal/Modal';
 import AchievementForm from '../../../../components/achievement/AchievementForm';
 import GradeManager from '../../../../components/unifiedNotes/GradeManager';
 import TeacherAchievements from '../../../../features/teacher/TeacherAchivement';
+import { PrivateRoutes } from '../../../../../app/routes/routes';
 
 function Academy() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +20,7 @@ function Academy() {
           <h2 className='container-notes-title'>Gestor de Progreso Académico</h2>
           <div className='header-container'>
             <button className='btn-addLogros' onClick={() => setIsModalOpen(true)}>Agregar logros</button> 
+            <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1102866337/2025`}>Ver Informe Básico</Link>
           </div>
           <div className='body-container'>
             <TeacherAchievements/>

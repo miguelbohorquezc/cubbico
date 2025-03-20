@@ -5,6 +5,7 @@ import StudentsPage from "./components/StudentsPage"
 import Home from "./components/Home"
 import Academy from "./components/Academy"
 import Notes from "./components/Notes"
+import AcademicReport from "../../../components/classRoomReport/AcademicReport"
 
 function Dashboard() {
   return (
@@ -16,6 +17,7 @@ function Dashboard() {
       <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`}   element={<Notes/>}/>
       <Route path={PrivateRoutes.ACADEMY}                                     element={<Academy/>}/>
       <Route path={PrivateRoutes.STUDENT}                                     element={<StudentsPage/>}/>
+      <Route path={`${PrivateRoutes.REPORT}/:studentId/:year`}   element={<AcademicReport />} />
     </RoutesWithNotFound> 
   )
 }
