@@ -18,6 +18,8 @@ function Dashboard() {
       <Route path={PrivateRoutes.ACADEMY}                                     element={<Academy/>}/>
       <Route path={PrivateRoutes.STUDENT}                                     element={<StudentsPage/>}/>
       <Route path={`${PrivateRoutes.REPORT}/:studentId/:year`}   element={<AcademicReport />} />
+
+      <Route path={`${PrivateRoutes.REPORT}/:schoolLevel/:studentId/:year`} element={<AcademicReport/>}/>
     </RoutesWithNotFound> 
   )
 }

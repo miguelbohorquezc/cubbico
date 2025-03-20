@@ -20,7 +20,7 @@ function Academy() {
           <h2 className='container-notes-title'>Gestor de Progreso Académico</h2>
           <div className='header-container'>
             <button className='btn-addLogros' onClick={() => setIsModalOpen(true)}>Agregar logros</button> 
-            <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1102866337/2025`}>Ver Informe Básico</Link>
+            <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/primaria/1102866337/2025`}>Ver Informe Básico</Link>
           </div>
           <div className='body-container'>
             <TeacherAchievements/>
