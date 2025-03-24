@@ -4,6 +4,8 @@ import { useAppSelector } from "../../../app/store/store";
 import { useNavigate, useParams } from "react-router-dom";
 import DataTable from "../../components/datatable/DataTable";
 import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
+import Tooltip from "../../components/toolTip/Tooltip";
+import { toolTipsData } from "../../../domain/entities/toolTipsData";
 
 
 const TeacherAreas = () => {
@@ -66,7 +68,9 @@ const TeacherAreas = () => {
     { key: "actions", 
       label: "Acciones",
       render: (area: any) => (
-        <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
+        <Tooltip text={toolTipsData.EVALUACIONES} position="right">
+          <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
+        </Tooltip>
       )}
   ];
 

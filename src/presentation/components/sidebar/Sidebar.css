@@ -54,6 +54,22 @@
   transition: background-color 0.2s ease;
 }
 
+.submenu-item-link  p{
+  padding: 5px;
+  color: white;
+  text-decoration: none;
+  font-size: 11pt;
+  margin-bottom: 0.5em;
+  margin-left: 20px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+
+.submenu-item-link p:hover {
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .submenu-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }

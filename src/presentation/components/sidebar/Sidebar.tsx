@@ -12,6 +12,8 @@ import sidebarCollapse from '../../../assets/sidebarIcons/sidebar-left-collapse-
 import {PrivateRoutes} from '../../../app/routes/routes';
 import "./Sidebar.css"; // Importamos los estilos CSS
 import { Link } from "react-router-dom";
+import Tooltip from "../toolTip/Tooltip";
+import { toolTipsData } from "../../../domain/entities/toolTipsData";
 
 const Sidebar = () => {
   const { isOpen, activeSubmenu, toggleSidebar, toggleSubmenu } = useSidebar();
@@ -106,12 +108,51 @@ const Sidebar = () => {
             <span className="icon-text"></span>
           </div>
           {/* ---------------------------------------------- */}
-              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}`} >
-          <div className={isOpen ? "icon": "icon-collapse"}>
-                <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
-                {isOpen && <span className="icon-text"><p>Evaluaciones</p></span>}
-                <span className="icon-text"></span>
+          <div className={isOpen ? "icon": "icon-collapse"}
+            onClick={() => toggleSubmenu("periodos")}
+          >
+            <img className="sidebar-icons" src={userIcon} alt="Periodos" />
+            {isOpen && <span className="icon-text"><p>Periodos</p></span>}
+            {isOpen && (
+              <span className="icon-text">
+                <img src={colapsarIcon} alt="Expandir/colapsar" />
+              </span>
+            )}
           </div>
+          <div className={`submenu ${
+              activeSubmenu === "periodos" ? "submenu-active" : ""
+            }`}
+          >
+            <div className="submenu-item-link">
+            <Tooltip text={toolTipsData.PERIODO1} position="right">
+              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/1`} style={{ textDecoration: 'none' }}>
+                <p>Período Académico 1</p>
+              </Link>
+            </Tooltip>
+            </div>
+            <div className="submenu-item-link">
+              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/2`} style={{ textDecoration: 'none' }}>
+                <p>Período Académico 2</p>
+              </Link>
+            </div>
+            <div className="submenu-item-link">
+              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/3`} style={{ textDecoration: 'none' }}>
+                <p>Período Académico 3</p>
+              </Link>
+            </div>
+            <div className="submenu-item-link">
+              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/4`} style={{ textDecoration: 'none' }}>
+                <p>Período Académico 4</p>
+              </Link>
+            </div>
+          </div>
+          {/* ---------------------------------------------- */}
+              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}`} >
+                <div className={isOpen ? "icon": "icon-collapse"}>
+                      <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
+                      {isOpen && <span className="icon-text"><p>Evaluaciones</p></span>}
+                      <span className="icon-text"></span>
+                </div>
               </Link>
           {/* ---------------------------------------------- */}
         </div>
