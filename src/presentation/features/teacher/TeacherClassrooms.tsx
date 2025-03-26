@@ -4,6 +4,8 @@ import { useAppSelector } from "../../../app/store/store";
 import DataTable from "../../components/datatable/DataTable";
 import { useNavigate } from "react-router-dom";
 import classRooms from "../../../assets/datatableIcons/align-box-right-bottom.svg"
+import Tooltip from "../../components/toolTip/Tooltip";
+import { toolTipsData } from "../../../domain/entities/toolTipsData";
 
 const TeacherClassrooms = () => {
   const { classrooms, loading } = useAppSelector((state) => state.teacherData);
@@ -38,7 +40,7 @@ const TeacherClassrooms = () => {
             badgeClass = "status-badge preescolar-badge";
             label = "Preescolar";
             break;
-          case "secundaria":
+          case "bsecundaria":
             badgeClass = "status-badge secundaria-badge";
             label = "Secundaria";
             break;
@@ -58,7 +60,9 @@ const TeacherClassrooms = () => {
       key: 'actions', 
       label: 'Acciones',
       render: (classrooms: any) => (
-        <img src={classRooms} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(classrooms.id, classrooms.nivel)}/> 
+        <Tooltip text={toolTipsData.ASIGNATURAS} position="right">
+          <img src={classRooms} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(classrooms.id, classrooms.nivel)}/> 
+        </Tooltip>
       )
     }
   ];
@@ -75,6 +79,10 @@ const TeacherClassrooms = () => {
       enablePagination={false}
       enableSearch={true}
       skeletonCount={10}
+      tableSize={{ 
+        width: "27rem", 
+        maxHeight: "100vh" 
+      }}
     />
   );
 };

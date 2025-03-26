@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "./firebase/firebase";
 
-interface AreaIhsInfo {
+export interface AreaIhsInfo {
     id?: string;
     asignatura: string;
     ihs: number;

@@ -1,0 +1,218 @@
+.achievement-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  animation: containerEntrance 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes containerEntrance {
+  0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+  100% { opacity: 1; transform: none; }
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.title-badge {
+  font-family: 'Nunito', sans-serif;
+  background: rgb(219 154 52 / 8%);
+  color: #ffbb4d;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 750;
+  border: 2px solid rgb(219 138 52 / 15%);
+}
+
+.period-badge {
+    font-family: 'Nunito', sans-serif;
+    background: rgba(52, 152, 219, 0.08);
+    color: #34dbcc;
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 750;
+    border: 2px solid rgba(52, 152, 219, 0.15);
+}
+
+.logro-group {
+  margin-bottom: 1.8rem;
+  animation: fieldEntrance 0.5s ease-out;
+}
+
+@keyframes fieldEntrance {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.logro-textarea {
+  width: 100%;
+  padding: 1.2rem;
+  border: 2px solid #e8ebef;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11pt;
+  line-height: 1.6;
+  resize: vertical;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fafcff;
+  caret-color: #3498db
+}
+
+.logro-textarea:focus {
+  border-color: #3498db;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(52,152,219,0.1);
+  outline: none;
+  caret-color: #3498db; /* Color del cursor */
+  color: #2c3e50; /* Color del texto */
+}
+
+.logro-textarea:hover {
+  border-color: #3498db;
+  caret-color: #3498db; /* Color del cursor */
+  color: #2c3e50; /* Color del texto */
+}
+
+.progress-container {
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  height: 6px;
+  background: #f0f4f8;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db, #2eccaa);
+  width: 0;
+  transition: width 0.4s ease;
+  border-radius: 3px;
+}
+
+.character-count {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  min-width: 60px;
+  text-align: right;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.6rem;
+  padding: 0.8rem;
+  background: #fef2f2;
+  border-radius: 8px;
+  border: 1px solid #fee2e2;
+  animation: shake 0.4s ease-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.error-message::before {
+  content: '⚠️';
+  font-size: 1.1em;
+}
+
+.submit-button {
+  position: relative;
+  background: linear-gradient(135deg, #3498db, #1dc2d8);
+  color: white;
+  padding: 0.9rem 2.2rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+
+.submit-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    transparent 25%, 
+    rgba(255,255,255,0.15) 50%, 
+    transparent 75%);
+  animation: buttonShine 3s infinite linear;
+  transform: rotate(45deg);
+}
+
+@keyframes buttonShine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.button-loading .button-text {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.button-loading::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 50%;
+  left: 50%;
+  margin: -12px 0 0 -12px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: buttonSpin 1s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .achievement-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .logro-textarea {
+    padding: 1rem;
+    caret-color: #3498db; /* Color del cursor */
+    color: #2c3e50; /* Color del texto */
+  }
+  
+  .submit-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

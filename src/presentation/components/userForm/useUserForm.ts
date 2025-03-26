@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../../../domain/services/firebase/firebase";
+import { auth } from "../../../infrastructure/firebase/firebase";
 import { 
   createUser,
   getAreas,
@@ -10,7 +10,7 @@ import {
   UserFormData,
   Area,
   ClassRoom
-} from "../../../domain/services/user.service";
+} from "../../../infrastructure/user.service";
 
 export const useUserForm = () => {
   const navigate = useNavigate();

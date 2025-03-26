@@ -25,7 +25,7 @@ const COMMON_SELECT_PROPS = {
   },
   nivel: {
     placeholder: 'Seleccione un nivel',
-    options: ['primaria', 'secundaria']
+    options: ['primaria', 'secundaria', 'preescolar']
   },
   evaluacion: {
     placeholder: 'Seleccione modo de evaluación',

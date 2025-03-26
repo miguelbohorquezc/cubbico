@@ -4,15 +4,17 @@ import { useAppSelector } from "../../../app/store/store";
 import { useNavigate, useParams } from "react-router-dom";
 import DataTable from "../../components/datatable/DataTable";
 import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
+import Tooltip from "../../components/toolTip/Tooltip";
+import { toolTipsData } from "../../../domain/entities/toolTipsData";
 
 
 const TeacherAreas = () => {
   const { areas, loading } = useAppSelector((state) => state.teacherData);
-  const { classroomId, classroomNivel } = useParams();
+  const {periodId ,classroomId, classroomNivel } = useParams();
   const navigate = useNavigate();
 
   const handleSelectClassRoom = (areaId: string) => {
-    navigate(`/private/dashboard/notes/${classroomId}/${areaId}`);
+    navigate(`/private/dashboard/notes/${1}/${classroomId}/${areaId}`);
   };
 
   const columns = [
@@ -47,10 +49,10 @@ const TeacherAreas = () => {
             badgeClass = "status-badge preescolar-badge";
             label = "Preescolar";
             break;
-          case "secundaria":
-            badgeClass = "status-badge secundaria-badge";
-            label = "Secundaria";
-            break;
+            case "bsecundaria":
+              badgeClass = "status-badge secundaria-badge";
+              label = "Secundaria";
+              break;
           default:
             badgeClass = "status-badge default-badge";
             label = row.nivel; // Si es otro valor
@@ -66,13 +68,22 @@ const TeacherAreas = () => {
     { key: "actions", 
       label: "Acciones",
       render: (area: any) => (
-        <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
-      )}
+        <Tooltip text={toolTipsData.EVALUACIONES} position="right">
+          <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
+        </Tooltip>
+      )},
+      { key: "actions", 
+        label: "Acciones",
+        render: (area: any) => (
+          <Tooltip text={toolTipsData.EVALUACIONES} position="right">
+            <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
+          </Tooltip>
+        )}
   ];
 
   return (
     <DataTable
-      data={areas.filter((area: any) => area.nivel === /* classroomNivel?.toLowerCase() */ "secundaria")}
+      data={areas.filter((area: any) => area.nivel === classroomNivel?.toLowerCase())}
       //@ts-ignore
       columns={columns}
       isLoading={loading}
@@ -82,6 +93,10 @@ const TeacherAreas = () => {
       enablePagination={false}
       enableSearch={true}
       skeletonCount={10}
+      tableSize={{ 
+        width: "33rem", 
+        maxHeight: "100vh" 
+      }}
     />
   );
 };

@@ -352,3 +352,26 @@
   color: #c62828;
 }
 
+.no-data-row {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.no-data-message {
+  padding: 2rem;
+  font-style: italic;
+}
+
+.achievements-badge{
+    font-family: 'Nunito', sans-serif;
+    background: rgba(52, 152, 219, 0.08);
+    color: #7f7f7f;
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-size: 11pt;
+    font-weight: 450;
+    border: 2px solid rgba(52, 152, 219, 0.15);
+    margin-bottom: 8px;
+}
+

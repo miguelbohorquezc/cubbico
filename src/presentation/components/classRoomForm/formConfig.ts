@@ -10,6 +10,8 @@ export const SELECT_OPTIONS = {
     { value: '', label: 'Seleccione un salón' },
     { value: 'walkers', label: 'Walkers' },
     { value: 'nursery a', label: 'Nursery A' },
+    { value: 'primero a', label: 'Primero A' },
+    { value: 'septimo', label: 'Septimo' },
     // ... resto de opciones
   ],
   nivel: [

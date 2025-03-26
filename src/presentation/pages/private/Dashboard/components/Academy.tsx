@@ -4,7 +4,7 @@ import Sidebar from "../../../../components/sidebar/Sidebar"
 import TeacherAreas from "../../../../features/teacher/TeacherAreas";
 import TeacherClassrooms from "../../../../features/teacher/TeacherClassrooms";
 import TeacherDataLoader from "../../../../features/teacher/TeacherDataLoader";
-import AreaForm from '../../../../components/areaForm/AreaForm';
+
 
 function Academy() {
 
@@ -16,7 +16,6 @@ function Academy() {
       <Sidebar/>
       <TeacherClassrooms/>
       {classroomId && <TeacherAreas/>}
-      {/* <AreaForm/> */}
     </>
   )
 }
