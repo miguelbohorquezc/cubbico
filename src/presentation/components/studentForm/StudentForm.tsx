@@ -1,8 +1,9 @@
+//@ts-ignore
 import { FormEvent } from 'react';
 import './StudentForm.css';
 import { useStudentForm } from './useStudentForm';
 import { FormField } from '../../../shared/utils/FormField';
-import { SELECT_OPTIONS, TEXT_FIELDS, SELECT_FIELDS } from './formConfig';
+import { TEXT_FIELDS, SELECT_FIELDS } from './formConfig';
 import { StudentFormState } from '../../../shared/types/studentTypes';
 
 const StudentForm = () => {
@@ -38,6 +39,7 @@ const StudentForm = () => {
         {TEXT_FIELDS.map(({ type, name, placeholder }) => (
           <FormField
             key={name}
+            //@ts-ignore
             type={type}
             name={name}
             value={form[name as keyof StudentFormState]}

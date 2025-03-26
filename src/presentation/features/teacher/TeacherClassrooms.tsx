@@ -2,7 +2,7 @@
 import React from "react";
 import { useAppSelector } from "../../../app/store/store";
 import DataTable from "../../components/datatable/DataTable";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import classRooms from "../../../assets/datatableIcons/align-box-right-bottom.svg"
 import Tooltip from "../../components/toolTip/Tooltip";
 import { toolTipsData } from "../../../domain/entities/toolTipsData";
@@ -10,9 +10,10 @@ import { toolTipsData } from "../../../domain/entities/toolTipsData";
 const TeacherClassrooms = () => {
   const { classrooms, loading } = useAppSelector((state) => state.teacherData);
   const navigate = useNavigate();
+  const {periodId} = useParams()
 
   const handleSelectClassRoom = (classroomId: string, classroomNivel: string) => {
-    navigate(`/private/dashboard/academy/${classroomNivel}/${classroomId}`);
+    navigate(`/private/dashboard/academy/${periodId}/${classroomNivel}/${classroomId}`);
   };
 
   const columns = [

@@ -2,7 +2,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Area } from "../../../domain/entities/area";
 import { ClassRoom } from "../../../domain/entities/classRoom";
-import { AchievementData } from "../../../infrastructure/achievement.service";
+import { AchievementData } from "../../../domain/entities/achievementData";
 
 interface TeacherState {
   classrooms: ClassRoom[];

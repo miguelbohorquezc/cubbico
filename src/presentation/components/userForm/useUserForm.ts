@@ -2,15 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../infrastructure/firebase/firebase";
-import { 
-  createUser,
-  getAreas,
-  getClassRooms,
-  assignRoles,
-  UserFormData,
-  Area,
-  ClassRoom
-} from "../../../infrastructure/user.service";
+import {createUser,getAreas,getClassRooms,assignRoles} from "../../../infrastructure/user.service";
+import { ClassRoom } from "../../../domain/entities/classRoom";
+import { UserFormData } from "../../../domain/entities/userFormData";
+import { Area } from "../../../domain/entities/area";
 
 export const useUserForm = () => {
   const navigate = useNavigate();

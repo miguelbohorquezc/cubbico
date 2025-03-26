@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore";
 import { db } from "./firebase/firebase";
-import { studentInfo } from "../domain/entities/user.student";
+import { studentInfo } from "../domain/entities/studentInfo";
 import {  Student } from "../presentation/components/notes/types";
 import { BatchStudentData } from "../domain/entities/batchStudentData";
 

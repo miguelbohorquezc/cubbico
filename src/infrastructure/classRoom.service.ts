@@ -1,8 +1,8 @@
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from './firebase/firebase';
-import { ClassRoomDoc } from '../../shared/types/classRoomTypes';
+import { ClassRoom } from '../domain/entities/classRoom';
 
-export const addClassroom = async (classroom: ClassRoomDoc) => {
+export const addClassroom = async (classroom: ClassRoom) => {
   try {
     const docRef = await addDoc(collection(db, 'classRooms'), {
       ...classroom,

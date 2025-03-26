@@ -4,7 +4,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import userReducer from "./states/user";
 import studentReducer from "./states/student.slice";
 import { FirebaseUser } from "../../domain/entities/firebaseUser";
-import { studentInfo } from "../../domain/entities/user.student";
+import { studentInfo } from "../../domain/entities/studentInfo";
 import usersReducer from "./states/user.slice";
 import { Area } from "../../domain/entities/area";
 import { ClassRoom } from "../../domain/entities/classRoom";

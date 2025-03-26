@@ -19,6 +19,7 @@ export interface AreaServiceData {
 }
 
 // Función de conversión segura en el submit
+//@ts-ignore
 const parseAreaData = (form: AreaFormState): AreaServiceData => ({
   id: form.id,
   orden: Number(form.orden) || 0,

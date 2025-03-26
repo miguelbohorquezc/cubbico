@@ -36,6 +36,8 @@ export const useAreaForm = () => {
   const handleBlur = useCallback(
     (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
+
+      //@ts-ignore
       const errors = validationsForm(form);
       setError(prev => ({ 
         ...prev, 

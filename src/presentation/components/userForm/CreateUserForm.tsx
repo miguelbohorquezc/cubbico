@@ -130,7 +130,7 @@ const CreateUserForm = () => {
                     checked={form.areas[area.id] || false}
                     onChange={handleCheckboxChange('areas')}
                   />
-                  <span>{`${area.orden} - ${area.asignatura}`}</span>
+                  <span>{`${area.orden} - ${area.asignatura} - ${area.nivel}`}</span>
                 </label>
               ))}
             </div>

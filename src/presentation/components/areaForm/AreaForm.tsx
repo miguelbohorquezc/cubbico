@@ -1,3 +1,4 @@
+//@ts-ignore
 import React from 'react';
 import { useAreaForm } from './useAreaForm';
 import { TEXT_FIELDS, SELECT_FIELDS } from './formConfig';

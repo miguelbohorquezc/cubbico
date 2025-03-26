@@ -1,5 +1,6 @@
 // classRoomTypes.ts
 export interface SalonFormState {
+    id: string;
     identificador: string;
     directorGrupo: string;
     nombreSalon: string;

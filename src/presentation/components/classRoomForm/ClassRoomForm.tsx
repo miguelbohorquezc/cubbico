@@ -1,9 +1,9 @@
 // ClassRoomForm.tsx
+//@ts-ignore
 import { FormEvent } from 'react';
 import './ClassRoomForm.css';
 import { useClassRoomForm } from './useClassRoomForm';
 import { FormField } from '../../../shared/utils/FormField';
-import { SalonFormState } from '../../../shared/types/classRoomTypes';
 import { SELECT_OPTIONS } from './formConfig';
 
 const ClassRoomForm = () => {

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FirebaseUser } from "../../../domain/entities/firebaseUser";
 
-// Estado inicial mejor tipado
 const getInitialUserState = (): FirebaseUser | null => {
   try {
     const storedUser = sessionStorage.getItem('user');
@@ -12,7 +11,7 @@ const getInitialUserState = (): FirebaseUser | null => {
   }
 };
 
-// Estado inicial
+
 const initialState: FirebaseUser | null = getInitialUserState();
 
 // Helper functions mejoradas con manejo de errores

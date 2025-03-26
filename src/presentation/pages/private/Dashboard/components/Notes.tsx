@@ -28,9 +28,9 @@ function Academy() {
           <div className='body-container'>
             {/* <TeacherAchievements/>
             <GradeManager/>  */}
-            {/* <InformeConfigurador classRoomId={classroomId} year='2025'/> */} 
-             <GestorIndicadores classRoomId={classroomId} year='2025' periodo={1}/> 
-            <EvaluadorCompleto studentId='1102866337' year='2025' classRoomId={classroomId} periodo={1}/> 
+            {/* <InformeConfigurador classRoomId={classroomId} year='2025'/>   */}
+            {/* <GestorIndicadores classRoomId={classroomId} year='2025' periodo={1}/>  */}
+            {/* <EvaluadorCompleto studentId='1102866337' year='2025' classRoomId={classroomId} periodo={1}/> */}  
           </div>
       </div>
       <Modal

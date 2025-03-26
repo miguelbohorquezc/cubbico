@@ -1,3 +1,4 @@
+//@ts-ignore
 import React from 'react';
 import { useAchievementForm } from './useAchievementForm';
 import './AchievementForm.css';

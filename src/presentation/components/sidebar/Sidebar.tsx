@@ -1,3 +1,4 @@
+//@ts-ignore
 import React from "react";
 import useSidebar from "./useSidebar";
 import logo from '../../../assets/sidebarIcons/logo.png';

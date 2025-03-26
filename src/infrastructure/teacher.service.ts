@@ -1,8 +1,8 @@
 // teacher.service.ts
 import { getDocs, query, where, documentId, getDoc, doc, collection } from "firebase/firestore";
 import { db } from "./firebase/firebase";
-import { ClassRoom } from "../entities/classRoom";
-import { Area } from "../entities/area";
+import { ClassRoom } from "../domain/entities/classRoom";
+import { Area } from "../domain/entities/area";
 
 export const fetchTeacherData = async (userId: string) => {
   try {

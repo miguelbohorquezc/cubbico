@@ -1,14 +1,6 @@
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "./firebase/firebase";
-
-export interface AreaIhsInfo {
-    id?: string;
-    asignatura: string;
-    ihs: number;
-    area: string;
-    orden: number;
-    nivel: string;
-}
+import { AreaIhsInfo } from "../domain/entities/area";
 
 
 export const addArea = async (area: AreaIhsInfo) => {
@@ -20,7 +12,7 @@ export const addArea = async (area: AreaIhsInfo) => {
             // Actualizar documento existente
             docRef = doc(db, "areas", area.id);
             await setDoc(docRef, {
-                asignatura: area.asignatura, // <- ¿Se necesita realmente la concatenación?
+                asignatura: area.asignatura,
                 ihs: area.ihs,
                 area: area.area,
                 orden: area.orden,
