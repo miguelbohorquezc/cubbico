@@ -71,7 +71,14 @@ const TeacherAreas = () => {
         <Tooltip text={toolTipsData.EVALUACIONES} position="right">
           <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
         </Tooltip>
-      )}
+      )},
+      { key: "actions", 
+        label: "Acciones",
+        render: (area: any) => (
+          <Tooltip text={toolTipsData.EVALUACIONES} position="right">
+            <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
+          </Tooltip>
+        )}
   ];
 
   return (
