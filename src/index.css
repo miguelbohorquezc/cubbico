@@ -18,6 +18,31 @@ h3{
   font-size: 11pt;
 }
 
+/* .container-page {
+  display: flex;
+  height: 100vh; 
+  align-items: stretch; 
+}
+
+.sidebar {
+  width: 250px; 
+  background: lightblue;
+  min-height: 100vh;
+} */
+
+.body-container-page {
+  flex: 1; /* Ocupa el espacio restante */
+  background: #eeefef;
+  padding: 20px; 
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh; /* Limita su altura a la pantalla */
+  overflow-y: auto; /* Permite scroll en el contenido sin afectar el sidebar */
+}
+
+
+
+
 .classroom-name{
   font-size: 10pt;
   font-weight: 800;
@@ -26,7 +51,7 @@ h3{
 
 /* Estilos para botones de acción */
 
-.custom-icon {
+/* .custom-icon {
   width: 40px;
   height: 40px;
   
@@ -79,4 +104,4 @@ h3{
   background: rgb(52, 180, 219);
   border: 2px solid rgb(52, 166, 219);
 }
-
+ */

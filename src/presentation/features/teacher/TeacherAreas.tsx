@@ -15,10 +15,22 @@ const TeacherAreas = () => {
 
   const handleSelectClassRoom = (areaId: string) => {
     navigate(`/private/dashboard/notes/${periodId}/${classroomId}/${areaId}`);
+    console.log(classroomNivel)
   };
 
   const handleSelectClassRoomPreschool = (areaId: string) => {
     navigate(`/private/dashboard/notespreschool/${periodId}/${classroomId}/${areaId}`);
+    console.log(classroomNivel)
+  };
+
+  const handleSelectClassRoomPreschoolIndicador = (areaId: string) => {
+    navigate(`/private/dashboard/indicadores/${periodId}/${classroomId}/${areaId}`);
+    console.log(classroomNivel)
+  };
+
+  const handleSelectClassRoomPreschoolEvaluador = (areaId: string) => {
+    navigate(`/private/dashboard/evaluadorpreescolar/${periodId}/${classroomId}/${areaId}`);
+    console.log(classroomNivel)
   };
 
   const columns = [
@@ -72,7 +84,7 @@ const TeacherAreas = () => {
     { key: "actions", 
       label: "Acciones",
       render: (area: any) => {
-        if (area.nivel.toLowerCase() !== classroomNivel?.toLowerCase()) {
+        if (classroomNivel?.toLowerCase() !== 'preescolar') {
           return (
             <Tooltip text={toolTipsData.EVALUACIONES} position="bottom">
               <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(area.id)}/> 
@@ -80,12 +92,20 @@ const TeacherAreas = () => {
           );
         } else {
           return (
-            <Tooltip text={toolTipsData.EVALUACIONES} position="bottom">
-              <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschool(area.id)}/> 
-            </Tooltip>
+            <div>
+              <Tooltip text={toolTipsData.PROPOSITOS} position="bottom">
+                <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschool(area.id)}/> 
+              </Tooltip>
+              <Tooltip text={toolTipsData.INDICADORES} position="bottom">
+                <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolIndicador(area.id)}/> 
+              </Tooltip>
+              <Tooltip text={toolTipsData.EVALUACIONES} position="bottom">
+                <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEvaluador(area.id)}/> 
+              </Tooltip>
+            </div>
           );
         }
-      }}
+    }}
   ];
 
   const preschoolArea=[

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
-import { AreaIhsInfo } from '../../../infrastructure/area.service';
 import './GestorIndicadores.css';
+import { AreaIhsInfo } from '../../../domain/entities/area';
 
 interface Indicador {
   id: string;

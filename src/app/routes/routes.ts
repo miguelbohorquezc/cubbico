@@ -11,5 +11,7 @@ export const PrivateRoutes = {
     ACADEMY :           'academy',
     NOTES:              'notes',
     REPORT:             'report',
-    REPORTPRESCHOOL:    'reportpreschool'
+    NOTESPRESCHOOL:    'notespreschool',
+    INDICADORES:       'indicadores',
+    EVALUADORPREESCOLAR:       'evaluadorpreescolar',
 }
