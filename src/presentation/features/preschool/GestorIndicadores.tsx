@@ -10,7 +10,6 @@ interface Indicador {
   periodos: number[];
   asignatura: string;
   activo: boolean;
-  nivel: 'básico' | 'intermedio' | 'avanzado';
 }
 
 interface Props {
@@ -33,8 +32,7 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
     texto: '',
     periodos: [periodo],
     asignatura: '',
-    activo: true,
-    nivel: 'básico'
+    activo: true
   });
   const [errores, setErrores] = useState<string[]>([]);
 
@@ -147,8 +145,7 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
       texto: indicador.texto,
       periodos: [...indicador.periodos],
       asignatura: indicador.asignatura,
-      activo: indicador.activo,
-      nivel: indicador.nivel
+      activo: indicador.activo
     });
     document.querySelector('.columna-formulario')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -159,8 +156,7 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
       texto: '',
       periodos: [periodo],
       asignatura: asignaturaActiva,
-      activo: true,
-      nivel: 'básico'
+      activo: true
     });
     setErrores([]);
   };
@@ -265,246 +261,276 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
         </div>
 
         <div className="columna-indicadores">
-          {asignaturaActiva ? (
-            <>
-              <div className="indicadores-header">
-                <h3>
-                  {asignaturas.find(a => a.id === asignaturaActiva)?.asignatura || 'Asignatura'}
-                </h3>
-                <div className="indicador-status">
-                  <span className="activos">
-                    {indicadores[asignaturaActiva]?.filter(i => i.activo).length || 0} activos
-                  </span>
-                  <span className="total">
-                    {indicadores[asignaturaActiva]?.length || 0} total
-                  </span>
-                </div>
-              </div>
-
-              <div className="indicadores-lista">
-                {indicadores[asignaturaActiva]?.length > 0 ? (
-                  indicadores[asignaturaActiva].map(indicador => (
-                    <div 
-                      key={indicador.id}
-                      className={`indicador-item ${!indicador.activo ? 'inactivo' : ''} ${indicadorEditando?.id === indicador.id ? 'editando' : ''}`}
-                      onClick={() => editarIndicador(indicador)}
-                    >
-                      <div className="indicador-content">
-                        <p className="indicador-texto">{indicador.texto}</p>
-                        <div className="indicador-meta">
-                          <span className={`nivel-badge ${indicador.nivel}`}>
-                            {indicador.nivel}
-                          </span>
-                          <span className="periodos">
-                            {indicador.periodos.map(p => `P${p}`).join(', ')}
-                          </span>
-                          <span className={`estado ${indicador.activo ? 'activo' : 'inactivo'}`}>
-                            {indicador.activo ? 'Activo' : 'Inactivo'}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        className={`toggle-activo ${indicador.activo ? 'activo' : 'inactivo'}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleActivo(asignaturaActiva, indicador.id);
-                        }}
-                        aria-label={indicador.activo ? 'Desactivar indicador' : 'Activar indicador'}
-                      >
-                        {indicador.activo ? (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeWidth="2" strokeLinecap="round"/>
-                            <polyline points="22 4 12 14.01 9 11.01" strokeWidth="2" strokeLinecap="round"/>
-                          </svg>
-                        ) : (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <line x1="18" y1="6" x2="6" y2="18" strokeWidth="2" strokeLinecap="round"/>
-                            <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2" strokeLinecap="round"/>
-                          </svg>
-                        )}
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <div className="sin-indicadores">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <line x1="12" y1="9" x2="12" y2="13" strokeWidth="2" strokeLinecap="round"/>
-                      <line x1="12" y1="17" x2="12.01" y2="17" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                    <p>No hay indicadores para esta asignatura</p>
-                    <button 
-                      className="btn-crear-primero"
-                      onClick={() => setFormulario(prev => ({
-                        ...prev,
-                        asignatura: asignaturaActiva
-                      }))}
-                    >
-                      Crear primer indicador
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="sin-asignatura">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10" strokeWidth="2"/>
-                <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2" strokeLinecap="round"/>
-                <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-              <p>Seleccione una asignatura para ver o crear indicadores</p>
-            </div>
-          )}
+  {asignaturaActiva ? (
+    <>
+      <div className="indicadores-header">
+        <h3>
+          {asignaturas.find(a => a.id === asignaturaActiva)?.asignatura || 'Asignatura'}
+        </h3>
+        <div className="indicador-status">
+          <span className="activos">
+            {indicadores[asignaturaActiva]?.filter(i => i.activo).length || 0} activos
+          </span>
+          <span className="total">
+            {indicadores[asignaturaActiva]?.length || 0} total
+          </span>
         </div>
+      </div>
 
-        <div className="columna-formulario">
-          <div className="formulario-card">
-            <div className="formulario-header">
-              <h3>{indicadorEditando ? 'Editar Indicador' : 'Nuevo Indicador'}</h3>
-              {indicadorEditando && (
-                <button 
-                  className="btn-nuevo"
-                  onClick={resetFormulario}
+      <div className="indicadores-lista">
+        {indicadores[asignaturaActiva]?.length > 0 ? (
+          <>
+            {indicadores[asignaturaActiva].map(indicador => (
+              <div 
+                key={indicador.id}
+                className={`indicador-item ${!indicador.activo ? 'inactivo' : ''} ${indicadorEditando?.id === indicador.id ? 'editando' : ''}`}
+                onClick={() => editarIndicador(indicador)}
+              >
+                <div className="indicador-content">
+                  <p className="indicador-texto">{indicador.texto}</p>
+                  <div className="indicador-meta">
+                    <span className="periodos">
+                      {indicador.periodos.map(p => `P${p}`).join(', ')}
+                    </span>
+                    <span className={`estado ${indicador.activo ? 'activo' : 'inactivo'}`}>
+                      {indicador.activo ? 'Activo' : 'Inactivo'}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  className={`toggle-activo ${indicador.activo ? 'activo' : 'inactivo'}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleActivo(asignaturaActiva, indicador.id);
+                  }}
+                  aria-label={indicador.activo ? 'Desactivar indicador' : 'Activar indicador'}
                 >
-                  + Nuevo
-                </button>
-              )}
-            </div>
-            
-            {asignaturaActiva && (
-              <>
-                <div className="form-group">
-                  <label>Asignatura:</label>
-                  <div className="asignatura-seleccionada">
-                    {asignaturas.find(a => a.id === asignaturaActiva)?.asignatura}
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Texto del indicador:</label>
-                  <div className="textarea-container">
-                    <textarea
-                      value={formulario.texto}
-                      onChange={(e) => setFormulario({
-                        ...formulario,
-                        texto: e.target.value
-                      })}
-                      placeholder="Ej: Identifica y cuenta números del 1 al 10..."
-                      className={`indicador-input ${errores.length > 0 ? 'error' : ''}`}
-                      maxLength={MAX_CARACTERES}
-                      rows={4}
-                    />
-                    <div className="textarea-footer">
-                      <div className="contador-caracteres">
-                        {formulario.texto.length}/{MAX_CARACTERES}
-                      </div>
-                      <div className="sugerencia">
-                        Sé específico y observable
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Periodos aplicables:</label>
-                  <div className="periodos-grid">
-                    {[1, 2, 3].map(p => (
-                      <button
-                        key={`periodo-${p}`}
-                        type="button"
-                        className={`periodo-item ${formulario.periodos.includes(p) ? 'seleccionado' : ''}`}
-                        onClick={() => {
-                          const nuevosPeriodos = formulario.periodos.includes(p)
-                            ? formulario.periodos.filter(periodo => periodo !== p)
-                            : [...formulario.periodos, p];
-                          
-                          setFormulario({
-                            ...formulario,
-                            periodos: nuevosPeriodos
-                          });
-                        }}
-                      >
-                        Periodo {p}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Nivel de dificultad:</label>
-                  <div className="niveles-grid">
-                    {(['básico', 'intermedio', 'avanzado'] as const).map(nivel => (
-                      <button
-                        key={`nivel-${nivel}`}
-                        type="button"
-                        className={`nivel-item ${formulario.nivel === nivel ? 'seleccionado' : ''}`}
-                        onClick={() => setFormulario({
-                          ...formulario,
-                          nivel
-                        })}
-                      >
-                        {nivel}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="form-group-checkbox">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={formulario.activo}
-                      onChange={(e) => setFormulario({
-                        ...formulario,
-                        activo: e.target.checked
-                      })}
-                      className="checkbox-input"
-                    />
-                    <span className="checkbox-custom"></span>
-                    <span className="checkbox-text">Indicador activo</span>
-                  </label>
-                </div>
-
-                {errores.length > 0 && (
-                  <div className="errores-container">
-                    {errores.map((error, index) => (
-                      <div key={index} className="error-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <circle cx="12" cy="12" r="10" strokeWidth="2"/>
-                          <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2" strokeLinecap="round"/>
-                          <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2" strokeLinecap="round"/>
-                        </svg>
-                        <span>{error}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="form-actions">
-                  {indicadorEditando && (
-                    <button
-                      className="btn-cancelar"
-                      onClick={cancelarEdicion}
-                    >
-                      Cancelar
-                    </button>
+                  {indicador.activo ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeWidth="2" strokeLinecap="round"/>
+                      <polyline points="22 4 12 14.01 9 11.01" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <line x1="18" y1="6" x2="6" y2="18" strokeWidth="2" strokeLinecap="round"/>
+                      <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
                   )}
-                  <button
-                    className="btn-guardar"
-                    onClick={guardarIndicador}
-                    disabled={
-                      !formulario.texto.trim() || 
-                      (indicadores[asignaturaActiva]?.length || 0) >= MAX_INDICADORES && !indicadorEditando
-                    }
-                  >
-                    {indicadorEditando ? 'Actualizar' : 'Guardar'} Indicador
-                  </button>
-                </div>
-              </>
-            )}
+                </button>
+              </div>
+            ))}
+            
+            {/* Nuevo botón para crear indicador */}
+            <button 
+              className="btn-crear-indicador"
+              onClick={() => {
+                setFormulario(prev => ({
+                  ...prev,
+                  texto: '',
+                  periodos: [periodo],
+                  asignatura: asignaturaActiva,
+                  activo: true
+                }));
+                setIndicadorEditando(null);
+                document.querySelector('.columna-formulario')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="12" y1="5" x2="12" y2="19" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="5" y1="12" x2="19" y2="12" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+              Crear nuevo indicador
+            </button>
+          </>
+        ) : (
+          <div className="sin-indicadores">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <line x1="12" y1="9" x2="12" y2="13" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="12" y1="17" x2="12.01" y2="17" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <p>No hay indicadores para esta asignatura</p>
+            <button 
+              className="btn-crear-primero"
+              onClick={() => {
+                setFormulario(prev => ({
+                  ...prev,
+                  texto: '',
+                  periodos: [periodo],
+                  asignatura: asignaturaActiva,
+                  activo: true
+                }));
+                setIndicadorEditando(null);
+                document.querySelector('.columna-formulario')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Crear primer indicador
+            </button>
+          </div>
+        )}
+      </div>
+    </>
+  ) : (
+    <div className="sin-asignatura">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+        <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2" strokeLinecap="round"/>
+        <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+      <p>Seleccione una asignatura para ver o crear indicadores</p>
+    </div>
+  )}
+</div>
+
+<div className="columna-formulario">
+  <div className="formulario-card">
+    <div className="formulario-header">
+      <h3>{indicadorEditando ? 'Editar Indicador' : 'Nuevo Indicador'}</h3>
+    </div>
+    
+    {asignaturaActiva && (
+      <>
+        <div className="form-group">
+          <label>Asignatura:</label>
+          <div className="asignatura-seleccionada">
+            {asignaturas.find(a => a.id === asignaturaActiva)?.asignatura}
           </div>
         </div>
+
+        <div className="form-group">
+          <label>Texto del indicador:</label>
+          <div className="textarea-container">
+            <textarea
+              value={formulario.texto}
+              onChange={(e) => setFormulario({
+                ...formulario,
+                texto: e.target.value
+              })}
+              placeholder="Ej: Identifica y cuenta números del 1 al 10..."
+              className={`indicador-input ${errores.length > 0 ? 'error' : ''}`}
+              maxLength={MAX_CARACTERES}
+              rows={5}
+              style={{
+                minHeight: '120px',
+                resize: 'vertical',
+                padding: '12px',
+                border: '1px solid #ddd',
+                borderRadius: '6px',
+                transition: 'border 0.3s ease',
+                width: '100%'
+              }}
+            />
+            <div className="textarea-footer">
+              <div className="contador-caracteres">
+                {formulario.texto.length}/{MAX_CARACTERES}
+              </div>
+              <div className="sugerencia">
+                <small>Sé específico y observable. Ej: "Reconoce y nombra las figuras geométricas básicas"</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label>Periodos aplicables:</label>
+          <div className="periodos-grid">
+            {[1, 2, 3, 4].map(p => (
+              <button
+                key={`periodo-${p}`}
+                type="button"
+                className={`periodo-item ${formulario.periodos.includes(p) ? 'seleccionado' : ''}`}
+                onClick={() => {
+                  const nuevosPeriodos = formulario.periodos.includes(p)
+                    ? formulario.periodos.filter(periodo => periodo !== p)
+                    : [...formulario.periodos, p];
+                  
+                  setFormulario({
+                    ...formulario,
+                    periodos: nuevosPeriodos
+                  });
+                }}
+              >
+                Periodo {p}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="form-group-checkbox">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={formulario.activo}
+              onChange={(e) => setFormulario({
+                ...formulario,
+                activo: e.target.checked
+              })}
+              className="checkbox-input"
+            />
+            <span className="checkbox-custom"></span>
+            <span className="checkbox-text">Indicador activo</span>
+          </label>
+        </div>
+
+        {errores.length > 0 && (
+          <div className="errores-container">
+            {errores.map((error, index) => (
+              <div key={index} className="error-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+                  <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2" strokeLinecap="round"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                <span>{error}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="form-actions">
+          {indicadorEditando && (
+            <button
+              className="btn-cancelar"
+              onClick={cancelarEdicion}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="18" y1="6" x2="6" y2="18" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="6" y1="6" x2="18" y2="18" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+              Cancelar
+            </button>
+          )}
+          <button
+            className="btn-guardar"
+            onClick={guardarIndicador}
+            disabled={
+              !formulario.texto.trim() || 
+              (indicadores[asignaturaActiva]?.length || 0) >= MAX_INDICADORES && !indicadorEditando
+            }
+          >
+            {indicadorEditando ? (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Actualizar
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <polyline points="17 21 17 13 7 13 7 21" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <polyline points="7 3 7 8 15 8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Guardar
+              </>
+            )}
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+</div>
       </div>
     </div>
   );

@@ -5,13 +5,13 @@ import GestorIndicadores from '../../../../features/preschool/GestorIndicadores'
 
 function ConfigIndicadores() {
 
-  const { classroomId = '' } = useParams();
+  const { classroomId = '', periodId = '' } = useParams();
 
   return (
     <>
       <Sidebar/>
       <div className='body-container-page'>
-        <GestorIndicadores classRoomId={classroomId} year='2025' periodo={1}/>
+        <GestorIndicadores classRoomId={classroomId} year='2025' periodo={periodId}/>
       </div>
     </>
     

@@ -9,22 +9,24 @@ import AcademicReport from "../../../components/classRoomReport/AcademicReport"
 import NotesPreschool from "./components/NotesPreschool"
 import ConfigIndicadores from "./components/ConfigIndicadores"
 import EvaluadorPreescolar from "./components/EvaluadorPreescolar"
+import ClassroomStudents from "../../../features/teacher/ClassroomStudents"
 
 function Dashboard() {
   return (
     <RoutesWithNotFound>
       <Route path="/" element={<Navigate to={PrivateRoutes.HISTORY}/>}/>
-      <Route path={PrivateRoutes.HISTORY}                                               element={<Home/>}/>
-      <Route path={`${PrivateRoutes.ACADEMY}/:periodId/:classroomNivel/:classroomId`}   element={<Academy/>}/>
-      <Route path={`${PrivateRoutes.ACADEMY}/:classroomId/:areaId`}                     element={<Academy/>}/>
-      <Route path={`${PrivateRoutes.ACADEMY}/:periodId`}                                element={<Academy/>}/>
-      <Route path={PrivateRoutes.STUDENT}                                               element={<StudentsPage/>}/>
-      <Route path={`${PrivateRoutes.REPORT}/:studentId/:year`}                          element={<AcademicReport />} />
-      <Route path={`${PrivateRoutes.REPORT}/:schoolLevel/:studentId/:year`}             element={<AcademicReport/>}/>
-      <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`}             element={<Notes/>}/>
-      <Route path={`${PrivateRoutes.NOTESPRESCHOOL}/:periodId/:classroomId`}            element={<NotesPreschool/>}/>
-      <Route path={`${PrivateRoutes.INDICADORES}/:periodId/:classroomId`}               element={<ConfigIndicadores/>}/>
-      <Route path={`${PrivateRoutes.EVALUADORPREESCOLAR}/:periodId/:classroomId`}       element={<EvaluadorPreescolar/>}/>
+      <Route path={PrivateRoutes.HISTORY}                                                                 element={<Home/>}/>
+      <Route path={`${PrivateRoutes.ACADEMY}/:periodId/:classroomNivel/:classroomId`}                     element={<Academy/>}/>
+      <Route path={`${PrivateRoutes.ACADEMY}/:classroomId/:areaId`}                                       element={<Academy/>}/>
+      <Route path={`${PrivateRoutes.ACADEMY}/:periodId`}                                                  element={<Academy/>}/>
+      <Route path={PrivateRoutes.STUDENT}                                                                 element={<StudentsPage/>}/>
+      <Route path={`${PrivateRoutes.REPORT}/:studentId/:year`}                                            element={<AcademicReport />} />
+      <Route path={`${PrivateRoutes.REPORT}/:schoolLevel/:studentId/:year`}                               element={<AcademicReport/>}/>
+      <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`}                               element={<Notes/>}/>
+      <Route path={`${PrivateRoutes.NOTESPRESCHOOL}/:periodId/:classroomId`}                              element={<NotesPreschool/>}/>
+      <Route path={`${PrivateRoutes.INDICADORES}/:periodId/:classroomId`}                                 element={<ConfigIndicadores/>}/>
+      <Route path={`${PrivateRoutes.EVALUADORPREESCOLAR}/:periodId/:classroomId/:studentId/:year`}        element={<EvaluadorPreescolar/>}/>
+      <Route path={`${PrivateRoutes.STUDENT}/:periodId/:classroomId/students`}                            element={<ClassroomStudents />} />
     </RoutesWithNotFound> 
   )
 }

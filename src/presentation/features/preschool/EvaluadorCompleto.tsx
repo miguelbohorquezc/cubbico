@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
 import './EvaluadorCompleto.css';
+import { useParams } from 'react-router-dom';
 
 interface Indicador {
   id: string;
@@ -69,7 +70,7 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
         const indicadoresData = indicadoresSnap.exists() 
           ? (indicadoresSnap.data().indicadores || [])
               .filter((ind: Indicador) => ind.activo && ind.periodos.includes(periodo))
-          : [];
+              : [];
         setIndicadores(indicadoresData);
 
         setSelecciones(seleccionesSnap.exists() ? seleccionesSnap.data().selecciones || {} : {});

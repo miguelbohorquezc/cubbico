@@ -3,5 +3,6 @@ export enum toolTipsData {
     ASIGNATURAS = 'ver las asignaturas matriculadas en este salón',
     EVALUACIONES = 'Ingresar al gestor de progreso académico',
     PROPOSITOS = 'Configurar propósitos para informe de preescolar',
-    INDICADORES = 'Configurar indicadores'
+    INDICADORES = 'Configurar indicadores',
+    ESTUDIANTES = 'Entrar al salón de clases'
 }

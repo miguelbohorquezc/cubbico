@@ -170,6 +170,32 @@
 .toggle-activo.activo { color: #4caf50; }
 .toggle-activo.inactivo { color: #f44336; }
 
+.btn-crear-indicador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: #f0f7ff;
+  color: #1976d2;
+  border: 1px dashed #90caf9;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-crear-indicador:hover {
+  background-color: #e3f2fd;
+  border-color: #42a5f5;
+}
+
+.btn-crear-indicador svg {
+  stroke: #1976d2;
+}
+
 /* Columna formulario */
 .columna-formulario {
   background: white;
@@ -264,4 +290,64 @@
   margin: 5px 0;
   color: #d32f2f;
   font-size: 0.85em;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancelar, .btn-guardar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.btn-cancelar {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.btn-cancelar:hover {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.btn-cancelar svg {
+  stroke: #dc2626;
+}
+
+.btn-guardar {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.btn-guardar:hover {
+  background-color: #dcfce7;
+  border-color: #86efac;
+}
+
+.btn-guardar:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.btn-guardar svg {
+  stroke: #16a34a;
+}
+
+.btn-guardar:disabled svg {
+  stroke: #9ca3af;
 }

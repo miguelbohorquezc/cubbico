@@ -12,7 +12,7 @@ import CreateUserForm from "../../../../components/userForm/CreateUserForm";
 
 
 function Home() {
-  const { students, loading } = useStudents();
+  /* const { students, loading } = useStudents(); */
   const { users, loadingUsers, error, handleDeleteUser } = useUsers();
   
   const columns = [
@@ -47,6 +47,7 @@ function Home() {
       {/* <ClassRoomForm/> */}
       <AreaForm/>
       <CreateUserForm/>
+      <StudentForm/>
       {/* <StudentForm/>
       <CreateUserForm/>
       <GradeManager/>

@@ -33,6 +33,11 @@ const TeacherAreas = () => {
     console.log(classroomNivel)
   };
 
+  const handleSelectClassRoomPreschoolEstudents = (areaId: string) => {
+    navigate(`/private/dashboard/student/${periodId}/${classroomId}/students`);
+    console.log(classroomNivel)
+  };
+
   const columns = [
     { key: "area", 
       label: "Área",
@@ -101,6 +106,9 @@ const TeacherAreas = () => {
               </Tooltip>
               <Tooltip text={toolTipsData.EVALUACIONES} position="bottom">
                 <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEvaluador(area.id)}/> 
+              </Tooltip>
+              <Tooltip text={toolTipsData.ESTUDIANTES} position="bottom">
+                <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEstudents(area.id)}/> 
               </Tooltip>
             </div>
           );
