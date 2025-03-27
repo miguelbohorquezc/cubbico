@@ -23,6 +23,8 @@ const CreateUserForm = () => {
     classRooms,
     showPassword,
     passwordRequirements,
+    filterPreschool,
+    togglePreschoolFilter,
     setShowPassword,
     handleInputChange,
     handleCheckboxChange,
@@ -120,10 +122,24 @@ const CreateUserForm = () => {
 
         {form.role === 'Docente' && (
           <div className="form-section">
-            <h3>Asignaturas:</h3>
+            <div className="filter-container">
+              <h3>Asignaturas:</h3>
+              <label className="filter-toggle">
+                <input
+                  type="checkbox"
+                  checked={filterPreschool}
+                  onChange={togglePreschoolFilter}
+                />
+                <span>Mostrar solo asignaturas de Preescolar</span>
+              </label>
+            </div>
+            
             <div className="checkbox-grid">
               {areas.map(area => (
-                <label key={area.id} className="checkbox-item">
+                <label 
+                  key={area.id} 
+                  className={`checkbox-item ${area.nivel.toLowerCase().includes('preescolar') ? 'preschool' : ''}`}
+                >
                   <input
                     type="checkbox"
                     name={area.id}

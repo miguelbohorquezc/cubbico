@@ -14,7 +14,8 @@ export const addStudent = async (student: studentInfo ) =>{
         lastName: student.lastName,
         classRoom: student.classRoom,
         className: student.className,
-        caracter: student.caracter
+        caracter: student.caracter,
+        classroomId: student.classroomId
     },{merge: true});
     
     alert(`El estudiante: ${student.name} ${student.lastName} Ha sido matriculado en el salón ${student.classRoom}.`);

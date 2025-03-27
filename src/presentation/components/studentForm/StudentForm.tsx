@@ -3,11 +3,18 @@ import { FormEvent } from 'react';
 import './StudentForm.css';
 import { useStudentForm } from './useStudentForm';
 import { FormField } from '../../../shared/utils/FormField';
-import { TEXT_FIELDS, SELECT_FIELDS } from './formConfig';
+import { TEXT_FIELDS, SELECT_OPTIONS } from './formConfig';
 import { StudentFormState } from '../../../shared/types/studentTypes';
 
 const StudentForm = () => {
-  const { form, error, handleBlur, handleChange, handleSubmit } = useStudentForm();
+  const { 
+    form, 
+    error, 
+    handleBlur, 
+    handleChange, 
+    handleSubmit, 
+    classrooms 
+  } = useStudentForm();
 
   const renderSection = (title: string, subtitle: string) => (
     <div className='section-header'>
@@ -18,12 +25,32 @@ const StudentForm = () => {
     </div>
   );
 
+  // Generar opciones de salones desde los datos cargados
+  const classroomOptions = classrooms.map(classroom => ({
+    value: classroom.nombreSalon,
+    label: classroom.nombreSalon
+  }));
+
+  // Actualizar SELECT_FIELDS para usar classroomOptions
+  const dynamicSelectFields = [
+    { name: 'document', options: SELECT_OPTIONS.document },
+    { name: 'classRoom', options: SELECT_OPTIONS.classRoom },
+    { 
+      name: 'className', 
+      options: [
+        { value: '', label: 'Seleccione salón' },
+        ...classroomOptions
+      ]
+    },
+    { name: 'caracter', options: SELECT_OPTIONS.caracter }
+  ];
+
   return (
     <div className="form-container">
       <form className='student-form' onSubmit={handleSubmit}>
         {renderSection("Estudiantes", "Información de nuevo estudiante.")}
         
-        {SELECT_FIELDS.map(({ name, options }) => (
+        {dynamicSelectFields.map(({ name, options }) => (
           <FormField
             key={name}
             type="select"
@@ -39,7 +66,6 @@ const StudentForm = () => {
         {TEXT_FIELDS.map(({ type, name, placeholder }) => (
           <FormField
             key={name}
-            //@ts-ignore
             type={type}
             name={name}
             value={form[name as keyof StudentFormState]}

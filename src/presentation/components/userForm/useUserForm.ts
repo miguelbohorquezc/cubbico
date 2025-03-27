@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../infrastructure/firebase/firebase";
-import {createUser,getAreas,getClassRooms,assignRoles} from "../../../infrastructure/user.service";
+import { createUser, getAreas, getClassRooms, assignRoles } from "../../../infrastructure/user.service";
 import { ClassRoom } from "../../../domain/entities/classRoom";
 import { UserFormData } from "../../../domain/entities/userFormData";
 import { Area } from "../../../domain/entities/area";
@@ -14,6 +14,7 @@ export const useUserForm = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
+  const [filterPreschool, setFilterPreschool] = useState(false);
   const [passwordRequirements, setPasswordRequirements] = useState({
     hasLength: false,
     hasUppercase: false,
@@ -50,6 +51,15 @@ export const useUserForm = () => {
     
     loadInitialData();
   }, []);
+
+  const filteredAreas = filterPreschool 
+    ? areas.filter(area => area.nivel.toLowerCase().includes('preescolar'))
+    : areas;
+
+  const togglePreschoolFilter = () => {
+    setFilterPreschool(!filterPreschool);
+    setForm(prev => ({ ...prev, areas: {} }));
+  };
 
   const validatePassword = (password: string) => {
     const requirements = {
@@ -164,10 +174,12 @@ export const useUserForm = () => {
     form,
     errors,
     loading,
-    areas,
+    areas: filteredAreas,
     classRooms,
     showPassword,
     passwordRequirements,
+    filterPreschool,
+    togglePreschoolFilter,
     setShowPassword,
     handleInputChange,
     handleCheckboxChange,

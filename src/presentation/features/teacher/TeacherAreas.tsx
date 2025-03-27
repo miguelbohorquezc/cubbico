@@ -104,9 +104,6 @@ const TeacherAreas = () => {
               <Tooltip text={toolTipsData.INDICADORES} position="bottom">
                 <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolIndicador(area.id)}/> 
               </Tooltip>
-              <Tooltip text={toolTipsData.EVALUACIONES} position="bottom">
-                <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEvaluador(area.id)}/> 
-              </Tooltip>
               <Tooltip text={toolTipsData.ESTUDIANTES} position="bottom">
                 <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEstudents(area.id)}/> 
               </Tooltip>
