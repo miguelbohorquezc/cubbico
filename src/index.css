@@ -18,29 +18,20 @@ h3{
   font-size: 11pt;
 }
 
-/* .container-page {
-  display: flex;
-  height: 100vh; 
-  align-items: stretch; 
+h4{
+  font-size: 9pt;
 }
 
-.sidebar {
-  width: 250px; 
-  background: lightblue;
-  min-height: 100vh;
-} */
 
 .body-container-page {
-  flex: 1; /* Ocupa el espacio restante */
+  flex: 1; 
   background: #eeefef;
   padding: 20px; 
   display: flex;
   flex-direction: column;
-  max-height: 100vh; /* Limita su altura a la pantalla */
-  overflow-y: auto; /* Permite scroll en el contenido sin afectar el sidebar */
+  max-height: 100vh; 
+  overflow-y: auto; 
 }
-
-
 
 
 .classroom-name{
@@ -48,60 +39,3 @@ h3{
   font-weight: 800;
   color: #3e3e3e;
 }
-
-/* Estilos para botones de acción */
-
-/* .custom-icon {
-  width: 40px;
-  height: 40px;
-  
-  color: #3b82f6;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.container-notes{
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 0.5em;
-}
-
-.container-notes .container-notes-title{
-  margin-top: 1em;
-  padding-left: 30px;
-  padding-top: 10px;
-}
-
-.container-notes .body-container{
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-.container-notes .header-container .btn-addLogros{
-  margin-top: 10px;
-  margin-left: 30px;
-  padding: 0.5rem 2rem;
-  border-radius: 20px;
-  
-  font-size: 11pt;
-  font-weight: 750;
-
-  font-family: 'Nunito', sans-serif;
-  
-  color: #4dafff;
-  background: rgba(52, 144, 219, 0.08);
-  border: 2px solid rgba(52, 166, 219, 0.15);
-}
-
-.container-notes .header-container .btn-addLogros:hover{
-  cursor: pointer;
-  color: #ffffff;
-  background: rgb(52, 180, 219);
-  border: 2px solid rgb(52, 166, 219);
-}
- */

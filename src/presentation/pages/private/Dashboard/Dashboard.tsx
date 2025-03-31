@@ -10,12 +10,14 @@ import NotesPreschool from "./components/NotesPreschool"
 import ConfigIndicadores from "./components/ConfigIndicadores"
 import EvaluadorPreescolar from "./components/EvaluadorPreescolar"
 import ClassroomStudents from "../../../features/teacher/ClassroomStudents"
+import User from "./components/Users"
 
 function Dashboard() {
   return (
     <RoutesWithNotFound>
       <Route path="/" element={<Navigate to={PrivateRoutes.HISTORY}/>}/>
       <Route path={PrivateRoutes.HISTORY}                                                                 element={<Home/>}/>
+      <Route path={PrivateRoutes.USER}                                                                    element={<User/>}/>
       <Route path={`${PrivateRoutes.ACADEMY}/:periodId/:classroomNivel/:classroomId`}                     element={<Academy/>}/>
       <Route path={`${PrivateRoutes.ACADEMY}/:classroomId/:areaId`}                                       element={<Academy/>}/>
       <Route path={`${PrivateRoutes.ACADEMY}/:periodId`}                                                  element={<Academy/>}/>

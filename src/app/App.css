@@ -5,13 +5,6 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
-  background-color: #f5f7fa;
-  line-height: 1.6;
-  color: #333;
-}
-
 /* Contenedor principal */
 .container {
   display: flex;
@@ -72,7 +65,7 @@ body {
   }
 }
 
-/* Estilos base para textos (no afectan a Login) */
+/* Estilos base para textos */
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: 1rem;
   font-weight: 600;
@@ -81,7 +74,7 @@ h1, h2, h3, h4, h5, h6 {
 
 p {
   margin-bottom: 1rem;
-  color: #ffffff;
+  color: #262627;
 }
 
 a {
