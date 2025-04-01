@@ -9,7 +9,7 @@ import usersReducer from "./states/user.slice";
 import { Area } from "../../domain/entities/area";
 import { ClassRoom } from "../../domain/entities/classRoom";
 import teacherReducer from "./states/teacher.slice";
-import { AchievementData } from "../../infrastructure/achievement.service";
+import { AchievementData } from "../../domain/entities/achievementData";
 
 export interface AppState {
   user: FirebaseUser;
