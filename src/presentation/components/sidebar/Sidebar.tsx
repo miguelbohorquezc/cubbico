@@ -2,14 +2,14 @@
 import React from "react";
 import useSidebar from "./useSidebar";
 import logo from '../../../assets/sidebarIcons/logo.png';
-import dasboardIcon from '../../../assets/sidebarIcons/dashboard-title-icon.svg';
-import userIcon from '../../../assets/sidebarIcons/icon-users.svg';
-import classroomIcon from '../../../assets/sidebarIcons/icon-classroom.svg';
-import areaIcon from '../../../assets/sidebarIcons/icon-area.svg';
-import dateIcon from '../../../assets/sidebarIcons/icon-date.svg';
-import colapsarIcon from '../../../assets/sidebarIcons/colapsar.svg';
-import sidebarExpand from '../../../assets/sidebarIcons/sidebar-left-expand-filled.svg';
-import sidebarCollapse from '../../../assets/sidebarIcons/sidebar-left-collapse-filled.svg';
+import dasboardIcon from '../../../assets/sidebarIcons/dashboard-icon.svg';
+import userIcon from '../../../assets/sidebarIcons/user-icon.svg';
+import classroomIcon from '../../../assets/sidebarIcons/classroom-icon.svg';
+import areaIcon from '../../../assets/sidebarIcons/book-icon.svg';
+import dateIcon from '../../../assets/sidebarIcons/clock-icon.svg';
+import colapsarIcon from '../../../assets/sidebarIcons/collapsed-icon-menu.svg';
+import sidebarExpand from '../../../assets/sidebarIcons/collapsed-left.svg';
+import sidebarCollapse from '../../../assets/sidebarIcons/collapsed-right.svg';
 import {PrivateRoutes} from '../../../app/routes/routes';
 import "./Sidebar.css"; // Importamos los estilos CSS
 import { Link } from "react-router-dom";
@@ -62,7 +62,7 @@ const Sidebar = () => {
             {isOpen && <span className="icon-text"><p>Matricula</p></span>}
             {isOpen && (
               <span className="icon-text">
-                <img src={colapsarIcon} alt="Expandir/colapsar" />
+                <img src={colapsarIcon} alt="Expandir/colapsar"/>
               </span>
             )}
           </div>
@@ -70,8 +70,7 @@ const Sidebar = () => {
               activeSubmenu === "matricula" ? "submenu-active" : ""
             }`}
           >
-            <div className="submenu-item">Submenú 1.1</div>
-            <div className="submenu-item">Submenú 1.2</div>
+            <div className="submenu-item">Matricular estudiantes</div>
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}
@@ -89,8 +88,7 @@ const Sidebar = () => {
               activeSubmenu === "salones" ? "submenu-active" : ""
             }`}
           >
-            <div className="submenu-item">Submenú 1.1</div>
-            <div className="submenu-item">Submenú 1.2</div>
+            <div className="submenu-item">Crear un nuevo salón</div>
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}
