@@ -7,7 +7,7 @@
 
 .sidebar {
   transition: width 0.3s ease;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
   color: white;
   display: flex;
   flex-direction: column;

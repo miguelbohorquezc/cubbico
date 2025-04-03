@@ -20,9 +20,9 @@ const Navbar = () => {
         <div className="breadcrumb">
           <span className="breadcrumb-item">Inicio</span>
           <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-item">Dashboard</span>
+          <span className="breadcrumb-item">Nivel</span>
           <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-item active">Panel</span>
+          <span className="breadcrumb-item active">Grado</span>
         </div>
 
         {/* Menú de usuario */}

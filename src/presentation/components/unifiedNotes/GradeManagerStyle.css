@@ -18,8 +18,8 @@
   
   /* Estructura principal */
   .grade-manager {
-    padding: 2rem 1rem;
-    max-width: 900px;
+    padding: 0.5rem 0.5rem;
+    max-width: 860px;
     margin: 0 auto;
     background: white;
     border-radius: 12px;
