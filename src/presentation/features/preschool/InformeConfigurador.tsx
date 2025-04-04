@@ -161,8 +161,8 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
   return (
     <div className="informe-configurador">
       <header className="config-header">
-        <h2>Configuración de Informes Preescolares - {year}</h2>
-        <p className="subtitulo">Salón: {classRoomId}</p>
+        {/* <h2>Configuración de Informes Preescolares - {year}</h2>
+        <p className="subtitulo">Salón: {classRoomId}</p> */}
         
         {/* Barra de progreso general */}
         <div className="progreso-general">

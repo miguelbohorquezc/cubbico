@@ -7,6 +7,9 @@ import Tooltip from "../../components/toolTip/Tooltip";
 import { toolTipsData } from "../../../domain/entities/toolTipsData";
 import { fetchStudentsByClassroom } from "../../../infrastructure/student.service";
 import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
+import Button from "../button/Button";
+import Navbar from "../../components/navbar/Navbar";
+import Sidebar from "../../components/sidebar/Sidebar";
 
 const ClassroomStudents = () => {
   const { classroomId, periodId } = useParams();
@@ -107,21 +110,39 @@ const ClassroomStudents = () => {
   ];
 
   return (
-    <DataTable
-      data={students}
-      columns={columns}
-      isLoading={loading}
-      exportFileName={`estudiantes-salón-${classroomId}`}
-      initialItemsPerPage={10}
-      enableExport={true}
-      enablePagination={true}
-      enableSearch={true}
-      skeletonCount={10}
-      tableSize={{ 
-        width: "100%", 
-        maxHeight: "80vh" 
-      }}
-    />
+    <>
+    <Sidebar/>
+    <div className='container-page'>
+          <div className='header-container-page'>
+            <Navbar/>
+            <div className='title-option'>
+              <Button 
+                variant="primary" size="sm"
+                onClick={() => navigate(-1)}>
+                Regresar
+              </Button>             
+              <h2>Evaluar estudiantes</h2>
+            </div>
+          </div>
+          <div className='body-container-page'> 
+          <DataTable
+            data={students}
+            columns={columns}
+            isLoading={loading}
+            exportFileName={`estudiantes-salón-${classroomId}`}
+            initialItemsPerPage={10}
+            enableExport={true}
+            enablePagination={true}
+            enableSearch={true}
+            skeletonCount={10}
+            tableSize={{ 
+              width: "100%", 
+              maxHeight: "80vh" 
+            }}
+          />
+          </div>
+    </div>
+    </>
   );
 };
 

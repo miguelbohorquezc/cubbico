@@ -56,7 +56,7 @@ h4{
   padding: 20px; 
   display: flex;
   flex-direction: row;
-  max-height: 90vh; 
+  max-height: 79vh; 
   overflow-y: auto;
   gap: 5px; 
 }

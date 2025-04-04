@@ -7,9 +7,6 @@ import AchievementForm from '../../../../components/achievement/AchievementForm'
 import GradeManager from '../../../../components/unifiedNotes/GradeManager';
 import TeacherAchievements from '../../../../features/teacher/TeacherAchivement';
 import { PrivateRoutes } from '../../../../../app/routes/routes';
-import InformeConfigurador from '../../../../features/preschool/InformeConfigurador';
-import GestorIndicadores from '../../../../features/preschool/GestorIndicadores';
-import EvaluadorCompleto from '../../../../features/preschool/EvaluadorCompleto';
 import Button from '../../../../features/button/Button';
 import Navbar from '../../../../components/navbar/Navbar';
 

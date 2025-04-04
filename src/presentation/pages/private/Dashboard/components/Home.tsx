@@ -10,7 +10,7 @@ function Home() {
     <>
       <Sidebar/>
       {/* <AreaForm/> */}
-      <CreateUserForm/>
+      {/* <CreateUserForm/> */}
       {/* <StudentForm/> */}
     </>
   )

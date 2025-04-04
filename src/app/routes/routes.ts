@@ -8,6 +8,7 @@ export const PrivateRoutes = {
     DASHBOARD:                  'dashboard',
     HOME:                       'home',
     STUDENT:                    'student',
+    CREATESTUDENT:              'createstudent',
     HISTORY:                    'history',
     ACADEMY :                   'academy',
     NOTES:                      'notes',
@@ -15,4 +16,6 @@ export const PrivateRoutes = {
     NOTESPRESCHOOL:             'notespreschool',
     INDICADORES:                'indicadores',
     EVALUADORPREESCOLAR:        'evaluadorpreescolar',
+    CLASSROOMS:                'classrooms',
+    AREA:                       'area',
 }

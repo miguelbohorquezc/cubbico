@@ -11,11 +11,14 @@ import ConfigIndicadores from "./components/ConfigIndicadores"
 import EvaluadorPreescolar from "./components/EvaluadorPreescolar"
 import ClassroomStudents from "../../../features/teacher/ClassroomStudents"
 import User from "./components/Users"
+import ClassRoomPage from "./components/ClassRoomPage"
+import AreaPage from "./components/AreaPage"
 
 function Dashboard() {
   return (
     <RoutesWithNotFound>
       <Route path="/" element={<Navigate to={PrivateRoutes.HISTORY}/>}/>
+      <Route path={PrivateRoutes.CREATESTUDENT}                                                           element={<StudentsPage/>}/>
       <Route path={PrivateRoutes.HISTORY}                                                                 element={<Home/>}/>
       <Route path={PrivateRoutes.USER}                                                                    element={<User/>}/>
       <Route path={`${PrivateRoutes.ACADEMY}/:periodId/:classroomNivel/:classroomId`}                     element={<Academy/>}/>
@@ -29,6 +32,8 @@ function Dashboard() {
       <Route path={`${PrivateRoutes.INDICADORES}/:periodId/:classroomId`}                                 element={<ConfigIndicadores/>}/>
       <Route path={`${PrivateRoutes.EVALUADORPREESCOLAR}/:periodId/:classroomId/:studentId/:year`}        element={<EvaluadorPreescolar/>}/>
       <Route path={`${PrivateRoutes.STUDENT}/:periodId/:classroomId/students`}                            element={<ClassroomStudents />} />
+      <Route path={`${PrivateRoutes.CLASSROOMS}`}                                                         element={<ClassRoomPage />} />
+      <Route path={`${PrivateRoutes.AREA}`}                                                               element={<AreaPage />} />
     </RoutesWithNotFound> 
   )
 }

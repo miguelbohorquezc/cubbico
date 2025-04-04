@@ -70,7 +70,11 @@ const Sidebar = () => {
               activeSubmenu === "matricula" ? "submenu-active" : ""
             }`}
           >
-            <div className="submenu-item">Matricular estudiantes</div>
+            <Tooltip text={toolTipsData.PERIODO1} position="right">
+              <Link to={`/private/dashboard/${PrivateRoutes.CREATESTUDENT}`} style={{ textDecoration: 'none' }}>
+                <p>Período Académico 1</p>
+              </Link>
+            </Tooltip>
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}
@@ -88,14 +92,26 @@ const Sidebar = () => {
               activeSubmenu === "salones" ? "submenu-active" : ""
             }`}
           >
-            <div className="submenu-item">Crear un nuevo salón</div>
+            <div className="submenu-item">
+              <Tooltip text={toolTipsData.PERIODO1} position="right">
+                <Link to={`/private/dashboard/${PrivateRoutes.CLASSROOMS}`} style={{ textDecoration: 'none' }}>
+                  <p>Crear un nuevo salón</p>
+                </Link>
+              </Tooltip>
+            </div>
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}
             
           >
             <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
-            {isOpen && <span className="icon-text"><p>Asignaturas</p></span>}
+            {isOpen && <span className="icon-text">
+                  <Tooltip text={toolTipsData.PERIODO1} position="right">
+                  <Link to={`/private/dashboard/${PrivateRoutes.AREA}`} style={{ textDecoration: 'none' }}>
+                    <p>Asignatura</p>
+                  </Link>
+                </Tooltip>
+              </span>}
             <span className="icon-text"></span>
           </div>
           {/* ---------------------------------------------- */}

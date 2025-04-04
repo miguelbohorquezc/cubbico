@@ -456,6 +456,7 @@
 }
 
 .mensaje.success {
+  width: 100%;
   background-color: #e8f5e9;
   color: #388e3c;
   border-left: 4px solid #388e3c;

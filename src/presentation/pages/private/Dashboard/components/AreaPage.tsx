@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../../../components/navbar/Navbar"
 import Sidebar from "../../../../components/sidebar/Sidebar"
-import StudentForm from "../../../../components/studentForm/StudentForm"
 import Button from "../../../../features/button/Button"
 import Modal from "../../../../components/modal/Modal";
 import { useState } from "react";
+import ClassRoomForm from "../../../../components/classRoomForm/ClassRoomForm";
+import AreaForm from "../../../../components/areaForm/AreaForm";
 
-function StudentsPage() {
+function AreaPage() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
@@ -24,9 +25,9 @@ function StudentsPage() {
               <Button 
                 variant="accent" size="sm"
                 onClick={() => setIsModalOpen(true)}>
-                Matricular estudiantes
+                Registrar área
               </Button>              
-              <h2>Estudiantes</h2>
+              <h2>Lista de áreas</h2>
             </div>
           </div>
           <div className='body-container-page'> 
@@ -39,10 +40,10 @@ function StudentsPage() {
         title="Logros académicos"
       >
         <div>
-          <StudentForm/>
+          <AreaForm/>
         </div>
       </Modal>
     </>
   )
 }
-export default StudentsPage
+export default AreaPage

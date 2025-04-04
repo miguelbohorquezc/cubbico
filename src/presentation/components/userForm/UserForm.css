@@ -1,6 +1,7 @@
 /* Estilos base y contenedor principal */
 .form-container {
   max-width: 900px;
+  height: 63rem;
   margin: 2rem auto;
   padding: 2rem;
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
