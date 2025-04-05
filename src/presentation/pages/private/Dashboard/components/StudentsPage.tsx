@@ -36,7 +36,7 @@ function StudentsPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Logros académicos"
+        title="Matricular Estudiantes"
       >
         <div>
           <StudentForm/>

@@ -36,7 +36,7 @@ function ClassRoomPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Logros académicos"
+        title="Crear Salón de Clases"
       >
         <div>
           <ClassRoomForm/>

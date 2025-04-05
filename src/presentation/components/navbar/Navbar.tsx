@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Navbar.css';
+import { useSelector } from 'react-redux';
+import { useUserForm } from '../userForm/useUserForm';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -8,10 +10,12 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
-    // Aquí iría la lógica de cierre de sesión
-    console.log('Sesión cerrada');
-  };
+    const {handleLogout,} = useUserForm();
+
+  //@ts-ignore
+  const userEmail = useSelector((state) => state.user.email);
+  const initial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
+
 
   return (
     <nav className="navbar">
@@ -20,26 +24,24 @@ const Navbar = () => {
         <div className="breadcrumb">
           <span className="breadcrumb-item">Inicio</span>
           <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-item">Nivel</span>
-          <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-item active">Grado</span>
+          <span className="breadcrumb-item active">{}</span>
         </div>
 
         {/* Menú de usuario */}
         <div className="user-menu-container">
           <button className="user-menu-toggle" onClick={toggleDropdown}>
-            <span className="user-avatar">JS</span>
-            <span className="user-name">John Smith</span>
+            <span className="user-avatar">{initial}</span>
+            <span className="user-name">{userEmail}</span>
             <span className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}></span>
           </button>
 
           {isDropdownOpen && (
             <div className="dropdown-menu">
               <div className="dropdown-header">
-                <span className="dropdown-avatar">JS</span>
+                <span className="dropdown-avatar"></span>
                 <div className="dropdown-user-info">
-                  <span className="dropdown-user-name">John Smith</span>
-                  <span className="dropdown-user-email">john@example.com</span>
+                  <span className="dropdown-user-name">{initial}</span>
+                  <span className="dropdown-user-email">{userEmail}</span>
                 </div>
               </div>
               <div className="dropdown-divider"></div>

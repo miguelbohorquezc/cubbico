@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
 import { useNavigate, useParams } from 'react-router-dom';
-import Sidebar from '../../components/sidebar/Sidebar';
-import Navbar from '../../components/navbar/Navbar';
-import Button from '../button/Button';
 
 interface Indicador {
   id: string;
@@ -134,21 +131,7 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
  
   return (
     <>
-    <Sidebar/>
-      <div className='container-page'>
-          <div className='header-container-page'>
-            <Navbar/>
-            <div className='title-option'>
-              <Button 
-                variant="primary" size="sm"
-                onClick={() => navigate(-1)}>
-                Regresar
-              </Button>             
-              <h2>Configurar Propósitos</h2>
-            </div>
-          </div>
-          <div className='body-container-page'>
-            {cargando ? (
+    {cargando ? (
               <div className="loading-container">
                 <div className="loading-spinner"></div>
                 <p>Cargando información del evaluador...</p>
@@ -264,9 +247,7 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
                   )}
                 </div>
               </div>
-              )} 
-          </div>
-      </div>
+              )}
     </>
   );
 };
