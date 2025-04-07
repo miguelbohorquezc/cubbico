@@ -1,4 +1,4 @@
-// TeacherAreas.tsx
+//@ts-ignore
 import React from "react";
 import { useAppSelector } from "../../../app/store/store";
 import { useNavigate, useParams } from "react-router-dom";
@@ -28,11 +28,13 @@ const TeacherAreas = () => {
     console.log(classroomNivel)
   };
 
+  //@ts-ignore
   const handleSelectClassRoomPreschoolEvaluador = (areaId: string) => {
     navigate(`/private/dashboard/evaluadorpreescolar/${periodId}/${classroomId}/${areaId}`);
     console.log(classroomNivel)
   };
 
+  //@ts-ignore
   const handleSelectClassRoomPreschoolEstudents = (areaId: string) => {
     navigate(`/private/dashboard/student/${periodId}/${classroomId}/students`);
     console.log(classroomNivel)

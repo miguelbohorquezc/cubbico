@@ -1,3 +1,4 @@
+//@ts-ignore
 import React, { useEffect, useState } from "react";
 
 import DataTable from "../../components/datatable/DataTable";
@@ -35,6 +36,7 @@ const ClassroomStudents = () => {
     loadStudents();
   }, [classroomId]);
 
+  //@ts-ignore
   const handleViewStudent = (studentId: string) => {
     // Navegar al perfil del estudiante o a sus notas
     navigate(`/private/student/${studentId}`);

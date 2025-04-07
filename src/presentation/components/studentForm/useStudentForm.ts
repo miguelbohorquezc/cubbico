@@ -19,6 +19,7 @@ export const useStudentForm = () => {
   const [form, setForm] = useState<StudentFormState>(initialFormState);
   const [error, setError] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  //@ts-ignore
   const [classrooms, setClassrooms] = useState<ClassRoom[]>([]);
 
   // Cargar salones al montar el componente

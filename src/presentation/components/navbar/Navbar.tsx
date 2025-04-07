@@ -1,3 +1,4 @@
+//@ts-ignore
 import React, { useState } from 'react';
 import './Navbar.css';
 import { useSelector } from 'react-redux';

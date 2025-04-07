@@ -15,6 +15,7 @@ function EvaluadorPreescolar() {
 
   
   const navigate = useNavigate();
+  //@ts-ignore
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (

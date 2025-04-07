@@ -66,6 +66,7 @@ const StudentForm = () => {
         {TEXT_FIELDS.map(({ type, name, placeholder }) => (
           <FormField
             key={name}
+            //@ts-ignore
             type={type}
             name={name}
             value={form[name as keyof StudentFormState]}

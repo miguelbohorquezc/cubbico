@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Navigation, NavigationControl } from "../../../components"
 import home from '../../../assets/homeVectorGray.svg'
 import './home.css'

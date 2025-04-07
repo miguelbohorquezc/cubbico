@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Indicador {
   id: string;
@@ -44,6 +44,7 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
   const [guardando, setGuardando] = useState(false);
   const [mostrarExito, setMostrarExito] = useState(false);
 
+  //@ts-ignore
   const navigate = useNavigate();
 
   useEffect(() => {

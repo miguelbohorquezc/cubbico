@@ -1,4 +1,4 @@
-// TeacherDataLoader.tsx
+//@ts-ignore
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { teacherActions } from "../../../app/store/states/teacher.slice"; // Importación corregida

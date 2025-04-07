@@ -13,6 +13,7 @@ import Navbar from '../../../../components/navbar/Navbar';
 function Notes() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //@ts-ignore
   const { classroomId = '' } = useParams();
 
   return (

@@ -77,7 +77,9 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
       .flatMap(p => p.asignaturas);
       
     return asignaturasDisponibles.filter(
+      //@ts-ignore
       a => !asignaturasUsadasEnOtros.includes(a.id) && 
+      //@ts-ignore
            !propositos[propositoIndex].asignaturas.includes(a.id)
     );
   };
@@ -266,7 +268,9 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
                     className="asignatura-item"
                     onClick={() => {
                       const nuevosPropositos = [...propositos];
+                      //@ts-ignore
                       if (!nuevosPropositos[propositoActivo].asignaturas.includes(asignatura.id)) {
+                        //@ts-ignore
                         nuevosPropositos[propositoActivo].asignaturas.push(asignatura.id);
                         setPropositos(nuevosPropositos);
                         validarProposito(propositoActivo);

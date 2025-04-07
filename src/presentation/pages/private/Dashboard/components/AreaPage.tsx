@@ -4,7 +4,6 @@ import Sidebar from "../../../../components/sidebar/Sidebar"
 import Button from "../../../../features/button/Button"
 import Modal from "../../../../components/modal/Modal";
 import { useState } from "react";
-import ClassRoomForm from "../../../../components/classRoomForm/ClassRoomForm";
 import AreaForm from "../../../../components/areaForm/AreaForm";
 
 function AreaPage() {

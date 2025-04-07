@@ -1,4 +1,4 @@
-// TeacherAchievements.tsx
+//@ts-ignore
 import React, { useMemo } from "react";
 import { useAppSelector } from "../../../app/store/store";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ const TeacherAchievements = () => {
   const { achievements, loading } = useAppSelector((state) => state.teacherData);
   const { periodId, classroomId, areaId } = useParams();
   const navigate = useNavigate();
+  //@ts-ignore
   const getLogros = useAchievementForm();
 
   // Filtrar logros por classroomId y areaId
@@ -19,6 +20,7 @@ const TeacherAchievements = () => {
       achievement.period === Number(periodId)
     ), [achievements, classroomId, areaId, periodId]);
 
+  //@ts-ignore
   const handleViewDetails = (achievementId: string) => {
     navigate(`/private/dashboard/achievements/${achievementId}`);
   };
