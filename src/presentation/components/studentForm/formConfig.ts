@@ -16,6 +16,7 @@ export const SELECT_OPTIONS = {
     { value: '', label: 'Seleccione salón' },
     { value: 'primeroA', label: 'Primero A' },
     { value: 'primeroB', label: 'Primero B' },
+    { value: 'NurseryA', label: 'Nursery A' },
     // ... opciones de salones
   ],
   caracter: [

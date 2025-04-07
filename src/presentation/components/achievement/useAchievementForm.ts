@@ -1,15 +1,10 @@
 // useAchievementForm.ts
 import { useState, useCallback, FormEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { 
-  getAchievement, 
-  addAchievement, 
-  updateAchievement 
-} from '../../../infrastructure/achievement.service';
-import { AchievementFormState } from './achievementFormConfig';
+import { getAchievement, addAchievement, updateAchievement } from '../../../infrastructure/achievement.service';
 import { useAppDispatch } from '../../../app/store/store';
 import  {teacherActions, teacherSlice } from '../../../app/store/states/teacher.slice';
-import { AchievementData } from '../../../domain/entities/achievementData';
+import { AchievementData, AchievementFormState } from '../../../domain/entities/achievementData';
 
 const initialFormState: AchievementFormState = {
   logro1: '',
@@ -52,7 +47,9 @@ export const useAchievementForm = () => {
           };
 
           setForm(snapshot.logros);
-          setDocId(snapshot.id);
+          if (snapshot.id) {
+            setDocId(snapshot.id);
+          }
           dispatch(teacherActions.upsertAchievement(achievementData));
         }
       } catch (error) {

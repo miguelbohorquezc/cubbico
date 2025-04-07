@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '../../../app/store/store';
 import { fetchStudentsByClassroom, bulkSaveStudents } from '../../../infrastructure/student.service';
 import useGradeManager from './useGradeManager';
 import StudentRow from './StudentRow';
 import './styles.css';
-import { GradeField, Student, AcademicRecord } from './types';
+import { GradeField, Student } from './types';
 import { createSelector } from '@reduxjs/toolkit';
-import { shallowEqual } from 'react-redux';
 
 const selectFilteredAchievements = createSelector(
   [

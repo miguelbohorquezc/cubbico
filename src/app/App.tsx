@@ -29,23 +29,3 @@ function App() {
 }
 
 export default App
-
-{/* <div className="container">
-  import Sidebar from '../presentation/components/sidebar/Sidebar'
-  
-  <div className="sidebar-left">
-  <Sidebar/>
-  </div>
-
-    
-    <div className="sidebar-right">
-      <h3></h3>
-      <p></p>
-    </div>
-
-   
-    <div className="content">
-      <h3></h3>
-      <p></p>
-    </div> 
-  </div> */}

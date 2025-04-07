@@ -1,20 +1,15 @@
-/* Reset básico */
+/* Reset mejorado */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-}
-
 /* Contenedor principal */
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+  min-height: 100vh;
 }
 
 /* Columnas */
@@ -22,18 +17,19 @@ body {
 .sidebar-right,
 .content {
   overflow-y: auto;
+  padding: 1rem;
 }
 
 .sidebar-left {
   flex: 1;
   background-color: #f4f4f4;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #e1e1e1;
 }
 
 .sidebar-right {
   flex: 1;
   background-color: #f9f9f9;
-  border-left: 1px solid #ddd;
+  border-left: 1px solid #e1e1e1;
 }
 
 .content {
@@ -44,24 +40,49 @@ body {
 /* Diseño responsivo */
 @media (min-width: 768px) {
   .container {
-    flex-direction: row; /* Columnas horizontales en pantallas grandes */
+    flex-direction: row;
   }
 
   .sidebar-left,
   .content,
   .sidebar-right {
     flex: unset;
+    height: 100vh;
   }
 
   .sidebar-left {
-    flex-basis: auto; /* 20% del ancho total */
+    flex-basis: 250px;
+    min-width: 250px;
   }
 
   .content {
-    flex-basis: auto; /* 60% del ancho total */
+    flex-grow: 1;
   }
 
   .sidebar-right {
-    flex-basis: 20%; /* 20% del ancho total */
+    flex-basis: 250px;
+    min-width: 250px;
   }
+}
+
+/* Estilos base para textos */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: #262627;
+}
+
+a {
+  color: #333333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #2980b9;
 }

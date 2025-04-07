@@ -3,12 +3,19 @@ export const PublicRoutes = {
 };
 
 export const PrivateRoutes = {
-    PRIVATE:    'private',
-    DASHBOARD:  'dashboard',
-    HOME:       'home',
-    STUDENT:    'student',
-    HISTORY:    'history',
-    ACADEMY :   'academy',
-    NOTES:      'notes',
-    REPORT:     'report'
+    USER:                       'user',
+    PRIVATE:                    'private',
+    DASHBOARD:                  'dashboard',
+    HOME:                       'home',
+    STUDENT:                    'student',
+    CREATESTUDENT:              'createstudent',
+    HISTORY:                    'history',
+    ACADEMY :                   'academy',
+    NOTES:                      'notes',
+    REPORT:                     'report',
+    NOTESPRESCHOOL:             'notespreschool',
+    INDICADORES:                'indicadores',
+    EVALUADORPREESCOLAR:        'evaluadorpreescolar',
+    CLASSROOMS:                'classrooms',
+    AREA:                       'area',
 }

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { studentInfo } from "../../models";
+import { studentInfo } from "../../../domain/entities/studentInfo";
 
 const initialState: studentInfo = {
   id: "",

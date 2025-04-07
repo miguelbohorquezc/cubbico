@@ -18,6 +18,7 @@ function History() {
       <Sidebar/>
       <DataTable
         data={students}
+        //@ts-ignore
         columns={columns}
         initialItemsPerPage={10}
         isLoading={loading}

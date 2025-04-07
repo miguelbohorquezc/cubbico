@@ -6,4 +6,5 @@ export interface studentInfo {
     classRoom: string;
     className: string;
     caracter: string;
+    classroomId?: string;
   }

@@ -6,3 +6,12 @@ export interface Area {
     area: string;
     nivel: string;
   }
+
+  export interface AreaIhsInfo {
+    id?: string;
+    asignatura: string;
+    ihs: number;
+    area: string;
+    orden: number;
+    nivel: string;
+}

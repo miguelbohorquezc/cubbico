@@ -2,7 +2,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getDocs, collection } from "firebase/firestore";
 import { db } from "../../../infrastructure/firebase/firebase";
-import { studentInfo } from "../../../domain/entities/user.student";
+import { studentInfo } from "../../../domain/entities/studentInfo";
 // src/domain/states/student.slice.ts
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from "../store";

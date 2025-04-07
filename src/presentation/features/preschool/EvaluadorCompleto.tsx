@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
-import './EvaluadorCompleto.css';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface Indicador {
   id: string;
@@ -44,6 +44,8 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
   const [guardando, setGuardando] = useState(false);
   const [mostrarExito, setMostrarExito] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -69,7 +71,7 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
         const indicadoresData = indicadoresSnap.exists() 
           ? (indicadoresSnap.data().indicadores || [])
               .filter((ind: Indicador) => ind.activo && ind.periodos.includes(periodo))
-          : [];
+              : [];
         setIndicadores(indicadoresData);
 
         setSelecciones(seleccionesSnap.exists() ? seleccionesSnap.data().selecciones || {} : {});
@@ -126,127 +128,127 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
     }
   };
 
-  if (cargando) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Cargando información del evaluador...</p>
-      </div>
-    );
-  }
-
+ 
   return (
-    <div className="evaluador-container">
-      <div className="header-card">
-        <h2>Selección de Indicadores</h2>
-        <div className="student-meta">
-          <div className="meta-item">
-            <span className="meta-label">Estudiante:</span>
-            <span className="meta-value">{studentId}</span>
-          </div>
-          <div className="meta-item">
-            <span className="meta-label">Periodo:</span>
-            <span className="meta-value">{periodo}</span>
-          </div>
-          <div className="meta-item">
-            <span className="meta-label">Año:</span>
-            <span className="meta-value">{year}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="propositos-grid">
-        {propositos.map((proposito) => (
-          <div key={`p-${proposito.id}`} className="proposito-card">
-            <div className="proposito-header">
-              <div className="proposito-icon">📌</div>
-              <h3>{proposito.texto}</h3>
-            </div>
-
-            <div className="proposito-content">
-              <div className="referentes-panel">
-                <h4 className="section-title">
-                  <span className="section-icon">📚</span>
-                  Referentes
-                </h4>
-                <ul className="referentes-list">
-                  {proposito.referentes.map((referente, index) => (
-                    <li key={`ref-${proposito.id}-${index}`} className="referente-item">
-                      {referente}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="asignaturas-panel">
-                <h4 className="section-title">
-                  <span className="section-icon">📝</span>
-                  Asignaturas
-                </h4>
-                
-                {proposito.asignaturas.map((asignaturaId) => {
-                  const nombreAsignatura = obtenerNombreAsignatura(asignaturaId);
-                  const indicadoresAsignatura = indicadores.filter(
-                    ind => ind.asignatura === asignaturaId
-                  );
-                  const indicadorSeleccionadoId = selecciones[asignaturaId];
-
-                  return (
-                    <div key={`asig-${asignaturaId}`} className="asignatura-selector">
-                      <h5 className="asignatura-title">
-                        <span className="asignatura-icon">📘</span>
-                        {nombreAsignatura}
-                      </h5>
-                      
-                      <select
-                        value={indicadorSeleccionadoId || ''}
-                        onChange={(e) => handleSeleccion(asignaturaId, e.target.value)}
-                        className="indicador-select"
-                      >
-                        <option value="">Seleccione un indicador...</option>
-                        {indicadoresAsignatura.map((indicador) => (
-                          <option 
-                            key={`opt-${indicador.id}`} 
-                            value={indicador.id}
-                            title={`${indicador.texto} (${indicador.nivel})`}
-                          >
-                            {indicador.texto} ({indicador.nivel})
-                          </option>
-                        ))}
-                      </select>
+    <>
+    {cargando ? (
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Cargando información del evaluador...</p>
+              </div>) : (
+              <div>
+                <div className="header-card">
+                  <h2>Selección de Indicadores</h2>
+                  <div className="student-meta">
+                    <div className="meta-item">
+                      <span className="meta-label">Estudiante:</span>
+                      <span className="meta-value">{studentId}</span>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                    <div className="meta-item">
+                      <span className="meta-label">Periodo:</span>
+                      <span className="meta-value">{periodo}</span>
+                    </div>
+                    <div className="meta-item">
+                      <span className="meta-label">Año:</span>
+                      <span className="meta-value">{year}</span>
+                    </div>
+                  </div>
+                </div>
 
-      <div className="action-bar">
-        <button 
-          onClick={guardarEvaluacion}
-          disabled={guardando || Object.keys(selecciones).length === 0}
-          className={`save-button ${guardando ? 'guardando' : ''}`}
-        >
-          {guardando ? (
-            <>
-              <span className="button-spinner"></span>
-              Guardando...
-            </>
-          ) : (
-            'Guardar Selección'
-          )}
-        </button>
-        
-        {mostrarExito && (
-          <div className="success-message">
-            <span className="success-icon">✓</span>
-            Selección guardada correctamente
-          </div>
-        )}
-      </div>
-    </div>
+                <div className="propositos-grid">
+                  {propositos.map((proposito) => (
+                    <div key={`p-${proposito.id}`} className="proposito-card">
+                      <div className="proposito-header">
+                        <div className="proposito-icon">📌</div>
+                        <h3>{proposito.texto}</h3>
+                      </div>
+
+                      <div className="proposito-content">
+                        <div className="referentes-panel">
+                          <h4 className="section-title">
+                            <span className="section-icon">📚</span>
+                            Referentes
+                          </h4>
+                          <ul className="referentes-list">
+                            {proposito.referentes.map((referente, index) => (
+                              <li key={`ref-${proposito.id}-${index}`} className="referente-item">
+                                {referente}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="asignaturas-panel">
+                          <h4 className="section-title">
+                            <span className="section-icon">📝</span>
+                            Asignaturas
+                          </h4>
+                          
+                          {proposito.asignaturas.map((asignaturaId) => {
+                            const nombreAsignatura = obtenerNombreAsignatura(asignaturaId);
+                            const indicadoresAsignatura = indicadores.filter(
+                              ind => ind.asignatura === asignaturaId
+                            );
+                            const indicadorSeleccionadoId = selecciones[asignaturaId];
+
+                            return (
+                              <div key={`asig-${asignaturaId}`} className="asignatura-selector">
+                                <h5 className="asignatura-title">
+                                  <span className="asignatura-icon">📘</span>
+                                  {nombreAsignatura}
+                                </h5>
+                                
+                                <select
+                                  value={indicadorSeleccionadoId || ''}
+                                  onChange={(e) => handleSeleccion(asignaturaId, e.target.value)}
+                                  className="indicador-select"
+                                >
+                                  <option value="">Seleccione un indicador...</option>
+                                  {indicadoresAsignatura.map((indicador) => (
+                                    <option 
+                                      key={`opt-${indicador.id}`} 
+                                      value={indicador.id}
+                                      title={`${indicador.texto} (${indicador.nivel})`}
+                                    >
+                                      {indicador.texto} ({indicador.nivel})
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="action-bar">
+                  <button 
+                    onClick={guardarEvaluacion}
+                    disabled={guardando || Object.keys(selecciones).length === 0}
+                    className={`save-button ${guardando ? 'guardando' : ''}`}
+                  >
+                    {guardando ? (
+                      <>
+                        <span className="button-spinner"></span>
+                        Guardando...
+                      </>
+                    ) : (
+                      'Guardar Selección'
+                    )}
+                  </button>
+                  
+                  {mostrarExito && (
+                    <div className="success-message">
+                      <span className="success-icon">✓</span>
+                      Selección guardada correctamente
+                    </div>
+                  )}
+                </div>
+              </div>
+              )}
+    </>
   );
 };
 

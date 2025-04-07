@@ -1,8 +1,5 @@
-export type AchievementFormState = {
-    logro1: string;
-    logro2: string;
-    logro3: string;
-  };
+import { AchievementFormState } from "../../../domain/entities/achievementData";
+
   
   export const validationsForm = (form: AchievementFormState) => {
     const errors: Record<string, string> = {};

@@ -1,14 +1,15 @@
+//@ts-ignore
 import React from "react";
 import useSidebar from "./useSidebar";
 import logo from '../../../assets/sidebarIcons/logo.png';
-import dasboardIcon from '../../../assets/sidebarIcons/dashboard-title-icon.svg';
-import userIcon from '../../../assets/sidebarIcons/icon-users.svg';
-import classroomIcon from '../../../assets/sidebarIcons/icon-classroom.svg';
-import areaIcon from '../../../assets/sidebarIcons/icon-area.svg';
-import dateIcon from '../../../assets/sidebarIcons/icon-date.svg';
-import colapsarIcon from '../../../assets/sidebarIcons/colapsar.svg';
-import sidebarExpand from '../../../assets/sidebarIcons/sidebar-left-expand-filled.svg';
-import sidebarCollapse from '../../../assets/sidebarIcons/sidebar-left-collapse-filled.svg';
+import dasboardIcon from '../../../assets/sidebarIcons/dashboard-icon.svg';
+import userIcon from '../../../assets/sidebarIcons/user-icon.svg';
+import classroomIcon from '../../../assets/sidebarIcons/classroom-icon.svg';
+import areaIcon from '../../../assets/sidebarIcons/book-icon.svg';
+import dateIcon from '../../../assets/sidebarIcons/clock-icon.svg';
+import colapsarIcon from '../../../assets/sidebarIcons/collapsed-icon-menu.svg';
+import sidebarExpand from '../../../assets/sidebarIcons/collapsed-left.svg';
+import sidebarCollapse from '../../../assets/sidebarIcons/collapsed-right.svg';
 import {PrivateRoutes} from '../../../app/routes/routes';
 import "./Sidebar.css"; // Importamos los estilos CSS
 import { Link } from "react-router-dom";
@@ -61,7 +62,7 @@ const Sidebar = () => {
             {isOpen && <span className="icon-text"><p>Matricula</p></span>}
             {isOpen && (
               <span className="icon-text">
-                <img src={colapsarIcon} alt="Expandir/colapsar" />
+                <img src={colapsarIcon} alt="Expandir/colapsar"/>
               </span>
             )}
           </div>
@@ -69,8 +70,11 @@ const Sidebar = () => {
               activeSubmenu === "matricula" ? "submenu-active" : ""
             }`}
           >
-            <div className="submenu-item">Submenú 1.1</div>
-            <div className="submenu-item">Submenú 1.2</div>
+            <Tooltip text={toolTipsData.NUEVOESTUDIANTE} position="right">
+              <Link to={`/private/dashboard/${PrivateRoutes.CREATESTUDENT}`} style={{ textDecoration: 'none' }}>
+                <p>Nuevo estudiante</p>
+              </Link>
+            </Tooltip>
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}
@@ -88,15 +92,26 @@ const Sidebar = () => {
               activeSubmenu === "salones" ? "submenu-active" : ""
             }`}
           >
-            <div className="submenu-item">Submenú 1.1</div>
-            <div className="submenu-item">Submenú 1.2</div>
+            <div className="submenu-item">
+              <Tooltip text={toolTipsData.NUEVOSALONES} position="right">
+                <Link to={`/private/dashboard/${PrivateRoutes.CLASSROOMS}`} style={{ textDecoration: 'none' }}>
+                  <p>Crear un nuevo salón</p>
+                </Link>
+              </Tooltip>
+            </div>
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}
             
           >
             <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
-            {isOpen && <span className="icon-text"><p>Asignaturas</p></span>}
+            {isOpen && <span className="icon-text">
+                  <Tooltip text={toolTipsData.NUEVAASIGNATURA} position="right">
+                  <Link to={`/private/dashboard/${PrivateRoutes.AREA}`} style={{ textDecoration: 'none' }}>
+                    <p>Asignatura</p>
+                  </Link>
+                </Tooltip>
+              </span>}
             <span className="icon-text"></span>
           </div>
           {/* ---------------------------------------------- */}
@@ -154,6 +169,16 @@ const Sidebar = () => {
                       <span className="icon-text"></span>
                 </div>
               </Link>
+          {/* ---------------------------------------------- */}
+          <Tooltip text={toolTipsData.USER} position="right">
+              <Link to={`/private/dashboard/${PrivateRoutes.USER}`} >
+                <div className={isOpen ? "icon": "icon-collapse"}>
+                      <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
+                      {isOpen && <span className="icon-text"><p>Usuarios</p></span>}
+                      <span className="icon-text"></span>
+                </div>
+              </Link>
+          </Tooltip>
           {/* ---------------------------------------------- */}
         </div>
       </div>

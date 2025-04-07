@@ -5,6 +5,7 @@ import { addClassroom } from '../../../infrastructure/classRoom.service';
 import { validationsForm } from './formConfig';
 
 const initialForm: SalonFormState = {
+  id:'',
   identificador: '',
   directorGrupo: '',
   nombreSalon: '',

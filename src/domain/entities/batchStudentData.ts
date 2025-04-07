@@ -14,10 +14,3 @@ export interface BatchStudentData {
     classroomId: string;  
     achievementId?: string; // Campo nuevo para la referencia
   }
-
-
- /*  logros: Array<{
-    id: string;
-    numero: number;
-    descripcion: string;
-  }>; */

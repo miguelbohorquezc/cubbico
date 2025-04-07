@@ -1,5 +1,12 @@
 export enum toolTipsData {
     PERIODO1 = 'Calificar a los estudiantes en el periodo académico 1',
     ASIGNATURAS = 'ver las asignaturas matriculadas en este salón',
-    EVALUACIONES = 'Ingresar al gestor de progreso académico'
+    EVALUACIONES = 'Ingresar al gestor de progreso académico',
+    PROPOSITOS = 'Configurar propósitos para informe de preescolar',
+    INDICADORES = 'Configurar indicadores',
+    ESTUDIANTES = 'Entrar al salón de clases',
+    USER = 'Administrador de usuarios',
+    NUEVOESTUDIANTE = 'Crear nuevo estudiante',
+    NUEVOSALONES = 'Crear nuevo salón de clases',
+    NUEVAASIGNATURA = 'Crear nueva asignatura',
 }

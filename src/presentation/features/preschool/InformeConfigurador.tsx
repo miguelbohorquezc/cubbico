@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
-import { AreaIhsInfo } from '../../../infrastructure/area.service';
 import './InformeConfigurador.css';
+import { AreaIhsInfo } from '../../../domain/entities/area';
 
 interface Proposito {
   id: string;
@@ -161,8 +161,8 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
   return (
     <div className="informe-configurador">
       <header className="config-header">
-        <h2>Configuración de Informes Preescolares - {year}</h2>
-        <p className="subtitulo">Salón: {classRoomId}</p>
+        {/* <h2>Configuración de Informes Preescolares - {year}</h2>
+        <p className="subtitulo">Salón: {classRoomId}</p> */}
         
         {/* Barra de progreso general */}
         <div className="progreso-general">
@@ -193,7 +193,7 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
 
       <div className="contenedor-principal">
         {/* Columna izquierda - Formulario activo */}
-        <div className="columna-formulario">
+        <div className="columna-formulario-propositos">
           <div className="proposito-card">
             <div className="card-header">
               <h3>Propósito {propositoActivo + 1}</h3>

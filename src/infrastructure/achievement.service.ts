@@ -1,18 +1,8 @@
 // achievement.service.ts
 import { addDoc, collection, doc, setDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase/firebase";
+import { AchievementData } from "../domain/entities/achievementData";
 
-export interface AchievementData {
-  id?: string;
-  classroomId: string;
-  areaId: string;
-  period: number;
-  logros: {
-    logro1: string;
-    logro2: string;
-    logro3: string;
-  };
-}
 
 export const getAchievement = async (classroomId: string, areaId: string, period: number) => {
   try {

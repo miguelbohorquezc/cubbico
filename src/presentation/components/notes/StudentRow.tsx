@@ -1,7 +1,7 @@
 import React from 'react';
 import GradeInput from './GradeInput';
 import FaultsInput from './FaultsInput';
-import { Student, GradeField, AcademicRecord } from './types';
+import { Student, GradeField } from './types';
 
 interface StudentRowProps {
   student: Student;

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Student, Grade, GradeField, AcademicRecord } from './types';
-import { AchievementData } from "../../../infrastructure/achievement.service";
+import { Student, GradeField, AcademicRecord } from './types';
+import { AchievementData } from '../../../domain/entities/achievementData';
 
 interface GradeManagerParams {
   currentYear: string;

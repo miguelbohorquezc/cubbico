@@ -207,11 +207,13 @@ const GradeManager: React.FC = () => {
                   <td key={field}>
                     <InputField
                       type="number"
+                      //@ts-ignore
                       value={studentGrades[field]}
                       min={1}
                       max={5}
                       step={0.01}
                       onChange={(value) => handleGradeChange(student.id, field, value)}
+                      //@ts-ignore
                       isValid={!showErrors || validateGrade(studentGrades[field])}
                       errorMessage="1.00-5.00"
                     />

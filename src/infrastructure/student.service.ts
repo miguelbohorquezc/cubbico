@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore";
 import { db } from "./firebase/firebase";
-import { studentInfo } from "../domain/entities/user.student";
+import { studentInfo } from "../domain/entities/studentInfo";
 import {  Student } from "../presentation/components/notes/types";
 import { BatchStudentData } from "../domain/entities/batchStudentData";
 
@@ -14,7 +14,8 @@ export const addStudent = async (student: studentInfo ) =>{
         lastName: student.lastName,
         classRoom: student.classRoom,
         className: student.className,
-        caracter: student.caracter
+        caracter: student.caracter,
+        classroomId: student.classroomId
     },{merge: true});
     
     alert(`El estudiante: ${student.name} ${student.lastName} Ha sido matriculado en el salón ${student.classRoom}.`);

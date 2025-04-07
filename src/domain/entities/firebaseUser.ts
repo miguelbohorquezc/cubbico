@@ -1,4 +1,5 @@
   export interface FirebaseUser {
+    id?: string;
     accessToken?: string;
     auth?: {
       providerId?: string;
