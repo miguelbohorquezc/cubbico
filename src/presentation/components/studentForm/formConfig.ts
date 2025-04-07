@@ -22,7 +22,7 @@ export const SELECT_OPTIONS = {
   caracter: [
     { value: '', label: 'Seleccione modo de evaluación' },
     { value: 'normal', label: 'Normal' },
-    { value: 'especial', label: 'Especial' }
+    { value: 'ajustes', label: 'Ajustes' }
   ]
 };
 

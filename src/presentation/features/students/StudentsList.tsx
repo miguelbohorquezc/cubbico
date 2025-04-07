@@ -6,14 +6,46 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Student } from "../../../presentation/components/notes/types";
 import Tooltip from "../../components/toolTip/Tooltip";
 import { toolTipsData } from "../../../domain/entities/toolTipsData";
-import { fetchStudents } from "../../../infrastructure/student.service";
+import { fetchStudents, deleteStudent, updateStudent } from "../../../infrastructure/student.service";
 import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
+import Modal from "../../components/modal/Modal";
+import StudentForm from "../../components/studentForm/StudentForm";
 
 const StudentList = () => {
   const { classroomId, periodId } = useParams();
   const [students, setStudents] = useState<Student[]>([]);
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const handleDelete = async (studentId: string) => {
+    if (window.confirm("¿Estás seguro de eliminar este estudiante?")) {
+      try {
+        await deleteStudent(studentId);
+        setStudents(students.filter(s => s.id !== studentId));
+        alert("Estudiante eliminado con éxito");
+      } catch (error) {
+        console.error("Error al eliminar:", error);
+        alert("Error al eliminar estudiante");
+      }
+    }
+  };
+
+  const handleEdit = (student: Student) => {
+    setEditingStudent(student);
+  };
+
+  const handleUpdateStudent = async (updatedData: Student) => {
+    try {
+      await updateStudent(updatedData.id, updatedData);
+      setStudents(students.map(s => s.id === updatedData.id ? updatedData : s));
+      setEditingStudent(null);
+      alert("Estudiante actualizado con éxito");
+    } catch (error) {
+      console.error("Error al actualizar:", error);
+      alert("Error al actualizar estudiante");
+    }
+  };
 
 
   useEffect(() => {
@@ -45,13 +77,21 @@ const StudentList = () => {
 
   const columns = [
     { 
-      key: "document", 
-      label: "Documento",
-      render: (row: Student) => (
-        <p className="student-document">
-          {row.document}
-        </p>
-      )
+        key: "document", 
+        label: "Documento",
+        render: (row: Student) => (
+          <p className="student-document">
+            {row.document}
+          </p>
+        )
+    },{ 
+        key: "documentId", 
+        label: "Documento",
+        render: (row: Student) => (
+            <p className="student-document">
+            {row.id}
+            </p>
+        )
     },
     { 
       key: "name", 
@@ -70,10 +110,18 @@ const StudentList = () => {
           {row.lastName}
         </p>
       )
-    },
+    },{ 
+        key: "classRoom", 
+        label: "Salón",
+        render: (row: Student) => (
+          <p className="student-classroom">
+            {row.className}
+          </p>
+        )
+      },
     { 
       key: "caracter", 
-      label: "Carácter",
+      label: "Evaluación",	
       render: (row: Student) => {
         let badgeClass = "status-badge ";
         let label = row.caracter;
@@ -98,18 +146,33 @@ const StudentList = () => {
       }
     },
     { 
-      key: 'actions', 
-      label: 'Acciones',
-      render: (student: Student) => (
-        <Tooltip text={toolTipsData.ESTUDIANTES} position="bottom">
-                <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEvaluador(student.id, '2025')}/> 
-              </Tooltip>
-      )
-    }
+        key: 'actions', 
+        label: 'Acciones',
+        render: (student: Student) => (
+          <div className="actions-container">
+            <Tooltip text="Editar estudiante" position="bottom">
+              <img 
+                src={actionIcon} 
+                className="action-icon" 
+                alt="edit" 
+                onClick={() => handleEdit(student)}
+              />
+            </Tooltip>
+            <Tooltip text="Eliminar estudiante" position="bottom">
+              <img 
+                src={actionIcon} 
+                className="action-icon" 
+                alt="delete" 
+                onClick={() => handleDelete(student.id)}
+              />
+            </Tooltip>
+          </div>
+        )
+      }
   ];
 
   return (
-    
+    <>
           <DataTable
             data={students}
             columns={columns}
@@ -121,9 +184,21 @@ const StudentList = () => {
             enableSearch={true}
             skeletonCount={10}
             tableSize={{ 
-              width: "100%", 
-              maxHeight: "80vh" 
+              width: "100%"
             }}/>
+            
+            <Modal
+                isOpen={!!editingStudent}
+                onClose={() => setEditingStudent(null)}
+                title="Editar Estudiante">
+                {editingStudent && (
+                <StudentForm 
+                    initialData={editingStudent}
+                    onSubmit={handleUpdateStudent}
+                />
+                )}
+            </Modal>
+    </>
           
   )
 };

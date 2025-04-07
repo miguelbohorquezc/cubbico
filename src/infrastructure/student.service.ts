@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore";
 import { db } from "./firebase/firebase";
 import { studentInfo } from "../domain/entities/studentInfo";
 import {  Student } from "../presentation/components/notes/types";
@@ -135,3 +135,21 @@ export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
     throw new Error(`Error al guardar: ${error instanceof Error ? error.message : error}`);
   }
 }
+
+export const updateStudent = async (studentId: string, updatedData: Partial<Student>) => {
+  try {
+    await setDoc(doc(db, "student", studentId), updatedData, { merge: true });
+    return true;
+  } catch (error) {
+    throw new Error("Error al actualizar estudiante");
+  }
+};
+
+export const deleteStudent = async (studentId: string) => {
+  try {
+    await deleteDoc(doc(db, "student", studentId));
+    return true;
+  } catch (error) {
+    throw new Error("Error al eliminar estudiante");
+  }
+};

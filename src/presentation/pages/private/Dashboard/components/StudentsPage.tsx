@@ -40,7 +40,7 @@ function StudentsPage() {
         title="Matricular Estudiantes"
       >
         <div>
-          <StudentForm/>
+          <StudentForm />
         </div>
       </Modal>
     </>

@@ -15,8 +15,8 @@ const initialFormState: StudentFormState = {
   classroomId: '' // Nuevo campo
 };
 
-export const useStudentForm = () => {
-  const [form, setForm] = useState<StudentFormState>(initialFormState);
+export const useStudentForm = (initialData?: StudentFormState) => {
+  const [form, setForm] = useState<StudentFormState>(initialData || initialFormState);
   const [error, setError] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   //@ts-ignore

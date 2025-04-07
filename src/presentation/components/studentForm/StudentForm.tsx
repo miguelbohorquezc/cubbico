@@ -7,15 +7,21 @@ import { TEXT_FIELDS, SELECT_OPTIONS } from './formConfig';
 import { StudentFormState } from '../../../shared/types/studentTypes';
 import Button from '../../features/button/Button';
 
-const StudentForm = () => {
+interface StudentFormProps {
+  initialData?: StudentFormState;
+  onSubmit?: (formData: StudentFormState) => void;
+}
+
+//@ts-ignore
+const StudentForm = ({ initialData, onSubmit }: StudentFormProps) => {
   const { 
     form, 
     error, 
     handleBlur, 
     handleChange, 
     handleSubmit, 
-    classrooms 
-  } = useStudentForm();
+    classrooms, 
+  } = useStudentForm(initialData);
 
   const renderSection = (title: string, subtitle: string) => (
     <div className='section-header'>
