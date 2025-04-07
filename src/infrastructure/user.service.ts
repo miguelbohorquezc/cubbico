@@ -1,4 +1,3 @@
-// src/services/user.service.ts
 import { collection, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { auth, db } from "./firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";

@@ -5,6 +5,7 @@ import { useStudentForm } from './useStudentForm';
 import { FormField } from '../../../shared/utils/FormField';
 import { TEXT_FIELDS, SELECT_OPTIONS } from './formConfig';
 import { StudentFormState } from '../../../shared/types/studentTypes';
+import Button from '../../features/button/Button';
 
 const StudentForm = () => {
   const { 
@@ -19,8 +20,8 @@ const StudentForm = () => {
   const renderSection = (title: string, subtitle: string) => (
     <div className='section-header'>
       <div className='header-info'>
-        <h4>{title}</h4>
-        <h6>{subtitle}</h6>
+        <h2>{title}</h2>
+        <p>{subtitle}</p>
       </div>
     </div>
   );
@@ -77,9 +78,15 @@ const StudentForm = () => {
           />
         ))}
 
-        <button type="submit" className="submit-btn">
+        <Button 
+          variant="primary" size="lg"
+          type="submit">
+            Matricular estudiantes
+        </Button>
+
+        {/* <button type="submit" className="submit-btn">
           Matricular Estudiante
-        </button>
+        </button> */}
       </form>
     </div>
   );

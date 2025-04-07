@@ -5,6 +5,7 @@ import StudentForm from "../../../../components/studentForm/StudentForm"
 import Button from "../../../../features/button/Button"
 import Modal from "../../../../components/modal/Modal";
 import { useState } from "react";
+import StudentList from "../../../../features/students/StudentsList";
 
 function StudentsPage() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function StudentsPage() {
             </div>
           </div>
           <div className='body-container-page'> 
-            
+            <StudentList/>
           </div>
       </div>
       <Modal

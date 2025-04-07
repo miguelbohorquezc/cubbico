@@ -45,6 +45,29 @@ export const fetchStudentsByClassroom = async (classroomId: string): Promise<Stu
   }
 };
 
+export const fetchStudents = async (): Promise<Student[]> => {
+  try {
+    const q = query(
+      collection(db, "student")
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      name: doc.data().name,
+      lastName: doc.data().lastName,
+      document: doc.data().document,
+      classroomId: doc.data().classroomId,
+      caracter: doc.data().caracter,
+      className: doc.data().className,
+      classRoom: doc.data().classRoom
+    }));
+    
+  } catch (error) {
+    throw new Error("Error al cargar estudiantes");
+  }
+};
+
 export const fetchStudentGrades = async (
   studentId: string,
   year: string,
