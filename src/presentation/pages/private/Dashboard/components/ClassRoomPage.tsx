@@ -5,6 +5,7 @@ import Button from "../../../../features/button/Button"
 import Modal from "../../../../components/modal/Modal";
 import { useState } from "react";
 import ClassRoomForm from "../../../../components/classRoomForm/ClassRoomForm";
+import ClassRoomList from "../../../../features/students/ClassRoomList";
 
 function ClassRoomPage() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function ClassRoomPage() {
             </div>
           </div>
           <div className='body-container-page'> 
-            
+          <ClassRoomList/>
           </div>
       </div>
       <Modal
@@ -39,7 +40,11 @@ function ClassRoomPage() {
         title="Crear Salón de Clases"
       >
         <div>
-          <ClassRoomForm/>
+          <ClassRoomForm onSubmit={() => {
+              setIsModalOpen(false);
+              // Aquí podrías recargar la lista si es necesario
+            }}
+          />
         </div>
       </Modal>
     </>

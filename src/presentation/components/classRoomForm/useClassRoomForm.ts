@@ -1,21 +1,20 @@
 // useClassRoomForm.ts
 import { useState, useCallback, FormEvent } from 'react';
 import { SalonFormState } from '../../../shared/types/classRoomTypes'; 
-import { addClassroom } from '../../../infrastructure/classRoom.service';
+import { addClassroom, updateClassroom } from '../../../infrastructure/classRoom.service';
 import { validationsForm } from './formConfig';
 
-const initialForm: SalonFormState = {
-  id:'',
-  identificador: '',
-  directorGrupo: '',
-  nombreSalon: '',
-  nivel: ''
-};
-
-export const useClassRoomForm = () => {
-  const [form, setForm] = useState<SalonFormState>(initialForm);
+export const useClassRoomForm = (initialData?: SalonFormState) => {
   const [error, setError] = useState<Partial<SalonFormState>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = useState<SalonFormState>(initialData || {
+    id: '',
+    identificador: '',
+    directorGrupo: '',
+    nombreSalon: '',
+    nivel: ''
+  });
+
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -42,12 +41,29 @@ export const useClassRoomForm = () => {
         return;
       }
       
-      await addClassroom(form);
-      setForm(initialForm);
-      alert('Salón creado exitosamente!');
+      if (form.id) {
+        // Modo edición - actualizar
+        await updateClassroom(form.id, form);
+        alert('Salón actualizado exitosamente!');
+      } else {
+        // Modo creación - nuevo
+        await addClassroom(form);
+        alert('Salón creado exitosamente!');
+      }
+      
+      setForm(initialData || {
+        id: '',
+        identificador: '',
+        directorGrupo: '',
+        nombreSalon: '',
+        nivel: ''
+      });
+      
+      return true; // Para manejar cierre modal
     } catch (error) {
-      console.error('Error al crear salón:', error);
-      alert('Error al crear el salón');
+      console.error('Error:', error);
+      alert(`Error al ${form.id ? 'actualizar' : 'crear'} el salón`);
+      return false;
     } finally {
       setIsSubmitting(false);
     }

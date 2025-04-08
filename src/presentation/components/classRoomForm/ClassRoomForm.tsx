@@ -5,8 +5,14 @@ import './ClassRoomForm.css';
 import { useClassRoomForm } from './useClassRoomForm';
 import { FormField } from '../../../shared/utils/FormField';
 import { SELECT_OPTIONS } from './formConfig';
+import { SalonFormState } from '../../../shared/types/classRoomTypes';
 
-const ClassRoomForm = () => {
+interface ClassRoomFormProps {
+  initialData?: SalonFormState;
+  onSubmit?: (formData: SalonFormState) => void;
+}
+
+const ClassRoomForm = ({ initialData, onSubmit }: ClassRoomFormProps) => {
   const { 
     form, 
     error, 
@@ -14,12 +20,14 @@ const ClassRoomForm = () => {
     handleBlur, 
     handleSubmit, 
     isSubmitting 
-  } = useClassRoomForm();
+  } = useClassRoomForm(initialData);
 
   return (
     <div className="classroom-form-container">
       <form className='student-form' onSubmit={handleSubmit}>
-        <h2 className="form-title">Crear Nuevo Salón</h2>
+        <h2 className="form-title">
+          {initialData ? 'Editar Salón' : 'Crear Nuevo Salón'}
+        </h2>
 
         <FormField
           type="select"
@@ -69,7 +77,9 @@ const ClassRoomForm = () => {
           className="submit-btn"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Creando...' : 'Crear Salón'}
+          {isSubmitting 
+            ? (initialData ? 'Actualizando...' : 'Creando...') 
+            : (initialData ? 'Actualizar Salón' : 'Crear Salón')}
         </button>
       </form>
     </div>

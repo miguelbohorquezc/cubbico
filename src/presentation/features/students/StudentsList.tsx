@@ -2,17 +2,15 @@
 import React, { useEffect, useState } from "react";
 
 import DataTable from "../../components/datatable/DataTable";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Student } from "../../../presentation/components/notes/types";
 import Tooltip from "../../components/toolTip/Tooltip";
-import { toolTipsData } from "../../../domain/entities/toolTipsData";
 import { fetchStudents, deleteStudent, updateStudent } from "../../../infrastructure/student.service";
 import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
 import Modal from "../../components/modal/Modal";
 import StudentForm from "../../components/studentForm/StudentForm";
 
 const StudentList = () => {
-  const { classroomId, periodId } = useParams();
   const [students, setStudents] = useState<Student[]>([]);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
@@ -71,10 +69,6 @@ const StudentList = () => {
     navigate(`/private/student/${studentId}`);
   };
 
-  const handleSelectClassRoomPreschoolEvaluador = (studentId: string, year: string) => {
-    navigate(`/private/dashboard/evaluadorpreescolar/${periodId}/${classroomId}/${studentId}/${year}`);
-  };
-
   const columns = [
     { 
         key: "document", 
@@ -98,7 +92,7 @@ const StudentList = () => {
       label: "Nombre",
       render: (row: Student) => (
         <p className="student-name">
-          {row.name}
+          {row.name.toUpperCase()}
         </p>
       )
     },
@@ -107,7 +101,7 @@ const StudentList = () => {
       label: "Apellido",
       render: (row: Student) => (
         <p className="student-lastname">
-          {row.lastName}
+          {row.lastName.toUpperCase()}
         </p>
       )
     },{ 
