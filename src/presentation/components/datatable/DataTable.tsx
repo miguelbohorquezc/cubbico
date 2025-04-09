@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useDataTable } from "./useDataTable";
+import xlsxIcon from "../../../assets/datatableIcons/xls.svg";
 //@ts-ignore
 import { CSVLink } from "react-csv";
 import "./DataTable.css";
@@ -122,7 +123,7 @@ function DataTable<T>({
               filename={`${exportFileName}-${new Date().toISOString().slice(0,10)}.csv`}
               className="export-button"
             >
-              📊 Exportar
+              <img src={xlsxIcon} alt="" /> 
             </CSVLink>
           )}
         </div>

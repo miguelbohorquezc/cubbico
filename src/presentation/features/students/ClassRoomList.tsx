@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import DataTable from "../../components/datatable/DataTable";
 import { fetchClassrooms, deleteClassroom, updateClassroom } from "../../../infrastructure/classRoom.service";
 import Tooltip from "../../components/toolTip/Tooltip";
-import actionIcon from "../../../assets/datatableIcons/book-icon.svg";
 import Modal from "../../components/modal/Modal";
 import { ClassRoom } from "../../../domain/entities/classRoom";
 import ClassRoomForm from "../../components/classRoomForm/ClassRoomForm";
+
+import editIcon from "../../../assets/datatableIcons/edit.svg";
+import trashIcon from "../../../assets/datatableIcons/trash.svg";
 
 const ClassRoomList = () => {
   const [classrooms, setClassrooms] = useState<ClassRoom[]>([]);
@@ -79,11 +81,31 @@ const ClassRoomList = () => {
     { 
       key: "nivel", 
       label: "Nivel",
-      render: (row: ClassRoom) => (
-        <p className="classroom-level">
-          {row.nivel.toUpperCase()}
-        </p>
-      )
+      render: (row: ClassRoom) => {
+        let badgeClass = "status-badge";
+        
+        // Personaliza según el carácter del estudiante si es necesario
+        switch(row.nivel?.toLowerCase()) {
+          case "preescolar":
+            badgeClass += " preescolar-badge";
+            break;
+          case "primaria":
+            badgeClass += " primaria-badge";
+            break;
+          case "secundaria":
+            badgeClass += " secundaria-badge";
+            break;
+          default:
+            badgeClass += " normal-badge";
+        }
+
+        
+          return (
+          <p className={badgeClass}>
+            {row.nivel.toUpperCase()}
+          </p>  )
+        
+      }   
     },
     { 
       key: "directorGrupo", 
@@ -101,7 +123,7 @@ const ClassRoomList = () => {
         <div className="actions-container">
           <Tooltip text="Editar salón" position="bottom">
             <img 
-              src={actionIcon} 
+              src={editIcon} 
               className="action-icon" 
               alt="edit" 
               onClick={() => handleEdit(classroom)}
@@ -109,7 +131,7 @@ const ClassRoomList = () => {
           </Tooltip>
           <Tooltip text="Eliminar salón" position="bottom">
             <img 
-              src={actionIcon} 
+              src={trashIcon} 
               className="action-icon" 
               alt="delete" 
               onClick={() => handleDelete(classroom.id)}

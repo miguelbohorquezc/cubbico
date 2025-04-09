@@ -14,10 +14,24 @@ export const SELECT_OPTIONS = {
   ],
   className: [
     { value: '', label: 'Seleccione salón' },
-    { value: 'primeroA', label: 'Primero A' },
-    { value: 'primeroB', label: 'Primero B' },
-    { value: 'NurseryA', label: 'Nursery A' },
-    // ... opciones de salones
+    { value: 'nursery a', label: 'Nursery A' },
+    { value: 'nursery b', label: 'Nursery B' },
+    { value: 'prekinder a', label: 'Prekinder A' },
+    { value: 'prekinder b', label: 'Prekinder B' },
+    { value: 'kinder a', label: 'Kinder A' },
+    { value: 'kinder b', label: 'Kinder B' },
+    { value: 'transition a', label: 'Transition A' },
+    { value: 'transition b', label: 'Transition B' },
+    { value: 'primero a', label: 'Primero A' },
+    { value: 'primero b', label: 'Primero B' },
+    { value: 'segundo', label: 'Segundo' },
+    { value: 'tercero', label: 'Tercero' },
+    { value: 'cuarto', label: 'Cuarto' },
+    { value: 'quinto', label: 'Quinto' },
+    { value: 'sexto', label: 'Sexto' },
+    { value: 'septimo', label: 'Septimo' },
+    { value: 'octavo', label: 'Octavo' },
+    { value: 'noveno', label: 'Noveno' },
   ],
   caracter: [
     { value: '', label: 'Seleccione modo de evaluación' },
@@ -33,10 +47,10 @@ export const TEXT_FIELDS = [
 ];
 
 export const SELECT_FIELDS = [
-  { name: 'document', options: SELECT_OPTIONS.document },
-  { name: 'classRoom', options: SELECT_OPTIONS.classRoom },
-  { name: 'className', options: SELECT_OPTIONS.className },
-  { name: 'caracter', options: SELECT_OPTIONS.caracter }
+  { name: 'document',   options: SELECT_OPTIONS.document },
+  { name: 'classRoom',  options: SELECT_OPTIONS.classRoom },
+  { name: 'className',  options: SELECT_OPTIONS.className },
+  { name: 'caracter',   options: SELECT_OPTIONS.caracter }
 ];
 
 export const validationsForm = (form: StudentFormState) => {

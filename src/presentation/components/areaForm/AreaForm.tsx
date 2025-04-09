@@ -2,14 +2,22 @@
 import React from 'react';
 import { useAreaForm } from './useAreaForm';
 import { TEXT_FIELDS, SELECT_FIELDS } from './formConfig';
-import './AreaForm.css'; // CSS regular o módulo CSS
+import './AreaForm.css'; 
+import { AreaFormState, AreaServiceData } from '../../../shared/types/areaTypes';
 
-const AreaForm = () => {
-  const { form, error, handleChange, handleBlur, handleSubmit, isSubmitting } = useAreaForm();
+interface AreaFormProps {
+  initialData?: AreaFormState;
+  onSubmit?: (formData: AreaServiceData) => Promise<boolean> | void;
+}
+
+const AreaForm = ({ initialData, onSubmit }: AreaFormProps) => {
+  const { form, error, handleChange, handleBlur, handleSubmit, isSubmitting } = useAreaForm({ initialData, onSubmit });
 
   return (
     <div className="form-container">
-      <h2 className="form-title">Registro de Áreas Académicas</h2>
+      <h2 className="form-title">
+        {initialData?.id ? 'Editar Área' : 'Nueva Área'}
+      </h2>
       <form onSubmit={handleSubmit} className="area-form">
         <div className="form-grid">
           {/* Campos de texto */}
@@ -58,12 +66,14 @@ const AreaForm = () => {
         </div>
 
         <div className="form-actions">
-          <button
+        <button
             type="submit"
             disabled={isSubmitting}
             className={`submit-button ${isSubmitting ? 'button-disabled' : ''}`}
           >
-            {isSubmitting ? 'Guardando...' : 'Guardar Área'}
+            {isSubmitting 
+              ? (initialData?.id ? 'Actualizando...' : 'Guardando...') 
+              : (initialData?.id ? 'Actualizar Área' : 'Guardar Área')}
           </button>
         </div>
       </form>

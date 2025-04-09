@@ -175,18 +175,34 @@
   
   .export-button {
     /* Mantener estilos anteriores */
-    background: #66cf7e;
+    background: #3bd35f;
     padding: 5px 10px;
     border-radius: 4px;
     color: white;
     border: none;
     cursor: pointer;
     transition: background 0.3s ease;
-    
+  }
+
+  .export-button img{
+    padding-top: 3px;
   }
   
   .export-button:hover {
     background: #0c8025;
+  }
+
+  .actions-container {
+    display: flex;
+    gap: 20px;
+    background: #001d38;
+    color: white;
+    border: none;
+    padding: 5px 3px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    justify-content: center;
   }
   
   .no-results {
@@ -240,10 +256,6 @@
     100% { background-position: -200% 0; }
   }
   
-  .loading-overlay {
-    /* Mantener el overlay existente si se desea */
-    /* ... estilos existentes ... */
-  }
   
   @media (max-width: 768px) {
     .table-controls {
@@ -316,6 +328,13 @@
   border-radius: 12px;
   font-size: 0.8em;
   display: inline-block;
+}
+
+.normal-badge {
+  font-weight: 500;
+    padding: 5px 10px;
+    background-color: #ffee93;
+    color: #2c3e50;
 }
 
 .active-badge {

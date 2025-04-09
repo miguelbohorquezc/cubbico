@@ -126,6 +126,7 @@ export const useUserForm = () => {
 
   const handleBlur = () => {
     validateForm();
+    console.log("Form data on blur:", form);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

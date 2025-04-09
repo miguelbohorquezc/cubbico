@@ -1,40 +1,55 @@
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "./firebase/firebase";
-import { AreaIhsInfo } from "../domain/entities/area";
+import { AreaServiceData } from "../shared/types/areaTypes";
 
 
-export const addArea = async (area: AreaIhsInfo) => {
+export const addArea = async (area: Omit<AreaServiceData, 'id'>) => {
     try {
-        let docRef;
-        let action = 'actualizado';
-
-        if (area.id) {
-            // Actualizar documento existente
-            docRef = doc(db, "areas", area.id);
-            await setDoc(docRef, {
-                asignatura: area.asignatura,
-                ihs: area.ihs,
-                area: area.area,
-                orden: area.orden,
-                nivel: area.nivel
-            }, { merge: true });
-        } else {
-            // Crear nuevo documento con ID automático
-            const newDocRef = await addDoc(collection(db, "areas"), {
-                asignatura: area.asignatura,
-                ihs: area.ihs,
-                area: area.area,
-                orden: area.orden,
-                nivel: area.nivel
-            });
-            docRef = newDocRef;
-            action = 'registrado';
-        }
-
-        alert(`El área: ${area.area} ${area.asignatura} se ha ${action} correctamente`);
+      const docRef = await addDoc(collection(db, 'areas'), {
+        ...area,
+        createdAt: new Date().toISOString()
+      });
+      return docRef.id; // Retorna el ID generado por Firestore
     } catch (error) {
-        console.error('Error al agregar/editar el área:', error);
-        alert('Hubo un error al procesar el área. Por favor, intenta nuevamente.');
+      console.error('Error adding area:', error);
+      throw error;
+    }
+  };
+  
+export const fetchAreas = async (): Promise<AreaServiceData[]> => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "areas"));
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        orden: doc.data().orden,
+        asignatura: doc.data().asignatura,
+        ihs: doc.data().ihs,
+        area: doc.data().area,
+        nivel: doc.data().nivel
+      }));
+    } catch (error) {
+      console.error("Error al cargar áreas:", error);
+      throw new Error("Error al cargar áreas");
+    }
+};
+  
+export const updateArea = async (areaId: string, updatedData: Partial<AreaServiceData>) => {
+    try {
+      await updateDoc(doc(db, "areas", areaId), updatedData);
+      return true;
+    } catch (error) {
+      console.error("Error updating area:", error);
+      throw error;
+    }
+  };
+  
+export const deleteArea = async (areaId: string) => {
+    try {
+      await deleteDoc(doc(db, "areas", areaId));
+      return true;
+    } catch (error) {
+      console.error("Error deleting area:", error);
+      throw new Error("Error al eliminar área");
     }
 };
 

@@ -20,7 +20,14 @@ const COMMON_SELECT_PROPS = {
     options: [
       'Matemáticas',
       'Humanidades, Lengua Castellana e Idioma Extranjero (Inglés)',
-      'Ciencias Naturales y Educación Ambiental'
+      'Ciencias Naturales y Educación Ambiental',
+      'Ciencias Sociales',
+      'Educación Ética y Valores Humanos',
+      'Educación Religiosa',
+      'Educación Artística y Cultural',
+      'Tecnología e Informática',
+      'Educación Física, Recreación y Deportes',
+      'Preescolar'
     ]
   },
   nivel: {
@@ -61,7 +68,7 @@ export const TEXT_FIELDS: TextFieldConfig[] = [
   { 
     name: 'ihs',
     type: 'number',
-    placeholder: 'Intensidad Horaria [ejemplo: 4]'
+    placeholder: 'Intensidad Horaria (ejemplo: 4)'
   },
   { 
     name: 'asignatura',

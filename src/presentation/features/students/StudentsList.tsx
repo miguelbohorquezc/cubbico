@@ -1,14 +1,14 @@
 //@ts-ignore
 import React, { useEffect, useState } from "react";
-
 import DataTable from "../../components/datatable/DataTable";
 import { useNavigate } from "react-router-dom";
 import { Student } from "../../../presentation/components/notes/types";
 import Tooltip from "../../components/toolTip/Tooltip";
 import { fetchStudents, deleteStudent, updateStudent } from "../../../infrastructure/student.service";
-import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
 import Modal from "../../components/modal/Modal";
 import StudentForm from "../../components/studentForm/StudentForm";
+import editIcon from "../../../assets/datatableIcons/edit.svg";
+import trashIcon from "../../../assets/datatableIcons/trash.svg";
 
 const StudentList = () => {
   const [students, setStudents] = useState<Student[]>([]);
@@ -117,19 +117,19 @@ const StudentList = () => {
       key: "caracter", 
       label: "Evaluación",	
       render: (row: Student) => {
-        let badgeClass = "status-badge ";
+        let badgeClass = "status-badge";
         let label = row.caracter;
         
         // Personaliza según el carácter del estudiante si es necesario
         switch(row.caracter?.toLowerCase()) {
-          case "interno":
-            badgeClass += "interno-badge";
+          case "normal":
+            badgeClass += " normal-badge";
             break;
-          case "externo":
-            badgeClass += "externo-badge";
+          case "ajustes":
+            badgeClass += " ajustes-badge";
             break;
           default:
-            badgeClass += "default-badge";
+            badgeClass += " normal-badge";
         }
         
         return (
@@ -146,7 +146,7 @@ const StudentList = () => {
           <div className="actions-container">
             <Tooltip text="Editar estudiante" position="bottom">
               <img 
-                src={actionIcon} 
+                src={editIcon} 
                 className="action-icon" 
                 alt="edit" 
                 onClick={() => handleEdit(student)}
@@ -154,7 +154,7 @@ const StudentList = () => {
             </Tooltip>
             <Tooltip text="Eliminar estudiante" position="bottom">
               <img 
-                src={actionIcon} 
+                src={trashIcon} 
                 className="action-icon" 
                 alt="delete" 
                 onClick={() => handleDelete(student.id)}
@@ -166,8 +166,8 @@ const StudentList = () => {
   ];
 
   return (
-    <>
-          <DataTable
+          <>
+            <DataTable
             data={students}
             columns={columns}
             isLoading={loading}
@@ -192,9 +192,8 @@ const StudentList = () => {
                 />
                 )}
             </Modal>
-    </>
-          
-  )
+          </>      
+        )
 };
 
 export default StudentList;
