@@ -23,14 +23,14 @@ const CreateUserForm = () => {
     classRooms,
     showPassword,
     passwordRequirements,
-    filterPreschool,
-    togglePreschoolFilter,
+    selectedLevels,
     setShowPassword,
     handleInputChange,
     handleCheckboxChange,
     handleSubmit,
     handleLogout,
-    handleBlur
+    handleBlur,
+    toggleNivelEducativo
   } = useUserForm();
 
   return (
@@ -89,7 +89,7 @@ const CreateUserForm = () => {
         </div>
 
         <div className="form-group password-field">
-          <div className="input-container">
+          <div className="input-container-user">
             <input
               type={showPassword ? 'text' : 'password'}
               name="confirmPassword"
@@ -122,54 +122,86 @@ const CreateUserForm = () => {
 
         {form.role === 'Docente' && (
           <div className="form-section">
-            <div className="filter-container">
-              <h3>Asignaturas:</h3>
-              <label className="filter-toggle">
-                <input
-                  type="checkbox"
-                  checked={filterPreschool}
-                  onChange={togglePreschoolFilter}
-                />
-                <span>Mostrar solo asignaturas de Preescolar</span>
-              </label>
+            <div className="form-group">
+              <label>Niveles Educativos *</label>
+              <div className="level-buttons">
+                {['Preescolar', 'Primaria', 'Secundaria'].map(nivel => (
+                  <button
+                    type="button"
+                    key={nivel}
+                    className={`level-button ${
+                      selectedLevels.includes(nivel as any) ? 'active' : ''
+                    }`}
+                    onClick={() => toggleNivelEducativo(nivel as any)}
+                  >
+                    {nivel}
+                    {selectedLevels.includes(nivel as any) && (
+                      <span className="check-icon">✓</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              {errors.nivelesEducativos && (
+                <span className="error-message">{errors.nivelesEducativos}</span>
+              )}
             </div>
-            
-            <div className="checkbox-grid">
-              {areas.map(area => (
-                <label 
-                  key={area.id} 
-                  className={`checkbox-item ${area.nivel.toLowerCase().includes('preescolar') ? 'preschool' : ''}`}
-                >
-                  <input
-                    type="checkbox"
-                    name={area.id}
-                    checked={form.areas[area.id] || false}
-                    onChange={handleCheckboxChange('areas')}
-                  />
-                  <span>{`${area.orden} - ${area.asignatura} - ${area.nivel}`}</span>
-                </label>
-              ))}
-            </div>
-            {errors.areas && <span className="error-message">{errors.areas}</span>}
+
+            {selectedLevels.length > 0 && (
+              <>
+                <div className="form-group">
+                  <h3>Asignaturas ({selectedLevels.join(', ')})</h3>
+                  <div className="checkbox-grid">
+                    {areas.map(area => (
+                      <label 
+                        key={area.id} 
+                        className={`checkbox-item ${
+                          area.nivel.toLowerCase().includes('preescolar') 
+                            ? 'preschool' 
+                            : ''
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          name={area.id}
+                          checked={form.areas[area.id] || false}
+                          onChange={handleCheckboxChange('areas')}
+                          disabled={loading}
+                        />
+                        <span>
+                          {area.asignatura} - {area.nivel}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.areas && (
+                    <span className="error-message">{errors.areas}</span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <h3>Salones ({selectedLevels.join(', ')})</h3>
+                  <div className="checkbox-grid">
+                    {classRooms.map(salon => (
+                      <label key={salon.id} className="checkbox-item">
+                        <input
+                          type="checkbox"
+                          name={salon.id}
+                          checked={form.salones[salon.id] || false}
+                          onChange={handleCheckboxChange('salones')}
+                          disabled={loading}
+                        />
+                        <span>{salon.nombreSalon}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.salones && (
+                    <span className="error-message">{errors.salones}</span>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         )}
-
-        <div className="form-section">
-          <h3>Salones de Clase:</h3>
-          <div className="checkbox-grid">
-            {classRooms.map(salon => (
-              <label key={salon.id} className="checkbox-item">
-                <input
-                  type="checkbox"
-                  name={salon.id}
-                  checked={form.salones[salon.id] || false}
-                  onChange={handleCheckboxChange('salones')}
-                />
-                <span>{salon.nombreSalon}</span>
-              </label>
-            ))}
-          </div>
-        </div>
 
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? 'Creando...' : 'Registrar Usuario'}

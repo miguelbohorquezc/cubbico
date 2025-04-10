@@ -6,4 +6,5 @@ export interface UserFormData {
     areas: Record<string, boolean>;
     salones: Record<string, boolean>;
     directorGrupo: string;
+    nivelesEducativos: ('Preescolar' | 'Primaria' | 'Secundaria')[];
   }

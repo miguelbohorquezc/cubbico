@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../infrastructure/firebase/firebase";
@@ -14,7 +14,7 @@ export const useUserForm = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
-  const [filterPreschool, setFilterPreschool] = useState(false);
+  const [selectedLevels, setSelectedLevels] = useState<('Preescolar' | 'Primaria' | 'Secundaria')[]>([]);
   const [passwordRequirements, setPasswordRequirements] = useState({
     hasLength: false,
     hasUppercase: false,
@@ -29,7 +29,8 @@ export const useUserForm = () => {
     role: '',
     areas: {},
     salones: {},
-    directorGrupo: ''
+    directorGrupo: '',
+    nivelesEducativos: []
   });
 
   useEffect(() => {
@@ -52,13 +53,30 @@ export const useUserForm = () => {
     loadInitialData();
   }, []);
 
-  const filteredAreas = filterPreschool 
-    ? areas.filter(area => area.nivel.toLowerCase().includes('preescolar'))
-    : areas;
+  const filteredAreas = useMemo(() => {
+    if (selectedLevels.length === 0) return areas;
+    return areas.filter(area => 
+      selectedLevels.some(nivel => 
+        area.nivel.toLowerCase().includes(nivel.toLowerCase())
+      )
+    );
+  }, [areas, selectedLevels]);
 
-  const togglePreschoolFilter = () => {
-    setFilterPreschool(!filterPreschool);
-    setForm(prev => ({ ...prev, areas: {} }));
+  const filteredClassRooms = useMemo(() => {
+    if (selectedLevels.length === 0) return classRooms;
+    return classRooms.filter(salon =>
+      selectedLevels.some(nivel =>
+        salon.nivel.toLowerCase().includes(nivel.toLowerCase())
+      )
+    );
+  }, [classRooms, selectedLevels]);
+
+  const toggleNivelEducativo = (nivel: 'Preescolar' | 'Primaria' | 'Secundaria') => {
+    setSelectedLevels(prev => 
+      prev.includes(nivel)
+        ? prev.filter(n => n !== nivel)
+        : [...prev, nivel]
+    );
   };
 
   const validatePassword = (password: string) => {
@@ -97,8 +115,20 @@ export const useUserForm = () => {
       newErrors.role = 'Debe seleccionar un rol';
     }
 
-    if (form.role === 'Docente' && !Object.values(form.areas).some(v => v)) {
-      newErrors.areas = 'Debe seleccionar al menos un área';
+    if (form.role === 'Docente') {
+      if (selectedLevels.length === 0) {
+        newErrors.nivelesEducativos = 'Seleccione al menos un nivel educativo';
+      }
+
+      const hasSelectedAreas = Object.values(form.areas).some(v => v);
+      if (!hasSelectedAreas) {
+        newErrors.areas = 'Debe seleccionar al menos un área';
+      }
+
+      const hasSelectedSalones = Object.values(form.salones).some(v => v);
+      if (!hasSelectedSalones) {
+        newErrors.salones = 'Debe seleccionar al menos un salón';
+      }
     }
 
     setErrors(newErrors);
@@ -107,6 +137,21 @@ export const useUserForm = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    if (name === 'role' && form.role !== value) {
+      setForm({
+        email: form.email,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        role: value,
+        areas: {},
+        salones: {},
+        directorGrupo: '',
+        nivelesEducativos: []
+      });
+      setSelectedLevels([]);
+      return;
+    }
     
     if (name === 'password') {
       validatePassword(value);
@@ -126,7 +171,6 @@ export const useUserForm = () => {
 
   const handleBlur = () => {
     validateForm();
-    console.log("Form data on blur:", form);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -135,14 +179,33 @@ export const useUserForm = () => {
 
     setLoading(true);
     try {
-      const userId = await createUser(form);
-      await assignRoles(userId, {
-        role: form.role,
-        areas: form.areas,
-        salones: form.salones,
-        directorGrupo: form.directorGrupo
+      const areasToSend = Object.fromEntries(
+        Object.entries(form.areas)
+          .filter(([id]) => filteredAreas.some(a => a.id === id))
+      );
+
+      const salonesToSend = Object.fromEntries(
+        Object.entries(form.salones)
+          .filter(([id]) => filteredClassRooms.some(s => s.id === id))
+      );
+
+      const userId = await createUser({
+        ...form,
+        nivelesEducativos: selectedLevels,
+        areas: areasToSend,
+        salones: salonesToSend
       });
       
+      await assignRoles(userId, {
+        role: form.role,
+        areas: areasToSend,
+        salones: salonesToSend,
+        directorGrupo: form.directorGrupo,
+        //@ts-ignore
+        nivelesEducativos: selectedLevels
+      });
+      
+      // Reset form
       setForm({
         email: '',
         password: '',
@@ -150,8 +213,10 @@ export const useUserForm = () => {
         role: '',
         areas: {},
         salones: {},
-        directorGrupo: ''
+        directorGrupo: '',
+        nivelesEducativos: []
       });
+      setSelectedLevels([]);
       
       alert('Usuario creado exitosamente!');
     } catch (error) {
@@ -176,16 +241,16 @@ export const useUserForm = () => {
     errors,
     loading,
     areas: filteredAreas,
-    classRooms,
+    classRooms: filteredClassRooms,
     showPassword,
     passwordRequirements,
-    filterPreschool,
-    togglePreschoolFilter,
+    selectedLevels,
     setShowPassword,
     handleInputChange,
     handleCheckboxChange,
     handleSubmit,
     handleLogout,
-    handleBlur
+    handleBlur,
+    toggleNivelEducativo
   };
 };

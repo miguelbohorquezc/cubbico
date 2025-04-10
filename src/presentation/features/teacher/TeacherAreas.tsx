@@ -72,7 +72,7 @@ const TeacherAreas = () => {
             badgeClass = "status-badge preescolar-badge";
             label = "Preescolar";
             break;
-            case "bsecundaria":
+            case "secundaria":
               badgeClass = "status-badge secundaria-badge";
               label = "Secundaria";
               break;
@@ -160,8 +160,7 @@ const TeacherAreas = () => {
         enableSearch={true}
         skeletonCount={10}
         tableSize={{ 
-          width: "40rem", 
-          maxHeight: "100vh" 
+          width: "42rem" 
         }}
       />
     );

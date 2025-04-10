@@ -31,7 +31,7 @@ export const SELECT_OPTIONS = {
     { value: '', label: 'Seleccione nivel' },
     { value: 'Preescolar', label: 'Preescolar' },
     { value: 'Primaria', label: 'Primaria' },
-    { value: 'Básica Secundaria', label: 'Básica Secundaria' }
+    { value: 'Secundaria', label: 'Secundaria' }
   ]
 };
 
