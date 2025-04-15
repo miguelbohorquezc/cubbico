@@ -14,8 +14,10 @@ function AreaPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshList, setRefreshList] = useState(false);
   
+  //@ts-ignore
   const [areas, setAreas] = useState<AreaServiceData[]>([]);
 
+  //@ts-ignore
   const handleFormSubmitSuccess = () => {
     setIsModalOpen(false);
     setRefreshList(prev => !prev); // Forzar actualización de la lista

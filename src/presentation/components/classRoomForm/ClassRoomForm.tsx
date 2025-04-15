@@ -12,6 +12,7 @@ interface ClassRoomFormProps {
   onSubmit?: (formData: SalonFormState) => void;
 }
 
+//@ts-ignore
 const ClassRoomForm = ({ initialData, onSubmit }: ClassRoomFormProps) => {
   const { 
     form, 

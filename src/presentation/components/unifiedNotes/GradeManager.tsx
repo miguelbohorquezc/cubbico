@@ -18,7 +18,6 @@ const GradeManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showErrors, setShowErrors] = useState(false);
-  const [hasAchievements, setHasAchievements] = useState(false);
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -73,20 +72,6 @@ const GradeManager: React.FC = () => {
     loadStudents();
   }, [classroomId, periodId, areaId]);
 
-  useEffect(() => {
-    const checkAchievements = async () => {
-      if (classroomId && areaId && periodId) {
-        const achievement = await getAchievement(
-          classroomId,
-          areaId,
-          parseInt(periodId)
-        );
-        console.log(achievement);
-        setHasAchievements(!!achievement);
-      }
-    };
-    checkAchievements();
-  }, [classroomId, areaId, periodId]);
 
   const calculateAverage = (l1: string, l2: string, l3: string): string => {
     const num1 = parseFloat(l1);
@@ -192,13 +177,15 @@ const GradeManager: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {students.map(student => {
+          {students
+          .sort((a, b) => a.lastName.localeCompare(b.lastName))
+          .map(student => {
             const studentGrades = grades[student.id] || { l1: '', l2: '', l3: '', fallas: '' };
             
             return (
               <tr key={student.id}>
                 <td className="student-info">
-                  <p>{`${student.name} ${student.lastName}`.toUpperCase()}</p>
+                  <p>{`${student.lastName} ${student.name}`.toUpperCase()}</p>
                   <div className="student-details">
                     <span><p>{student.id}</p></span>
                   </div>
@@ -239,17 +226,10 @@ const GradeManager: React.FC = () => {
           })}
         </tbody>
       </table>
-
-      {!hasAchievements && (
-  <div className="warning-message">
-    ⚠️ Debes registrar los logros académicos antes de ingresar notas
-  </div>
-)}
-
       <button 
         onClick={handleSubmit}
         className="submit-button"
-        disabled={!hasAchievements || loading}
+        disabled={ loading}
       >
         Guardar Calificaciones
       </button>

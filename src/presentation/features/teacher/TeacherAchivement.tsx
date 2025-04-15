@@ -41,13 +41,13 @@ const TeacherAchievements = () => {
       render: (row: any) => (
         <>
         <div className="achievements-badge">
-        {`L1: ${row.logros.logro1}` || <em>Sin registrar</em>}
+          <p>{`L1: ${row.logros.logro1}` || <em>Sin registrar</em>}</p>
         </div>
         <div className="achievements-badge">
-        {`L2: ${row.logros.logro2}` || <em>Sin registrar</em>}
+          <p>{`L2: ${row.logros.logro2}` || <em>Sin registrar</em>}</p>
         </div>
         <div className="achievements-badge">
-        {`L3: ${row.logros.logro3}` || <em>Sin registrar</em>}
+          <p>{`L3: ${row.logros.logro3}` || <em>Sin registrar</em>}</p>
         </div>
         </>
       )
@@ -67,7 +67,7 @@ const TeacherAchievements = () => {
       enableSearch={false}
       skeletonCount={3}
       tableSize={{ 
-        width: "27rem", 
+        width: "26rem", 
       }}
       tableClassName="compact-table"
     />

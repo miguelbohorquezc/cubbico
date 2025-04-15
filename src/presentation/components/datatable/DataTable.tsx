@@ -176,7 +176,7 @@ function DataTable<T>({
     sortedData.length === 0 ? (
       <tr className="no-data-row">
         <td colSpan={columns.length} className="no-data-message">
-          No hay asignaturas registradas para este nivel
+          No hay información registrada para mostrar
         </td>
       </tr>
     ) : (

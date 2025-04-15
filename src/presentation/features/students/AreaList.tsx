@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import DataTable from "../../components/datatable/DataTable";
 import { fetchAreas, deleteArea, updateArea } from "../../../infrastructure/area.service";
 import Tooltip from "../../components/toolTip/Tooltip";
-import actionIcon from "../../../assets/datatableIcons/book-icon.svg";
 import Modal from "../../components/modal/Modal";
 import AreaForm from "../../components/areaForm/AreaForm";
 import { AreaServiceData } from "../../../shared/types/areaTypes";

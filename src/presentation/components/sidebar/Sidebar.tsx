@@ -162,13 +162,13 @@ const Sidebar = () => {
             </div>
           </div>
           {/* ---------------------------------------------- */}
-              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}`} >
+            <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}`} >
                 <div className={isOpen ? "icon": "icon-collapse"}>
                       <img className="sidebar-icons" src={areaIcon} alt="Configuración" />
                       {isOpen && <span className="icon-text"><p>Evaluaciones</p></span>}
                       <span className="icon-text"></span>
                 </div>
-              </Link>
+            </Link>
           {/* ---------------------------------------------- */}
           <Tooltip text={toolTipsData.USER} position="right">
               <Link to={`/private/dashboard/${PrivateRoutes.USER}`} >

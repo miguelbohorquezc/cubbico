@@ -74,6 +74,7 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
               .filter((ind: Indicador) => ind.activo && ind.periodos.includes(periodo))
               : [];
         setIndicadores(indicadoresData);
+        console.log('Indicadores:', indicadoresData);
 
         setSelecciones(seleccionesSnap.exists() ? seleccionesSnap.data().selecciones || {} : {});
 
@@ -193,7 +194,7 @@ const EvaluadorCompleto = ({ studentId, periodo, year, classRoomId }: Props) => 
                             const indicadorSeleccionadoId = selecciones[asignaturaId];
 
                             return (
-                              <div key={`asig-${asignaturaId}`} className="asignatura-selector">
+                              <div key={`asig-${asignaturaId}`} className="">
                                 <h5 className="asignatura-title">
                                   <span className="asignatura-icon">📘</span>
                                   {nombreAsignatura}

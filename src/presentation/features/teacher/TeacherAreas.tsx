@@ -41,20 +41,20 @@ const TeacherAreas = () => {
   };
 
   const columns = [
-    { key: "area", 
-      label: "Área",
-      render: (row: any) => (
-        //@ts-ignore
-        <p className={"classroom-name"}>
-          {row.area.toUpperCase()}
-        </p>
-      ) },
     { key: "asignatura", 
       label: "Asignatura",
       render: (row: any) => (
         //@ts-ignore
         <span className={`status-badge active-badge-asignatura`}>
           {row.asignatura}
+        </span>
+      ) },
+    { key: "area", 
+      label: "Área",
+      render: (row: any) => (
+        //@ts-ignore
+        <span className={`status-badge active-badge-area`}>
+          {row.area}
         </span>
       ) },
     { key: "nivel", 
@@ -141,8 +141,7 @@ const TeacherAreas = () => {
       enableSearch={true}
       skeletonCount={10}
       tableSize={{ 
-        width: "40rem", 
-        maxHeight: "100vh" 
+        width: "40rem"
       }}
     />
     );

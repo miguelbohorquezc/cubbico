@@ -17,6 +17,15 @@ const TeacherClassrooms = () => {
   };
 
   const columns = [
+    { key: "identificador", 
+      label: "Id",
+      render: (row: any) => (
+        //@ts-ignore
+        <p className={"classroom-name"}>
+          {row.identificador.toUpperCase()}
+        </p>
+      )
+       },
     { key: "nombreSalon", 
       label: "Salón",
       render: (row: any) => (

@@ -351,6 +351,13 @@
   color: #29b641;
 }
 
+.active-badge-area {
+  font-weight: 500;
+  padding: 5px 10px;
+  background-color: #ccfffc;
+  color: #29a1b6;
+}
+
 .primaria-badge {
   font-weight: 500;
   padding: 5px 10px;
@@ -389,6 +396,7 @@
 }
 
 .achievements-badge{
+    width: 17rem;
     font-family: 'Nunito', sans-serif;
     background: rgba(52, 152, 219, 0.08);
     color: #7f7f7f;
