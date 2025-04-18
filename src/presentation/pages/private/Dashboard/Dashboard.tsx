@@ -26,7 +26,7 @@ function Dashboard() {
       <Route path={`${PrivateRoutes.ACADEMY}/:periodId`}                                                  element={<Academy/>}/>
       <Route path={PrivateRoutes.STUDENT}                                                                 element={<StudentsPage/>}/>
       <Route path={`${PrivateRoutes.REPORT}/:studentId/:year`}                                            element={<AcademicReport />} />
-      <Route path={`${PrivateRoutes.REPORT}/:schoolLevel/:studentId/:year`}                               element={<AcademicReport/>}/>
+      <Route path={`${PrivateRoutes.REPORT}/:schoolLevel/:periodId/:studentId/:year`}                     element={<AcademicReport/>}/>
       <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`}                               element={<Notes/>}/>
       <Route path={`${PrivateRoutes.NOTESPRESCHOOL}/:periodId/:classroomId`}                              element={<NotesPreschool/>}/>
       <Route path={`${PrivateRoutes.INDICADORES}/:periodId/:classroomId`}                                 element={<ConfigIndicadores/>}/>

@@ -1,15 +1,29 @@
-//@ts-ignore
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../../infrastructure/firebase/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import logo from '../../../assets/logo/logotipo.jpg';
+import "./AcademicReport.css";
+
+interface Grades {
+  l1: number;
+  l2: number;
+  l3: number;
+  fallas: number;
+}
+
+interface Achievement {
+  logro1: string;
+  logro2: string;
+  logro3: string;
+}
 
 interface SubjectData {
   areaId: string;
   asignatura: string;
   ihs: string;
-  grades: { l1: number; l2: number; l3: number; fallas: number };
-  achievements: { logro1: string; logro2: string; logro3: string };
+  grades: Grades;
+  achievements: Achievement;
 }
 
 interface AreaGroup {
@@ -18,36 +32,69 @@ interface AreaGroup {
   subjects: SubjectData[];
 }
 
+interface StudentData {
+  name: string;
+  lastName: string;
+  className: string;
+  classRoom: string;
+  document?: string;
+  id: string;
+  classroomId?: string;
+}
+
+interface PeriodInfo {
+  periodo: string;
+  curso: string;
+}
+
 const AcademicReport = () => {
-  const { schoolLevel, studentId, year } = useParams<{ 
+  const { schoolLevel, studentId, year, periodId } = useParams<{ 
     schoolLevel?: '1' | '2';
     studentId?: string;
+    periodId?: string;
     year?: string;
   }>();
   
-  const [reportData, setReportData] = useState<{
+  const [reportData, setReportData] = React.useState<{
     primary: SubjectData[];
     secondary: AreaGroup[];
+    periodInfo?: PeriodInfo;
   }>({ primary: [], secondary: [] });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  
+  const [studentInfo, setStudentInfo] = React.useState<StudentData | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState('');
 
   const isSecondary = schoolLevel === '2';
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
       try {
         if (!studentId || !year) throw new Error('Parámetros inválidos');
 
-        // Obtener datos del historial académico y áreas
+        // Obtener datos del estudiante
+        const studentDoc = await getDoc(doc(db, 'student', studentId));
+        if (!studentDoc.exists()) throw new Error('Estudiante no encontrado');
+        
+        const studentData = studentDoc.data() as StudentData;
+        setStudentInfo({
+          name: studentData.name || '',
+          lastName: studentData.lastName || '',
+          className: studentData.className || '',
+          classRoom: studentData.classRoom || '',
+          document: studentData.document,
+          id: studentData.id,
+          classroomId: studentData.classroomId
+        });
+
+        // Obtener datos académicos
         const [historySnap, areasSnapshot] = await Promise.all([
           getDoc(doc(db, 'history', studentId)),
           getDocs(collection(db, 'areas'))
         ]);
 
-        if (!historySnap.exists()) throw new Error('Estudiante no encontrado');
+        if (!historySnap.exists()) throw new Error('Historial académico no encontrado');
 
-        // Procesar datos de áreas
         const areasMap = areasSnapshot.docs.reduce((acc, doc) => {
           acc[doc.id] = {
             ...doc.data(),
@@ -56,33 +103,29 @@ const AcademicReport = () => {
           return acc;
         }, {} as Record<string, any>);
 
-        // Procesar datos académicos
-        const yearData = historySnap.data().years[year];
+        const yearData = historySnap.data()?.years[year];
         if (!yearData) throw new Error('No hay datos para este año');
 
         const primaryData: SubjectData[] = [];
         const secondaryGroups: Record<string, AreaGroup> = {};
 
+        // Procesar cada período académico
         for (const period of Object.values(yearData.periods)) {
-          //@ts-ignore
-          for (const [areaId, areaData] of Object.entries(period.areas)) {
+          const periodData = period as any;
+          for (const [areaId, areaData] of Object.entries(periodData.areas)) {
             const areaInfo = areasMap[areaId] || {};
-            //@ts-ignore
-            const achievements = await getAchievements(areaData.metadata.achievementId);
+            const achievements = await getAchievements((areaData as any).metadata?.achievementId);
 
             const subject: SubjectData = {
               areaId,
               asignatura: areaInfo.asignatura || areaId,
               ihs: areaInfo.ihs || 'N/A',
-              //@ts-ignore
-              grades: areaData.grades,
-              achievements
+              grades: (areaData as any).grades || { l1: 0, l2: 0, l3: 0, fallas: 0 },
+              achievements: achievements || { logro1: 'N/A', logro2: 'N/A', logro3: 'N/A' }
             };
 
-            // Datos para ambos modos
             primaryData.push(subject);
 
-            // Preparar datos para modo secundaria
             const areaKey = areaInfo.area || 'Otras';
             if (!secondaryGroups[areaKey]) {
               secondaryGroups[areaKey] = {
@@ -95,17 +138,19 @@ const AcademicReport = () => {
           }
         }
 
-        // Ordenar datos para secundaria
-        const sortedSecondary = Object.values(secondaryGroups)
-          .sort((a, b) => a.orden - b.orden)
-          .map(group => ({
-            ...group,
-            subjects: group.subjects.sort((a, b) => a.asignatura.localeCompare(b.asignatura))
-          }));
-
         setReportData({
           primary: primaryData,
-          secondary: sortedSecondary
+          secondary: Object.values(secondaryGroups)
+            .sort((a, b) => a.orden - b.orden)
+            .map(group => ({
+              ...group,
+              subjects: group.subjects.sort((a, b) => 
+                a.asignatura.localeCompare(b.asignatura))
+            })),
+          periodInfo: {
+            periodo: yearData.periodo || '',
+            curso: yearData.curso || ''
+          }
         });
         setError('');
       } catch (err) {
@@ -119,15 +164,12 @@ const AcademicReport = () => {
   }, [studentId, year]);
 
   const getAchievements = async (achievementId?: string) => {
+    if (!achievementId) return null;
     try {
-      if (!achievementId) return { logro1: 'N/A', logro2: 'N/A', logro3: 'N/A' };
-      
       const achievementSnap = await getDoc(doc(db, 'achievements', achievementId));
-      return achievementSnap.exists() 
-        ? achievementSnap.data().logros 
-        : { logro1: 'N/A', logro2: 'N/A', logro3: 'N/A' };
+      return achievementSnap.exists() ? achievementSnap.data().logros : null;
     } catch (error) {
-      return { logro1: 'Error', logro2: 'Error', logro3: 'Error' };
+      return null;
     }
   };
 
@@ -135,207 +177,224 @@ const AcademicReport = () => {
     return ((l1 + l2 + l3) / 3).toFixed(2);
   };
 
-  const renderPrimaryTable = () => (
-    <table style={tableStyle}>
-      <thead>
+  const formatStudentName = (name: string, lastName: string) => {
+    const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    const formattedLastName = lastName.split(' ')
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+      .join(' ');
+    return `${formattedName} ${formattedLastName}`;
+  };
+
+  const renderStudentInfoTable = () => (
+    <table className="table-student-info-report">
+      <thead className="thead-student-info">
         <tr>
-          <th style={headerStyle}>Asignatura</th>
-          <th style={headerStyle}>IHS</th>
-          <th style={headerStyle}>Notas</th>
-          <th style={headerStyle}>Promedio</th>
-          <th style={headerStyle}>Logros</th>
+          <td>ESTUDIANTE</td>
+          <td>GRADO</td>
+          <td>PERIODO</td>
+          <td>FECHA</td>
         </tr>
       </thead>
       <tbody>
-        {reportData.primary.map((subject, index) => (
-          <tr key={index} style={index % 2 === 0 ? evenRowStyle : oddRowStyle}>
-            <td style={cellStyle}>{subject.asignatura}</td>
-            <td style={cellStyle}>{subject.ihs}</td>
-            <td style={cellStyle}>
-              <div style={gradesContainer}>
-                <span style={gradeLabel}>L1:</span> {subject.grades.l1}<br/>
-                <span style={gradeLabel}>L2:</span> {subject.grades.l2}<br/>
-                <span style={gradeLabel}>L3:</span> {subject.grades.l3}
-              </div>
-            </td>
-            <td style={{ ...cellStyle, fontWeight: 'bold' }}>
-              {calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}
-            </td>
-            <td style={cellStyle}>
-              <div style={achievementsContainer}>
-                {Object.entries(subject.achievements).map(([key, value], idx) => (
-                  <div key={key} style={achievementItemStyle}>
-                    <span style={achievementNumberStyle}>{idx + 1}</span>
-                    {value}
-                  </div>
-                ))}
-              </div>
-            </td>
-          </tr>
-        ))}
+        <tr>
+          <td className="student-name">
+            {studentInfo ? 
+              formatStudentName(studentInfo.name, studentInfo.lastName) : 
+              'Cargando...'}
+          </td>
+          <td className="student-classroom">
+            {studentInfo ? 
+              `${studentInfo.classRoom} - ${studentInfo.className}` : 
+              'Cargando...'}
+          </td>
+          <td>{periodId}</td>
+          <td>{new Date().toLocaleDateString()}</td>
+        </tr>
       </tbody>
     </table>
   );
 
-  const renderSecondaryGroups = () => (
-    reportData.secondary.map((group, index) => (
-      <div key={index} style={{ marginTop: '2rem' }}>
-        <h3 style={areaTitleStyle}>{group.nombreArea}</h3>
-        <table style={tableStyle}>
+  const renderPrimaryTable = () => {
+    const totalFallas = reportData.primary.reduce(
+      (sum, subject) => sum + (subject.grades.fallas || 0),
+      0
+    );
+
+    return (
+      <div className="report-container">
+        <table className="table-header-info-report">
+          <thead className="thead-header-info">
+            <tr className="tr-header">
+              <td className="td-logo-school" rowSpan={2}>
+                <img src={logo} alt="logotipo" />
+              </td>
+              <td align="center" className="td-header">
+                <b>COLINA CAMPESTRE SCHOOL</b>
+                <p>De Sincelejo, Sucre, 
+                con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria 
+                por parte de Secretaria de Educación Municipal, 
+                según resolución No 2747 del 12 de diciembre de 2023. Carrera 34No 38-158, 
+                teléfonos: 2771068-3006781806</p>
+                <p>NIT: 901731191-3</p>
+              </td>
+              <td align="center" className="td-dane">DANE 370001038852</td>
+            </tr>
+          </thead>
+        </table>
+        
+        {renderStudentInfoTable()}
+
+        <table className="report-table">
           <thead>
             <tr>
-              <th style={headerStyle}>Asignatura</th>
-              <th style={headerStyle}>IHS</th>
-              <th style={headerStyle}>Notas</th>
-              <th style={headerStyle}>Promedio</th>
-              <th style={headerStyle}>Logros</th>
+              <th className="table-header">Asignatura</th>
+              <th className="table-header">IHS</th>
+              <th className="table-header">Fallas</th>
+              <th className="table-header">Logros</th>
+              <th className="table-header">Notas</th>
+              <th className="table-header">Promedio</th>
             </tr>
           </thead>
           <tbody>
-            {group.subjects.map((subject, idx) => (
-              <tr key={idx} style={idx % 2 === 0 ? evenRowStyle : oddRowStyle}>
-                <td style={cellStyle}>{subject.asignatura}</td>
-                <td style={cellStyle}>{subject.ihs}</td>
-                <td style={cellStyle}>
-                  <div style={gradesContainer}>
-                    <span style={gradeLabel}>L1:</span> {subject.grades.l1}<br/>
-                    <span style={gradeLabel}>L2:</span> {subject.grades.l2}<br/>
-                    <span style={gradeLabel}>L3:</span> {subject.grades.l3}
-                  </div>
-                </td>
-                <td style={{ ...cellStyle, fontWeight: 'bold' }}>
-                  {calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}
-                </td>
-                <td style={cellStyle}>
-                  <div style={achievementsContainer}>
+            {reportData.primary.map((subject, index) => (
+              <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+                <td className="table-cell">{subject.asignatura}</td>
+                <td className="table-cell">{subject.ihs}</td>
+                <td className="table-cell">{subject.grades.fallas}</td>
+                <td className="table-cell">
+                  <div className="achievements-container">
                     {Object.entries(subject.achievements).map(([key, value], idx) => (
-                      <div key={key} style={achievementItemStyle}>
-                        <span style={achievementNumberStyle}>{idx + 1}</span>
+                      <div key={key} className="achievement-item">
+                        <span className="achievement-number">{idx + 1}</span>
                         {value}
                       </div>
                     ))}
                   </div>
                 </td>
+                <td className="table-cell">
+                  <div className="grades-container">
+                    <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
+                    <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
+                    <span className="grade-label">L3:</span> {subject.grades.l3}
+                  </div>
+                </td>
+                <td className="table-cell average-cell">
+                  {calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}
+                </td>
               </tr>
             ))}
+            <tr className="total-row">
+              <td colSpan={2} className="table-cell">Total faltas:</td>
+              <td className="table-cell">{totalFallas}</td>
+              <td colSpan={3} className="table-cell"></td>
+            </tr>
           </tbody>
         </table>
       </div>
-    ))
-  );
+    );
+  };
 
-  if (loading) return <div style={loadingStyle}>Cargando informe...</div>;
-  if (error) return <div style={errorStyle}>Error: {error}</div>;
+  const renderSecondaryGroups = () => {
+    let totalFallasSecundaria = 0;
+
+    return (
+      <div className="report-container">
+        <table className="table-header-info-report">
+          <thead className="thead-header-info">
+            <tr className="tr-header">
+              <td className="td-logo-school" rowSpan={2}>
+                <img src={logo} alt="logotipo" />
+              </td>
+              <td align="center" className="td-header">
+                <b>COLINA CAMPESTRE SCHOOL</b>
+                <p>De Sincelejo, Sucre, 
+                con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria 
+                por parte de Secretaria de Educación Municipal, 
+                según resolución No 2747 del 12 de diciembre de 2023. Carrera 34No 38-158, 
+                teléfonos: 2771068-3006781806</p>
+                <p>NIT: 901731191-3</p>
+              </td>
+              <td align="center" className="td-dane">DANE 370001038852</td>
+            </tr>
+          </thead>
+        </table>
+        
+        {renderStudentInfoTable()}
+
+        {reportData.secondary.map((group, index) => {
+          const groupFallas = group.subjects.reduce(
+            (sum, subject) => sum + (subject.grades.fallas || 0),
+            0
+          );
+          totalFallasSecundaria += groupFallas;
+
+          return (
+            <div key={index} className="area-group">
+              <h3 className="area-title">{group.nombreArea}</h3>
+              <table className="report-table">
+                <thead>
+                  <tr>
+                    <th className="table-header">Asignatura</th>
+                    <th className="table-header">IHS</th>
+                    <th className="table-header">Fallas</th>
+                    <th className="table-header">Logros</th>
+                    <th className="table-header">Notas</th>
+                    <th className="table-header">Promedio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.subjects.map((subject, idx) => (
+                    <tr key={idx} className={idx % 2 === 0 ? 'even-row' : 'odd-row'}>
+                      <td className="table-cell">{subject.asignatura}</td>
+                      <td className="table-cell">{subject.ihs}</td>
+                      <td className="table-cell">{subject.grades.fallas}</td>
+                      <td className="table-cell">
+                        <div className="achievements-container">
+                          {Object.entries(subject.achievements).map(([key, value], idx) => (
+                            <div key={key} className="achievement-item">
+                              <span className="achievement-number">{idx + 1}</span>
+                              {value}
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="table-cell">
+                        <div className="grades-container">
+                          <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
+                          <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
+                          <span className="grade-label">L3:</span> {subject.grades.l3}
+                        </div>
+                      </td>
+                      <td className="table-cell average-cell">
+                        {calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr className="total-row">
+                    <td colSpan={2} className="table-cell">Total {group.nombreArea}:</td>
+                    <td className="table-cell">{groupFallas}</td>
+                    <td colSpan={3} className="table-cell"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
+        
+        <div className="grand-total">
+          <strong>Total faltas secundaria: {totalFallasSecundaria}</strong>
+        </div>
+      </div>
+    );
+  };
+
+  if (loading) return <div className="loading-state">Cargando informe...</div>;
+  if (error) return <div className="error-state">Error: {error}</div>;
   if (!reportData.primary.length && !reportData.secondary.length) {
-    return <div>No se encontraron datos académicos</div>;
+    return <div className="error-state">No se encontraron datos académicos</div>;
   }
 
-  return (
-    <div style={containerStyle}>
-      <h2 style={titleStyle}>
-        Informe Académico {isSecondary ? 'Secundaria' : 'Primaria'} - {year}
-      </h2>
-
-      {isSecondary ? renderSecondaryGroups() : renderPrimaryTable()}
-    </div>
-  );
+  return isSecondary ? renderSecondaryGroups() : renderPrimaryTable();
 };
-
-// Estilos
-const containerStyle = {
-  padding: '20px',
-  maxWidth: '1200px',
-  margin: '0 auto',
-  fontFamily: 'Arial, sans-serif'
-};
-
-const titleStyle = {
-  color: '#2c3e50',
-  borderBottom: '2px solid #3498db',
-  paddingBottom: '10px',
-  marginBottom: '30px'
-};
-
-const tableStyle = {
-  width: '100%',
-  borderCollapse: 'collapse',
-  marginTop: '15px'
-} as const;
-
-const headerStyle = {
-  backgroundColor: '#3498db',
-  color: 'white',
-  padding: '12px',
-  textAlign: 'left',
-  fontSize: '14px'
-} as const;
-
-const cellStyle = {
-  padding: '12px',
-  borderBottom: '1px solid #ecf0f1',
-  verticalAlign: 'top',
-  fontSize: '14px'
-} as const;
-
-const evenRowStyle = {
-  backgroundColor: '#f8f9fa'
-} as const;
-
-const oddRowStyle = {
-  backgroundColor: '#ffffff'
-} as const;
-
-const gradesContainer = {
-  lineHeight: '1.6'
-} as const;
-
-const gradeLabel = {
-  display: 'inline-block',
-  width: '30px',
-  color: '#7f8c8d'
-} as const;
-
-const achievementsContainer = {
-  display: 'grid',
-  gap: '10px'
-} as const;
-
-const achievementItemStyle = {
-  display: 'flex',
-  gap: '8px',
-  alignItems: 'flex-start'
-} as const;
-
-const achievementNumberStyle = {
-  background: '#2ecc71',
-  color: 'white',
-  minWidth: '24px',
-  height: '24px',
-  borderRadius: '50%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: '12px',
-  fontWeight: 'bold'
-} as const;
-
-const areaTitleStyle = {
-  backgroundColor: '#3498db',
-  color: 'white',
-  padding: '10px',
-  borderRadius: '5px',
-  margin: '20px 0 15px'
-} as const;
-
-const loadingStyle = {
-  padding: '20px',
-  textAlign: 'center'
-} as const;
-
-const errorStyle = {
-  padding: '20px',
-  textAlign: 'center',
-  color: '#e74c3c'
-} as const;
 
 export default AcademicReport;
