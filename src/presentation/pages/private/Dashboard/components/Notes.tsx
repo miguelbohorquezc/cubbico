@@ -9,12 +9,19 @@ import TeacherAchievements from '../../../../features/teacher/TeacherAchivement'
 import { PrivateRoutes } from '../../../../../app/routes/routes';
 import Button from '../../../../features/button/Button';
 import Navbar from '../../../../components/navbar/Navbar';
+import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../../../app/store/store';
 
 function Notes() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   //@ts-ignore
   const { classroomId = '' } = useParams();
+  
+  const classroom = useAppSelector(state => 
+      state.teacherData.classrooms.find(c => c.id === classroomId)
+    );
+    console.log(classroomId, classroom)
 
   return (
     <>
@@ -31,7 +38,7 @@ function Notes() {
               </Button>
               <Button 
                 variant="accent" size="sm">
-                <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/primaria/1102866337/2025`}>Ver Informe Básico</Link>
+                <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1/1/${classroom?.directorGrupo}/1104269389/2025`}>Ver Informe Básico</Link>
               </Button>             
             </div>
           </div>

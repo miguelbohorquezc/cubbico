@@ -48,11 +48,12 @@ interface PeriodInfo {
 }
 
 const AcademicReport = () => {
-  const { schoolLevel, studentId, year, periodId } = useParams<{ 
+  const { schoolLevel, studentId, year, periodId, director } = useParams<{ 
     schoolLevel?: '1' | '2';
     studentId?: string;
     periodId?: string;
     year?: string;
+    director?: string;
   }>();
   
   const [reportData, setReportData] = React.useState<{
@@ -279,17 +280,49 @@ const AcademicReport = () => {
                   </div>
                 </td>
                 <td className="table-cell average-cell">
-                  {calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}
+                  <p>{calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}</p>
+               
                 </td>
               </tr>
             ))}
-            <tr className="total-row">
-              <td colSpan={2} className="table-cell">Total faltas:</td>
-              <td className="table-cell">{totalFallas}</td>
-              <td colSpan={3} className="table-cell"></td>
+          </tbody>
+        </table>
+        <table className="table-student-info-report">
+          <tbody>
+            <tr>
+                <td colSpan={2}><p>CONVENCIONES: I.H.S (Intensidad Horaria Semanal), L(Logro)</p></td>
+                <td colSpan={3}align="center">{`Total fallas: ${totalFallas}`}</td>
             </tr>
           </tbody>
         </table>
+        <table className="table-student-info-report">
+                    <thead className="thead-student-info">
+                            <tr className="">
+                                <td colSpan={2}><p>ESCALA DE VALORACIÓN</p></td>
+                            </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td colSpan={2}><p>Superior: 4.6 - 5.0; Alto: 4.0 - 4.5; Básico: 3.0 - 3.9; Bajo: 1.0 - 2.9</p></td>
+                            </tr>
+                    </tbody>
+        </table>
+        <table className="table-student-info-report">
+          <thead className="thead-student-info">
+                            <tr className="">
+                                <td colSpan={3}>
+                                    <p>OBSERVACIONES</p>
+                                </td>
+                            </tr>
+          </thead>
+          <tbody>
+            <tr><td></td></tr>
+          </tbody>
+        </table>
+        <div className="firma">  
+          <p>{director}</p>
+          <p>Director(a) de grupo</p>
+        </div>
       </div>
     );
   };
