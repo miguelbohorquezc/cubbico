@@ -178,6 +178,13 @@ const AcademicReport = () => {
     return ((l1 + l2 + l3) / 3).toFixed(2);
   };
 
+  const getGradeCategory = (average: number) => {
+    if (average >= 4.6) return { text: 'Superior', color: '#3498db' }; // Azul
+    if (average >= 4.0) return { text: 'Alto', color: '#2ecc71' };     // Verde
+    if (average >= 3.0) return { text: 'Básico', color: '#f39c12' };   // Amarillo
+    return { text: 'Bajo', color: '#e74c3c' };                         // Rojo
+  };
+
   const formatStudentName = (name: string, lastName: string) => {
     const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     const formattedLastName = lastName.split(' ')
@@ -257,34 +264,45 @@ const AcademicReport = () => {
             </tr>
           </thead>
           <tbody>
-            {reportData.primary.map((subject, index) => (
-              <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                <td className="table-cell">{subject.asignatura}</td>
-                <td className="table-cell">{subject.ihs}</td>
-                <td className="table-cell">{subject.grades.fallas}</td>
-                <td className="table-cell">
-                  <div className="achievements-container">
-                    {Object.entries(subject.achievements).map(([key, value], idx) => (
-                      <div key={key} className="achievement-item">
-                        <span className="achievement-number">{idx + 1}</span>
-                        {value}
-                      </div>
-                    ))}
-                  </div>
-                </td>
-                <td className="table-cell">
-                  <div className="grades-container">
-                    <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
-                    <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
-                    <span className="grade-label">L3:</span> {subject.grades.l3}
-                  </div>
-                </td>
-                <td className="table-cell average-cell">
-                  <p>{calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}</p>
-               
-                </td>
-              </tr>
-            ))}
+            {reportData.primary.map((subject, index) => {
+              const average = parseFloat(calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3));
+              const gradeCategory = getGradeCategory(average);
+              
+              return (
+                <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+                  <td className="table-cell">{subject.asignatura}</td>
+                  <td className="table-cell">{subject.ihs}</td>
+                  <td className="table-cell">{subject.grades.fallas}</td>
+                  <td className="table-cell">
+                    <div className="achievements-container">
+                      {Object.entries(subject.achievements).map(([key, value], idx) => (
+                        <div key={key} className="achievement-item">
+                          <span className="achievement-number">{idx + 1}</span>
+                          {value}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="table-cell">
+                    <div className="grades-container">
+                      <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
+                      <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
+                      <span className="grade-label">L3:</span> {subject.grades.l3}
+                    </div>
+                  </td>
+                  <td className="table-cell average-cell">
+                    <p>{average.toFixed(2)}</p>
+                    <span style={{ 
+                      color: gradeCategory.color,
+                      fontWeight: 'bold',
+                      fontSize: '0.8em'
+                    }}>
+                      {gradeCategory.text}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <table className="table-student-info-report">
@@ -376,33 +394,45 @@ const AcademicReport = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {group.subjects.map((subject, idx) => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'even-row' : 'odd-row'}>
-                      <td className="table-cell">{subject.asignatura}</td>
-                      <td className="table-cell">{subject.ihs}</td>
-                      <td className="table-cell">{subject.grades.fallas}</td>
-                      <td className="table-cell">
-                        <div className="achievements-container">
-                          {Object.entries(subject.achievements).map(([key, value], idx) => (
-                            <div key={key} className="achievement-item">
-                              <span className="achievement-number">{idx + 1}</span>
-                              {value}
-                            </div>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="table-cell">
-                        <div className="grades-container">
-                          <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
-                          <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
-                          <span className="grade-label">L3:</span> {subject.grades.l3}
-                        </div>
-                      </td>
-                      <td className="table-cell average-cell">
-                        {calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3)}
-                      </td>
-                    </tr>
-                  ))}
+                  {group.subjects.map((subject, idx) => {
+                    const average = parseFloat(calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3));
+                    const gradeCategory = getGradeCategory(average);
+                    
+                    return (
+                      <tr key={idx} className={idx % 2 === 0 ? 'even-row' : 'odd-row'}>
+                        <td className="table-cell">{subject.asignatura}</td>
+                        <td className="table-cell">{subject.ihs}</td>
+                        <td className="table-cell">{subject.grades.fallas}</td>
+                        <td className="table-cell">
+                          <div className="achievements-container">
+                            {Object.entries(subject.achievements).map(([key, value], idx) => (
+                              <div key={key} className="achievement-item">
+                                <span className="achievement-number">{idx + 1}</span>
+                                {value}
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="table-cell">
+                          <div className="grades-container">
+                            <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
+                            <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
+                            <span className="grade-label">L3:</span> {subject.grades.l3}
+                          </div>
+                        </td>
+                        <td className="table-cell average-cell">
+                          <b>{average.toFixed(2)}</b>
+                          <span style={{ 
+                            color: gradeCategory.color,
+                            fontWeight: 'bold',
+                            fontSize: '0.8em'
+                          }}>
+                            {gradeCategory.text}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                   <tr className="total-row">
                     <td colSpan={2} className="table-cell">Total {group.nombreArea}:</td>
                     <td className="table-cell">{groupFallas}</td>

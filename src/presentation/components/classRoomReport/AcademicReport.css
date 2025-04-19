@@ -107,11 +107,11 @@
 
 /* Celdas y filas */
 .table-header {
-  background: #2c3e50;
-  color: white;
-  padding: 12px;
-  text-align: left;
-  font-size: 14px;
+  background: #f5f5f5;
+    color: #2f2f2f;
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
 }
 
 .table-cell {
@@ -122,7 +122,7 @@
 }
 
 .even-row {
-  background: #f8f9fa;
+  background: #ffffff;
 }
 
 .odd-row {
@@ -142,7 +142,7 @@
 }
 
 .achievement-number {
-  background: #2ecc71;
+  background: #a9ddff;
   color: white;
   min-width: 24px;
   height: 24px;
@@ -168,7 +168,21 @@
 
 /* Totales y promedios */
 .average-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.average-cell p {
+  margin: 0;
+}
+
+.average-cell span {
   font-weight: bold;
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .total-row {
@@ -204,7 +218,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
   margin-top: 5em;
   font-size: 10pt;
   font-weight: 500;
@@ -213,15 +226,15 @@
 
 @media print {
   .report-container .table-header-info-report .thead-header-info .tr-header .td-header b{
-    font-size: 1.5em; /* Ajusta el tamaño de fuente según sea necesario */
+    font-size: 1.5em;
   }
 
   .report-container .table-header-info-report .thead-header-info .tr-header .td-header p{
-    font-size: 11pt; /* Ajusta el tamaño de fuente según sea necesario */
+    font-size: 11pt;
   }
   
   .report-container .table-student-info-report tr td {
-    font-size: 11pt; /* Ajusta el tamaño de fuente según sea necesario */
+    font-size: 11pt;
   }
 
   .report-container .table-notes-info-report tbody tr td ol li{
@@ -233,7 +246,7 @@
   }
 
   .report-container .table-notes-info-report .tr-title td{
-    font-size: 11pt
+    font-size: 11pt;
   }
 
   body{
@@ -243,6 +256,4 @@
   :root{
     background-color: white;
   }
-
-  /* Ajusta otros estilos según sea necesario */
 }
