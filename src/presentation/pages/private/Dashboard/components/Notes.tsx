@@ -51,17 +51,6 @@ function Notes() {
             <GradeManager/> 
           </div>
       </div>
-      
-     {/*  <div className='container-notes'>
-          <h2 className='container-notes-title'>Gestor de Progreso Académico</h2>
-          <div className='header-container'>
-            <button className='btn-addLogros' onClick={() => setIsModalOpen(true)}>Agregar logros</button> 
-            <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/primaria/1102866337/2025`}>Ver Informe Básico</Link>
-          </div>
-          <div className='body-container'>
-            
-          </div>
-      </div> */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

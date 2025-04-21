@@ -4,18 +4,18 @@
   }
   
   .class-averages-report {
+    font-family: 'Nunito', sans-serif;
     background-color: #fcfbf5;
-    border: 1px solid #d1d5db;
     border-radius: 8px;
     padding: 16px;
-    font-family: sans-serif;
     -webkit-print-color-adjust: exact;
   }
   
   .class-averages-report h2 {
     margin: 16px 0;
     text-align: center;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    color: #333;
   }
   
   .class-averages-report table {
@@ -26,25 +26,59 @@
   }
   
   /* Header cells: rotate area names vertically */
-  .class-averages-report thead th:not(:first-child):not(:nth-last-child(1)) {
+  .class-averages-report thead th {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f3f4f6;
+    font-weight: 600;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .class-averages-report thead th.th-asignatura {
+    padding: 7px;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     white-space: nowrap;
     vertical-align: bottom;
-    padding: 8px 4px;
+    font-size: 0.85rem;
+    color: #555;
+    width: 5em;
+  }
+
+  .class-averages-report thead th.th-estudiante{
+    width: 8em
   }
   
-  .class-averages-report table th,
-  .class-averages-report table td {
+  .class-averages-report thead th.th-asignatura .p-asignaturas {
+    margin: 0;
+  }
+  
+  .class-averages-report tbody td {
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 8px;
     text-align: center;
-    overflow: hidden;
+    vertical-align: middle;
   }
   
-  .class-averages-report table th {
-    background-color: #f3f4f6;
-    font-weight: bold;
+  /* Paragraph styling inside cells */
+  .student-position-p {
+    margin: 0;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .student-name-p {
+    margin: 0;
+    font-size: 11pt;
+    font-weight: 600;
+    color: #111;
+    text-align: left;
+  }
+  
+  .promedio-p {
+    margin: 0;
+    font-weight: 500;
+    color: #222;
   }
   
   /* Elegant badge for letter spans */
@@ -52,39 +86,11 @@
     display: inline-block;
     padding: 2px 6px;
     border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.05);
-    font-weight: bold;
+    font-weight: 700;
+    background: #f3f3f3;
   }
   
-  .class-summary {
-    margin-top: 16px;
-    text-align: right;
-    font-weight: bold;
-  }
-  
-  .table-header-info-report {
-    border: none;
-    margin-bottom: 16px;
-  }
-  
-  .table-header-info-report td {
-    border: none;
-    padding: 4px;
-  }
-  
-  .td-logo-school img {
-    max-width: 80px;
-    height: auto;
-  }
-  
-  /* Tab: defaults already above */
-  
-  /* Use Nunito font */
-  .class-averages-report {
-    font-family: 'Nunito', sans-serif;
-  }
-  
-  /* Softer background based on text color via inline style */
+  /* Softer background based on inline color */
   .class-averages-report td span[style*="#3498db"] {
     background-color: rgba(52, 152, 219, 0.15);
   }
@@ -98,12 +104,14 @@
     background-color: rgba(231, 76, 60, 0.15);
   }
   
+  .class-summary {
+    margin-top: 16px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
   @media print {
-    .class-averages-report {
-      background-color: #fcfbf5 !important;
-      -webkit-print-color-adjust: exact;
-    }
- 
     .class-averages-report {
       background-color: #fcfbf5 !important;
       -webkit-print-color-adjust: exact;

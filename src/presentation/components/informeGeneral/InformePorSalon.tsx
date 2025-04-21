@@ -48,6 +48,7 @@ const ClassAveragesReport: React.FC = () => {
     year?: string;
   }>();
 
+  const [classroomName, setClassroomName] = useState<string>('');
   const [subjectsMeta, setSubjectsMeta] = useState<SubjectMeta[]>([]);
   const [studentAverages, setStudentAverages] = useState<StudentAverage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +63,15 @@ const ClassAveragesReport: React.FC = () => {
       }
 
       try {
+        // Obtener nombre del salón
+        const classroomDocRef = doc(db, 'classRooms', classroomId);
+        const classroomDoc = await getDoc(classroomDocRef);
+        if (classroomDoc.exists()) {
+          setClassroomName(classroomDoc.data().nombreSalon || classroomId);
+        } else {
+          setClassroomName(classroomId);
+        }
+
         // 1. Metadatos de áreas filtrado por nivel
         const desiredNivel = schoolLevel.toLowerCase();
         const areasQuery = query(
@@ -153,44 +163,44 @@ const ClassAveragesReport: React.FC = () => {
   return (
     <div className="class-averages-report">
       <table className="table-header-info-report">
-          <thead className="thead-header-info">
-            <tr className="tr-header">
-              <td className="td-logo-school" rowSpan={2}>
-                <img src={logo} alt="logotipo" />
-              </td>
-              <td align="center" className="td-header">
-                <b>COLINA CAMPESTRE SCHOOL</b>
-                <p>De Sincelejo, Sucre, 
-                con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria 
-                por parte de Secretaria de Educación Municipal, 
-                según resolución No 2747 del 12 de diciembre de 2023. Carrera 34No 38-158, 
-                teléfonos: 2771068-3006781806</p>
-                <p>NIT: 901731191-3</p>
-              </td>
-              <td align="center" className="td-dane">DANE 370001038852</td>
-            </tr>
-          </thead>
-        </table>
+        <thead className="thead-header-info">
+          <tr className="tr-header">
+            <td className="td-logo-school" rowSpan={1}>
+              <img src={logo} alt="logotipo" />
+            </td>
+            <td align="center" className="td-header" colSpan={2}>
+              <b>COLINA CAMPESTRE SCHOOL</b>
+              <p>De Sincelejo, Sucre, 
+              con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria 
+              por parte de Secretaria de Educación Municipal, 
+              según resolución No 2747 del 12 de diciembre de 2023. Carrera 34No 38-158, 
+              teléfonos: 2771068-3006781806</p>
+              <p>NIT: 901731191-3</p>
+            </td>
+            <td align="center" className="td-dane">DANE 370001038852</td>
+          </tr>
+        </thead>
+      </table>
       <h2>
-        Promedios - Salón {classroomId} - Nivel {schoolLevel} - Periodo {periodId}
+        <p className='title-p'>{`REPORTE DE PROMEDIOS - SALÓN ${classroomName.toUpperCase()} - ${schoolLevel?.toUpperCase()} - P ${periodId}`}</p>
       </h2>
       <table>
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Estudiante</th>
+            <th scope="col" className='th-asignatura'><p>Posiciones</p></th>
+            <th scope="col" className='th-estudiante'><p>Estudiante</p></th>
             {areaIds.map(id => (
-              <th key={id} scope="col">
-                {subjectsMeta.find(m => m.areaId === id)?.asignatura || id}
+              <th key={id} scope="col" className='th-asignatura'>
+                <p className='p-asignaturas'>{subjectsMeta.find(m => m.areaId === id)?.asignatura || id}</p>
               </th>
             ))}
-            <th scope="col">Prom Gral</th>
+            <th scope="col" className='th-asignatura'><p>Promedio General</p></th>
           </tr>
         </thead>
         <tbody>
           {studentAverages.map(student => (
             <tr key={student.studentId}>
-              <td><p className='student-postion-p'>{student.position}</p></td>
+              <td><p className='student-position-p'>{student.position}</p></td>
               <td><p className='student-name-p'>{student.studentName}</p></td>
               {areaIds.map(id => {
                 const avg = student.averages[id];
@@ -200,13 +210,13 @@ const ClassAveragesReport: React.FC = () => {
                 const cat = getGradeCategory(avg);
                 return (
                   <td key={id}>
-                   <p className='promedio-p'>{avg.toFixed(2)}</p> 
-                   <span style={{ color: cat.color }}>{cat.letter}</span>
+                    <p className='promedio-p'>{avg.toFixed(2)}</p> 
+                    <span style={{ color: cat.color }}>{cat.letter}</span>
                   </td>
                 );
               })}
               <td>
-                {student.generalAverage.toFixed(2)}{' '}
+                <p className='promedio-p'>{student.generalAverage.toFixed(2)}</p>{' '}
                 <span style={{ color: getGradeCategory(student.generalAverage).color }}>
                   {getGradeCategory(student.generalAverage).letter}
                 </span>

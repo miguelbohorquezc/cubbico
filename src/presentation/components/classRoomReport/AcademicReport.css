@@ -61,6 +61,11 @@
   width: 6rem;
 }
 
+.title-p{
+  font-size: 12pt;
+}
+
+
 /* Información del estudiante */
 .table-student-info-report {
   border: 1px solid #9ea4ff;
