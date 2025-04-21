@@ -24,11 +24,12 @@ interface SubjectData {
   ihs: string;
   grades: Grades;
   achievements: Achievement;
+  _orden?: string;
 }
 
 interface AreaGroup {
   nombreArea: string;
-  orden: number;
+  _orden?: string;
   subjects: SubjectData[];
 }
 
@@ -57,8 +58,8 @@ const AcademicReport = () => {
   }>();
   
   const [reportData, setReportData] = React.useState<{
-    primary: SubjectData[];
-    secondary: AreaGroup[];
+    primary: Omit<SubjectData, '_orden'>[];
+    secondary: Omit<AreaGroup, '_orden'>[];
     periodInfo?: PeriodInfo;
   }>({ primary: [], secondary: [] });
   
@@ -68,12 +69,21 @@ const AcademicReport = () => {
 
   const isSecondary = schoolLevel === '2';
 
+  const getAchievements = async (achievementId?: string) => {
+    if (!achievementId) return null;
+    try {
+      const achievementSnap = await getDoc(doc(db, 'achievements', achievementId));
+      return achievementSnap.exists() ? achievementSnap.data().logros : null;
+    } catch (error) {
+      return null;
+    }
+  };
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         if (!studentId || !year) throw new Error('Parámetros inválidos');
 
-        // Obtener datos del estudiante
         const studentDoc = await getDoc(doc(db, 'student', studentId));
         if (!studentDoc.exists()) throw new Error('Estudiante no encontrado');
         
@@ -88,7 +98,6 @@ const AcademicReport = () => {
           classroomId: studentData.classroomId
         });
 
-        // Obtener datos académicos
         const [historySnap, areasSnapshot] = await Promise.all([
           getDoc(doc(db, 'history', studentId)),
           getDocs(collection(db, 'areas'))
@@ -99,7 +108,7 @@ const AcademicReport = () => {
         const areasMap = areasSnapshot.docs.reduce((acc, doc) => {
           acc[doc.id] = {
             ...doc.data(),
-            orden: doc.data().orden || 9999
+            orden: doc.data().orden ? String(doc.data().orden) : '9999'
           };
           return acc;
         }, {} as Record<string, any>);
@@ -110,7 +119,18 @@ const AcademicReport = () => {
         const primaryData: SubjectData[] = [];
         const secondaryGroups: Record<string, AreaGroup> = {};
 
-        // Procesar cada período académico
+        // Función de ordenamiento segura
+        const sortByOrder = (a: { _orden?: string }, b: { _orden?: string }) => {
+          const orderA = a._orden || '9999';
+          const orderB = b._orden || '9999';
+          
+          // Comparación numérica si ambos son números
+          if (!isNaN(Number(orderA)) && !isNaN(Number(orderB))) {
+            return Number(orderA) - Number(orderB);
+          }
+          return orderA.localeCompare(orderB);
+        };
+
         for (const period of Object.values(yearData.periods)) {
           const periodData = period as any;
           for (const [areaId, areaData] of Object.entries(periodData.areas)) {
@@ -122,7 +142,8 @@ const AcademicReport = () => {
               asignatura: areaInfo.asignatura || areaId,
               ihs: areaInfo.ihs || 'N/A',
               grades: (areaData as any).grades || { l1: 0, l2: 0, l3: 0, fallas: 0 },
-              achievements: achievements || { logro1: 'N/A', logro2: 'N/A', logro3: 'N/A' }
+              achievements: achievements || { logro1: 'N/A', logro2: 'N/A', logro3: 'N/A' },
+              _orden: areaInfo.orden
             };
 
             primaryData.push(subject);
@@ -131,7 +152,7 @@ const AcademicReport = () => {
             if (!secondaryGroups[areaKey]) {
               secondaryGroups[areaKey] = {
                 nombreArea: areaKey,
-                orden: areaInfo.orden || 9999,
+                _orden: areaInfo.orden,
                 subjects: []
               };
             }
@@ -140,13 +161,17 @@ const AcademicReport = () => {
         }
 
         setReportData({
-          primary: primaryData,
+          primary: primaryData
+            .sort(sortByOrder)
+            .map(({ _orden, ...rest }) => rest),
+          
           secondary: Object.values(secondaryGroups)
-            .sort((a, b) => a.orden - b.orden)
-            .map(group => ({
-              ...group,
-              subjects: group.subjects.sort((a, b) => 
-                a.asignatura.localeCompare(b.asignatura))
+            .sort(sortByOrder)
+            .map(({ _orden, subjects, ...groupRest }) => ({
+              ...groupRest,
+              subjects: subjects
+                .sort(sortByOrder)
+                .map(({ _orden, ...subjectRest }) => subjectRest)
             })),
           periodInfo: {
             periodo: yearData.periodo || '',
@@ -164,25 +189,15 @@ const AcademicReport = () => {
     fetchData();
   }, [studentId, year]);
 
-  const getAchievements = async (achievementId?: string) => {
-    if (!achievementId) return null;
-    try {
-      const achievementSnap = await getDoc(doc(db, 'achievements', achievementId));
-      return achievementSnap.exists() ? achievementSnap.data().logros : null;
-    } catch (error) {
-      return null;
-    }
-  };
-
   const calculateAverage = (l1: number, l2: number, l3: number) => {
     return ((l1 + l2 + l3) / 3).toFixed(2);
   };
 
   const getGradeCategory = (average: number) => {
-    if (average >= 4.6) return { text: 'Superior', color: '#3498db' }; // Azul
-    if (average >= 4.0) return { text: 'Alto', color: '#2ecc71' };     // Verde
-    if (average >= 3.0) return { text: 'Básico', color: '#f39c12' };   // Amarillo
-    return { text: 'Bajo', color: '#e74c3c' };                         // Rojo
+    if (average >= 4.6) return { text: 'Superior', color: '#3498db' };
+    if (average >= 4.0) return { text: 'Alto', color: '#2ecc71' };
+    if (average >= 3.0) return { text: 'Básico', color: '#f39c12' };
+    return { text: 'Bajo', color: '#e74c3c' };
   };
 
   const formatStudentName = (name: string, lastName: string) => {
@@ -265,7 +280,11 @@ const AcademicReport = () => {
           </thead>
           <tbody>
             {reportData.primary.map((subject, index) => {
-              const average = parseFloat(calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3));
+              const average = parseFloat(calculateAverage(
+                subject.grades.l1, 
+                subject.grades.l2, 
+                subject.grades.l3
+              ));
               const gradeCategory = getGradeCategory(average);
               
               return (
@@ -291,14 +310,15 @@ const AcademicReport = () => {
                     </div>
                   </td>
                   <td className="table-cell average-cell">
-                    <p>{average.toFixed(2)}</p>
-                    <span style={{ 
-                      color: gradeCategory.color,
-                      fontWeight: 'bold',
-                      fontSize: '0.8em'
-                    }}>
-                      {gradeCategory.text}
-                    </span>
+                    <div className="average-content">
+                      <p>{average.toFixed(2)}</p>
+                      <span style={{ 
+                        color: gradeCategory.color,
+                        backgroundColor: `${gradeCategory.color}20`
+                      }}>
+                        {gradeCategory.text}
+                      </span>
+                    </div>
                   </td>
                 </tr>
               );
@@ -314,24 +334,24 @@ const AcademicReport = () => {
           </tbody>
         </table>
         <table className="table-student-info-report">
-                    <thead className="thead-student-info">
-                            <tr className="">
-                                <td colSpan={2}><p>ESCALA DE VALORACIÓN</p></td>
-                            </tr>
-                    </thead>
-                    <tbody>
-                            <tr>
-                                <td colSpan={2}><p>Superior: 4.6 - 5.0; Alto: 4.0 - 4.5; Básico: 3.0 - 3.9; Bajo: 1.0 - 2.9</p></td>
-                            </tr>
-                    </tbody>
+          <thead className="thead-student-info">
+            <tr className="">
+              <td colSpan={2}><p>ESCALA DE VALORACIÓN</p></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={2}><p>Superior: 4.6 - 5.0; Alto: 4.0 - 4.5; Básico: 3.0 - 3.9; Bajo: 1.0 - 2.9</p></td>
+            </tr>
+          </tbody>
         </table>
         <table className="table-student-info-report">
           <thead className="thead-student-info">
-                            <tr className="">
-                                <td colSpan={3}>
-                                    <p>OBSERVACIONES</p>
-                                </td>
-                            </tr>
+            <tr className="">
+              <td colSpan={3}>
+                <p>OBSERVACIONES</p>
+              </td>
+            </tr>
           </thead>
           <tbody>
             <tr><td></td></tr>
@@ -395,7 +415,11 @@ const AcademicReport = () => {
                 </thead>
                 <tbody>
                   {group.subjects.map((subject, idx) => {
-                    const average = parseFloat(calculateAverage(subject.grades.l1, subject.grades.l2, subject.grades.l3));
+                    const average = parseFloat(calculateAverage(
+                      subject.grades.l1, 
+                      subject.grades.l2, 
+                      subject.grades.l3
+                    ));
                     const gradeCategory = getGradeCategory(average);
                     
                     return (
@@ -421,14 +445,15 @@ const AcademicReport = () => {
                           </div>
                         </td>
                         <td className="table-cell average-cell">
-                          <b>{average.toFixed(2)}</b>
-                          <span style={{ 
-                            color: gradeCategory.color,
-                            fontWeight: 'bold',
-                            fontSize: '0.8em'
-                          }}>
-                            {gradeCategory.text}
-                          </span>
+                          <div className="average-content">
+                            <p>{average.toFixed(2)}</p>
+                            <span style={{ 
+                              color: gradeCategory.color,
+                              backgroundColor: `${gradeCategory.color}20`
+                            }}>
+                              {gradeCategory.text}
+                            </span>
+                          </div>
                         </td>
                       </tr>
                     );

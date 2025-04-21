@@ -39,6 +39,10 @@ function Notes() {
               <Button 
                 variant="accent" size="sm">
                 <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1/1/${classroom?.directorGrupo}/1104269389/2025`}>Ver Informe Básico</Link>
+              </Button>
+              <Button 
+                variant="accent" size="sm">
+                <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/${classroom?.id}/1/${classroom?.nivel}/2025`}>Ver Informe general</Link>
               </Button>             
             </div>
           </div>

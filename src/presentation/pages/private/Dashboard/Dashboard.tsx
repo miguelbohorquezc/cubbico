@@ -13,6 +13,7 @@ import ClassroomStudents from "../../../features/teacher/ClassroomStudents"
 import User from "./components/Users"
 import ClassRoomPage from "./components/ClassRoomPage"
 import AreaPage from "./components/AreaPage"
+import InformePorSalon from "../../../components/informeGeneral/InformePorSalon"
 
 function Dashboard() {
   return (
@@ -26,6 +27,7 @@ function Dashboard() {
       <Route path={`${PrivateRoutes.ACADEMY}/:periodId`}                                                  element={<Academy/>}/>
       <Route path={PrivateRoutes.STUDENT}                                                                 element={<StudentsPage/>}/>
       <Route path={`${PrivateRoutes.REPORT}/:studentId/:year`}                                            element={<AcademicReport />} />
+      <Route path={`${PrivateRoutes.REPORT}/:classroomId/:periodId/:schoolLevel/:year`}                   element={<InformePorSalon/>}/>
       <Route path={`${PrivateRoutes.REPORT}/:schoolLevel/:periodId/:director/:studentId/:year`}           element={<AcademicReport/>}/>
       <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`}                               element={<Notes/>}/>
       <Route path={`${PrivateRoutes.NOTESPRESCHOOL}/:periodId/:classroomId`}                              element={<NotesPreschool/>}/>
