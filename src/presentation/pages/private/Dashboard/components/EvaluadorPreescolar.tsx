@@ -1,7 +1,7 @@
 
 import {useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../../../../components/sidebar/Sidebar';
-import EvaluadorCompleto from '../../../../features/preschool/EvaluadorCompleto';
+import EvaluadorCompleto from '../../../../features/preschool/Evaluador/EvaluadorCompleto';
 import Navbar from '../../../../components/navbar/Navbar';
 import Button from '../../../../features/button/Button';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ function EvaluadorPreescolar() {
                 onClick={() => navigate(-1)}>
                 Regresar
               </Button>             
-              <h2>Configurar Propósitos</h2>
+              <h2>Evaluar estudiante</h2>
             </div>
           </div>
           <div className='body-container-page'> 

@@ -18,7 +18,9 @@ function Academy() {
       <div className='container-page'>
           <div className='header-container-page'>
             <Navbar/>
-            <h2>Salones y asignaturas</h2>
+            <div className='title-option'>
+              <h2>Salones y asignaturas</h2>
+            </div>
           </div>
           <div className='body-container-page'> 
             <TeacherClassrooms/>
