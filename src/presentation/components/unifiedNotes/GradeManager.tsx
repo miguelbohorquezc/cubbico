@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { bulkSaveStudents, fetchStudentsByClassroom, fetchStudentGrades } from '../../../infrastructure/student.service';
 import { getAchievement } from '../../../infrastructure/achievement.service';
 import { Student } from './types';
 import InputField from './InputField';
 import './GradeManagerStyle.css';
+import Button from '../../features/button/Button';
+import { PrivateRoutes } from '../../../app/routes/routes';
+import { useAppSelector } from '../../../app/store/store';
 
 const GradeManager: React.FC = () => {
   const { periodId, classroomId, areaId } = useParams<{
@@ -12,6 +15,12 @@ const GradeManager: React.FC = () => {
     classroomId: string;
     areaId: string;
   }>();
+
+  //@ts-ignore
+    const classroom = useAppSelector(state => 
+        state.teacherData.classrooms.find((c: { id: string | undefined; }) => c.id === classroomId)
+      );
+      console.log(classroomId, classroom)
   
   const [students, setStudents] = useState<Student[]>([]);
   const [grades, setGrades] = useState<Record<string, { l1: string; l2: string; l3: string; fallas: string }>>({});
@@ -174,6 +183,7 @@ const GradeManager: React.FC = () => {
             <th><h3>L3</h3></th>
             <th><h3>Fallas</h3></th>
             <th><h3>Promedio</h3></th>
+            <th><h3>Informe</h3></th>
           </tr>
         </thead>
         <tbody>
@@ -220,6 +230,22 @@ const GradeManager: React.FC = () => {
                 </td>
                 <td className="average-cell">
                     {calculateAverage(studentGrades.l1, studentGrades.l2, studentGrades.l3)}
+                </td>
+                <td>
+                  
+                  {
+                  //@ts-ignore
+                  student.classRoom === 'Primaria' ? (
+                    <Button 
+                      variant="accent" size="sm">
+                      <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1/1/${classroom?.directorGrupo}/${student.id}/2025`}>(Ver)</Link>
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="accent" size="sm">
+                      <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/2/1/${classroom?.directorGrupo}/${student.id}/2025`}>(Ver)</Link>
+                    </Button>
+                  )}
                 </td>
               </tr>
             );

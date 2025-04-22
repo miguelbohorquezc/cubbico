@@ -18,7 +18,7 @@ interface Props {
   periodo: number;
 }
 
-const MAX_CARACTERES = 120;
+const MAX_CARACTERES = 250;
 const MAX_INDICADORES = 10;
 
 const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {

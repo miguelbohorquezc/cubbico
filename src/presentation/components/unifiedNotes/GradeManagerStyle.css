@@ -24,6 +24,7 @@
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
   }
   
   .title {
@@ -82,7 +83,7 @@
   }
   
   .grade-input {
-    width: 115px;
+    width: 93px;
     padding: 0.8rem 1.2rem;
     border: 2px solid #ced4da;
     border-radius: 8px;

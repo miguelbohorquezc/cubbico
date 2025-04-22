@@ -200,14 +200,6 @@ const AcademicReport = () => {
     return { text: 'Bajo', color: '#e74c3c' };
   };
 
-  const formatStudentName = (name: string, lastName: string) => {
-    const formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-    const formattedLastName = lastName.split(' ')
-      .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-      .join(' ');
-    return `${formattedName} ${formattedLastName}`;
-  };
-
   const renderStudentInfoTable = () => (
     <table className="table-student-info-report">
       <thead className="thead-student-info">
@@ -222,12 +214,12 @@ const AcademicReport = () => {
         <tr>
           <td className="student-name">
             {studentInfo ? 
-              formatStudentName(studentInfo.name, studentInfo.lastName) : 
+              `${studentInfo.name.toUpperCase()} ${studentInfo.lastName.toUpperCase()}` :  
               'Cargando...'}
           </td>
           <td className="student-classroom">
             {studentInfo ? 
-              `${studentInfo.classRoom} - ${studentInfo.className}` : 
+              studentInfo.className.toUpperCase() : 
               'Cargando...'}
           </td>
           <td>{periodId}</td>
@@ -304,9 +296,9 @@ const AcademicReport = () => {
                   </td>
                   <td className="table-cell">
                     <div className="grades-container">
-                      <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
-                      <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
-                      <span className="grade-label">L3:</span> {subject.grades.l3}
+                      <span className="grade-label">L1:</span> {subject.grades.l1.toFixed(1)}<br/>
+                      <span className="grade-label">L2:</span> {subject.grades.l2.toFixed(1)}<br/>
+                      <span className="grade-label">L3:</span> {subject.grades.l3.toFixed(1)}
                     </div>
                   </td>
                   <td className="table-cell average-cell">
@@ -389,6 +381,8 @@ const AcademicReport = () => {
             </tr>
           </thead>
         </table>
+
+        <p>INFORME DE VALORACIÓN</p>
         
         {renderStudentInfoTable()}
 
@@ -439,9 +433,9 @@ const AcademicReport = () => {
                         </td>
                         <td className="table-cell">
                           <div className="grades-container">
-                            <span className="grade-label">L1:</span> {subject.grades.l1}<br/>
-                            <span className="grade-label">L2:</span> {subject.grades.l2}<br/>
-                            <span className="grade-label">L3:</span> {subject.grades.l3}
+                            <span className="grade-label">L1:</span> {subject.grades.l1.toFixed(1)}<br/>
+                            <span className="grade-label">L2:</span> {subject.grades.l2.toFixed(1)}<br/>
+                            <span className="grade-label">L3:</span> {subject.grades.l3.toFixed(1)}
                           </div>
                         </td>
                         <td className="table-cell average-cell">
@@ -458,19 +452,47 @@ const AcademicReport = () => {
                       </tr>
                     );
                   })}
-                  <tr className="total-row">
-                    <td colSpan={2} className="table-cell">Total {group.nombreArea}:</td>
-                    <td className="table-cell">{groupFallas}</td>
-                    <td colSpan={3} className="table-cell"></td>
-                  </tr>
                 </tbody>
               </table>
             </div>
           );
         })}
         
-        <div className="grand-total">
-          <strong>Total faltas secundaria: {totalFallasSecundaria}</strong>
+        <table className="table-student-info-report">
+          <tbody>
+            <tr>
+                <td colSpan={2}><p>CONVENCIONES: I.H.S (Intensidad Horaria Semanal), L(Logro)</p></td>
+                <td colSpan={3}align="center">{`Total fallas: ${totalFallasSecundaria}`}</td>
+            </tr>
+          </tbody>
+        </table>
+        <table className="table-student-info-report">
+          <thead className="thead-student-info">
+            <tr className="">
+              <td colSpan={2}><p>ESCALA DE VALORACIÓN</p></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={2}><p>Superior: 4.6 - 5.0; Alto: 4.0 - 4.5; Básico: 3.0 - 3.9; Bajo: 1.0 - 2.9</p></td>
+            </tr>
+          </tbody>
+        </table>
+        <table className="table-student-info-report">
+          <thead className="thead-student-info">
+            <tr className="">
+              <td colSpan={3}>
+                <p>OBSERVACIONES</p>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td></td></tr>
+          </tbody>
+        </table>
+        <div className="firma">  
+          <p>{director}</p>
+          <p>Director(a) de grupo</p>
         </div>
       </div>
     );

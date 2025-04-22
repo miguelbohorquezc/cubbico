@@ -76,25 +76,12 @@ const ClassroomStudents = () => {
     },
     { 
       key: "caracter", 
-      label: "Carácter",
+      label: "Evaluación",
       render: (row: Student) => {
         let badgeClass = "status-badge ";
-        let label = row.caracter;
-        
-        // Personaliza según el carácter del estudiante si es necesario
-        switch(row.caracter?.toLowerCase()) {
-          case "interno":
-            badgeClass += "interno-badge";
-            break;
-          case "externo":
-            badgeClass += "externo-badge";
-            break;
-          default:
-            badgeClass += "default-badge";
-        }
-        
+        let label = row.caracter;    
         return (
-          <span className={badgeClass}>
+          <span className={`status-badge active-badge-area`}>
             {label}
           </span>
         );
@@ -138,8 +125,7 @@ const ClassroomStudents = () => {
             enableSearch={true}
             skeletonCount={10}
             tableSize={{ 
-              width: "100%", 
-              maxHeight: "80vh" 
+              width: "100%"
             }}
           />
           </div>

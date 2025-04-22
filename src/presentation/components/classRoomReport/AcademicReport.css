@@ -3,7 +3,7 @@
   width: 65rem;
   display: flex;
   flex-direction: column;
-  gap: 2em;
+  gap: 1em;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
@@ -103,8 +103,8 @@
 }
 
 .area-title {
-  background: #3498db;
-  color: white;
+  background: #eeeeee;
+  color: rgb(0, 0, 0);
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 15px;
