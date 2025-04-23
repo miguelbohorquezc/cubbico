@@ -286,12 +286,24 @@ const AcademicReport = () => {
                   <td className="table-cell">{subject.grades.fallas}</td>
                   <td className="table-cell">
                     <div className="achievements-container">
-                      {Object.entries(subject.achievements).map(([key, value], idx) => (
-                        <div key={key} className="achievement-item">
+                    <div className="achievement-item">
+                                <span className="achievement-number">{1}</span>
+                                {subject.achievements.logro1}
+                              </div>
+                              <div className="achievement-item">
+                                <span className="achievement-number">{2}</span>
+                                {subject.achievements.logro2}
+                              </div>
+                              <div className="achievement-item">
+                                <span className="achievement-number">{3}</span>
+                                {subject.achievements.logro3}
+                              </div>
+                     {/*  {Object.entries(subject.achievements).map(([key, value], idx) => (
+                    <div key={key} className="achievement-item">
                           <span className="achievement-number">{idx + 1}</span>
                           {value}
                         </div>
-                      ))}
+                      ))} */}
                     </div>
                   </td>
                   <td className="table-cell">
@@ -423,12 +435,20 @@ const AcademicReport = () => {
                         <td className="table-cell">{subject.grades.fallas}</td>
                         <td className="table-cell">
                           <div className="achievements-container">
-                            {Object.entries(subject.achievements).map(([key, value], idx) => (
-                              <div key={key} className="achievement-item">
-                                <span className="achievement-number">{idx + 1}</span>
-                                {value}
+                              <div className="achievement-item">
+                                <span className="achievement-number">{1}</span>
+                                {subject.achievements.logro1}
                               </div>
-                            ))}
+                              <div className="achievement-item">
+                                <span className="achievement-number">{2}</span>
+                                {subject.achievements.logro2}
+                              </div>
+                              <div className="achievement-item">
+                                <span className="achievement-number">{3}</span>
+                                {subject.achievements.logro3}
+                              </div>
+                            {/* {Object.entries(subject.achievements).map(([key, value], idx) => (
+                            ))} */}
                           </div>
                         </td>
                         <td className="table-cell">

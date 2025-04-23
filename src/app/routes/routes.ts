@@ -16,6 +16,7 @@ export const PrivateRoutes = {
     NOTESPRESCHOOL:             'notespreschool',
     INDICADORES:                'indicadores',
     EVALUADORPREESCOLAR:        'evaluadorpreescolar',
+    PRINT:                     'print',
     CLASSROOMS:                'classrooms',
     AREA:                       'area',
 }

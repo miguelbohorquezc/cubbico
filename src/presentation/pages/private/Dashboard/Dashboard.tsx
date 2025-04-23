@@ -14,6 +14,7 @@ import User from "./components/Users"
 import ClassRoomPage from "./components/ClassRoomPage"
 import AreaPage from "./components/AreaPage"
 import InformePorSalon from "../../../components/informeGeneral/InformePorSalon"
+import InformePreescolar from "../../../features/preschool/Evaluador/InformePreescolar"
 
 function Dashboard() {
   return (
@@ -33,6 +34,7 @@ function Dashboard() {
       <Route path={`${PrivateRoutes.NOTESPRESCHOOL}/:periodId/:classroomId`}                              element={<NotesPreschool/>}/>
       <Route path={`${PrivateRoutes.INDICADORES}/:periodId/:classroomId`}                                 element={<ConfigIndicadores/>}/>
       <Route path={`${PrivateRoutes.EVALUADORPREESCOLAR}/:periodId/:classroomId/:studentId/:year`}        element={<EvaluadorPreescolar/>}/>
+      <Route path={`${PrivateRoutes.PRINT}/:periodId/:classroomId/:studentId/:year`}                      element={<InformePreescolar/>}/>
       <Route path={`${PrivateRoutes.STUDENT}/:periodId/:classroomId/students`}                            element={<ClassroomStudents />} />
       <Route path={`${PrivateRoutes.CLASSROOMS}`}                                                         element={<ClassRoomPage />} />
       <Route path={`${PrivateRoutes.AREA}`}                                                               element={<AreaPage />} />

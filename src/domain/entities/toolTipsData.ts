@@ -5,6 +5,7 @@ export enum toolTipsData {
     PROPOSITOS = 'Configurar propósitos para informe de preescolar',
     INDICADORES = 'Configurar indicadores',
     ESTUDIANTES = 'Entrar al salón de clases',
+    IMPRIMIR = 'Imprimir informe de preescolar',
     USER = 'Administrador de usuarios',
     NUEVOESTUDIANTE = 'Crear nuevo estudiante',
     NUEVOSALONES = 'Crear nuevo salón de clases',

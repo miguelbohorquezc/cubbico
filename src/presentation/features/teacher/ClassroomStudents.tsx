@@ -46,6 +46,10 @@ const ClassroomStudents = () => {
     navigate(`/private/dashboard/evaluadorpreescolar/${periodId}/${classroomId}/${studentId}/${year}`);
   };
 
+  const printPreschoolEvaluador = (studentId: string, year: string) => {
+    navigate(`/private/dashboard/print/${periodId}/${classroomId}/${studentId}/${year}`);
+  };
+
   const columns = [
     { 
       key: "document", 
@@ -78,6 +82,7 @@ const ClassroomStudents = () => {
       key: "caracter", 
       label: "Evaluación",
       render: (row: Student) => {
+        //@ts-ignore
         let badgeClass = "status-badge ";
         let label = row.caracter;    
         return (
@@ -91,9 +96,14 @@ const ClassroomStudents = () => {
       key: 'actions', 
       label: 'Acciones',
       render: (student: Student) => (
+        <>
         <Tooltip text={toolTipsData.ESTUDIANTES} position="bottom">
-                <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEvaluador(student.id, '2025')}/> 
-              </Tooltip>
+           <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoomPreschoolEvaluador(student.id, '2025')}/> 
+        </Tooltip>
+        <Tooltip text={toolTipsData.IMPRIMIR} position="bottom">
+          <img src={actionIcon} className="custom-icon" alt="classRooms" onClick={() => printPreschoolEvaluador(student.id, '2025')}/> 
+        </Tooltip>
+        </>
       )
     }
   ];

@@ -1,3 +1,4 @@
+//@ts-ignore
 import React from 'react';
 import { useEvaluadorCompleto } from './useEvaluadorCompleto';
 import './EvaluadorCompleto.css';
