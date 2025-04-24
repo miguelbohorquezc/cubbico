@@ -223,7 +223,7 @@ const AcademicReport = () => {
               'Cargando...'}
           </td>
           <td>{periodId}</td>
-          <td>{new Date().toLocaleDateString()}</td>
+          <td>30/04/2025</td>
         </tr>
       </tbody>
     </table>

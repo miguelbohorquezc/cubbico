@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useEvaluadorPreescolar } from './useEvaluadorPreescolar';
+import './InformePreescolar.css'; // Asegúrate de tener el CSS correspondiente
 
 import logo from '../../../../assets/logo/logotipo.jpg';
 
@@ -40,12 +41,12 @@ const InformePreescolar: React.FC = () => {
   return (
     <>
       {cargando ? (
-        <div className="ec-loading-container">
-          <div className="ec-loading-spinner" />
+        <div className="ip-loading-container">
+          <div className="ip-loading-spinner" />
           <p>Cargando información del informe...</p>
         </div>
       ) : (
-        <div className='ec-informe-container'>
+        <div className='ip-informe-container'>
           <table className="table-header-info-report">
             <thead className="thead-header-info">
               <tr className="tr-header">
@@ -65,36 +66,36 @@ const InformePreescolar: React.FC = () => {
             </thead>
           </table>
 
-          <div className="ec-header-card">
-            <div className="ec-student-meta">
-              <div className="ec-meta-item">
-                <span className="ec-meta-label">Estudiante:</span>
-                <span className="ec-meta-value">
+          <div className="ip-header-card">
+            <div className="ip-student-meta">
+              <div className="ip-meta-item">
+                <span className="ip-meta-label">ESTUDIANTE:</span>
+                <span className="ip-meta-value">
                   {studentName || studentId}
                 </span>
               </div>
-              <div className="ec-meta-item">
-                <span className="ec-meta-label">Salón:</span>
-                <span className="ec-meta-value">
-                  {classroomName || classroomId}
+              <div className="ip-meta-item">
+                <span className="ip-meta-label">SALÓN DE CLASES:</span>
+                <span className="ip-meta-value">
+                  {classroomName.toUpperCase() || classroomId}
                 </span>
               </div>
-              <div className="ec-meta-item">
-                <span className="ec-meta-label">Periodo:</span>
-                <span className="ec-meta-value">{safePeriod}</span>
+              <div className="ip-meta-item">
+                <span className="ip-meta-label">Periodo:</span>
+                <span className="ip-meta-value">{safePeriod}</span>
               </div>
-              <div className="ec-meta-item">
-                <span className="ec-meta-label">Fecha:</span>
-                <span className="ec-meta-value">{year}</span>
+              <div className="ip-meta-item">
+                <span className="ip-meta-label">Fecha:</span>
+                <span className="ip-meta-value">30/04/2025</span>
               </div>
             </div>
           </div>
 
           {/* Reestructuración de contenidos de propósitos */}
-          <div className="ec-propositos-grid">
+          <div className="ip-propositos-grid">
             {propositos.map((p, i) => (
-              <div key={p.id} className="ec-proposito-card">
-                <div className="ec-proposito-content">
+              <div key={p.id} className="ip-proposito-card">
+                <div className="ip-proposito-content">
                   <table>
                     <thead>
                       <tr>
@@ -103,7 +104,7 @@ const InformePreescolar: React.FC = () => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>
+                        <td className='ip-proposito-row-referentes'>
                           <h4>Referentes</h4>
                           <ul>
                             {p.referentes.map((r, idx) => (
@@ -111,23 +112,22 @@ const InformePreescolar: React.FC = () => {
                             ))}
                           </ul>
                         </td>
-                        <td>
+                        <td className='ip-proposito-row-indicadores'>
                           <h4>Indicadores</h4>
                           {p.asignaturas.map(aId => {
-                            const nombre = obtenerNombreAsignatura(aId);
-                            const opts = indicadores.filter(ind => ind.asignatura === aId);
-                            const sel = selecciones[aId] || '';
-                            return (
-                              <div key={aId}>
-                                <strong>{}</strong>
-                                <select value={sel} disabled>
-                                  <option value="">
-                                    {sel ? opts.find(o => o.id === sel)?.texto : 'Sin selección'}
-                                  </option>
-                                </select>
-                              </div>
-                            );
-                          })}
+  const opts = indicadores.filter(ind => ind.asignatura === aId);
+  const sel = selecciones[aId] || '';
+  const indicador = opts.find(o => o.id === sel);
+
+  return (
+    <div key={aId} className="ip-indicador-item-container">
+      {indicador 
+        ? <p className="ip-indicador-text">{indicador.texto}</p>
+        : <p className="ip-indicador-text--empty">Sin selección</p>
+      }
+    </div>
+  );
+})}
                         </td>
                       </tr>
                     </tbody>
@@ -138,8 +138,8 @@ const InformePreescolar: React.FC = () => {
           </div>
 
           {mostrarExito && (
-            <div className="ec-success-message">
-              <span className="ec-success-icon">✓</span> Selección guardada correctamente
+            <div className="ip-success-message">
+              <span className="ip-success-icon">✓</span> Selección guardada correctamente
             </div>
           )}
         </div>
