@@ -28,6 +28,7 @@ const InformePreescolar: React.FC = () => {
     propositos,
     indicadores,
     selecciones,
+    //@ts-ignore
     obtenerNombreAsignatura,
     cargando,
     mostrarExito

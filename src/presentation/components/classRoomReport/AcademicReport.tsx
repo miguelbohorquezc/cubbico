@@ -262,7 +262,7 @@ const AcademicReport = () => {
         <table className="report-table">
           <thead>
             <tr>
-              <th className="table-header">Asignatura</th>
+              <th className="table-header">Área</th>
               <th className="table-header">IHS</th>
               <th className="table-header">Fallas</th>
               <th className="table-header">Logros</th>

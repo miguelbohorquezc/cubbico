@@ -51,6 +51,7 @@ export function useEvaluadorPreescolar(
   const [selecciones, setSelecciones] = useState<Record<string, string>>({});
   const [areas, setAreas] = useState<Area[]>([]);
   const [cargando, setCargando] = useState<boolean>(true);
+  //@ts-ignore
   const [mostrarExito, setMostrarExito] = useState<boolean>(false);
 
   useEffect(() => {
