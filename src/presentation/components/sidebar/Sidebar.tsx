@@ -70,11 +70,13 @@ const Sidebar = () => {
               activeSubmenu === "matricula" ? "submenu-active" : ""
             }`}
           >
+            <div className="submenu-item">
             <Tooltip text={toolTipsData.NUEVOESTUDIANTE} position="right">
               <Link to={`/private/dashboard/${PrivateRoutes.CREATESTUDENT}`} style={{ textDecoration: 'none' }}>
                 <p>Nuevo estudiante</p>
               </Link>
             </Tooltip>
+            </div>
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}

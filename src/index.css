@@ -46,7 +46,7 @@ h4{
   flex-direction: row;
   gap: 1em;
   justify-content: flex-start;
-  align-items: baseline;
+  align-items: center;
   padding-left: 2em;
 } 
 
@@ -114,6 +114,15 @@ h4{
   user-select: none;
   box-shadow: var(--shadow-sm);
 }
+/* Botones nav */
+.nav-options{
+  width: 3em;
+  height: 3em;
+  border: none;
+  background: #ffffff00;
+  cursor: pointer;
+}
+
 
 /* Tamaños */
 .btn-sm {

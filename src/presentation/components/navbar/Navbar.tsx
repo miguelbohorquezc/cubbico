@@ -31,7 +31,7 @@ const Navbar = () => {
         {/* Menú de usuario */}
         <div className="user-menu-container">
           <button className="user-menu-toggle" onClick={toggleDropdown}>
-            <span className="user-avatar">{initial}</span>
+            <span className="user-avatar">{}</span>
             <span className="user-name">{userEmail}</span>
             <span className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}></span>
           </button>
@@ -41,7 +41,7 @@ const Navbar = () => {
               <div className="dropdown-header">
                 <span className="dropdown-avatar"></span>
                 <div className="dropdown-user-info">
-                  <span className="dropdown-user-name">{initial}</span>
+                  <span className="dropdown-user-name">Usuario</span>
                   <span className="dropdown-user-email">{userEmail}</span>
                 </div>
               </div>

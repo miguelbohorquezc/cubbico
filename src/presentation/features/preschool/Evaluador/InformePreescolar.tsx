@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEvaluadorPreescolar } from './useEvaluadorPreescolar';
-import './InformePreescolar.css'; // Asegúrate de tener el CSS correspondiente
-
+import './InformePreescolar.css';
 import logo from '../../../../assets/logo/logotipo.jpg';
+import logoPreschool from '../../../../assets/logo/logoPreschool.svg';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../../infrastructure/firebase/firebase';
 
 type Params = {
   classroomId: string;
@@ -17,7 +19,7 @@ const InformePreescolar: React.FC = () => {
     classroomId = '',
     studentId = '',
     periodId = '0',
-    year = ''
+    year = '',
   } = useParams<Params>();
 
   const safePeriod = parseInt(periodId, 10) || 0;
@@ -28,16 +30,35 @@ const InformePreescolar: React.FC = () => {
     propositos,
     indicadores,
     selecciones,
-    //@ts-ignore
+    // @ts-ignore
     obtenerNombreAsignatura,
     cargando,
-    mostrarExito
+    mostrarExito,
   } = useEvaluadorPreescolar({
     studentId,
     periodo: safePeriod,
     year,
-    classRoomId: classroomId
+    classRoomId: classroomId,
   });
+
+  const [directorGrupo, setDirectorGrupo] = useState<string>('');
+
+  useEffect(() => {
+    if (!classroomId) return;
+    const fetchDirector = async () => {
+      try {
+        const ref = doc(db, 'classRooms', classroomId);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          const data = snap.data();
+          setDirectorGrupo(data.directorGrupo || '');
+        }
+      } catch (err) {
+        console.error('Error fetching directorGrupo:', err);
+      }
+    };
+    fetchDirector();
+  }, [classroomId]);
 
   return (
     <>
@@ -47,7 +68,7 @@ const InformePreescolar: React.FC = () => {
           <p>Cargando información del informe...</p>
         </div>
       ) : (
-        <div className='ip-informe-container'>
+        <div className="ip-informe-container">
           <table className="table-header-info-report">
             <thead className="thead-header-info">
               <tr className="tr-header">
@@ -57,12 +78,17 @@ const InformePreescolar: React.FC = () => {
                 <td align="center" className="td-header">
                   <b>COLINA CAMPESTRE SCHOOL</b>
                   <p>
-                    De Sincelejo, Sucre, con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria por parte de Secretaría de Educación Municipal,
-                    según resolución No 2747 del 12 de diciembre de 2023. Carrera 34 No 38-158, teléfonos: 2771068-3006781806
+                    De Sincelejo, Sucre, con reconocimiento oficial en
+                    los niveles de Preescolar, Básica Primaria y Básica
+                    Secundaria por parte de Secretaría de Educación
+                    Municipal, según resolución No 2747 del 12 de diciembre
+                    de 2023. Carrera 34 No 38-158, teléfonos:
+                    2771068-3006781806
                   </p>
                   <p>NIT: 901731191-3</p>
                 </td>
-                <td align="center" className="td-dane">DANE 370001038852</td>
+                <td align="center" className="td-dane"><img className='logoPreschool' src={logoPreschool} alt="logotipo"/><p>DANE 370001038852</p></td>
+                        
               </tr>
             </thead>
           </table>
@@ -92,7 +118,6 @@ const InformePreescolar: React.FC = () => {
             </div>
           </div>
 
-          {/* Reestructuración de contenidos de propósitos */}
           <div className="ip-propositos-grid">
             {propositos.map((p, i) => (
               <div key={p.id} className="ip-proposito-card">
@@ -105,7 +130,7 @@ const InformePreescolar: React.FC = () => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td className='ip-proposito-row-referentes'>
+                        <td className="ip-proposito-row-referentes">
                           <h4>Referentes</h4>
                           <ul>
                             {p.referentes.map((r, idx) => (
@@ -113,22 +138,32 @@ const InformePreescolar: React.FC = () => {
                             ))}
                           </ul>
                         </td>
-                        <td className='ip-proposito-row-indicadores'>
+                        <td className="ip-proposito-row-indicadores">
                           <h4>Indicadores</h4>
-                          {p.asignaturas.map(aId => {
-  const opts = indicadores.filter(ind => ind.asignatura === aId);
-  const sel = selecciones[aId] || '';
-  const indicador = opts.find(o => o.id === sel);
+                          {p.asignaturas.map((aId) => {
+                            const opts = indicadores.filter(
+                              (ind) => ind.asignatura === aId
+                            );
+                            const sel = selecciones[aId] || '';
+                            const indicador = opts.find((o) => o.id === sel);
 
-  return (
-    <div key={aId} className="ip-indicador-item-container">
-      {indicador 
-        ? <p className="ip-indicador-text">{indicador.texto}</p>
-        : <p className="ip-indicador-text--empty">Sin selección</p>
-      }
-    </div>
-  );
-})}
+                            return (
+                              <div
+                                key={aId}
+                                className="ip-indicador-item-container"
+                              >
+                                {indicador ? (
+                                  <p className="ip-indicador-text">
+                                    {indicador.texto}
+                                  </p>
+                                ) : (
+                                  <p className="ip-indicador-text--empty">
+                                    Sin selección
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
                         </td>
                       </tr>
                     </tbody>
@@ -140,9 +175,38 @@ const InformePreescolar: React.FC = () => {
 
           {mostrarExito && (
             <div className="ip-success-message">
-              <span className="ip-success-icon">✓</span> Selección guardada correctamente
+              <span className="ip-success-icon">✓</span> Selección guardada
+              correctamente
             </div>
           )}
+
+          <div className="ip-observaciones-section">
+            <h4>Observaciones</h4>
+            <table className="ip-observaciones-table">
+              <tbody>
+                {Array.from({ length: 1 }).map((_, idx) => (
+                  <tr key={idx}>
+                    <td>&nbsp;</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="ip-director-section">
+            <div className="firma">  
+              <p>{directorGrupo.toUpperCase()}</p>
+              <p>Director(a) de grupo</p>
+            </div>
+            {/* <p>
+              Director(a) de Grupo:&nbsp;
+              {directorGrupo ? (
+                <strong>{directorGrupo}</strong>
+              ) : (
+                <em>Cargando...</em>
+              )}
+            </p> */}
+          </div>
         </div>
       )}
     </>

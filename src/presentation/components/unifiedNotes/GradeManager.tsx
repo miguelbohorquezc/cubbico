@@ -8,6 +8,8 @@ import './GradeManagerStyle.css';
 import Button from '../../features/button/Button';
 import { PrivateRoutes } from '../../../app/routes/routes';
 import { useAppSelector } from '../../../app/store/store';
+import informe from "../../../assets/navbarIcons/informe.svg"
+import Tooltip from '../toolTip/Tooltip';
 
 const GradeManager: React.FC = () => {
   const { periodId, classroomId, areaId } = useParams<{
@@ -236,15 +238,27 @@ const GradeManager: React.FC = () => {
                   {
                   //@ts-ignore
                   student.classRoom === 'Primaria' ? (
-                    <Button 
-                      variant="accent" size="sm">
-                      <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1/1/${classroom?.directorGrupo}/${student.id}/2025`}>(Ver)</Link>
-                    </Button>
+                    <Tooltip text="Ver informe" position='bottom'>
+                      <button className="nav-options">
+                        <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1/${periodId}/${classroom?.directorGrupo}/${student.id}/2025`}>
+                          <img src={informe} 
+                              alt="informe"
+                              />
+                        </Link>
+                      </button>            
+                    </Tooltip>
+                    
+                   
                   ) : (
-                    <Button 
-                      variant="accent" size="sm">
-                      <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/2/1/${classroom?.directorGrupo}/${student.id}/2025`}>(Ver)</Link>
-                    </Button>
+                    <Tooltip text="Ver informe" position='bottom'>
+                      <button className="nav-options">
+                        <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/2/${periodId}/${classroom?.directorGrupo}/${student.id}/2025`}>
+                          <img src={informe} 
+                              alt="informe"
+                              />
+                        </Link>
+                      </button>            
+                    </Tooltip>
                   )}
                 </td>
               </tr>

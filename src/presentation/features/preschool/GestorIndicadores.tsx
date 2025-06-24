@@ -19,7 +19,7 @@ interface Props {
 }
 
 const MAX_CARACTERES = 250;
-const MAX_INDICADORES = 10;
+const MAX_INDICADORES = 40;
 
 const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
   const [asignaturas, setAsignaturas] = useState<AreaIhsInfo[]>([]);

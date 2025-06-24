@@ -6,6 +6,9 @@ import Modal from "../../../../components/modal/Modal";
 import { useState } from "react";
 import ClassRoomForm from "../../../../components/classRoomForm/ClassRoomForm";
 import ClassRoomList from "../../../../features/students/ClassRoomList";
+import arrowIcons from "../../../../../assets/navbarIcons/arrow.svg"
+import addIcons from "../../../../../assets/navbarIcons/add.svg"
+import Tooltip from "../../../../components/toolTip/Tooltip";
 
 function ClassRoomPage() {
   const navigate = useNavigate();
@@ -17,16 +20,20 @@ function ClassRoomPage() {
         <div className='header-container-page'>
             <Navbar/>
             <div className='title-option'>
-              <Button 
-                variant="primary" size="sm"
-                onClick={() => navigate(-1)}>
-                Regresar
-              </Button>
-              <Button 
-                variant="accent" size="sm"
-                onClick={() => setIsModalOpen(true)}>
-                Crear salones
-              </Button>              
+              <Tooltip text="Atras">
+                <button className="nav-options">
+                  <img src={arrowIcons} 
+                      alt="back"
+                      onClick={() => navigate(-1)} />
+                </button>
+              </Tooltip>
+              <Tooltip text="Crear salón de clases">
+                <button className="nav-options">
+                  <img src={addIcons} 
+                      alt="back"
+                      onClick={() => setIsModalOpen(true)} />
+                </button>            
+              </Tooltip>
               <h2>Salones de clase</h2>
             </div>
           </div>

@@ -3,7 +3,7 @@
   width: 65rem;
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 5px;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;

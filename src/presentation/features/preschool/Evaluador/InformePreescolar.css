@@ -17,7 +17,7 @@
     width: 40px;
     height: 40px;
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top-color: #333;
+    border-top-color: #1b1b1b;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 0.5rem;
@@ -52,12 +52,12 @@
     font-weight: bold;
     margin-bottom: 0.25rem;
     text-transform: uppercase;
-    color: #555;
+    color: #1e1e1e;
   }
   
   .ip-meta-value {
     font-size: 0.95rem;
-    color: #333;
+    color: #121212;
   }
   
   /* Sección de propósitos con Flexbox */
@@ -91,7 +91,7 @@
   }
   
   .ip-proposito-content table thead th {
-    color: #2c3e50;
+    color: #000000;
     padding: 0.5rem;
     font-size: 1rem;
     text-align: center;
@@ -102,6 +102,10 @@
     display: flex;
     gap: 1rem;
     margin-top: 0.75rem;
+  }
+
+  .td-dane img{
+    width: 5em;
   }
   
   /* Columnas de referentes e indicadores */
@@ -115,6 +119,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    gap: 8px;
   }
   
   /* Estilo de listas de referentes */
@@ -133,14 +138,14 @@
     border-radius: 11px;
     border: 1px solid #9bd7ff;
     font-size: 0.9rem;
-    color: #333;
+    color: #000000;
   }
   
   /* Títulos de sección */
   .ip-proposito-content h4 {
     margin: 0;
     font-size: 0.95rem;
-    color: #256029;
+    color: #000000;
     text-transform: uppercase;
   }
   
@@ -157,7 +162,7 @@
   .ip-indicador-text {
     margin: 0;
     font-size: 0.95rem;
-    color: #333;
+    color: #101010;
   }
   
   /* Texto cuando no hay selección */
@@ -177,7 +182,7 @@
     background-color: #e6f4ea;
     border: 1px solid #a3d7a5;
     border-radius: 4px;
-    color: #256029;
+    color: #0e0e0e;
   }
   
   .ip-success-icon {
@@ -215,3 +220,40 @@
     }
   }
   
+  /* Sección de Observaciones */
+.ip-observaciones-section {
+  margin-top: 1.5rem;
+}
+
+.ip-observaciones-section h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #0c0c0c;
+  text-transform: uppercase;
+}
+
+/* Tabla de observaciones */
+.ip-observaciones-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 4em;
+}
+
+.ip-observaciones-table td {
+  height: 2.5em;           /* Altura de cada fila */
+  border: 1px solid #ccc;
+  padding: 0 0.5rem;
+}
+
+/* Firma del Director */
+.ip-director-section {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.ip-director-section p {
+  margin: 0;
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #070707;
+}
