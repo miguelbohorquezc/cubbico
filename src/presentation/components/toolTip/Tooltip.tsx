@@ -101,7 +101,7 @@ const Tooltip: React.FC<TooltipProps> = ({
                 pointer-events: none;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.15);
                 animation: tooltip-fadeIn 0.2s ease-out;
-                z-index: 1000;
+                z-index: 6000;
                 white-space: nowrap;
                 transform: translate(var(--translate-x), var(--translate-y));
               }

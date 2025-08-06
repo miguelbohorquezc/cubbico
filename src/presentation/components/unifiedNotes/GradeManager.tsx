@@ -5,7 +5,6 @@ import { getAchievement } from '../../../infrastructure/achievement.service';
 import { Student } from './types';
 import InputField from './InputField';
 import './GradeManagerStyle.css';
-import Button from '../../features/button/Button';
 import { PrivateRoutes } from '../../../app/routes/routes';
 import { useAppSelector } from '../../../app/store/store';
 import informe from "../../../assets/navbarIcons/informe.svg"

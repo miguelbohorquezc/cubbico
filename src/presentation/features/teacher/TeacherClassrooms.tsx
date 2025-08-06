@@ -3,7 +3,7 @@ import React from "react";
 import { useAppSelector } from "../../../app/store/store";
 import DataTable from "../../components/datatable/DataTable";
 import { useNavigate, useParams } from "react-router-dom";
-import classRooms from "../../../assets/datatableIcons/align-box-right-bottom.svg"
+import areaIcon from '../../../assets/datatableIcons/file-invoice.svg';
 import Tooltip from "../../components/toolTip/Tooltip";
 import { toolTipsData } from "../../../domain/entities/toolTipsData";
 
@@ -71,7 +71,7 @@ const TeacherClassrooms = () => {
       label: 'Acciones',
       render: (classrooms: any) => (
         <Tooltip text={toolTipsData.ASIGNATURAS} position="right">
-          <img src={classRooms} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(classrooms.id, classrooms.nivel)}/> 
+          <img src={areaIcon} className="custom-icon" alt="classRooms" onClick={() => handleSelectClassRoom(classrooms.id, classrooms.nivel)}/> 
         </Tooltip>
       )
     }

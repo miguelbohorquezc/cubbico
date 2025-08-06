@@ -6,18 +6,21 @@
 }
 
 .sidebar {
+  position: fixed;
+  z-index: 5000;
   transition: width 0.3s ease;
-  background-color: #ffffff;
+  background-color: var(--background-sidebar-color);
   color: white;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
   padding: 10px;
-  border-right: 2px solid #f5f5f5;
+  border-right: 1.5px solid #dceaff;
+  height: 100vh;
 }
 
-.icon .sidebar-icons{
+.sidebar .icon .sidebar-icons{
   width: 1.5em;
 }
 
@@ -26,12 +29,15 @@
 }
 
 .sidebar.closed {
-  width: 52px;
+  width: 50px;
 }
 
 .toggle-button{
   display: flex;
   gap: 9em;
+  margin-top: 1em;
+  margin-bottom: 1.6em;
+  cursor: pointer;
 }
 
 /* Submenú con efecto de expansión */
@@ -68,11 +74,12 @@
 
 .submenu-item-link p:hover {
   padding: 5px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--btn-hover-primary);
+  color: white
 }
 
 .submenu-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--btn-hover-primary);
 }
 
 /* Submenú activo */
@@ -97,7 +104,7 @@
   padding: 10px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
+  border: 2px solid rgb(255, 255, 255);
   
   width: 14em;
   height: 3em;
@@ -121,7 +128,8 @@
 }
 
 .icon:hover {
-  background-color: #c6c6c6;
+  border: 2px solid var(--btn-hover-primary);
+  color: white;
   border-radius: 10px;
 }
 
@@ -139,9 +147,7 @@
 
 .sidebar-icons-option{
   padding-right: 3px;
+  width: 1.5em;
 }
 
-.sidebar-icons-option:hover{
-  background-color: #ffffff0f;
-  border-radius: 5px;
-}
+

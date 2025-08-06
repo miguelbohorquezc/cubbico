@@ -1,7 +1,6 @@
 //@ts-ignore
 import React from "react";
 import useSidebar from "./useSidebar";
-import logo from '../../../assets/sidebarIcons/logo.png';
 import dasboardIcon from '../../../assets/sidebarIcons/dashboard-icon.svg';
 import userIcon from '../../../assets/sidebarIcons/user-icon.svg';
 import classroomIcon from '../../../assets/sidebarIcons/classroom-icon.svg';
@@ -25,7 +24,7 @@ const Sidebar = () => {
         
         {/* Botón de Toggle */}
         <div className="toggle-button" onClick={toggleSidebar}>
-          <img className="sidebar-icons-option" src={logo} alt="área docente" />
+          {/* <img className="sidebar-icons-option" src={logo} alt="área docente" /> */}
           {isOpen ? (
             <img
               className="sidebar-icons-option"
@@ -148,19 +147,25 @@ const Sidebar = () => {
             </Tooltip>
             </div>
             <div className="submenu-item-link">
-              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/2`} style={{ textDecoration: 'none' }}>
-                <p>Período Académico 2</p>
-              </Link>
+              <Tooltip text={toolTipsData.PERIODO2} position="right">
+                <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/2`} style={{ textDecoration: 'none' }}>
+                  <p>Período Académico 2</p>
+                </Link>
+              </Tooltip>
             </div>
             <div className="submenu-item-link">
-              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/3`} style={{ textDecoration: 'none' }}>
-                <p>Período Académico 3</p>
-              </Link>
+              <Tooltip text={toolTipsData.PERIODO3} position="right">
+                <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/3`} style={{ textDecoration: 'none' }}>
+                  <p>Período Académico 3</p>
+                </Link>
+              </Tooltip>
             </div>
             <div className="submenu-item-link">
-              <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/4`} style={{ textDecoration: 'none' }}>
-                <p>Período Académico 4</p>
-              </Link>
+              <Tooltip text={toolTipsData.PERIODO4} position="right">
+                <Link to={`/private/dashboard/${PrivateRoutes.ACADEMY}/4`} style={{ textDecoration: 'none' }}>
+                  <p>Período Académico 4</p>
+                </Link>
+              </Tooltip>
             </div>
           </div>
           {/* ---------------------------------------------- */}

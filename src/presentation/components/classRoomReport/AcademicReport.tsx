@@ -4,8 +4,9 @@ import { db } from '../../../infrastructure/firebase/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import logo from '../../../assets/logo/logotipo.jpg';
 import "./AcademicReport.css";
+import {SubjectData, AreaGroup, StudentData, PeriodInfo} from './AcademicInterface'
 
-interface Grades {
+/* interface Grades {
   l1: number;
   l2: number;
   l3: number;
@@ -46,7 +47,7 @@ interface StudentData {
 interface PeriodInfo {
   periodo: string;
   curso: string;
-}
+} */
 
 const AcademicReport = () => {
   const { schoolLevel, studentId, year, periodId, director } = useParams<{ 
@@ -131,8 +132,10 @@ const AcademicReport = () => {
           return orderA.localeCompare(orderB);
         };
 
-        for (const period of Object.values(yearData.periods)) {
-          const periodData = period as any;
+        // Se filtra primero los datos para el periodo en cuestión
+        const periodData = (yearData.periods as Record<string, any>)[periodId!];
+          if (!periodData) throw new Error(`Periodo ${periodId} no encontrado`);
+
           for (const [areaId, areaData] of Object.entries(periodData.areas)) {
             const areaInfo = areasMap[areaId] || {};
             const achievements = await getAchievements((areaData as any).metadata?.achievementId);
@@ -158,7 +161,7 @@ const AcademicReport = () => {
             }
             secondaryGroups[areaKey].subjects.push(subject);
           }
-        }
+        
 
         setReportData({
           primary: primaryData
@@ -187,7 +190,7 @@ const AcademicReport = () => {
     };
 
     fetchData();
-  }, [studentId, year]);
+  }, [studentId, year, periodId]);
 
   const calculateAverage = (l1: number, l2: number, l3: number) => {
     return ((l1 + l2 + l3) / 3).toFixed(2);
@@ -223,7 +226,7 @@ const AcademicReport = () => {
               'Cargando...'}
           </td>
           <td>{periodId}</td>
-          <td>30/04/2025</td>
+          <td>18/07/2025</td>
         </tr>
       </tbody>
     </table>

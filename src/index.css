@@ -1,6 +1,7 @@
 
-
 #root{
+  --background-sidebar-color: #fdfdfd;
+  --btn-hover-primary: #6880a8;
   display: flex;
 }
 
@@ -52,13 +53,13 @@ h4{
 
 .body-container-page {
   flex: 1; 
-  background: #ffffff;
+  background: #f4faff;
   padding: 20px; 
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  /* max-height: 79vh; 
-  overflow-y: auto; */
+  justify-content: flex-start;
+  margin-top: 3em;
+  margin-left: 3em;
   gap: 5px; 
 }
 

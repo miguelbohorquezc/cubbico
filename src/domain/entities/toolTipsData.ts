@@ -1,5 +1,8 @@
 export enum toolTipsData {
     PERIODO1 = 'Calificar a los estudiantes en el periodo académico 1',
+    PERIODO2 = 'Calificar a los estudiantes en el periodo académico 2',
+    PERIODO3 = 'Calificar a los estudiantes en el periodo académico 3',
+    PERIODO4 = 'Calificar a los estudiantes en el periodo académico 4',
     ASIGNATURAS = 'ver las asignaturas matriculadas en este salón',
     EVALUACIONES = 'Ingresar al gestor de progreso académico',
     PROPOSITOS = 'Configurar propósitos para informe de preescolar',

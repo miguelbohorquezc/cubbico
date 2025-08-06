@@ -98,7 +98,7 @@ const InformePreescolar: React.FC = () => {
               <div className="ip-meta-item">
                 <span className="ip-meta-label">ESTUDIANTE:</span>
                 <span className="ip-meta-value">
-                  {studentName || studentId}
+                  {studentName.toUpperCase() || studentId}
                 </span>
               </div>
               <div className="ip-meta-item">
@@ -113,7 +113,7 @@ const InformePreescolar: React.FC = () => {
               </div>
               <div className="ip-meta-item">
                 <span className="ip-meta-label">Fecha:</span>
-                <span className="ip-meta-value">30/04/2025</span>
+                <span className="ip-meta-value">18/07/2025</span>
               </div>
             </div>
           </div>

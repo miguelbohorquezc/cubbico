@@ -15,6 +15,7 @@ const Navbar = () => {
 
   //@ts-ignore
   const userEmail = useSelector((state) => state.user.email);
+   //@ts-ignore
   const initial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
 
 
@@ -23,15 +24,16 @@ const Navbar = () => {
       <div className="navbar-content">
         {/* Breadcrumb */}
         <div className="breadcrumb">
-          <span className="breadcrumb-item">Inicio</span>
-          <span className="breadcrumb-separator">/</span>
+          
+          <span className="breadcrumb-item">Colina Campestre School</span>
+          <span className="breadcrumb-separator"></span>
           <span className="breadcrumb-item active">{}</span>
         </div>
 
         {/* Menú de usuario */}
         <div className="user-menu-container">
           <button className="user-menu-toggle" onClick={toggleDropdown}>
-            <span className="user-avatar">{}</span>
+            <span className="user-avatar-color">{}</span>
             <span className="user-name">{userEmail}</span>
             <span className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}></span>
           </button>

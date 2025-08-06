@@ -3,7 +3,7 @@ import React from "react";
 import { useAppSelector } from "../../../app/store/store";
 import { useNavigate, useParams } from "react-router-dom";
 import DataTable from "../../components/datatable/DataTable";
-import actionIcon from "../../../assets/datatableIcons/align-box-right-bottom.svg"
+import actionIcon from "../../../assets/datatableIcons/table-share.svg"
 import Tooltip from "../../components/toolTip/Tooltip";
 import { toolTipsData } from "../../../domain/entities/toolTipsData";
 

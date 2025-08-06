@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../../../components/navbar/Navbar"
 import Sidebar from "../../../../components/sidebar/Sidebar"
-import Button from "../../../../features/button/Button"
 import Modal from "../../../../components/modal/Modal";
 import { useState } from "react";
 import ClassRoomForm from "../../../../components/classRoomForm/ClassRoomForm";
