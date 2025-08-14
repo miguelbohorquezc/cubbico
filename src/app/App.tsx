@@ -6,6 +6,7 @@ import { BrowserRouter, Navigate, Route } from 'react-router-dom'
 import RoutesWithNotFound from '../shared/utils/routesWithNotFound'
 import { PrivateRoutes, PublicRoutes } from './routes/routes'
 import AuthGuard from './guard/auth.guard'
+import AspirantesPage from '../presentation/pages/public/Public'
 
 const Login = lazy(()=> import('../presentation/features/auth/LoginForm'))
 const Private = lazy(()=> import('../presentation/pages/private/Private'))
@@ -18,6 +19,7 @@ function App() {
           <RoutesWithNotFound>     
             <Route path='/' element={<Navigate to={PublicRoutes.LOGIN}/>}/>
             <Route path={PublicRoutes.LOGIN} element={<Login/>}/>
+            <Route path={PublicRoutes.ASPIRANTES} element={<AspirantesPage />} />
             <Route element={<AuthGuard/>}>
               <Route path={`${PrivateRoutes.PRIVATE}/*`} element={ <Private/>}/>
             </Route>

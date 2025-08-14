@@ -40,7 +40,7 @@
 /* Diseño responsivo */
 @media (min-width: 768px) {
   .container {
-    flex-direction: row;
+    
   }
 
   .sidebar-left,
