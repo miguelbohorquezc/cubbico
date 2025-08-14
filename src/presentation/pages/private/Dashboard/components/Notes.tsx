@@ -4,7 +4,7 @@ import Sidebar from '../../../../components/sidebar/Sidebar';
 import { useState } from 'react';
 import Modal from '../../../../components/modal/Modal';
 import AchievementForm from '../../../../components/achievement/AchievementForm';
-import GradeManager from '../../../../components/unifiedNotes/GradeManager';
+import GradeManager from '../../../../features/notesManager/GradeManager';
 import TeacherAchievements from '../../../../features/teacher/TeacherAchivement';
 import { PrivateRoutes } from '../../../../../app/routes/routes';
 import Navbar from '../../../../components/navbar/Navbar';

@@ -67,7 +67,7 @@ const TeacherAchievements = () => {
       enableSearch={false}
       skeletonCount={3}
       tableSize={{ 
-        width: "26rem", 
+        width: "19rem", 
       }}
       tableClassName="compact-table"
     />

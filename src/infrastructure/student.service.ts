@@ -68,7 +68,7 @@ export const fetchStudents = async (): Promise<Student[]> => {
   }
 };
 
-export const fetchStudentGrades = async (
+/* export const fetchStudentGrades = async (
   studentId: string,
   year: string,
   period: string,
@@ -94,7 +94,61 @@ export const fetchStudentGrades = async (
   } catch (error) {
     throw new Error("Error al cargar calificaciones");
   }
+}; */
+
+export const fetchStudentGrades = async (
+  studentId: string,
+  year: string,
+  period: string,
+  areaId: string
+) => {
+  try {
+    const docRef = doc(db, "history", studentId);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) return null;
+
+    const data = docSnap.data() ?? {};
+
+    // helpers: accede al nodo de período probando "years[year]" y "[year]" (raíz),
+    // y periodId como "2" y 2.
+    const getPeriodNode = (root: any) =>
+      root?.periods?.[period] ??
+      root?.periods?.[Number(period)] ??
+      undefined;
+
+    // esquema A: years[year]...
+    const nodeA = getPeriodNode(data?.years?.[year]);
+    // esquema B: year en la raíz (como en tu screenshot)
+    const nodeB = getPeriodNode(data?.[year]);
+
+    const periodNode = nodeA ?? nodeB;
+    const areaNode = periodNode?.areas?.[areaId];
+    const gradesNode = areaNode?.grades ?? {};
+
+    // devuelve TODO como string para que el <input> lo renderice
+    const l1  = gradesNode.l1 ?? '';
+    const l2  = gradesNode.l2 ?? '';
+    const l3  = gradesNode.l3 ?? '';
+    const fallas = gradesNode.fallas ?? '';
+
+    // soporta camelCase y snake_case por si acaso
+    const fallasVerificadas =
+      gradesNode.fallasVerificadas ??
+      gradesNode.fallas_verificadas ??
+      '';
+
+    return {
+      l1: String(l1),
+      l2: String(l2),
+      l3: String(l3),
+      fallas: String(fallas),
+      fallasVerificadas: String(fallasVerificadas),
+    };
+  } catch (error) {
+    throw new Error("Error al cargar calificaciones");
+  }
 };
+
 
 export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
   const batch = writeBatch(db);
