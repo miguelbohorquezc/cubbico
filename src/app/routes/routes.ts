@@ -1,3 +1,4 @@
+
 export const PublicRoutes = {
     LOGIN: 'login',
     ASPIRANTES: 'aspirantes'
@@ -17,7 +18,8 @@ export const PrivateRoutes = {
     NOTESPRESCHOOL:             'notespreschool',
     INDICADORES:                'indicadores',
     EVALUADORPREESCOLAR:        'evaluadorpreescolar',
-    PRINT:                     'print',
-    CLASSROOMS:                'classrooms',
+    PRINT:                      'print',
+    CLASSROOMS:                 'classrooms',
     AREA:                       'area',
+    ASPIRANTS:                  'aspirants'
 }

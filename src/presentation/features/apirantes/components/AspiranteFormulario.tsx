@@ -74,7 +74,7 @@ export default function AspiranteFormulario({ isEnabled = true, onGuardado }: Pr
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
-            Registrar otro hermanito
+            Registrar un hermano
           </button>
         </div>
       </section>

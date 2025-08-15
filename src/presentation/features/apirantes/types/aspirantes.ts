@@ -1,5 +1,12 @@
 export type Sexo = 'M' | 'F';
 
+export type EstadoSeguimiento =
+  | 'en_espera'
+  | 'en_revision'
+  | 'admitido'
+  | 'no_admitido'
+  | 'matricular';
+
 export interface DatosPadreOMadre {
   nombresApellidos: string;
   numeroIdentificacion: string;
@@ -49,6 +56,9 @@ export interface Aspirante {
 
   // Términos y condiciones
   aceptaTerminos: boolean;
+
+  estadoSeguimiento?: EstadoSeguimiento | null; // default: 'en_espera' si viene vacío
+  noAdmitidoMotivo?: string | null;
 
   // Agrupar hermanos (opcional)
   grupoFamiliarId?: string | null;

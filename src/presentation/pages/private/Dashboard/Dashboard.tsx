@@ -15,6 +15,7 @@ import ClassRoomPage from "./components/ClassRoomPage"
 import AreaPage from "./components/AreaPage"
 import InformePorSalon from "../../../components/informeGeneral/InformePorSalon"
 import InformePreescolar from "../../../features/preschool/Evaluador/InformePreescolar"
+import AspirantesAdminPage from "./components/AspirantesAdminPage"
 
 function Dashboard() {
   return (
@@ -38,6 +39,7 @@ function Dashboard() {
       <Route path={`${PrivateRoutes.STUDENT}/:periodId/:classroomId/students`}                            element={<ClassroomStudents />} />
       <Route path={`${PrivateRoutes.CLASSROOMS}`}                                                         element={<ClassRoomPage />} />
       <Route path={`${PrivateRoutes.AREA}`}                                                               element={<AreaPage />} />
+      <Route path={`${PrivateRoutes.ASPIRANTS}`}                                                          element={<AspirantesAdminPage />} />
     </RoutesWithNotFound> 
   )
 }

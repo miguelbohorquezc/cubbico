@@ -178,6 +178,5 @@ const CAMPOS_PASO_3 = [
   "madre.barrio","madre.telefono","madre.email","madre.empresa","madre.profesion"
 ];
 const CAMPOS_PASO_4 = [
-  "recomendador.nombresApellidos","recomendador.telefono","recomendador.parentesco",
-  "familiaresEnColegio"
+  
 ];

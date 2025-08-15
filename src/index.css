@@ -51,15 +51,16 @@ h4{
 }
 
 .container-page .header-container-page .title-option{
-      margin-top: 5rem;
+    margin-top: 4.5rem;
     margin-left: 2em;
-    display: flex
-;
+    display: flex;
     flex-direction: row;
     gap: 1em;
     justify-content: flex-start;
     align-items: center;
     padding-left: 2em;
+    padding-top: 10px;
+    padding-bottom: 10px;
 } 
 
 .body-container-page {
