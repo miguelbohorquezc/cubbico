@@ -7,6 +7,7 @@ import RoutesWithNotFound from '../shared/utils/routesWithNotFound'
 import { PrivateRoutes, PublicRoutes } from './routes/routes'
 import AuthGuard from './guard/auth.guard'
 import AspirantesPage from '../presentation/pages/public/Public'
+import MatriculaPage from '../presentation/pages/public/MatriculaPage'
 
 const Login = lazy(()=> import('../presentation/features/auth/LoginForm'))
 const Private = lazy(()=> import('../presentation/pages/private/Private'))
@@ -20,6 +21,7 @@ function App() {
             <Route path='/' element={<Navigate to={PublicRoutes.LOGIN}/>}/>
             <Route path={PublicRoutes.LOGIN} element={<Login/>}/>
             <Route path={PublicRoutes.ASPIRANTES} element={<AspirantesPage />} />
+            <Route path={PublicRoutes.MATRICULAS} element={<MatriculaPage />} />
             <Route element={<AuthGuard/>}>
               <Route path={`${PrivateRoutes.PRIVATE}/*`} element={ <Private/>}/>
             </Route>
