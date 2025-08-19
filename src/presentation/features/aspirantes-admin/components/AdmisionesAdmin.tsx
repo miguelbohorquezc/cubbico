@@ -10,7 +10,7 @@ import { useMatriculasAdmin } from "../hooks/useMatriculasAdmin";
 import { ApplicantsTable } from "./ApplicantsTable";
 import { EnrollmentsTable } from "./EnrollmentsTable";
 
-export default function AspirantesAdmin(){
+export default function AdmisionesAdmin(){
   const [tab, setTab] = React.useState<"aspirantes"|"matriculas">("aspirantes");
 
   // Estado de Aspirantes
@@ -33,7 +33,6 @@ export default function AspirantesAdmin(){
             <p className="muted">{sub}</p>
           </div>
 
-          {/* Toggle anclado – cambia según tab */}
           {isA ? (
             <FlagToggle
               isOn={A.flagHabilitado}
@@ -51,10 +50,8 @@ export default function AspirantesAdmin(){
           )}
         </header>
 
-        {/* Tabs */}
         <TabBar value={tab} onChange={setTab} />
 
-        {/* Búsqueda */}
         <section className="toolbar">
           <input
             className="input search"
@@ -68,7 +65,6 @@ export default function AspirantesAdmin(){
           />
         </section>
 
-        {/* Listado */}
         {isA ? (
           A.cargando
             ? <div className="loader">Cargando…</div>

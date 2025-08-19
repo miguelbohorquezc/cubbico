@@ -5,22 +5,7 @@ import {
   obtenerFlagAspirantesHabilitado,
   setFlagAspirantesHabilitado
 } from "../services/aspirantesAdmin.service";
-import type { EstadoSeguimiento } from "../../apirantes/types/aspirantes";
-
-export interface FilaAspirante {
-  id: string;
-  creadoEn?: any;
-  nombres: string;
-  apellidos: string;
-  colegioProcedencia?: string;
-  ultimoGrado?: string;
-  padre?: { nombresApellidos?: string; telefono?: string; email?: string };
-  madre?: { nombresApellidos?: string; telefono?: string; email?: string };
-  estadoSeguimiento?: EstadoSeguimiento | null;
-  noAdmitidoMotivo?: string | null;
-  grupoFamiliarId?: string | null;
-  [k: string]: any;
-}
+import type { EstadoSeguimiento, FilaAspirante } from "../types";
 
 export function useAspirantesAdmin() {
   const [cargando, setCargando] = useState(true);
@@ -44,12 +29,8 @@ export function useAspirantesAdmin() {
 
   useEffect(() => {
     (async () => {
-      try {
-        const enabled = await obtenerFlagAspirantesHabilitado();
-        setFlagHabilitado(enabled);
-      } catch (e) {
-        console.error(e);
-      }
+      try { setFlagHabilitado(await obtenerFlagAspirantesHabilitado()); }
+      catch (e) { console.error(e); }
     })();
   }, []);
 
@@ -57,7 +38,7 @@ export function useAspirantesAdmin() {
     const q = busqueda.trim().toLowerCase();
     if (!q) return filas;
     return filas.filter(f =>
-      `${f.nombres} ${f.apellidos}`.toLowerCase().includes(q) ||
+      `${f.nombres ?? ""} ${f.apellidos ?? ""}`.toLowerCase().includes(q) ||
       (f.padre?.nombresApellidos ?? "").toLowerCase().includes(q) ||
       (f.madre?.nombresApellidos ?? "").toLowerCase().includes(q) ||
       (f.grupoFamiliarId ?? "").toLowerCase().includes(q) ||
@@ -81,7 +62,6 @@ export function useAspirantesAdmin() {
 
   return {
     cargando, error, filas: filasFiltradas, busqueda, setBusqueda,
-    flagHabilitado, cambiarFlag, guardandoFlag,
-    cambiarEstado
+    flagHabilitado, cambiarFlag, guardandoFlag, cambiarEstado
   };
 }
