@@ -143,32 +143,32 @@ export function EnrollmentRow({ fila }: { fila: MatriculaRow }) {
           <td colSpan={6}>
             <div className="expand">
               {/* Header resumen */}
-              <section className="card card--header" aria-label="Resumen">
+              {/* <section className="card card--header" aria-label="Resumen">
                 <div className="header-wrap">
                   <div className="upper">{nombre || "—"}</div>
                   <span className={badge.cls}>
                     <p>{badge.txt}</p>
                   </span>
                 </div>
-              </section>
+              </section> */}
 
               {/* Estudiante */}
               <section className="card">
                 <h4>Estudiante</h4>
                 <ul className="list">
                   <li className="item">
-                    <div className="k">Nombre</div>
+                    <div className="k">Nombre Completo:</div>
                     <div className="v">{nombre || "—"}</div>
                   </li>
                   <li className="item">
-                    <div className="k">Identificación</div>
+                    <div className="k">Identificación:</div>
                     <div className="v">
                       {fila.estudiante?.tipoIdentificacion?.replace("_", " ").toUpperCase()} —{" "}
                       {fila.estudiante?.numeroIdentificacion || "—"}
                     </div>
                   </li>
                   <li className="item">
-                    <div className="k">Nacimiento</div>
+                    <div className="k">FECHA DE Nacimiento</div>
                     <div className="v">
                       {fila.estudiante?.fechaNacimiento || "—"} —{" "}
                       {fila.estudiante?.lugarNacimiento || "—"} —{" "}
@@ -185,7 +185,15 @@ export function EnrollmentRow({ fila }: { fila: MatriculaRow }) {
                     <div className="k">Colegio anterior</div>
                     <div className="v">{fila.estudiante?.colegioAnterior || "—"}</div>
                   </li>
+                  <li className="item">
+                    <div className="k">ESTADO DE MATRICULA:</div>
+                    <div className="v">
+                      <span className={badge.cls}>
+                        <p>{badge.txt}</p>
+                      </span></div>
+                  </li>
                 </ul>
+                
               </section>
 
               {/* Documentos físicos */}

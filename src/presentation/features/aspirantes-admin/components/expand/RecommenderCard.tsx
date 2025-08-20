@@ -7,10 +7,10 @@ export function RecommenderCard({ fila }: { fila: any }) {
     <section className="card" aria-label="Recomendador y anexos">
       <h4>Recomendador y anexos</h4>
       <ul className="list">
-        <FieldItem k="Recomendó" v={fila.recomendador?.nombresApellidos || "—"} />
-        <FieldItem k="Parentesco" v={fila.recomendador?.parentesco || "—"} />
+        <FieldItem k="Recomendó:" v={fila.recomendador?.nombresApellidos || "—"} />
+        <FieldItem k="Parentesco:" v={fila.recomendador?.parentesco || "—"} />
         <FieldItem
-          k="Teléfono"
+          k="Teléfono:"
           v={
             fila.recomendador?.telefono ? (
               <div className="phone">

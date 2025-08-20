@@ -7,10 +7,10 @@ export function ParentCard({ title, data }: { title: "Padre" | "Madre"; data?: a
     <section className="card" aria-label={title}>
       <h4>{title}</h4>
       <ul className="list">
-        <FieldItem k="Nombre" v={data?.nombresApellidos || "—"} />
-        <FieldItem k="Identificación" v={data?.numeroIdentificacion || "—"} />
+        <FieldItem k="Nombre:" v={data?.nombresApellidos || "—"} />
+        <FieldItem k="Identificación:" v={data?.numeroIdentificacion || "—"} />
         <FieldItem
-          k="Teléfono"
+          k="Teléfono:"
           v={
             data?.telefono ? (
               <div className="phone">
@@ -21,11 +21,11 @@ export function ParentCard({ title, data }: { title: "Padre" | "Madre"; data?: a
             ) : "—"
           }
         />
-        <FieldItem k="Email" v={data?.email ? <a className="link" href={`mailto:${data.email}`}>{data.email}</a> : "—"} />
-        <FieldItem k="Dirección" v={data?.direccion || "—"} />
-        <FieldItem k="Barrio" v={data?.barrio || "—"} />
-        <FieldItem k="Empresa" v={data?.empresa || "—"} />
-        <FieldItem k="Profesión" v={data?.profesion || "—"} />
+        <FieldItem k="Email:" v={data?.email ? <a className="link" href={`mailto:${data.email}`}>{data.email}</a> : "—"} />
+        <FieldItem k="Dirección:" v={data?.direccion || "—"} />
+        <FieldItem k="Barrio:" v={data?.barrio || "—"} />
+        <FieldItem k="Empresa:" v={data?.empresa || "—"} />
+        <FieldItem k="Profesión:" v={data?.profesion || "—"} />
       </ul>
     </section>
   );

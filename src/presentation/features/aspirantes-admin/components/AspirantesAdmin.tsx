@@ -24,35 +24,70 @@ export default function AspirantesAdmin(){
     ? "Control y seguimiento de aspirantes."
     : "Revisión documental y contabilidad de matrículas.";
 
+  const {
+  cargando, error, filas,
+  busqueda, setBusqueda,
+  flagHabilitado, cambiarFlag, guardandoFlag,
+  cambiarEstado,
+  // 👇 añade estos tres
+  anio, setAnio, aniosDisponibles
+} = useAspirantesAdmin();
+
+
   return (
     <div className="admin-screen">
       <div className="admin-container">
         <header className="admin-header">
+
           <div>
             <h1>{titulo}</h1>
             <p className="muted">{sub}</p>
           </div>
 
           {/* Toggle anclado – cambia según tab */}
-          {isA ? (
-            <FlagToggle
-              isOn={A.flagHabilitado}
-              saving={A.guardandoFlag}
-              label="FORMULARIO DE ASPIRANTES"
-              onToggle={A.cambiarFlag}
-            />
-          ) : (
-            <FlagToggle
-              isOn={M.flagHabilitado}
-              saving={M.guardandoFlag}
-              label="FORMULARIO DE MATRÍCULA"
-              onToggle={M.cambiarFlag}
-            />
-          )}
-        </header>
+          
+            {isA ? (
+              <FlagToggle
+                isOn={A.flagHabilitado}
+                saving={A.guardandoFlag}
+                label="FORMULARIO DE ASPIRANTES"
+                onToggle={A.cambiarFlag}
+              />
+            ) : (
+              <FlagToggle
+                isOn={M.flagHabilitado}
+                saving={M.guardandoFlag}
+                label="FORMULARIO DE MATRÍCULA"
+                onToggle={M.cambiarFlag}
+              />
+            )}
 
+          <div style={{ display: "flex", gap: ".5rem", alignItems: "center" }}>
+              <label htmlFor="anioSel" className="small" style={{ fontWeight: 700 }}>Año</label>
+              <select
+                id="anioSel"
+                className="select"
+                value={anio === "all" ? "all" : String(anio)}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setAnio(v === "all" ? "all" : parseInt(v, 10));
+                }}
+                style={{ minWidth: 120 }}
+                aria-label="Filtrar por año"
+                title="Filtrar por año"
+              >
+                {/* Opción 'Todos' (opcional). Si no la quieres, quítala. */}
+                <option value="all">Todos</option>
+                {aniosDisponibles.map((y) => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+          </div>
+
+        </header>
         {/* Tabs */}
         <TabBar value={tab} onChange={setTab} />
+
 
         {/* Búsqueda */}
         <section className="toolbar">
