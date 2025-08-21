@@ -71,7 +71,7 @@ export default function FichaMatriculaPrint({
 
         {/* 1. ANTECEDENTES PERSONALES */}
         <section className="pf-section">
-          <h3 className="pf-section__title">ANTECEDENTES PERSONALES DEL ESTUDIANTE</h3>
+          <h3 className="pf-section__title">INFORMACIÓN DEL ESTUDIANTE</h3>
           <div className="pf-grid pf-col-2">
             <dl className="pf-kv"><dt>APELLIDOS</dt><dd>{up(`${lo(S.primerApellido)} ${lo(S.segundoApellido)}`)}</dd></dl>
             <dl className="pf-kv"><dt>NOMBRES</dt><dd>{up(lo(S.nombres))}</dd></dl>

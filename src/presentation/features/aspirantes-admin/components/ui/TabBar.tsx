@@ -1,28 +1,42 @@
-import React from "react";
 
-type Tab = { id: "aspirantes" | "matriculas"; label: string };
-const TABS: Tab[] = [
-  { id: "aspirantes", label: "Aspirantes" },
-  { id: "matriculas", label: "Matrículas" },
-];
+export type TabKey = "aspirantes" | "matriculas" | "exportar";
 
-export function TabBar({ value, onChange }:{
-  value: "aspirantes" | "matriculas";
-  onChange: (v:"aspirantes"|"matriculas")=>void;
+export function TabBar({
+  value,
+  onChange,
+}: {
+  value: TabKey;
+  onChange: (v: TabKey) => void;
 }) {
   return (
-    <div className="tabs" role="tablist" aria-label="Secciones de Admisiones">
-      {TABS.map(t=>(
-        <button
-          key={t.id}
-          role="tab"
-          aria-selected={value===t.id}
-          className={`tab ${value===t.id ? "tab--active" : ""}`}
-          onClick={()=>onChange(t.id)}
-        >
-          {t.label}
-        </button>
-      ))}
+    <div className="tabbar" role="tablist" aria-label="Navegación de secciones">
+      <button
+        role="tab"
+        aria-selected={value === "aspirantes"}
+        className={`tab ${value === "aspirantes" ? "active" : ""}`}
+        onClick={() => onChange("aspirantes")}
+      >
+        Aspirantes
+      </button>
+
+      <button
+        role="tab"
+        aria-selected={value === "matriculas"}
+        className={`tab ${value === "matriculas" ? "active" : ""}`}
+        onClick={() => onChange("matriculas")}
+      >
+        Matrículas
+      </button>
+
+      {/* ➕ Nuevo botón, mantiene mismas clases/markup */}
+      <button
+        role="tab"
+        aria-selected={value === "exportar"}
+        className={`tab ${value === "exportar" ? "active" : ""}`}
+        onClick={() => onChange("exportar")}
+      >
+        Exportar
+      </button>
     </div>
   );
 }
