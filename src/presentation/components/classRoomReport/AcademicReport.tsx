@@ -267,7 +267,8 @@ const AcademicReport = () => {
             <tr>
               <th className="table-header">Área</th>
               <th className="table-header">IHS</th>
-              <th className="table-header">Fallas</th>
+              <th className="table-header">F</th>
+              <th className="table-header">FI</th>
               <th className="table-header">Logros</th>
               <th className="table-header">Notas</th>
               <th className="table-header">Promedio</th>
@@ -287,6 +288,7 @@ const AcademicReport = () => {
                   <td className="table-cell">{subject.asignatura}</td>
                   <td className="table-cell">{subject.ihs}</td>
                   <td className="table-cell">{subject.grades.fallas}</td>
+                  <td className="table-cell">{subject.grades.fallasVerificadas}</td>
                   <td className="table-cell">
                     <div className="achievements-container">
                     <div className="achievement-item">
@@ -335,8 +337,8 @@ const AcademicReport = () => {
         <table className="table-student-info-report">
           <tbody>
             <tr>
-                <td colSpan={2}><p>CONVENCIONES: I.H.S (Intensidad Horaria Semanal), L(Logro)</p></td>
-                <td colSpan={3}align="center">{`Total fallas: ${totalFallas}`}</td>
+                <td colSpan={2}><p>CONVENCIONES: I.H.S (Intensidad Horaria Semanal), L (Logro), F (Fallas), FI (Fallas injustificadas)</p></td>
+                {/* <td colSpan={3}align="center">{`Total fallas: ${totalFallas}`}</td> */}
             </tr>
           </tbody>
         </table>
@@ -416,7 +418,8 @@ const AcademicReport = () => {
                   <tr>
                     <th className="table-header">Asignatura</th>
                     <th className="table-header">IHS</th>
-                    <th className="table-header">Fallas</th>
+                    <th className="table-header">F</th>
+                    <th className="table-header">FI</th>
                     <th className="table-header">Logros</th>
                     <th className="table-header">Notas</th>
                     <th className="table-header">Promedio</th>
@@ -436,6 +439,7 @@ const AcademicReport = () => {
                         <td className="table-cell">{subject.asignatura}</td>
                         <td className="table-cell">{subject.ihs}</td>
                         <td className="table-cell">{subject.grades.fallas}</td>
+                        <td className="table-cell">{subject.grades.fallasVerificadas}</td>
                         <td className="table-cell">
                           <div className="achievements-container">
                               <div className="achievement-item">
@@ -484,8 +488,7 @@ const AcademicReport = () => {
         <table className="table-student-info-report">
           <tbody>
             <tr>
-                <td colSpan={2}><p>CONVENCIONES: I.H.S (Intensidad Horaria Semanal), L(Logro)</p></td>
-                <td colSpan={3}align="center">{`Total fallas: ${totalFallasSecundaria}`}</td>
+                <td colSpan={2}><p>CONVENCIONES: I.H.S (Intensidad Horaria Semanal), L (Logro), F (Fallas), FI (Fallas injustificadas)</p></td>
             </tr>
           </tbody>
         </table>

@@ -3,6 +3,7 @@ export interface Grades {
   l2: number;
   l3: number;
   fallas: number;
+  fallasVerificadas: number;
 }
 
 export interface Achievement {
