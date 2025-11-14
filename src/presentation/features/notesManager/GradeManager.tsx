@@ -72,7 +72,7 @@ const GradeManager: React.FC = () => {
             <th><h3>Fallas</h3></th>
             <th><h3>Fallas injustificadas</h3></th>
             <th><h3>Promedio</h3></th>
-            <th><h3>Informe</h3></th>
+            <th colSpan={2}><h3>Informes</h3></th>
           </tr>
         </thead>
         <tbody>
@@ -134,9 +134,9 @@ const GradeManager: React.FC = () => {
                   <td className="average-cell">
                     {calcularPromedio(g.l1, g.l2, g.l3)}
                   </td>
-
                   <td>
                     {
+                      
                       // @ts-ignore
                       student.classRoom === 'Primaria' ? (
                         <Tooltip text="Ver informe" position='bottom'>
@@ -145,6 +145,7 @@ const GradeManager: React.FC = () => {
                               <img src={informe} alt="informe" />
                             </Link>
                           </button>
+                          
                         </Tooltip>
                       ) : (
                         <Tooltip text="Ver informe" position='bottom'>
@@ -156,6 +157,15 @@ const GradeManager: React.FC = () => {
                         </Tooltip>
                       )
                     }
+                  </td>
+                  <td>
+                    <Tooltip text="Ver informe final de promedios" position='bottom'>
+                          <button className="nav-options">
+                            <Link to={`/private/dashboard/${PrivateRoutes.FINALREPORT}/${student.id}/2025`}>
+                              <img src={informe} alt="informe" />
+                            </Link>
+                          </button>             
+                        </Tooltip>
                   </td>
                 </tr>
               );

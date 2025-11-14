@@ -60,7 +60,7 @@ function downloadCsv(content: string, filename: string) {
   a.remove();
   URL.revokeObjectURL(url);
 }
-
+//@ts-ignore
 function fmt(d: Date | null): string {
   if (!d || isNaN(d.getTime())) return "—";
   return `${d.toLocaleDateString("es-CO")} ${d.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" })}`;

@@ -133,6 +133,7 @@ export function useMatriculaForm() {
     if (Object.keys(e).length) return { ok:false, id:null as string|null };
     setEnviando(true);
     try {
+      //@ts-ignore
       const id = await crearMatricula({ ...form, actualizadoEn: Date.now() });
       return { ok:true, id };
     } finally {

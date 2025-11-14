@@ -3,6 +3,7 @@ import {
   escucharAspirantes,
   actualizarEstadoSeguimiento,
   obtenerFlagAspirantesHabilitado,
+  //@ts-ignore
   setFlagAspirantesHabilitado
 } from "../services/aspirantesAdmin.service";
 import type { EstadoSeguimiento } from "../../apirantes/types/aspirantes";

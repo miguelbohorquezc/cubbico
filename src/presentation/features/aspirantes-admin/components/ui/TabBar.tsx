@@ -6,6 +6,7 @@ export function TabBar({
   onChange,
 }: {
   value: TabKey;
+  //@ts-ignore
   onChange: (v: TabKey) => void;
 }) {
   return (

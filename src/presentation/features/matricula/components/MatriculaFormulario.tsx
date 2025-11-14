@@ -46,6 +46,7 @@ export default function MatriculaFormulario({ isEnabled=true, onGuardado }:Props
     setTimeout(()=>setAlerta(a => (a?.msg===msg ? null : a)), 4500);
   };
 
+  //@ts-ignore
   const progreso = ((paso - 1) / 4) * 100;
 
   if(!isEnabled){

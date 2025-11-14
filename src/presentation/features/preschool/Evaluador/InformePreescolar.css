@@ -236,7 +236,11 @@
 .ip-observaciones-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 4em;
+  margin-bottom: 2em;
+}
+
+.firma-directora{
+  margin-top: 3em;
 }
 
 .ip-observaciones-table td {

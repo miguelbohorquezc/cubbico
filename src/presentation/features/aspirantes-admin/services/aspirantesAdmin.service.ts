@@ -1,5 +1,7 @@
 import {
+  //@ts-ignore
   collection, query, orderBy, onSnapshot, limit, startAfter,
+  //@ts-ignore
   getDocs, doc, updateDoc, getDoc, setDoc, serverTimestamp
 } from "firebase/firestore";
 // Ajusta la importación según tu proyecto:

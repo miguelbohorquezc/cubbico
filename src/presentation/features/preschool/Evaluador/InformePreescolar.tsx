@@ -7,6 +7,10 @@ import logoPreschool from '../../../../assets/logo/logoPreschool.svg';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../infrastructure/firebase/firebase';
 
+
+import firmOne from "../../../../assets/firm/01.jpg";
+import firmTwo from "../../../../assets/firm/02.jpg";
+
 type Params = {
   classroomId: string;
   studentId: string;
@@ -113,7 +117,7 @@ const InformePreescolar: React.FC = () => {
               </div>
               <div className="ip-meta-item">
                 <span className="ip-meta-label">Fecha:</span>
-                <span className="ip-meta-value">18/07/2025</span>
+                <span className="ip-meta-value">19/11/2025</span>
               </div>
             </div>
           </div>
@@ -193,11 +197,38 @@ const InformePreescolar: React.FC = () => {
             </table>
           </div>
 
+          <table className="table-student-info-report">
+            <tbody>
+              <tr>
+                <td align="center">
+                  <div className="firma">
+                    <img src={firmTwo} alt="firma directora" width={"150px"} />
+                    <p>ANA KARINA GOMEZ BUSTAMANTE</p>
+                    <p>Directora</p>
+                  </div>
+                </td>
+                <td align="center">
+                  <div className="firma">
+                    <img src={firmOne} alt="firma coordinadora" width={"150px"} />
+                    <p>NURIA MILENA MONTES SALAS</p>
+                    <p>Coordinadora Académica</p>
+                  </div>
+                </td>
+                <td align="center">
+                  <div className="firma-directora">
+                    <p>{directorGrupo.toUpperCase() || "Director(a) de Grupo"}</p>
+                    <p>Director(a) de Grupo</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
           <div className="ip-director-section">
-            <div className="firma">  
+           {/*  <div className="firma">  
               <p>{directorGrupo.toUpperCase()}</p>
               <p>Director(a) de grupo</p>
-            </div>
+            </div> */}
             {/* <p>
               Director(a) de Grupo:&nbsp;
               {directorGrupo ? (

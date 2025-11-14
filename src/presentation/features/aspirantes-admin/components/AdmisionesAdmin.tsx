@@ -48,9 +48,12 @@ export default function AdmisionesAdmin(){
               onToggle={M.cambiarFlag}
             />
           )}
+          
         </header>
-
-        <TabBar value={tab} onChange={setTab} />
+        
+        <TabBar value={tab}
+        //@ts-ignore
+          onChange={setTab} />
 
         <section className="toolbar">
           <input

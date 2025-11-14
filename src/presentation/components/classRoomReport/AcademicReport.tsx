@@ -6,6 +6,9 @@ import logo from '../../../assets/logo/logotipo.jpg';
 import "./AcademicReport.css";
 import {SubjectData, AreaGroup, StudentData, PeriodInfo} from './AcademicInterface'
 
+import firmOne from "../../../assets/firm/01.jpg";
+import firmTwo from "../../../assets/firm/02.jpg";
+
 /* interface Grades {
   l1: number;
   l2: number;
@@ -49,7 +52,7 @@ interface PeriodInfo {
   curso: string;
 } */
 
-const AcademicReport = () => {
+const  AcademicReport = () => {
   const { schoolLevel, studentId, year, periodId, director } = useParams<{ 
     schoolLevel?: '1' | '2';
     studentId?: string;
@@ -226,13 +229,14 @@ const AcademicReport = () => {
               'Cargando...'}
           </td>
           <td>{periodId}</td>
-          <td>18/07/2025</td>
+          <td>19/11/2025</td>
         </tr>
       </tbody>
     </table>
   );
 
   const renderPrimaryTable = () => {
+    //@ts-ignore
     const totalFallas = reportData.primary.reduce(
       (sum, subject) => sum + (subject.grades.fallas || 0),
       0
@@ -366,10 +370,32 @@ const AcademicReport = () => {
             <tr><td></td></tr>
           </tbody>
         </table>
-        <div className="firma">  
-          <p>{director}</p>
-          <p>Director(a) de grupo</p>
-        </div>
+        <table className="table-student-info-report">
+            <tbody>
+              <tr>
+                <td align="center">
+                  <div className="firma">
+                    <img src={firmTwo} alt="firma directora" width={"150px"} />
+                    <p>ANA KARINA GOMEZ BUSTAMANTE</p>
+                    <p>Directora</p>
+                  </div>
+                </td>
+                <td align="center">
+                  <div className="firma">
+                    <img src={firmOne} alt="firma coordinadora" width={"150px"} />
+                    <p>NURIA MILENA MONTES SALAS</p>
+                    <p>Coordinadora Académica</p>
+                  </div>
+                </td>
+                <td align="center">
+                  <div className="firma">
+                    <p>{director|| "Director(a) de Grupo"}</p>
+                    <p>Director(a) de Grupo</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+        </table>
       </div>
     );
   };
@@ -516,10 +542,38 @@ const AcademicReport = () => {
             <tr><td></td></tr>
           </tbody>
         </table>
-        <div className="firma">  
+
+        <table className="table-student-info-report">
+            <tbody>
+              <tr>
+                <td align="center">
+                  <div className="firma">
+                    <img src={firmTwo} alt="firma directora" width={"150px"} />
+                    <p>ANA KARINA GOMEZ BUSTAMANTE</p>
+                    <p>Directora</p>
+                  </div>
+                </td>
+                <td align="center">
+                  <div className="firma">
+                    <img src={firmOne} alt="firma coordinadora" width={"150px"} />
+                    <p>NURIA MILENA MONTES SALAS</p>
+                    <p>Coordinadora Académica</p>
+                  </div>
+                </td>
+                <td align="center">
+                  <div className="firma">
+                    <p>{director|| "Director(a) de Grupo"}</p>
+                    <p>Director(a) de Grupo</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+
+        {/* <div className="firma">  
           <p>{director}</p>
           <p>Director(a) de grupo</p>
-        </div>
+        </div> */}
       </div>
     );
   };

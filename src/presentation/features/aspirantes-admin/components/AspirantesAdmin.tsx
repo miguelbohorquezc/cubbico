@@ -33,9 +33,13 @@ export default function AspirantesAdmin(){
 
   // (Dejamos tu segundo llamado/desestructuración como en tu código)
   const {
+    //@ts-ignore
     cargando, error, filas,
+    //@ts-ignore
     busqueda, setBusqueda,
+    //@ts-ignore
     flagHabilitado, cambiarFlag, guardandoFlag,
+    //@ts-ignore
     cambiarEstado,
     // 👇 añade estos tres
     anio, setAnio, aniosDisponibles

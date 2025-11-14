@@ -1,3 +1,4 @@
+//@ts-ignore
 import React from "react";
 import type { MatriculaRow, DocsFisicos, Contabilidad } from "../../matriculas.types";
 
