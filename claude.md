@@ -938,9 +938,299 @@ Los siguientes módulos NO se modificarán durante este refactor:
 
 ---
 
+### FASE 5: Mejoras de Módulos Áreas y Salones (10-15 horas)
+
+> **Objetivo:** Implementar drag & drop para ordenar asignaturas y selector de director de grupo para salones. Solo aplica a Primaria y Secundaria (Preescolar excluido).
+
+---
+
+#### SECCIÓN A: Drag & Drop para Áreas/Asignaturas
+
+##### MT-A01: Crear tipos e interfaces para drag & drop ✅ COMPLETADA
+**Objetivo:** Definir tipos TypeScript para el sistema de reordenamiento
+
+**Archivos modificados:**
+- `src/shared/types/areaTypes.ts`
+
+**Criterios de aceptación:**
+- ✅ Interface `DragDropState` definida
+- ✅ Type `ReorderAreasPayload` definido
+- ✅ Type `AreaWithDragProps` definido
+- ✅ Type `NivelDragDrop` definido
+- ✅ Interface `DragDropHandlers` definida
+
+---
+
+##### MT-A02: Crear servicio batch update de orden ✅ COMPLETADA
+**Objetivo:** Implementar función para actualizar orden de múltiples áreas en Firestore
+
+**Archivos modificados:**
+- `src/infrastructure/area.service.ts`
+
+**Criterios de aceptación:**
+- ✅ Función `updateAreasOrder` con `writeBatch` de Firestore
+- ✅ Transacción atómica para actualizar múltiples documentos
+- ✅ Manejo de errores con try-catch
+- ✅ Documentación JSDoc
+
+---
+
+##### MT-A03: Crear hook useDragDropAreas ✅ COMPLETADA
+**Objetivo:** Implementar lógica de drag & drop reutilizable
+
+**Archivos creados:**
+- `src/presentation/features/students/hooks/useDragDropAreas.ts`
+
+**Criterios de aceptación:**
+- ✅ Estado local para drag & drop
+- ✅ Handlers: `handleDragStart`, `handleDragOver`, `handleDragEnd`, `handleDrop`
+- ✅ Integración con `updateAreasOrder`
+- ✅ Estado `isSaving` y `hasChanges`
+- ✅ Funciones `saveOrder` y `discardChanges`
+- ✅ Filtrado por nivel
+
+---
+
+##### MT-A04: Crear componente DraggableAreaRow ✅ COMPLETADA
+**Objetivo:** Crear componente de fila arrastrable con Tailwind CSS
+
+**Archivos creados:**
+- `src/presentation/features/students/components/DraggableAreaRow.tsx`
+
+**Criterios de aceptación:**
+- ✅ Props tipadas
+- ✅ Estilos Tailwind para estados: normal, dragging, drop-target
+- ✅ Icono de grip para arrastrar
+- ✅ Badge de nivel con colores
+- ✅ Acciones de editar/eliminar
+- ✅ Atributos ARIA para accesibilidad
+
+---
+
+##### MT-A05: Crear componente AreaListDragDrop ✅ COMPLETADA
+**Objetivo:** Crear lista con drag & drop para áreas de Primaria/Secundaria
+
+**Archivos creados:**
+- `src/presentation/features/students/AreaListDragDrop.tsx`
+
+**Criterios de aceptación:**
+- ✅ Tabs para seleccionar nivel (Primaria/Secundaria)
+- ✅ Lista de áreas arrastrables
+- ✅ Botones guardar/cancelar cambios
+- ✅ Loading states y feedback visual
+- ✅ Confirmación antes de cambiar tab con cambios pendientes
+- ✅ Funcionalidad de editar/eliminar mantenida
+
+---
+
+##### MT-A06: Integrar AreaListDragDrop en AreaPage ✅ COMPLETADA
+**Objetivo:** Actualizar AreaPage para usar el nuevo componente
+
+**Archivos modificados:**
+- `src/presentation/pages/private/Dashboard/components/AreaPage.tsx`
+
+**Criterios de aceptación:**
+- ✅ Usar `AreaListDragDrop` en lugar de `AreaList`
+- ✅ Mantener funcionalidad de crear área (modal)
+- ✅ Recarga automática al crear nueva área
+- ✅ Sin regresiones
+
+---
+
+##### MT-A07: Auto-asignar orden al crear asignatura ✅ COMPLETADA
+**Objetivo:** Asignar automáticamente el siguiente orden disponible al crear una asignatura
+
+**Archivos modificados:**
+- `src/presentation/components/areaForm/useAreaForm.ts`
+- `src/presentation/components/areaForm/AreaForm.tsx`
+- `src/presentation/pages/private/Dashboard/components/AreaPage.tsx`
+
+**Criterios de aceptación:**
+- ✅ Al crear asignatura, se calcula el siguiente orden disponible para el nivel seleccionado
+- ✅ El campo "orden" se pre-llena automáticamente al seleccionar nivel
+- ✅ La nueva asignatura aparece al final de la lista del nivel correspondiente
+- ✅ El usuario puede luego reordenar con drag & drop
+
+---
+
+#### SECCIÓN B: Selector de Director de Grupo para Salones
+
+##### MT-B01: Crear tipos para selector de director ✅ COMPLETADA
+**Objetivo:** Definir tipos TypeScript para el selector de docentes
+
+**Archivos modificados:**
+- `src/shared/types/classRoomTypes.ts`
+
+**Criterios de aceptación:**
+- ✅ Interface `DocenteOption` con `id`, `email`, `displayName`, `role`
+- ✅ Type `DirectorSelectorProps` con opciones, valor seleccionado, handlers
+- ✅ Type `DocentesMap` para búsqueda rápida
+- ✅ Documentación JSDoc
+
+---
+
+##### MT-B02: Crear función fetchDocentes en user.service ✅ COMPLETADA
+**Objetivo:** Agregar función para obtener lista de docentes activos
+
+**Archivos modificados:**
+- `src/infrastructure/user.service.ts`
+
+**Criterios de aceptación:**
+- ✅ Función `fetchDocentes(): Promise<DocenteOption[]>`
+- ✅ Filtrar solo usuarios con `role === 'Docente'`
+- ✅ Ordenar alfabéticamente por email
+- ✅ Manejo de errores
+
+---
+
+##### MT-B03: Crear componente DirectorSelector ✅ COMPLETADA
+**Objetivo:** Implementar dropdown de selección de director
+
+**Archivos creados:**
+- `src/presentation/components/classRoomForm/DirectorSelector.tsx`
+
+**Criterios de aceptación:**
+- ✅ Componente select con lista de docentes
+- ✅ Estado de carga mientras obtiene docentes
+- ✅ Mensaje si no hay docentes disponibles
+- ✅ Estilos Tailwind
+- ✅ Accesibilidad (ARIA labels)
+
+---
+
+##### MT-B04: Integrar DirectorSelector en ClassRoomForm ✅ COMPLETADA
+**Objetivo:** Reemplazar input de texto por selector de director
+
+**Archivos modificados:**
+- `src/presentation/components/classRoomForm/ClassRoomForm.tsx`
+- `src/presentation/components/classRoomForm/useClassRoomForm.ts`
+
+**Criterios de aceptación:**
+- ✅ Usar `DirectorSelector` en lugar de campo de texto
+- ✅ Solo mostrar selector para Primaria y Secundaria
+- ✅ Campo texto para Preescolar (mantiene funcionalidad legacy)
+- ✅ Compatibilidad con edición de salones existentes
+
+---
+
+##### MT-B05: Mostrar nombre del director en ClassRoomList ✅ COMPLETADA
+**Objetivo:** Mejorar visualización del director en la lista de salones
+
+**Archivos modificados:**
+- `src/presentation/features/students/ClassRoomList.tsx`
+
+**Criterios de aceptación:**
+- ✅ Mostrar nombre/email del docente en lugar de ID
+- ✅ Compatibilidad hacia atrás si el ID no se encuentra
+- ✅ Avatar con inicial del nombre
+- ✅ Estilo diferenciado para valores legacy
+
+---
+
+#### SECCIÓN C: Módulo CRUD de Áreas Académicas (Futuro)
+
+> **Estado:** ⏸️ PLANIFICADO - No ejecutar aún
+
+##### MT-C01: Crear entidad y tipos para Áreas Académicas ⏸️ FUTURO
+**Objetivo:** Definir la estructura de datos para áreas académicas en Firestore
+
+**Archivos a crear:**
+- `src/domain/entities/areaAcademica.ts`
+- `src/shared/types/areaAcademicaTypes.ts`
+
+**Criterios de aceptación:**
+- Interface `AreaAcademica` con: id, nombre, descripcion, activo, orden
+- Tipos para formulario y servicio
+- Documentación JSDoc
+
+---
+
+##### MT-C02: Crear servicio CRUD de Áreas Académicas ⏸️ FUTURO
+**Objetivo:** Implementar operaciones CRUD para áreas en Firestore
+
+**Archivos a crear:**
+- `src/infrastructure/areaAcademica.service.ts`
+
+**Criterios de aceptación:**
+- Funciones: fetchAreasAcademicas, addAreaAcademica, updateAreaAcademica, deleteAreaAcademica
+- Colección Firestore: `areasAcademicas`
+- Manejo de errores
+- Ordenamiento por campo `orden`
+
+---
+
+##### MT-C03: Crear página de administración de Áreas Académicas ⏸️ FUTURO
+**Objetivo:** Crear interfaz para gestionar las áreas académicas
+
+**Archivos a crear:**
+- `src/presentation/pages/private/Dashboard/components/AreasAcademicasPage.tsx`
+- `src/presentation/components/areaAcademicaForm/AreaAcademicaForm.tsx`
+
+**Criterios de aceptación:**
+- Lista de áreas con acciones CRUD
+- Formulario para crear/editar áreas
+- Drag & drop para reordenar (reutilizar patrón de asignaturas)
+- Diseño con Tailwind CSS
+
+---
+
+##### MT-C04: Integrar áreas dinámicas en formulario de asignaturas ⏸️ FUTURO
+**Objetivo:** Reemplazar el select hardcodeado por uno dinámico
+
+**Archivos a modificar:**
+- `src/presentation/components/areaForm/formConfig.ts`
+- `src/presentation/components/areaForm/AreaForm.tsx`
+
+**Criterios de aceptación:**
+- El select de "Área" carga opciones desde Firestore
+- Mantener compatibilidad con datos existentes
+- Loading state mientras carga
+- Fallback a opciones hardcodeadas si falla la carga
+
+---
+
+##### MT-C05: Agregar ruta y navegación para Áreas Académicas ⏸️ FUTURO
+**Objetivo:** Integrar la nueva página en el sistema de navegación
+
+**Archivos a modificar:**
+- `src/app/routes/PrivateRoutes.tsx`
+- `src/presentation/components/sidebar/Sidebar.tsx`
+
+**Criterios de aceptación:**
+- Nueva ruta: `/private/dashboard/areas-academicas`
+- Enlace en el sidebar (solo para rol Coordinador/Admin)
+- Breadcrumb correcto
+
+---
+
+##### MT-C06: Migrar áreas hardcodeadas a Firestore ⏸️ FUTURO
+**Objetivo:** Crear script/función para poblar la colección inicial
+
+**Archivos a crear:**
+- `src/infrastructure/scripts/seedAreasAcademicas.ts`
+
+**Criterios de aceptación:**
+- Script que crea las 10 áreas actuales en Firestore
+- Solo ejecutar si la colección está vacía
+- Documentación de uso
+
+---
+
+#### Resumen FASE 5
+
+| Sección | Total | Completadas | Pendientes | Futuras |
+|---------|-------|-------------|------------|---------|
+| A (Drag & Drop Asignaturas) | 7 | 7 ✅ | 0 | 0 |
+| B (Selector Director) | 5 | 5 ✅ | 0 | 0 |
+| C (CRUD Áreas Académicas) | 6 | 0 | 0 | 6 ⏸️ |
+| **Total** | **18** | **12** | **0** | **6** |
+
+---
+
 ### Estado Actual del Plan
-- **Microtarea actual:** Pendiente de iniciar
-- **Última actualización del plan:** 2026-01-20
+- **Fase actual:** FASE 5 - Mejoras de Áreas y Salones (Secciones A y B completadas)
+- **Microtarea actual:** Ninguna pendiente (Sección C es futura)
+- **Última actualización del plan:** 2026-01-21
 
 ---
 

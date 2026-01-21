@@ -9,7 +9,7 @@ export const useClassRoomForm = (initialData?: SalonFormState) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState<SalonFormState>(initialData || {
     id: '',
-    identificador: '',
+    identificador: Date.now().toString(), // Auto-generado para compatibilidad
     directorGrupo: '',
     nombreSalon: '',
     nivel: ''
@@ -29,6 +29,12 @@ export const useClassRoomForm = (initialData?: SalonFormState) => {
       const errors = validationsForm(form);
       setError(prev => ({ ...prev, [name]: errors[name as keyof SalonFormState] }));
     }, [form]);
+
+  // Handler específico para el selector de director
+  const handleDirectorChange = useCallback((docenteId: string) => {
+    setForm(prev => ({ ...prev, directorGrupo: docenteId }));
+    setError(prev => ({ ...prev, directorGrupo: '' }));
+  }, []);
 
   const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
@@ -53,7 +59,7 @@ export const useClassRoomForm = (initialData?: SalonFormState) => {
       
       setForm(initialData || {
         id: '',
-        identificador: '',
+        identificador: Date.now().toString(),
         directorGrupo: '',
         nombreSalon: '',
         nivel: ''
@@ -69,5 +75,5 @@ export const useClassRoomForm = (initialData?: SalonFormState) => {
     }
   }, [form]);
 
-  return { form, error, handleChange, handleBlur, handleSubmit, isSubmitting };
+  return { form, error, handleChange, handleBlur, handleSubmit, isSubmitting, handleDirectorChange };
 };

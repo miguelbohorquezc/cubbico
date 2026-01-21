@@ -1,6 +1,6 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc, writeBatch } from "firebase/firestore";
 import { db } from "./firebase/firebase";
-import { AreaServiceData } from "../shared/types/areaTypes";
+import { AreaServiceData, ReorderAreasPayload } from "../shared/types/areaTypes";
 
 
 export const addArea = async (area: Omit<AreaServiceData, 'id'>) => {
@@ -51,6 +51,51 @@ export const deleteArea = async (areaId: string) => {
       console.error("Error deleting area:", error);
       throw new Error("Error al eliminar área");
     }
+};
+
+/**
+ * Actualiza el orden de múltiples áreas en una transacción atómica.
+ * Usa writeBatch de Firestore para garantizar que todas las actualizaciones
+ * se apliquen o ninguna.
+ *
+ * @param payload - Objeto con el nivel y la lista de áreas con su nuevo orden
+ * @returns Promise<void>
+ * @throws Error si la operación falla
+ *
+ * @example
+ * await updateAreasOrder({
+ *   nivel: 'Primaria',
+ *   areas: [
+ *     { id: 'abc123', orden: 1 },
+ *     { id: 'def456', orden: 2 }
+ *   ]
+ * });
+ */
+export const updateAreasOrder = async (payload: ReorderAreasPayload): Promise<void> => {
+  const { areas } = payload;
+
+  if (!areas || areas.length === 0) {
+    return;
+  }
+
+  try {
+    const batch = writeBatch(db);
+
+    for (const area of areas) {
+      if (!area.id) {
+        console.warn('Área sin ID encontrada, saltando:', area);
+        continue;
+      }
+
+      const areaRef = doc(db, "areas", area.id);
+      batch.update(areaRef, { orden: area.orden });
+    }
+
+    await batch.commit();
+  } catch (error) {
+    console.error("Error al actualizar orden de áreas:", error);
+    throw new Error("Error al guardar el nuevo orden de las asignaturas");
+  }
 };
 
 

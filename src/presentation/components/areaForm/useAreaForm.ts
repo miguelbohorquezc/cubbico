@@ -1,4 +1,4 @@
-import { useState, useCallback, FormEvent } from 'react';
+import { useState, useCallback, FormEvent, useEffect } from 'react';
 import { AreaFormState, AreaServiceData } from '../../../shared/types/areaTypes';
 import { addArea, updateArea } from '../../../infrastructure/area.service';
 import { validationsForm } from './formConfig';
@@ -14,12 +14,29 @@ const initialFormState: AreaFormState = {
 interface UseAreaFormProps {
   initialData?: AreaFormState;
   onSubmit?: (formData: AreaServiceData) => Promise<boolean> | void;
+  /** Áreas existentes para calcular el siguiente orden automáticamente */
+  existingAreas?: AreaServiceData[];
 }
 
-export const useAreaForm = ({ initialData, onSubmit }: UseAreaFormProps = {}) => {
+export const useAreaForm = ({ initialData, onSubmit, existingAreas = [] }: UseAreaFormProps = {}) => {
   const [form, setForm] = useState<AreaFormState>(initialData || initialFormState);
   const [error, setError] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Auto-calcular orden cuando cambia el nivel (solo en modo creación)
+  useEffect(() => {
+    // Solo auto-calcular si NO estamos editando (no hay id) y hay áreas existentes
+    if (!initialData?.id && form.nivel && existingAreas.length > 0) {
+      const areasDelNivel = existingAreas.filter(a => a.nivel === form.nivel);
+      const maxOrden = areasDelNivel.reduce((max, a) => Math.max(max, a.orden), 0);
+      const siguienteOrden = maxOrden + 1;
+
+      setForm(prev => ({ ...prev, orden: siguienteOrden.toString() }));
+    } else if (!initialData?.id && form.nivel && existingAreas.length === 0) {
+      // Si no hay áreas existentes, comenzar en 1
+      setForm(prev => ({ ...prev, orden: '1' }));
+    }
+  }, [form.nivel, existingAreas, initialData?.id]);
 
   const parseAreaData = useCallback((formData: AreaFormState): Omit<AreaServiceData, 'id'> & { id?: string } => {
     const baseData = {

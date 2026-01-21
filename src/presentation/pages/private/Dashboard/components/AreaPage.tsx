@@ -3,35 +3,40 @@ import Navbar from "../../../../components/navbar/Navbar"
 import Sidebar from "../../../../components/sidebar/Sidebar"
 import Button from "../../../../features/button/Button"
 import Modal from "../../../../components/modal/Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AreaForm from "../../../../components/areaForm/AreaForm";
-import AreaList from "../../../../features/students/AreaList";
+import AreaListDragDrop from "../../../../features/students/AreaListDragDrop";
 import { AreaServiceData } from "../../../../../shared/types/areaTypes";
-import { addArea } from "../../../../../infrastructure/area.service";
+import { addArea, fetchAreas } from "../../../../../infrastructure/area.service";
 
 function AreaPage() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [refreshList, setRefreshList] = useState(false);
-  
-  //@ts-ignore
+  const [refreshKey, setRefreshKey] = useState(0);
   const [areas, setAreas] = useState<AreaServiceData[]>([]);
 
-  //@ts-ignore
-  const handleFormSubmitSuccess = () => {
-    setIsModalOpen(false);
-    setRefreshList(prev => !prev); // Forzar actualización de la lista
-  };
+  // Cargar áreas para el auto-cálculo de orden
+  useEffect(() => {
+    const loadAreas = async () => {
+      try {
+        const areasData = await fetchAreas();
+        setAreas(areasData);
+      } catch (error) {
+        console.error('Error loading areas:', error);
+      }
+    };
+    loadAreas();
+  }, [refreshKey]);
 
   const handleAddArea = async (formData: AreaServiceData) => {
     try {
       // Elimina el id antes de enviar a Firestore
       const { id, ...areaData } = formData;
-      const newAreaId = await addArea(areaData);
-      
-      // Agrega el nuevo área al estado con el id generado
-      setAreas(prev => [...prev, { ...formData, id: newAreaId }]);
+      await addArea(areaData);
+
       setIsModalOpen(false);
+      // Forzar recarga de la lista incrementando la key
+      setRefreshKey(prev => prev + 1);
       alert('Área creada exitosamente!');
       return true;
     } catch (error) {
@@ -48,21 +53,21 @@ function AreaPage() {
         <div className='header-container-page'>
             <Navbar/>
             <div className='title-option'>
-              <Button 
+              <Button
                 variant="primary" size="sm"
                 onClick={() => navigate(-1)}>
                 Regresar
               </Button>
-              <Button 
+              <Button
                 variant="accent" size="sm"
                 onClick={() => setIsModalOpen(true)}>
                 Registrar área
-              </Button>              
-              <h2>Lista de áreas</h2>
+              </Button>
+              <h2>Gestión de Asignaturas</h2>
             </div>
           </div>
-          <div className='body-container-page'> 
-            <AreaList key={refreshList.toString()} />
+          <div className='body-container-page'>
+            <AreaListDragDrop key={refreshKey} />
           </div>
       </div>
       <Modal
@@ -70,7 +75,7 @@ function AreaPage() {
         onClose={() => setIsModalOpen(false)}
         title="Nueva Área Académica"
       >
-        <AreaForm onSubmit={handleAddArea} />
+        <AreaForm onSubmit={handleAddArea} existingAreas={areas} />
       </Modal>
     </>
   )

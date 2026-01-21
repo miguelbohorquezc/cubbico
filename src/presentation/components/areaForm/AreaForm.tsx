@@ -8,10 +8,12 @@ import { AreaFormState, AreaServiceData } from '../../../shared/types/areaTypes'
 interface AreaFormProps {
   initialData?: AreaFormState;
   onSubmit?: (formData: AreaServiceData) => Promise<boolean> | void;
+  /** Áreas existentes para auto-calcular el orden (solo en modo creación) */
+  existingAreas?: AreaServiceData[];
 }
 
-const AreaForm = ({ initialData, onSubmit }: AreaFormProps) => {
-  const { form, error, handleChange, handleBlur, handleSubmit, isSubmitting } = useAreaForm({ initialData, onSubmit });
+const AreaForm = ({ initialData, onSubmit, existingAreas }: AreaFormProps) => {
+  const { form, error, handleChange, handleBlur, handleSubmit, isSubmitting } = useAreaForm({ initialData, onSubmit, existingAreas });
 
   return (
     <div className="form-container">

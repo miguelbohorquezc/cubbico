@@ -37,21 +37,17 @@ export const SELECT_OPTIONS = {
 
 export const validationsForm = (form: SalonFormState): Partial<SalonFormState> => {
   const errors: Partial<SalonFormState> = {};
-  
-  if (!form.identificador.trim()) {
-    errors.identificador = 'Seleccione un identificador numérico';
-  }
-  
-  if (!form.directorGrupo.trim()) {
-    errors.directorGrupo = 'Ingrese el director de grupo';
-  }
-  
-  if (!form.nombreSalon.trim()) {
-    errors.nombreSalon = 'Seleccione un nombre de salón';
-  }
-  
+
   if (!form.nivel.trim()) {
     errors.nivel = 'Seleccione un nivel académico';
+  }
+
+  if (!form.nombreSalon.trim()) {
+    errors.nombreSalon = 'Ingrese el nombre del salón';
+  }
+
+  if (!form.directorGrupo.trim()) {
+    errors.directorGrupo = 'Seleccione o ingrese el director de grupo';
   }
 
   return errors;

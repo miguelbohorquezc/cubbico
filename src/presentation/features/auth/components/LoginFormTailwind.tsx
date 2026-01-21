@@ -82,8 +82,8 @@ const LoginFormTailwind = () => {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg)',
-            opacity: 0.3
+            backgroundImage: 'url(https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?_gl=1*1aoukeb*_ga*NjM4Nzk4MDQzLjE3Njg5MTk2ODk.*_ga_8JE65Q40S6*czE3NjkwMTM0MDgkbzIkZzEkdDE3NjkwMTM2OTAkajQ1JGwwJGgw)',
+            opacity: 0.6
           }}
           role="img"
           aria-label="Imagen de bienvenida mostrando estudiantes"
@@ -95,17 +95,17 @@ const LoginFormTailwind = () => {
         {/* Contenido de la columna de imagen */}
         <div className="relative z-10 flex flex-col justify-between p-12 text-white">
           {/* Contenido superior (opcional para logos o títulos) */}
-          <div className="max-w-md">
+          {/* <div className="max-w-md">
             <h2 className="text-4xl font-bold mb-4 leading-tight animate-fade-in">
               Sistema Académico
             </h2>
             <p className="text-lg opacity-90 animate-fade-in">
               Colina Campestre School - Gestión Institucional
             </p>
-          </div>
+          </div> */}
 
           {/* Crédito de imagen (footer) */}
-          <div className="text-sm opacity-70 self-end">
+          {/* <div className="text-sm opacity-70 self-end">
             Foto de{' '}
             <a
               href="https://www.pexels.com"
@@ -115,7 +115,7 @@ const LoginFormTailwind = () => {
             >
               Pexels
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
 
