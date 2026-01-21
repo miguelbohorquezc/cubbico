@@ -1,12 +1,27 @@
+/**
+ * Hook de formulario de autenticación - REFACTORIZADO
+ *
+ * CAMBIOS DE SEGURIDAD APLICADOS:
+ * ✅ Usa AuthService en lugar de Firebase directamente
+ * ✅ Manejo de errores centralizado y traducido
+ * ✅ No duplica lógica de manejo de errores
+ * ✅ Usa tipos del dominio (AuthFormData, AuthErrorResponse)
+ *
+ * @deprecated Este hook será reemplazado por useAuth.ts en futuras versiones
+ * Se mantiene temporalmente para compatibilidad con LoginForm existente.
+ *
+ * @module useUserForm
+ */
+
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../app/store/store";
-import { auth } from "../../../infrastructure/firebase/firebase";
 import { createUser } from "../../../app/store/states/user";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Enum } from "../../../domain/entities/enum";
 import { FirebaseUser } from "../../../domain/entities/firebaseUser";
+import { AuthService } from "../../../infrastructure/firebase/auth.service";
+import { AuthFormData, AuthErrorResponse } from "../../../domain/entities/auth.types";
 
 interface FormValues {
   email: string;
@@ -16,11 +31,6 @@ interface FormValues {
 interface FormErrors {
   email?: string;
   password?: string;
-}
-
-interface AuthError {
-  code: string;
-  message: string;
 }
 
 interface ValidationRules {
@@ -49,7 +59,7 @@ export const useUserForm = (initialForm: FormValues, validations: ValidationRule
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors = validations(form);
-    
+
     if (Object.values(newErrors).some(error => !!error)) {
       setErrors(newErrors);
       return;
@@ -57,44 +67,37 @@ export const useUserForm = (initialForm: FormValues, validations: ValidationRule
 
     try {
       setIsLoading(true);
-      const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password);
-      
-      const userData = {
-        uid: userCredential.user.uid,
-        email: userCredential.user.email,
-        displayName: userCredential.user.displayName || "",
+      setAuthError(""); // Limpiar errores previos
+
+      // Usar AuthService en lugar de Firebase directamente
+      const { user } = await AuthService.signIn({
+        email: form.email,
+        password: form.password
+      } as AuthFormData);
+
+      // Mapear AuthUser a FirebaseUser para compatibilidad con Redux legacy
+      const userData: FirebaseUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        emailVerified: user.emailVerified,
+        photoURL: user.photoURL,
+        metadata: {
+          creationTime: user.metadata?.creationTime,
+          lastSignInTime: user.metadata?.lastSignInTime
+        }
       };
 
-      dispatch(createUser(userData as FirebaseUser));
+      dispatch(createUser(userData));
       navigate(Enum.PRIVATEROUTE);
     } catch (error) {
-      handleAuthError(error as AuthError);
+      // AuthService ya maneja el mapeo de errores a español
+      const authError = error as AuthErrorResponse;
+      setAuthError(authError.message);
     } finally {
       setIsLoading(false);
     }
-  }, [form, dispatch, navigate]);
-
-  const handleAuthError = useCallback((error: AuthError) => {
-    switch (error.code) {
-      case "auth/invalid-login-credentials":
-        setAuthError("Credenciales inválidas");
-        break;
-      case "auth/too-many-requests":
-        setAuthError("Demasiados intentos. Intente más tarde");
-        break;
-      case "auth/invalid-email":
-        setAuthError("Correo electrónico inválido");
-        break;
-      case "auth/missing-password":
-        setAuthError("Contraseña requerida");
-        break;
-      case "auth/network-request-failed":
-        setAuthError("Error de red");
-        break;
-      default:
-        setAuthError("Error al iniciar sesión");
-    }
-  }, []);
+  }, [form, dispatch, navigate, validations]);
 
   return {
     form,

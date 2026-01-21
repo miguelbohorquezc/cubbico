@@ -1,3 +1,9 @@
+/* Directivas de Tailwind CSS 3.x */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========== ESTILOS EXISTENTES PRESERVADOS ========== */
 
 #root{
   --background-sidebar-color: #fdfdfd;
