@@ -24,6 +24,30 @@
  */
 export { StatCard, default as StatCardDefault } from './StatCard';
 
+/**
+ * ClassroomAveragesChart - Gráfico de promedios por salón
+ * @see {@link ./ClassroomAveragesChart.tsx}
+ */
+export { ClassroomAveragesChart } from './ClassroomAveragesChart';
+
+/**
+ * LowPerformanceAlert - Tabla de alertas de bajo rendimiento
+ * @see {@link ./LowPerformanceAlert.tsx}
+ */
+export { LowPerformanceAlert } from './LowPerformanceAlert';
+
+/**
+ * AbsencesChart - Gráfico de inasistencias por estudiante
+ * @see {@link ./AbsencesChart.tsx}
+ */
+export { AbsencesChart } from './AbsencesChart';
+
+/**
+ * SubjectAveragesChart - Gráfico de promedios por asignatura
+ * @see {@link ./SubjectAveragesChart.tsx}
+ */
+export { SubjectAveragesChart } from './SubjectAveragesChart';
+
 // ============================================
 // Tipos re-exportados
 // ============================================
