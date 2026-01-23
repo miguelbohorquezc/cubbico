@@ -1127,6 +1127,28 @@ Los siguientes módulos NO se modificarán durante este refactor:
 
 ---
 
+##### MT-B06: Optimizar formulario de salones ✅ COMPLETADA (Ajuste post-implementación)
+**Objetivo:** Mejorar la UX del formulario de creación/edición de salones
+
+**Archivos modificados:**
+- `src/presentation/components/classRoomForm/ClassRoomForm.tsx`
+- `src/presentation/components/classRoomForm/useClassRoomForm.ts`
+- `src/presentation/components/classRoomForm/formConfig.ts`
+
+**Cambios realizados:**
+- ✅ Reorganizar orden de campos: Nivel → Nombre → Director
+- ✅ Cambiar "Nombre del salón" de select fijo a campo de texto libre
+- ✅ Eliminar campo "Identificador" del formulario (se auto-genera internamente)
+- ✅ Mostrar mensaje "Seleccione primero el nivel" antes de mostrar selector de director
+- ✅ Validaciones actualizadas
+
+**Flujo del formulario optimizado:**
+1. Nivel académico (select)
+2. Nombre del salón (texto libre: "Primero A", "Segundo B", etc.)
+3. Director de grupo (selector de docentes para Primaria/Secundaria, texto para Preescolar)
+
+---
+
 #### SECCIÓN C: Módulo CRUD de Áreas Académicas (Futuro)
 
 > **Estado:** ⏸️ PLANIFICADO - No ejecutar aún

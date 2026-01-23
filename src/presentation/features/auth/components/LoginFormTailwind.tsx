@@ -383,7 +383,7 @@ const LoginFormTailwind = () => {
             <div className="text-center text-xs text-gray-400 pt-2">
               <p className="flex items-center justify-center gap-1">
                 <span className="inline-block w-2 h-2 bg-success rounded-full animate-pulse" />
-                Versión Tailwind CSS • useAuth
+                Sistema Institucional Academico Colina Campestre School
               </p>
             </div>
           )}
