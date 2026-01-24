@@ -150,25 +150,53 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full flex flex-col">
-        <div className="animate-pulse space-y-4 flex-1">
-          <div className="flex justify-between items-center">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 h-full flex flex-col overflow-hidden">
+        {/* Header skeleton */}
+        <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-2">
-              <div className="h-5 bg-gray-200 rounded-lg w-40"></div>
-              <div className="h-3 bg-gray-100 rounded w-24"></div>
+              <div className="h-5 bg-gray-200 rounded-lg w-36 animate-pulse"></div>
+              <div className="h-3 bg-gray-100 rounded w-28 animate-pulse"></div>
             </div>
-            <div className="h-10 bg-gray-100 rounded-xl w-72"></div>
+            <div className="h-10 bg-gray-100 rounded-xl w-72 animate-pulse"></div>
           </div>
-          <div className="h-12 bg-gray-100 rounded-xl w-full mt-6"></div>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-16 bg-gray-50 rounded-xl w-full flex items-center px-6 gap-4">
-              <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                <div className="h-3 bg-gray-100 rounded w-1/4"></div>
+        </div>
+
+        {/* Table skeleton */}
+        <div className="flex-1 overflow-hidden">
+          {/* Table header */}
+          <div className="bg-gray-50 px-6 py-3 border-b border-gray-100 grid grid-cols-12 gap-4">
+            <div className="col-span-5 h-3 bg-gray-200 rounded w-16 animate-pulse"></div>
+            <div className="col-span-2 h-3 bg-gray-200 rounded w-10 animate-pulse"></div>
+            <div className="col-span-2 h-3 bg-gray-200 rounded w-12 animate-pulse"></div>
+            <div className="col-span-3 h-3 bg-gray-200 rounded w-16 animate-pulse ml-auto"></div>
+          </div>
+
+          {/* Table rows */}
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="px-6 py-4 border-b border-gray-50 grid grid-cols-12 gap-4 items-center">
+              {/* Usuario */}
+              <div className="col-span-5 flex items-center gap-3">
+                <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                <div className="space-y-2 flex-1">
+                  <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
+                  <div className="h-3 bg-gray-100 rounded w-40 animate-pulse"></div>
+                </div>
               </div>
-              <div className="h-6 bg-gray-100 rounded-full w-20"></div>
-              <div className="h-6 bg-gray-100 rounded-full w-16"></div>
+              {/* Rol */}
+              <div className="col-span-2">
+                <div className="h-6 bg-gray-100 rounded-full w-20 animate-pulse"></div>
+              </div>
+              {/* Estado */}
+              <div className="col-span-2">
+                <div className="h-6 bg-gray-100 rounded-full w-16 animate-pulse"></div>
+              </div>
+              {/* Acciones */}
+              <div className="col-span-3 flex justify-end gap-2">
+                <div className="w-8 h-8 bg-gray-100 rounded-lg animate-pulse"></div>
+                <div className="w-8 h-8 bg-gray-100 rounded-lg animate-pulse"></div>
+                <div className="w-8 h-8 bg-gray-100 rounded-lg animate-pulse"></div>
+              </div>
             </div>
           ))}
         </div>
@@ -178,7 +206,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
 
   if (error) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-full flex items-center justify-center p-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 h-full flex items-center justify-center p-6">
         <div className="text-center max-w-sm">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,7 +227,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col flex-1 h-full">
       {/* Header con búsqueda */}
       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

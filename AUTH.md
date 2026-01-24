@@ -419,3 +419,8 @@
 | 2026-01-24 | Fix | user.service: Agregada función getUserByUid para obtener perfil completo. |
 | 2026-01-24 | UI/UX | UserTable: Modales mejorados con headers coloreados, animaciones, mejor feedback. |
 | 2026-01-24 | UI/UX | UserTable: Layout flex para ocupar espacio, loading skeleton mejorado. |
+| 2026-01-24 | Layout | Users.tsx y Home.tsx: Corregido layout flex para ocupar 100% del viewport. |
+| 2026-01-24 | Layout | Contenedor raíz: h-screen overflow-hidden. Eliminado w-full/max-w-full redundantes. |
+| 2026-01-24 | Layout | UserTable: Agregado flex-1 a todos los estados (normal, loading, error). |
+| 2026-01-24 | UI/UX | UserTable skeleton: Rediseñado con grid que replica estructura real de la tabla. |
+| 2026-01-24 | UI/UX | AuthGuard LoadingScreen: Simplificado a spinner minimalista con fondo blur. |

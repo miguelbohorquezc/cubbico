@@ -61,7 +61,7 @@ function User() {
       <SidebarV2 />
 
       {/* Contenido principal */}
-      <div className="flex-1 flex flex-col min-w-0 w-full">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <HeaderV2
           title="Gestión de Usuarios"
@@ -70,10 +70,10 @@ function User() {
         />
 
         {/* Spacer para el header fixed */}
-        <div className="h-16" />
+        <div className="h-16 flex-shrink-0" />
 
         {/* Body */}
-        <main className="flex-1 flex flex-col p-4 lg:p-6 overflow-hidden w-full max-w-full">
+        <main className="flex-1 flex flex-col p-4 lg:p-6 min-h-0">
           {/* Header de la página */}
           <div className="flex items-center justify-between mb-4 flex-shrink-0">
             <div className="flex items-center gap-4">
@@ -107,7 +107,7 @@ function User() {
           </div>
 
           {/* Table - flex-1 para ocupar todo el espacio restante */}
-          <div className="flex-1 min-h-0 h-full">
+          <div className="flex-1 min-h-0 flex flex-col">
             <UserTable currentUserId={currentUser?.uid} />
           </div>
         </main>
