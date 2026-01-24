@@ -20,6 +20,7 @@ import { AppState } from '../store/store';
 import { AuthService } from '../../infrastructure/firebase/auth.service';
 import { createUser, resetUser } from '../store/states/user';
 import { PublicRoutes } from '../routes/routes';
+import { getUserByUid } from '../../infrastructure/user.service';
 
 /**
  * User roles for authorization
@@ -30,7 +31,7 @@ export type UserRole = 'Administrativo' | 'Docente' | 'Coordinador';
 /**
  * Auth states for the guard
  */
-type AuthState = 'loading' | 'authenticated' | 'unauthenticated';
+type AuthState = 'loading' | 'authenticated' | 'unauthenticated' | 'inactive';
 
 /**
  * Props for AuthGuard
@@ -88,25 +89,68 @@ export const AuthGuardV2: React.FC<AuthGuardProps> = ({
 
   useEffect(() => {
     // Configurar listener de cambios de autenticación
-    const unsubscribe = AuthService.onAuthStateChange((authUser) => {
+    const unsubscribe = AuthService.onAuthStateChange(async (authUser) => {
       if (authUser) {
-        // Usuario autenticado - AuthService ya retorna AuthUser mapeado
-        // Convertir AuthUser a FirebaseUser para compatibilidad con Redux store existente
-        // TODO: Migrar el store para usar AuthUser en lugar de FirebaseUser
-        const firebaseUser: any = {
-          uid: authUser.uid,
-          email: authUser.email,
-          displayName: authUser.displayName,
-          photoURL: authUser.photoURL,
-          emailVerified: authUser.emailVerified,
-          metadata: authUser.metadata,
-        };
+        try {
+          // Verificar si el usuario está activo en Firestore
+          const userProfile = await getUserByUid(authUser.uid);
 
-        // Actualizar Redux store
-        // NOTA: Los datos adicionales (rol, areas, salones) se cargarán desde Firestore
-        // a través de otros efectos/servicios después de la autenticación
-        dispatch(createUser(firebaseUser));
-        setAuthState('authenticated');
+          if (!userProfile) {
+            // Usuario no existe en Firestore (solo tiene cuenta de Auth)
+            // Permitir acceso pero sin datos de perfil
+            const firebaseUser: any = {
+              uid: authUser.uid,
+              email: authUser.email,
+              displayName: authUser.displayName,
+              photoURL: authUser.photoURL,
+              emailVerified: authUser.emailVerified,
+              metadata: authUser.metadata,
+            };
+            dispatch(createUser(firebaseUser));
+            setAuthState('authenticated');
+            return;
+          }
+
+          // Verificar si el usuario está activo
+          if (!userProfile.isActive) {
+            // Usuario inhabilitado - cerrar sesión y mostrar mensaje
+            await AuthService.signOut();
+            dispatch(resetUser());
+            setAuthState('inactive');
+            return;
+          }
+
+          // Usuario activo - crear objeto con datos de Firestore
+          const firebaseUser: any = {
+            uid: authUser.uid,
+            email: authUser.email,
+            displayName: userProfile.displayName || authUser.displayName,
+            photoURL: authUser.photoURL,
+            emailVerified: authUser.emailVerified,
+            metadata: authUser.metadata,
+            // Datos adicionales de Firestore
+            role: userProfile.role,
+            firstName: userProfile.firstName,
+            lastName: userProfile.lastName,
+            isActive: userProfile.isActive,
+          };
+
+          dispatch(createUser(firebaseUser));
+          setAuthState('authenticated');
+        } catch (error) {
+          console.error('Error verificando estado del usuario:', error);
+          // En caso de error, permitir acceso pero registrar el problema
+          const firebaseUser: any = {
+            uid: authUser.uid,
+            email: authUser.email,
+            displayName: authUser.displayName,
+            photoURL: authUser.photoURL,
+            emailVerified: authUser.emailVerified,
+            metadata: authUser.metadata,
+          };
+          dispatch(createUser(firebaseUser));
+          setAuthState('authenticated');
+        }
       } else {
         // Usuario no autenticado
         dispatch(resetUser());
@@ -161,6 +205,11 @@ export const AuthGuardV2: React.FC<AuthGuardProps> = ({
         state={{ from: location.pathname }}
       />
     );
+  }
+
+  // Usuario inhabilitado: mostrar pantalla de cuenta inactiva
+  if (authState === 'inactive') {
+    return <InactiveAccountScreen />;
   }
 
   // Usuario autenticado: verificar roles
@@ -311,6 +360,77 @@ const UnauthorizedScreen: React.FC<UnauthorizedScreenProps> = ({
         {/* Link a contacto */}
         <p className="text-xs text-light-gray-500 mt-4">
           Si crees que esto es un error, contacta al coordinador
+        </p>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * InactiveAccountScreen Component
+ *
+ * Pantalla mostrada cuando el usuario tiene una cuenta inhabilitada.
+ */
+const InactiveAccountScreen: React.FC = () => {
+  const handleGoToLogin = () => {
+    window.location.href = `/${PublicRoutes.LOGIN}`;
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+        {/* Icono */}
+        <div className="mx-auto w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mb-6">
+          <svg
+            className="w-12 h-12 text-amber-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+            />
+          </svg>
+        </div>
+
+        {/* Título */}
+        <h1 className="text-2xl font-bold text-gray-900 mb-3">
+          Cuenta Inhabilitada
+        </h1>
+
+        {/* Mensaje */}
+        <p className="text-gray-600 mb-6 leading-relaxed">
+          Tu cuenta ha sido temporalmente inhabilitada por un coordinador.
+          Si crees que esto es un error, contacta con el administrador del sistema.
+        </p>
+
+        {/* Info box */}
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm text-amber-800 text-left">
+              Mientras tu cuenta esté inhabilitada, no podrás acceder al sistema ni realizar ninguna operación.
+            </p>
+          </div>
+        </div>
+
+        {/* Botón */}
+        <button
+          onClick={handleGoToLogin}
+          className="w-full bg-gray-900 text-white py-3 px-4 rounded-xl font-medium hover:bg-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+        >
+          Volver al inicio de sesión
+        </button>
+
+        {/* Contacto */}
+        <p className="text-xs text-gray-500 mt-6">
+          Colina Campestre School - Sistema Institucional Académico
         </p>
       </div>
     </div>

@@ -23,14 +23,18 @@ export const useUserForm = () => {
   });
   
   const [form, setForm] = useState<UserFormData>({
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: '',
+    role: 'Docente',
+    willTeach: false,
     areas: {},
     salones: {},
     directorGrupo: '',
-    nivelesEducativos: []
+    nivelesEducativos: [],
+    isActive: true
   });
 
   useEffect(() => {
@@ -94,6 +98,18 @@ export const useUserForm = () => {
     const newErrors: Record<string, string> = {};
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
+    if (!form.firstName.trim()) {
+      newErrors.firstName = 'Nombre es requerido';
+    } else if (form.firstName.trim().length < 2) {
+      newErrors.firstName = 'Nombre debe tener al menos 2 caracteres';
+    }
+
+    if (!form.lastName.trim()) {
+      newErrors.lastName = 'Apellido es requerido';
+    } else if (form.lastName.trim().length < 2) {
+      newErrors.lastName = 'Apellido debe tener al menos 2 caracteres';
+    }
+
     if (!form.email) {
       newErrors.email = 'Email es requerido';
     } else if (!emailRegex.test(form.email)) {
@@ -115,7 +131,11 @@ export const useUserForm = () => {
       newErrors.role = 'Debe seleccionar un rol';
     }
 
-    if (form.role === 'Docente') {
+    // Validar asignaciones si es Docente O si es Coordinador que dará clases
+    const requiresTeachingAssignments = form.role === 'Docente' ||
+      (form.role === 'Coordinador' && form.willTeach);
+
+    if (requiresTeachingAssignments) {
       if (selectedLevels.length === 0) {
         newErrors.nivelesEducativos = 'Seleccione al menos un nivel educativo';
       }
@@ -140,14 +160,18 @@ export const useUserForm = () => {
     
     if (name === 'role' && form.role !== value) {
       setForm({
+        firstName: form.firstName,
+        lastName: form.lastName,
         email: form.email,
         password: form.password,
         confirmPassword: form.confirmPassword,
-        role: value,
+        role: value as 'Coordinador' | 'Docente',
+        willTeach: false,
         areas: {},
         salones: {},
         directorGrupo: '',
-        nivelesEducativos: []
+        nivelesEducativos: [],
+        isActive: true
       });
       setSelectedLevels([]);
       return;
@@ -160,7 +184,7 @@ export const useUserForm = () => {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCheckboxChange = (type: 'areas' | 'salones') => 
+  const handleCheckboxChange = (type: 'areas' | 'salones') =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, checked } = e.target;
       setForm(prev => ({
@@ -168,6 +192,24 @@ export const useUserForm = () => {
         [type]: { ...prev[type], [name]: checked }
       }));
     };
+
+  const handleWillTeachChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const willTeach = e.target.checked;
+    if (!willTeach) {
+      // Si desmarca "Dará clases", limpiar asignaciones
+      setForm(prev => ({
+        ...prev,
+        willTeach: false,
+        areas: {},
+        salones: {},
+        directorGrupo: '',
+        nivelesEducativos: []
+      }));
+      setSelectedLevels([]);
+    } else {
+      setForm(prev => ({ ...prev, willTeach: true }));
+    }
+  };
 
   const handleBlur = () => {
     validateForm();
@@ -207,14 +249,18 @@ export const useUserForm = () => {
       
       // Reset form
       setForm({
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         confirmPassword: '',
-        role: '',
+        role: 'Docente',
+        willTeach: false,
         areas: {},
         salones: {},
         directorGrupo: '',
-        nivelesEducativos: []
+        nivelesEducativos: [],
+        isActive: true
       });
       setSelectedLevels([]);
       
@@ -248,6 +294,7 @@ export const useUserForm = () => {
     setShowPassword,
     handleInputChange,
     handleCheckboxChange,
+    handleWillTeachChange,
     handleSubmit,
     handleLogout,
     handleBlur,

@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Enum } from '../../../../domain/entities/enum';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
 /**
  * Componente LoginForm modernizado
@@ -28,6 +29,7 @@ const LoginFormTailwind = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
 
   // Usar el nuevo hook useAuth con callbacks
   const {
@@ -264,17 +266,13 @@ const LoginFormTailwind = () => {
                 </span>
               </label>
 
-              <a
-                href="/forgot-password"
+              <button
+                type="button"
+                onClick={() => setShowForgotModal(true)}
                 className="text-medium-blue hover:text-deep-blue hover:underline transition-colors font-medium"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // TODO: Implementar recuperación de contraseña
-                  alert('Funcionalidad de recuperación de contraseña próximamente');
-                }}
               >
                 ¿Olvidaste tu contraseña?
-              </a>
+              </button>
             </div>
 
             {/* ========================================
@@ -389,6 +387,12 @@ const LoginFormTailwind = () => {
           )}
         </div>
       </div>
+
+      {/* Modal de recuperación de contraseña */}
+      <ForgotPasswordModal
+        isOpen={showForgotModal}
+        onClose={() => setShowForgotModal(false)}
+      />
     </div>
   );
 };

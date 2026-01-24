@@ -8,3 +8,4 @@
  */
 
 export { default as LoginFormTailwind } from './LoginFormTailwind';
+export { default as ForgotPasswordModal } from './ForgotPasswordModal';

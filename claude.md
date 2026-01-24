@@ -380,6 +380,9 @@ Este proyecto utiliza 3 agentes especializados para el desarrollo:
 - **Cuándo usar:** Después de cada implementación
 - **Función:** Análisis de seguridad y best practices
 
+### archivo AGENTS.md
+- obligatoriamente se deberá usar el archivo AGENTS.md para revisar las reglas definidas 
+
 ### Flujo de Trabajo
 
 ```
