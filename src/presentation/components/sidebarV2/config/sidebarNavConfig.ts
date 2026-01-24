@@ -55,6 +55,11 @@ export const brandConfig: SidebarBrandConfig = {
 
 /**
  * Items del menú principal del sidebar
+ *
+ * Permisos por rol:
+ * - Sin allowedRoles: visible para todos los usuarios autenticados
+ * - allowedRoles: ['Coordinador']: solo visible para coordinadores
+ * - allowedRoles: ['Docente', 'Coordinador']: visible para ambos roles
  */
 export const navItems: NavItem[] = [
   {
@@ -63,6 +68,7 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.HISTORY),
     icon: DashboardIcon,
     description: 'Inicio y resumen general',
+    // Sin allowedRoles = visible para todos
   },
   {
     id: 'matricula',
@@ -70,6 +76,7 @@ export const navItems: NavItem[] = [
     path: null,
     icon: EnrollmentIcon,
     description: 'Gestión de matrículas',
+    allowedRoles: ['Coordinador'],
     submenu: [
       {
         id: 'matricula-nuevo',
@@ -91,6 +98,7 @@ export const navItems: NavItem[] = [
     path: null,
     icon: ClassroomIcon,
     description: 'Gestión de salones',
+    allowedRoles: ['Coordinador'],
     submenu: [
       {
         id: 'salones-lista',
@@ -106,6 +114,7 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.AREA),
     icon: BookIcon,
     description: 'Gestión de asignaturas y áreas',
+    allowedRoles: ['Coordinador'],
   },
   {
     id: 'periodos',
@@ -113,6 +122,7 @@ export const navItems: NavItem[] = [
     path: null,
     icon: CalendarIcon,
     description: 'Períodos académicos',
+    allowedRoles: ['Docente', 'Coordinador'],
     submenu: [
       {
         id: 'periodo-1',
@@ -146,6 +156,7 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.ACADEMY),
     icon: EvaluationIcon,
     description: 'Gestión de evaluaciones',
+    allowedRoles: ['Docente', 'Coordinador'],
   },
   {
     id: 'usuarios',
@@ -153,6 +164,7 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.USER),
     icon: UsersIcon,
     description: 'Gestión de usuarios del sistema',
+    allowedRoles: ['Coordinador'],
   },
   {
     id: 'aspirantes',
@@ -160,6 +172,7 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.ASPIRANTS),
     icon: AspirantIcon,
     description: 'Gestión de admisiones',
+    allowedRoles: ['Coordinador'],
   },
 ];
 

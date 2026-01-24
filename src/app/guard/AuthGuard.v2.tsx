@@ -165,30 +165,36 @@ export const AuthGuardV2: React.FC<AuthGuardProps> = ({
   /**
    * Verifica si el usuario tiene los roles permitidos
    *
-   * NOTA: Actualmente el store no tiene la propiedad 'rol'.
-   * Esta función está preparada para cuando se implemente el sistema de roles
-   * cargando datos adicionales desde Firestore.
-   *
-   * @param user - Usuario actual desde Redux store
-   * @param roles - Roles permitidos
+   * @param user - Usuario actual desde Redux store (incluye role de Firestore)
+   * @param roles - Roles permitidos para la ruta
    * @returns true si el usuario tiene alguno de los roles permitidos
    */
-  const hasAllowedRole = (user: any, roles?: UserRole[]): boolean => {
+  const hasAllowedRole = (user: { role?: UserRole } | null, roles?: UserRole[]): boolean => {
+    // Si no hay roles especificados, cualquier usuario autenticado puede acceder
     if (!roles || roles.length === 0) {
-      // Si no hay roles especificados, cualquier usuario autenticado puede acceder
       return true;
     }
 
-    // TODO: Implementar verificación de roles cuando se carguen datos de Firestore
-    // Por ahora, si se especifican roles requeridos, permitir acceso
-    // (esto cambiará cuando se implemente el sistema de permisos completo)
+    // Si no hay usuario, no tiene acceso
     if (!user) {
       return false;
     }
 
-    // Temporalmente permitir acceso si el usuario está autenticado
-    // hasta que se implemente la carga de datos de rol desde Firestore
-    return true;
+    // Si el usuario no tiene rol asignado, no tiene acceso a rutas protegidas por rol
+    if (!user.role) {
+      return false;
+    }
+
+    // Verificar si el rol del usuario está en la lista de roles permitidos
+    return roles.includes(user.role);
+  };
+
+  /**
+   * Obtiene el rol del usuario actual desde el estado
+   */
+  const getUserRole = (): UserRole | undefined => {
+    const user = userState as { role?: UserRole } | null;
+    return user?.role;
   };
 
   // Estado de carga: mostrar pantalla de carga
@@ -215,11 +221,10 @@ export const AuthGuardV2: React.FC<AuthGuardProps> = ({
   // Usuario autenticado: verificar roles
   if (!hasAllowedRole(userState, allowedRoles)) {
     // Usuario autenticado pero sin permisos suficientes
-    // TODO: Descomentar cuando se implemente sistema de roles desde Firestore
     return (
       <UnauthorizedScreen
         requiredRoles={allowedRoles}
-        userRole={undefined} // TODO: Obtener de Firestore cuando se implemente
+        userRole={getUserRole()}
       />
     );
   }

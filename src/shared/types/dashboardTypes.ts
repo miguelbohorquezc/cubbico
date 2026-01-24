@@ -255,6 +255,12 @@ export interface RecentStudentFull extends RecentStudent {
 // ============================================
 
 /**
+ * Roles de usuario para control de acceso en navegación
+ * Sincronizado con UserRole de AuthGuard.v2.tsx
+ */
+export type NavUserRole = 'Coordinador' | 'Docente' | 'Administrativo';
+
+/**
  * Badge de notificación para items de navegación
  */
 export interface NavBadge {
@@ -278,6 +284,8 @@ export interface SubMenuItem {
   description?: string;
   /** Badge de notificación */
   badge?: NavBadge;
+  /** Roles permitidos para ver este item (si no se especifica, todos pueden ver) */
+  allowedRoles?: NavUserRole[];
 }
 
 /**
@@ -316,6 +324,8 @@ export interface NavItem {
   disabled?: boolean;
   /** Indica si es visible (para permisos) */
   visible?: boolean;
+  /** Roles permitidos para ver este item (si no se especifica, todos pueden ver) */
+  allowedRoles?: NavUserRole[];
 }
 
 /**

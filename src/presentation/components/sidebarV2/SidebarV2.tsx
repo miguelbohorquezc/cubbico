@@ -15,8 +15,9 @@
  * @version 1.0.0
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { SidebarBrand } from './components/SidebarBrand';
 import { SidebarNavItem } from './components/SidebarNavItem';
 import { SidebarSubmenu } from './components/SidebarSubmenu';
@@ -26,7 +27,8 @@ import { SidebarTooltip } from './components/SidebarTooltip';
 import { useSidebarV2 } from './hooks/useSidebarV2';
 import { navItems, brandConfig } from './config/sidebarNavConfig';
 import { MenuIcon } from '../icons/SidebarIcons';
-import type { NavItem } from '../../../shared/types/dashboardTypes';
+import type { NavItem, NavUserRole } from '../../../shared/types/dashboardTypes';
+import type { AppState } from '../../../app/store/store';
 
 // ============================================
 // Types
@@ -66,6 +68,32 @@ export const SidebarV2: React.FC<SidebarV2Props> = ({ className = '' }) => {
 
   const { isOpen, isCollapsed, expandedSubmenus, mode } = state;
   const isMobile = mode === 'mobile';
+
+  // Obtener rol del usuario desde Redux
+  const userRole = useSelector((state: AppState) => {
+    const user = state.user as { role?: NavUserRole } | null;
+    return user?.role;
+  });
+
+  /**
+   * Filtra los items de navegación según el rol del usuario
+   * - Items sin allowedRoles son visibles para todos
+   * - Items con allowedRoles solo son visibles si el usuario tiene uno de esos roles
+   */
+  const filteredNavItems = useMemo(() => {
+    return navItems.filter((item) => {
+      // Si no hay restricción de roles, el item es visible para todos
+      if (!item.allowedRoles || item.allowedRoles.length === 0) {
+        return true;
+      }
+      // Si el usuario no tiene rol, ocultar items restringidos
+      if (!userRole) {
+        return false;
+      }
+      // Verificar si el rol del usuario está en la lista de roles permitidos
+      return item.allowedRoles.includes(userRole);
+    });
+  }, [userRole]);
 
   /**
    * Verifica si un item está activo basado en la ruta actual
@@ -192,9 +220,9 @@ export const SidebarV2: React.FC<SidebarV2Props> = ({ className = '' }) => {
             </h2>
           )}
 
-          {/* Items de navegación */}
+          {/* Items de navegación (filtrados por rol) */}
           <div className="space-y-1">
-            {navItems.map(renderNavItem)}
+            {filteredNavItems.map(renderNavItem)}
           </div>
         </nav>
 

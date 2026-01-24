@@ -315,53 +315,72 @@
 ## FASE 4: Sistema de Permisos por Rol
 
 ### Microtarea 4.1: Crear servicio getUserByUid
-- **Estado:** ⬜ PENDIENTE
+- **Estado:** ✅ COMPLETADA
 - **Objetivo:** Cargar rol y permisos del usuario desde Firestore
 - **Archivos:**
   - `src/infrastructure/user.service.ts`
   - `src/domain/entities/userFormData.ts`
 - **Definition of Done:**
-  - [ ] Función `getUserByUid(uid): Promise<UserProfile>`
-  - [ ] Interface `UserProfile` con rol, áreas, salones, isActive
-  - [ ] Manejo de usuario no existente
+  - [x] Función `getUserByUid(uid): Promise<UserProfile>`
+  - [x] Interface `UserProfile` con rol, áreas, salones, isActive
+  - [x] Manejo de usuario no existente
+- **Cambios realizados (2026-01-24):**
+  - Función `getUserByUid` implementada en user.service.ts (líneas 190-218)
+  - Retorna UserProfile completo o null si no existe
+  - Maneja errores y valores por defecto
 
 ---
 
 ### Microtarea 4.2: Cargar datos de usuario al login
-- **Estado:** ⬜ PENDIENTE
+- **Estado:** ✅ COMPLETADA
 - **Objetivo:** Después de autenticar, cargar datos de Firestore
 - **Archivos:**
   - `src/app/guard/AuthGuard.v2.tsx`
   - `src/app/store/states/user.ts`
 - **Definition of Done:**
-  - [ ] AuthGuard llama `getUserByUid` después de autenticar
-  - [ ] Datos de Firestore se agregan al store
-  - [ ] Estado incluye `role: UserRole | null`
+  - [x] AuthGuard llama `getUserByUid` después de autenticar
+  - [x] Datos de Firestore se agregan al store
+  - [x] Estado incluye `role: UserRole | null`
+- **Cambios realizados (2026-01-24):**
+  - AuthGuardV2 llama `getUserByUid` en línea 96
+  - Datos de Firestore (role, firstName, lastName, isActive) se incluyen en el usuario
+  - Verificación de isActive para usuarios inhabilitados
 
 ---
 
 ### Microtarea 4.3: Verificación de roles en AuthGuardV2
-- **Estado:** ⬜ PENDIENTE
+- **Estado:** ✅ COMPLETADA
 - **Objetivo:** Activar verificación de roles en el guard
 - **Archivos:**
   - `src/app/guard/AuthGuard.v2.tsx`
 - **Definition of Done:**
-  - [ ] Función `hasAllowedRole` implementada
-  - [ ] Compara contra `allowedRoles` prop
-  - [ ] Si no tiene permiso, muestra `UnauthorizedScreen`
+  - [x] Función `hasAllowedRole` verifica rol del usuario
+  - [x] Compara contra `allowedRoles` prop
+  - [x] Si no tiene permiso, muestra `UnauthorizedScreen` con rol actual
+- **Cambios realizados (2026-01-24):**
+  - `hasAllowedRole` ahora verifica `user.role` contra `allowedRoles`
+  - Tipado mejorado: `user: { role?: UserRole } | null`
+  - Nueva función `getUserRole()` para obtener rol actual
+  - `UnauthorizedScreen` ahora recibe el rol del usuario
 
 ---
 
 ### Microtarea 4.4: Proteger rutas según rol
-- **Estado:** ⬜ PENDIENTE
+- **Estado:** ✅ COMPLETADA
 - **Objetivo:** Aplicar restricciones de rol a rutas
 - **Archivos:**
-  - `src/app/routes/routes.ts`
-  - Archivo de definición de rutas
+  - `src/presentation/pages/private/Dashboard/Dashboard.tsx`
 - **Definition of Done:**
-  - [ ] Ruta `/user` solo para Coordinador/Administrativo
-  - [ ] Rutas de notas/reportes para Docente y Coordinador
-  - [ ] Pantalla de acceso denegado funcional
+  - [x] Rutas administrativas (user, classrooms, area, student, aspirants) solo para Coordinador
+  - [x] Rutas de notas/reportes/academia para Docente y Coordinador
+  - [x] Pantalla de acceso denegado funcional (ya implementada en 4.3)
+- **Cambios realizados (2026-01-24):**
+  - Importado AuthGuardV2 en Dashboard.tsx
+  - Rutas agrupadas en 3 categorías:
+    1. Públicas (cualquier autenticado): `/`, `/history`
+    2. Administrativas (Coordinador): `/user`, `/classrooms`, `/area`, `/student`, `/aspirants`
+    3. Académicas (Docente + Coordinador): `/academy`, `/notes`, `/report`, preescolar
+  - Documentación de permisos en comentarios JSDoc
 
 ---
 
@@ -374,8 +393,8 @@
 | Fase 3 | 2 | 2 | 0 | 0 |
 | Fase 3.5 | 2 | 2 | 0 | 0 |
 | Fase 3.6 | 2 | 2 | 0 | 0 |
-| Fase 4 | 4 | 0 | 4 | 0 |
-| **Total** | **18** | **14** | **4** | **0** |
+| Fase 4 | 4 | 4 | 0 | 0 |
+| **Total** | **18** | **18** | **0** | **0** |
 
 ---
 
@@ -424,3 +443,8 @@
 | 2026-01-24 | Layout | UserTable: Agregado flex-1 a todos los estados (normal, loading, error). |
 | 2026-01-24 | UI/UX | UserTable skeleton: Rediseñado con grid que replica estructura real de la tabla. |
 | 2026-01-24 | UI/UX | AuthGuard LoadingScreen: Simplificado a spinner minimalista con fondo blur. |
+| 2026-01-24 | 4.1 | getUserByUid ya existía en user.service.ts. Marcada como completada. |
+| 2026-01-24 | 4.2 | Carga de datos de Firestore ya implementada en AuthGuardV2. Marcada como completada. |
+| 2026-01-24 | 4.3 | hasAllowedRole activada: verifica user.role contra allowedRoles. getUserRole() creada. |
+| 2026-01-24 | 4.4 | Dashboard.tsx: Rutas protegidas con AuthGuardV2. Admin→Coordinador, Academia→Docente+Coordinador. |
+| 2026-01-24 | Extra | Sidebar: Items filtrados por rol. NavItem tiene allowedRoles. SidebarV2 filtra según userRole de Redux. |
