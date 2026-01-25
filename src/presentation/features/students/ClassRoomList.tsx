@@ -1,15 +1,21 @@
 import { useEffect, useState, useMemo } from "react";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 import DataTable from "../../components/datatable/DataTable";
 import { fetchClassrooms, deleteClassroom, updateClassroom } from "../../../infrastructure/classRoom.service";
 import { fetchDocentes } from "../../../infrastructure/user.service";
-import Tooltip from "../../components/toolTip/Tooltip";
 import Modal from "../../components/modal/Modal";
 import { ClassRoom } from "../../../domain/entities/classRoom";
 import { DocenteOption, DocentesMap } from "../../../shared/types/classRoomTypes";
 import ClassRoomForm from "../../components/classRoomForm/ClassRoomForm";
 
-import editIcon from "../../../assets/datatableIcons/edit.svg";
-import trashIcon from "../../../assets/datatableIcons/trash.svg";
+/**
+ * Configuración de badges por nivel académico
+ */
+const NIVEL_BADGES: Record<string, string> = {
+  preescolar: "bg-purple-100 text-purple-700 border-purple-200",
+  primaria: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  secundaria: "bg-blue-100 text-blue-700 border-blue-200",
+};
 
 const ClassRoomList = () => {
   const [classrooms, setClassrooms] = useState<ClassRoom[]>([]);
@@ -84,52 +90,43 @@ const ClassRoomList = () => {
   };
 
   const columns = [
-    { 
-      key: "identificador", 
-      label: "Identificador",
+    {
+      key: "identificador",
+      label: "ID",
       render: (row: ClassRoom) => (
-        <p className="classroom-identifier">
+        <span className="font-mono text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
           {row.identificador}
-        </p>
+        </span>
       )
     },
-    { 
-      key: "nombreSalon", 
+    {
+      key: "nombreSalon",
       label: "Nombre del Salón",
       render: (row: ClassRoom) => (
-        <p>
+        <span className="font-medium text-gray-900">
           {row.nombreSalon.toUpperCase()}
-        </p>
+        </span>
       )
     },
-    { 
-      key: "nivel", 
+    {
+      key: "nivel",
       label: "Nivel",
       render: (row: ClassRoom) => {
-        let badgeClass = "status-badge";
-        
-        // Personaliza según el carácter del estudiante si es necesario
-        switch(row.nivel?.toLowerCase()) {
-          case "preescolar":
-            badgeClass += " preescolar-badge";
-            break;
-          case "primaria":
-            badgeClass += " primaria-badge";
-            break;
-          case "secundaria":
-            badgeClass += " secundaria-badge";
-            break;
-          default:
-            badgeClass += " normal-badge";
-        }
+        const nivelKey = row.nivel?.toLowerCase() || "";
+        const badgeClasses = NIVEL_BADGES[nivelKey] || "bg-gray-100 text-gray-700 border-gray-200";
 
-        
-          return (
-          <p className={badgeClass}>
-            {row.nivel.toUpperCase()}
-          </p>  )
-        
-      }   
+        return (
+          <span className={`
+            inline-flex items-center
+            px-2.5 py-1
+            text-xs font-semibold
+            rounded-full border
+            ${badgeClasses}
+          `}>
+            {row.nivel?.toUpperCase()}
+          </span>
+        );
+      }
     },
     {
       key: "directorGrupo",
@@ -140,39 +137,63 @@ const ClassRoomList = () => {
 
         return (
           <div className="flex items-center gap-2">
-            {isDocente && (
-              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-deepBlue text-white text-xs">
-                {directorName.charAt(0).toUpperCase()}
+            {isDocente ? (
+              <>
+                <span className="
+                  inline-flex items-center justify-center
+                  w-7 h-7 rounded-full
+                  bg-gradient-to-br from-slate-700 to-slate-900
+                  text-white text-xs font-medium
+                  shadow-sm
+                ">
+                  {directorName.charAt(0).toUpperCase()}
+                </span>
+                <span className="text-gray-900 font-medium">
+                  {directorName}
+                </span>
+              </>
+            ) : (
+              <span className="text-gray-400 italic text-sm">
+                {directorName || "Sin asignar"}
               </span>
             )}
-            <p className={`classroom-director ${!isDocente ? 'text-gray-500 italic' : ''}`}>
-              {directorName}
-            </p>
           </div>
         );
       }
     },
-    { 
-      key: 'actions', 
+    {
+      key: 'actions',
       label: 'Acciones',
       render: (classroom: ClassRoom) => (
-        <div className="actions-container">
-          <Tooltip text="Editar salón" position="bottom">
-            <img 
-              src={editIcon} 
-              className="action-icon" 
-              alt="edit" 
-              onClick={() => handleEdit(classroom)}
-            />
-          </Tooltip>
-          <Tooltip text="Eliminar salón" position="bottom">
-            <img 
-              src={trashIcon} 
-              className="action-icon" 
-              alt="delete" 
-              onClick={() => handleDelete(classroom.id)}
-            />
-          </Tooltip>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => handleEdit(classroom)}
+            className="
+              p-2 rounded-lg
+              text-gray-500 hover:text-blue-600
+              hover:bg-blue-50
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-blue-200
+            "
+            title="Editar salón"
+            aria-label="Editar salón"
+          >
+            <IconEdit size={18} stroke={1.5} />
+          </button>
+          <button
+            onClick={() => handleDelete(classroom.id)}
+            className="
+              p-2 rounded-lg
+              text-gray-500 hover:text-red-600
+              hover:bg-red-50
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-red-200
+            "
+            title="Eliminar salón"
+            aria-label="Eliminar salón"
+          >
+            <IconTrash size={18} stroke={1.5} />
+          </button>
         </div>
       )
     }

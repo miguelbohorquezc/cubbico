@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { IconX } from "@tabler/icons-react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,8 +12,8 @@ interface ModalProps {
 const sizeClasses = {
   sm: 'max-w-sm',
   md: 'max-w-md',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl'
+  lg: 'max-w-lg',
+  xl: 'max-w-2xl'
 };
 
 const Modal: React.FC<ModalProps> = ({
@@ -20,60 +21,84 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
-  size = 'lg'
+  size = 'md'
 }) => {
+  // Cerrar con Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
+  // Prevenir scroll del body cuando el modal está abierto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
+      {/* Backdrop con animación */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Modal container */}
-      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
         <div
-          className={`relative w-full ${sizeClasses[size]} bg-white rounded-lg shadow-xl transform transition-all`}
+          className={`
+            relative w-full ${sizeClasses[size]}
+            bg-white rounded-2xl shadow-2xl
+            transform transition-all
+            animate-slide-up
+          `}
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <h2
               id="modal-title"
-              className="text-xl font-semibold text-gray-900"
+              className="text-lg font-semibold text-gray-900"
             >
               {title}
             </h2>
             <button
               type="button"
               onClick={onClose}
-              className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+              className="
+                p-2 -mr-2
+                text-gray-400 hover:text-gray-600
+                hover:bg-gray-100
+                rounded-xl
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-gray-200
+              "
               aria-label="Cerrar modal"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <IconX size={20} stroke={2} />
             </button>
           </div>
 
           {/* Body */}
-          <div className="p-6 max-h-[70vh] overflow-y-auto">
+          <div className="px-6 py-5 max-h-[calc(100vh-200px)] overflow-y-auto">
             {children}
           </div>
         </div>

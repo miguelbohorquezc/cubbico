@@ -89,16 +89,15 @@ export const SELECT_FIELDS: SelectFieldConfig[] = [
   { name: 'nivel', options: SELECT_OPTIONS.nivel }
 ];
 
-// Validaciones (se mantiene funcionalidad original)
+// Validaciones con nombres correctos
 export const validationsForm = (form: AreaFormState) => {
   const errors: Record<string, string> = {};
-  
-  // Nota: Los nombres de las claves de error parecen no coincidir con los campos
-  if (!form.orden.trim()) errors.id = 'Campo requerido';
-  if (!form.asignatura.trim()) errors.document = 'Defina un nombre para la asignatura';
-  if (!form.ihs.trim()) errors.name = 'Campo requerido';
-  if (!form.area.trim()) errors.lastName = 'Campo requerido';
-  if (!form.nivel.trim()) errors.classRoom = 'Seleccione un nivel';
+
+  if (!form.asignatura.trim()) errors.asignatura = 'Defina un nombre para la asignatura';
+  if (!form.ihs.trim()) errors.ihs = 'Campo requerido';
+  if (!form.area.trim()) errors.area = 'Seleccione un área';
+  if (!form.nivel.trim()) errors.nivel = 'Seleccione un nivel';
+  // El orden se calcula automáticamente, no requiere validación en UI
 
   return errors;
 };

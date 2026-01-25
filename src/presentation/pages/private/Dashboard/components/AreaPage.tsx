@@ -1,16 +1,59 @@
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../../../components/navbar/Navbar"
-import Sidebar from "../../../../components/sidebar/Sidebar"
-import Button from "../../../../features/button/Button"
-import Modal from "../../../../components/modal/Modal";
 import { useState, useEffect } from "react";
+import { IconArrowLeft, IconPlus, IconBooks } from "@tabler/icons-react";
+import { SidebarV2 } from "../../../../components/sidebarV2";
+import { HeaderV2 } from "../../../../components/headerV2";
+import Modal from "../../../../components/modal/Modal";
 import AreaForm from "../../../../components/areaForm/AreaForm";
 import AreaListDragDrop from "../../../../features/students/AreaListDragDrop";
 import { AreaServiceData } from "../../../../../shared/types/areaTypes";
 import { addArea, fetchAreas } from "../../../../../infrastructure/area.service";
 
+// Key del localStorage usada por useSidebarV2
+const SIDEBAR_STORAGE_KEY = 'cubbico-sidebar-collapsed';
+
+/**
+ * Hook para sincronizar con el estado del sidebar en localStorage
+ */
+const useSidebarCollapsed = (): boolean => {
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === SIDEBAR_STORAGE_KEY) {
+        setIsCollapsed(e.newValue === 'true');
+      }
+    };
+
+    const handleSidebarChange = () => {
+      try {
+        setIsCollapsed(localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'true');
+      } catch {
+        // Ignorar errores
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    const interval = setInterval(handleSidebarChange, 100);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
+  return isCollapsed;
+};
+
 function AreaPage() {
   const navigate = useNavigate();
+  const isSidebarCollapsed = useSidebarCollapsed();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [areas, setAreas] = useState<AreaServiceData[]>([]);
@@ -30,54 +73,105 @@ function AreaPage() {
 
   const handleAddArea = async (formData: AreaServiceData) => {
     try {
-      // Elimina el id antes de enviar a Firestore
       const { id, ...areaData } = formData;
       await addArea(areaData);
-
       setIsModalOpen(false);
-      // Forzar recarga de la lista incrementando la key
       setRefreshKey(prev => prev + 1);
-      alert('Área creada exitosamente!');
       return true;
     } catch (error) {
       console.error('Error al crear área:', error);
-      alert(`Error: ${error instanceof Error ? error.message : 'Error al crear área'}`);
       return false;
     }
   };
 
   return (
-    <>
-      <Sidebar/>
-      <div className='container-page'>
-        <div className='header-container-page'>
-            <Navbar/>
-            <div className='title-option'>
-              <Button
-                variant="primary" size="sm"
-                onClick={() => navigate(-1)}>
-                Regresar
-              </Button>
-              <Button
-                variant="accent" size="sm"
-                onClick={() => setIsModalOpen(true)}>
-                Registrar área
-              </Button>
-              <h2>Gestión de Asignaturas</h2>
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Sidebar */}
+      <SidebarV2 />
+
+      {/* Contenido principal */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <HeaderV2
+          title="Asignaturas"
+          showDate
+          showSearch={false}
+          isSidebarCollapsed={isSidebarCollapsed}
+        />
+
+        {/* Spacer para el header fixed */}
+        <div className="h-16 flex-shrink-0" />
+
+        {/* Body */}
+        <main className="flex-1 p-4 lg:p-6 overflow-auto min-h-0">
+          {/* Header de la página */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              {/* Botón atrás */}
+              <button
+                onClick={() => navigate(-1)}
+                className="
+                  p-2 rounded-xl
+                  text-gray-500 hover:text-gray-700
+                  hover:bg-gray-100
+                  transition-all duration-200
+                  focus:outline-none focus:ring-2 focus:ring-amber-200
+                "
+                aria-label="Volver atrás"
+              >
+                <IconArrowLeft size={20} />
+              </button>
+
+              {/* Icono y título */}
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl shadow-lg shadow-violet-200">
+                <IconBooks size={20} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">
+                  Gestión de Asignaturas
+                </h1>
+                <p className="text-xs text-gray-500">
+                  Administra las asignaturas y su orden en los informes
+                </p>
+              </div>
             </div>
+
+            {/* Botón crear */}
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="
+                inline-flex items-center gap-2
+                px-4 py-2.5 text-sm font-medium
+                bg-gradient-to-r from-violet-500 to-purple-600
+                text-white rounded-xl
+                hover:from-violet-600 hover:to-purple-700
+                transition-all duration-200
+                shadow-md hover:shadow-lg shadow-violet-200
+                focus:outline-none focus:ring-2 focus:ring-violet-300
+              "
+            >
+              <IconPlus size={18} />
+              <span className="hidden sm:inline">Nueva Asignatura</span>
+            </button>
           </div>
-          <div className='body-container-page'>
+
+          {/* Lista de asignaturas con drag & drop */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden p-4 lg:p-6">
             <AreaListDragDrop key={refreshKey} />
           </div>
+        </main>
       </div>
+
+      {/* Modal de creación */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Nueva Área Académica"
+        title="Nueva Asignatura"
       >
         <AreaForm onSubmit={handleAddArea} existingAreas={areas} />
       </Modal>
-    </>
-  )
+    </div>
+  );
 }
-export default AreaPage
+
+export default AreaPage;

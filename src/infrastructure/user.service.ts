@@ -182,6 +182,43 @@ export const fetchDocentes = async (): Promise<DocenteOption[]> => {
 };
 
 /**
+ * Obtiene todos los usuarios del sistema desde Firestore.
+ * A diferencia de fetchDocentes, no filtra por rol.
+ *
+ * @returns Promise<DocenteOption[]> Lista de todos los usuarios
+ * @throws Error si falla la consulta a Firestore
+ *
+ * @example
+ * const usuarios = await fetchAllUsers();
+ * // [{ id: 'abc123', email: 'admin@school.com', role: 'Administrativo' }, ...]
+ */
+export const fetchAllUsers = async (): Promise<DocenteOption[]> => {
+  try {
+    const usersRef = collection(db, "users");
+    const snapshot = await getDocs(usersRef);
+
+    const usuarios: DocenteOption[] = snapshot.docs.map(doc => {
+      const data = doc.data();
+      const displayName = data.displayName ||
+        `${data.firstName || ''} ${data.lastName || ''}`.trim() ||
+        null;
+      return {
+        id: doc.id,
+        email: data.email || '',
+        displayName: displayName,
+        role: data.role || 'Usuario'
+      };
+    });
+
+    // Ordenar alfabéticamente por email
+    return usuarios.sort((a, b) => a.email.localeCompare(b.email));
+  } catch (error) {
+    console.error("Error al obtener usuarios:", error);
+    throw new Error("Error al cargar la lista de usuarios");
+  }
+};
+
+/**
  * Obtiene un usuario por su UID desde Firestore
  *
  * @param uid - UID del usuario (de Firebase Auth)
