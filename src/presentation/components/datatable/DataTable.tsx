@@ -36,6 +36,8 @@ interface DataTableProps<T> {
     maxHeight?: string | number;
   };
   tableClassName?: string;
+  /** Función para aplicar clases CSS condicionales a cada fila */
+  rowClassName?: (row: T) => string;
 }
 
 function DataTable<T>({
@@ -49,7 +51,8 @@ function DataTable<T>({
   enableSearch = true,
   skeletonCount = 5,
   tableSize = { width: "100%", height: "auto" },
-  tableClassName = ""
+  tableClassName = "",
+  rowClassName
 }: DataTableProps<T>) {
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
   const {
@@ -242,10 +245,11 @@ function DataTable<T>({
               (enablePagination ? paginatedData : sortedData).map((row, index) => (
                 <tr
                   key={index}
-                  className="
+                  className={`
                     transition-colors duration-150
                     hover:bg-emerald-50/50
-                  "
+                    ${rowClassName ? rowClassName(row) : ''}
+                  `}
                 >
                   {columns.map((col) => (
                     <td

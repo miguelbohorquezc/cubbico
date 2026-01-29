@@ -33,11 +33,11 @@ const calculateAverage = (grades: Grades): number => {
   return Math.round(((l1 + l2 + l3) / 3) * 100) / 100;
 };
 
-const getGradeCategory = (avg: number): { letter: string; color: string } => {
-  if (avg >= 4.6) return { letter: 'S', color: '#3498db' };
-  if (avg >= 4.0) return { letter: 'A', color: '#2ecc71' };
-  if (avg >= 3.0) return { letter: 'B', color: '#f39c12' };
-  return { letter: 'B', color: '#e74c3c' };
+const getGradeCategory = (avg: number): { letter: string; bgClass: string; textClass: string } => {
+  if (avg >= 4.6) return { letter: 'S', bgClass: 'bg-blue-100', textClass: 'text-blue-700' };
+  if (avg >= 4.0) return { letter: 'A', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' };
+  if (avg >= 3.0) return { letter: 'B', bgClass: 'bg-amber-100', textClass: 'text-amber-700' };
+  return { letter: 'B', bgClass: 'bg-red-100', textClass: 'text-red-700' };
 };
 
 const ClassAveragesReport: React.FC = () => {
@@ -87,6 +87,13 @@ const ClassAveragesReport: React.FC = () => {
           nivel: doc.data().nivel || ''
         }));
 
+        // Ordenar asignaturas por el campo 'orden' configurado en /area
+        metaList.sort((a, b) => {
+          const orderA = parseInt(a.orden) || 9999;
+          const orderB = parseInt(b.orden) || 9999;
+          return orderA - orderB;
+        });
+
         setSubjectsMeta(metaList);
         const validAreaIds = metaList.map(m => m.areaId);
 
@@ -127,7 +134,7 @@ const ClassAveragesReport: React.FC = () => {
               studentName: `${student.name} ${student.lastName}`,
               averages,
               generalAverage,
-              position: 0 // temporal
+              position: 0
             };
           })
         );
@@ -149,8 +156,35 @@ const ClassAveragesReport: React.FC = () => {
     fetchClassAverages();
   }, [classroomId, schoolLevel, periodId, year]);
 
-  if (loading) return <div>Cargando promedios de la clase...</div>;
-  if (error) return <div>Error: {error}</div>;
+  // ==========================================
+  // Estados de carga y error
+  // ==========================================
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg text-gray-600">Cargando promedios de la clase...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <p className="text-lg font-semibold text-red-600">Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   const areaIds = subjectsMeta.map(m => m.areaId);
   const classAverage = parseFloat(
@@ -160,75 +194,160 @@ const ClassAveragesReport: React.FC = () => {
     ).toFixed(2)
   );
 
+  // ==========================================
+  // Componente de badge de calificación
+  // ==========================================
+
+  const GradeBadge = ({ average }: { average: number }) => {
+    const cat = getGradeCategory(average);
+    return (
+      <span className={`inline-block px-1.5 py-0.5 rounded text-xs font-bold ${cat.bgClass} ${cat.textClass}`}>
+        {cat.letter}
+      </span>
+    );
+  };
+
   return (
-    <div className="class-averages-report">
-      <table className="table-header-info-report">
-        <thead className="thead-header-info">
-          <tr className="tr-header">
-            <td className="td-logo-school" rowSpan={1}>
-              <img src={logo} alt="logotipo" />
-            </td>
-            <td align="center" className="td-header" colSpan={2}>
-              <b>COLINA CAMPESTRE SCHOOL</b>
-              <p>De Sincelejo, Sucre, 
-              con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria 
-              por parte de Secretaria de Educación Municipal, 
-              según resolución No 2747 del 12 de diciembre de 2023. Carrera 34No 38-158, 
-              teléfonos: 2771068-3006781806</p>
-              <p>NIT: 901731191-3</p>
-            </td>
-            <td align="center" className="td-dane">DANE 370001038852</td>
-          </tr>
-        </thead>
-      </table>
-      <h2>
-        <p className='title-p'>{`REPORTE DE PROMEDIOS - SALÓN ${classroomName.toUpperCase()} - ${schoolLevel?.toUpperCase()} - P ${periodId}`}</p>
-      </h2>
-      <table>
+    <div className="class-averages-report font-['Nunito',sans-serif] bg-white rounded-lg p-4">
+      {/* Header de la escuela */}
+      <table className="w-full border-collapse mb-4">
         <thead>
-          <tr>
-            <th scope="col" className='th-asignatura'><p>Posiciones</p></th>
-            <th scope="col" className='th-estudiante'><p>Estudiante</p></th>
-            {areaIds.map(id => (
-              <th key={id} scope="col" className='th-asignatura'>
-                <p className='p-asignaturas'>{subjectsMeta.find(m => m.areaId === id)?.asignatura || id}</p>
-              </th>
-            ))}
-            <th scope="col" className='th-asignatura'><p>Promedio General</p></th>
+          <tr className="h-28">
+            <td className="w-24 p-2 border border-gray-100 align-middle">
+              <img src={logo} alt="logotipo" className="w-16 mx-auto" />
+            </td>
+            <td className="px-6 py-3 border border-gray-100 text-center" colSpan={2}>
+              <b className="text-base font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
+              <p className="text-[10pt] text-gray-600 mt-1 leading-relaxed">
+                De Sincelejo, Sucre, con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria
+                por parte de Secretaria de Educación Municipal, según resolución No 2747 del 12 de diciembre de 2023.
+                Carrera 34 No 38-158, teléfonos: 2771068-3006781806
+              </p>
+              <p className="text-[10pt] text-gray-700 font-semibold">NIT: 901731191-3</p>
+            </td>
+            <td className="w-28 px-3 py-2 border border-gray-100 text-center text-xs text-gray-600 align-middle">
+              DANE 370001038852
+            </td>
           </tr>
         </thead>
-        <tbody>
-          {studentAverages.map(student => (
-            <tr key={student.studentId}>
-              <td><p className='student-position-p'>{student.position}</p></td>
-              <td><p className='student-name-p'>{student.studentName}</p></td>
-              {areaIds.map(id => {
-                const avg = student.averages[id];
-                if (avg === undefined) {
-                  return <td key={id}>-</td>;
-                }
-                const cat = getGradeCategory(avg);
-                return (
-                  <td key={id}>
-                    <p className='promedio-p'>{avg.toFixed(2)}</p> 
-                    <span style={{ color: cat.color }}>{cat.letter}</span>
-                  </td>
-                );
-              })}
-              <td>
-                <p className='promedio-p'>{student.generalAverage.toFixed(2)}</p>{' '}
-                <span style={{ color: getGradeCategory(student.generalAverage).color }}>
-                  {getGradeCategory(student.generalAverage).letter}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
       </table>
-      <div className="class-summary">
-        <strong>Promedio general del salón:</strong> {classAverage.toFixed(2)}{' '}
-        <span style={{ color: getGradeCategory(classAverage).color }}>
-          {getGradeCategory(classAverage).letter}
+
+      {/* Título del reporte */}
+      <h2 className="text-center my-4">
+        <span className="text-lg font-bold text-gray-800">
+          {`REPORTE DE PROMEDIOS - SALÓN ${classroomName.toUpperCase()} - ${schoolLevel?.toUpperCase()} - P ${periodId}`}
+        </span>
+      </h2>
+
+      {/* Tabla de promedios */}
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse table-fixed">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="th-vertical w-12 px-2 py-3 border border-gray-200 text-center text-xs font-semibold text-gray-600 align-bottom">
+                <p className="m-0">Pos.</p>
+              </th>
+              <th className="w-40 px-3 py-3 border border-gray-200 text-left text-xs font-semibold text-gray-700">
+                <p className="m-0">Estudiante</p>
+              </th>
+              {areaIds.map(id => (
+                <th
+                  key={id}
+                  className="th-vertical w-14 px-1 py-2 border border-gray-200 text-center text-[11px] font-semibold text-gray-600 align-bottom"
+                >
+                  <p className="m-0">{subjectsMeta.find(m => m.areaId === id)?.asignatura || id}</p>
+                </th>
+              ))}
+              <th className="th-vertical w-16 px-2 py-3 border border-gray-200 text-center text-xs font-semibold text-gray-700 align-bottom">
+                <p className="m-0">Prom. Gral.</p>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {studentAverages.map((student, idx) => (
+              <tr
+                key={student.studentId}
+                className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors`}
+              >
+                {/* Posición */}
+                <td className="px-2 py-2 border border-gray-100 text-center align-middle">
+                  <span className={`
+                    inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold
+                    ${student.position === 1 ? 'bg-amber-400 text-white' :
+                      student.position === 2 ? 'bg-gray-300 text-gray-700' :
+                      student.position === 3 ? 'bg-amber-600 text-white' :
+                      'bg-gray-100 text-gray-600'}
+                  `}>
+                    {student.position}
+                  </span>
+                </td>
+
+                {/* Nombre del estudiante */}
+                <td className="px-3 py-2 border border-gray-100 align-middle">
+                  <p className="m-0 text-[11pt] font-semibold text-gray-900 text-left truncate">
+                    {student.studentName}
+                  </p>
+                </td>
+
+                {/* Promedios por asignatura */}
+                {areaIds.map(id => {
+                  const avg = student.averages[id];
+                  if (avg === undefined) {
+                    return (
+                      <td key={id} className="px-1 py-2 border border-gray-100 text-center text-gray-400">
+                        -
+                      </td>
+                    );
+                  }
+                  return (
+                    <td key={id} className="px-1 py-2 border border-gray-100 text-center align-middle">
+                      <div className="flex flex-col items-center gap-0.5">
+                        <span className="text-sm font-medium text-gray-800">{avg.toFixed(2)}</span>
+                        <GradeBadge average={avg} />
+                      </div>
+                    </td>
+                  );
+                })}
+
+                {/* Promedio general */}
+                <td className="px-2 py-2 border border-gray-100 text-center align-middle bg-gray-50">
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span className="text-sm font-bold text-gray-900">{student.generalAverage.toFixed(2)}</span>
+                    <GradeBadge average={student.generalAverage} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Resumen del salón */}
+      <div className="mt-6 flex justify-end items-center gap-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
+        <span className="text-sm font-semibold text-gray-700">Promedio general del salón:</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xl font-bold text-gray-900">{classAverage.toFixed(2)}</span>
+          <GradeBadge average={classAverage} />
+        </div>
+      </div>
+
+      {/* Leyenda */}
+      <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-600 justify-center">
+        <span className="inline-flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+          S: Superior (4.6-5.0)
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          A: Alto (4.0-4.5)
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          B: Básico (3.0-3.9)
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+          B: Bajo (1.0-2.9)
         </span>
       </div>
     </div>

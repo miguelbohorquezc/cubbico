@@ -10,156 +10,136 @@ Optimizar la experiencia de usuario en el flujo docente: selección de salones �
 | Ruta | Componente | Estilo | Estado |
 |------|-----------|--------|--------|
 | `/private/dashboard/academy/:periodId/:classroomId/:areaId` | Academy.tsx | Tailwind | ✅ Migrado |
-| `/private/dashboard/notes/:periodId/:classroomId/:areaId` | Notes.tsx | CSS Tradicional | ⏳ Pendiente |
-| `/private/dashboard/report/:studentId/:year` | AcademicReport.tsx | CSS Tradicional | ⏳ Pendiente |
-| `/private/dashboard/report/:classroomId/:periodId/:schoolLevel/:year` | InformePorSalon.tsx | CSS Tradicional | ⏳ Pendiente |
-| `/private/dashboard/final-report/:studentId/:year` | FinalReport.tsx | CSS Tradicional | ⏳ Pendiente |
+| `/private/dashboard/notes/:periodId/:classroomId/:areaId` | Notes.tsx | Tailwind | ✅ Migrado |
+| `/private/dashboard/report/:studentId/:year` | AcademicReport.tsx | Tailwind | ✅ Migrado |
+| `/private/dashboard/report/:classroomId/:periodId/:schoolLevel/:year` | InformePorSalon.tsx | Tailwind | ✅ Migrado |
+| `/private/dashboard/final-report/:studentId/:year` | FinalReport.tsx | Tailwind | ✅ Migrado |
+| `/private/dashboard/bulk-print/:periodId/:classroomId` | BulkReportPrinter.tsx | Tailwind | ✅ Rediseñado |
 
 ---
 
-## Módulos Protegidos (Requieren autorización)
-
-```
-src/presentation/components/notes/
-src/presentation/components/achievement/
-src/presentation/components/classRoomReport/
-src/presentation/components/informeGeneral/
-```
+## FASE 1: Vista de Salones y Asignaturas (Academy) ✅ COMPLETADA
+## FASE 2: Vista de Notas ✅ COMPLETADA
+## FASE 3: Sistema de Permisos Coordinador ✅ COMPLETADA
 
 ---
 
-## FASE 1: Vista de Salones y Asignaturas (Academy)
+## FASE 4: Reportes Académicos ✅ COMPLETADA
 
-**Objetivo:** Mejorar la experiencia de selección de salón y asignatura para los docentes.
+| ID | Microtarea | Estado |
+|----|------------|--------|
+| 4.1 | Optimizar AcademicReport.tsx con Tailwind | ✅ |
+| 4.2 | Optimizar InformePorSalon.tsx con Tailwind | ✅ |
+| 4.3 | Optimizar FinalReport.tsx con Tailwind | ✅ |
 
-**Archivos involucrados:**
-- `src/presentation/pages/private/Dashboard/components/Academy.tsx`
-- `src/presentation/features/teacher/TeacherClassrooms.tsx`
-- `src/presentation/features/teacher/TeacherAreas.tsx`
+---
 
-### Microtareas Fase 1
+## FASE 4B: Corrección de Bugs y Mejoras ✅ COMPLETADA
+
+| ID | Microtarea | Estado |
+|----|------------|--------|
+| 4B.1 | Ampliar tamaño del modal de logros | ✅ |
+| 4B.2 | Corregir carga de logros al entrar a asignatura | ✅ |
+| 4B.3 | Corregir orden de asignaturas en informes | ✅ |
+
+**Cambios realizados:**
+- Modal.tsx: Agregados tamaños 3xl, 4xl, full
+- Notes.tsx: Modal de logros ahora usa size="3xl"
+- teacher.service.ts: Ahora carga achievements junto con classrooms y areas
+- TeacherDataLoader.tsx: Dispatch de achievements al store
+- InformePorSalon.tsx: Ordenamiento de asignaturas por campo 'orden'
+
+---
+
+## FASE 4C: Rediseño Impresión Masiva ✅ COMPLETADA
+
+| ID | Microtarea | Estado |
+|----|------------|--------|
+| 4C.1 | Rediseñar BulkReportPrinter para documento único | ✅ |
+| 4C.2 | Configurar estilos para hoja legal y PDF | ✅ |
+| 4C.3 | Renderizar informes en secuencia (uno debajo de otro) | ✅ |
+| 4C.4 | Diferenciar vista primaria vs secundaria | ✅ |
+
+**Cambios realizados en BulkReportPrinter.tsx:**
+- Genera UN documento único con todos los informes
+- Usa `@page { size: legal portrait }` para hoja legal
+- Usa `page-break-after: always` entre informes
+- Vista de previsualización antes de imprimir
+- Botón "Imprimir / Exportar PDF" que usa `window.print()`
+- Diferencia primaria (lista plana) vs secundaria (agrupado por áreas)
+- Ordena asignaturas por campo 'orden'
+
+---
+
+## FASE 5: Configuración de Fecha de Entrega (PENDIENTE)
 
 | ID | Microtarea | Archivos (máx 2) | Estado |
 |----|------------|------------------|--------|
-| 1.1 | Mejorar feedback visual al seleccionar salón (estado activo) | `TeacherClassrooms.tsx` | ⏳ |
-| 1.2 | Mostrar nombre del salón seleccionado en el header de asignaturas | `Academy.tsx` | ⏳ |
-| 1.3 | Agregar breadcrumb de navegación (Período → Salón → Asignatura) | `Academy.tsx` | ⏳ |
-| 1.4 | Mejorar empty state cuando no hay salones asignados | `TeacherClassrooms.tsx` | ⏳ |
-
----
-
-## FASE 2: Vista de Notas (Requiere autorización)
-
-**Objetivo:** Optimizar UX/UI del registro de notas sin afectar la funcionalidad de calificación.
-
-**Archivos involucrados:**
-- `src/presentation/pages/private/Dashboard/components/Notes.tsx`
-- `src/presentation/features/notesManager/GradeManager.tsx`
-- `src/presentation/features/teacher/TeacherAchievements.tsx`
-- `src/presentation/components/achievement/AchievementForm.tsx`
-
-### Microtareas Fase 2
-
-| ID | Microtarea | Archivos (máx 2) | Estado |
-|----|------------|------------------|--------|
-| 2.1 | Migrar layout de Notes.tsx a SidebarV2/HeaderV2 | `Notes.tsx` | ⏳ |
-| 2.2 | Optimizar estilos de TeacherAchievements con Tailwind | `TeacherAchievements.tsx` | ⏳ |
-| 2.3 | Mejorar visual del formulario de logros (sin cambiar funcionalidad) | `AchievementForm.tsx` | ⏳ |
-| 2.4 | Optimizar tabla de calificaciones GradeManager (solo estilos) | `GradeManager.tsx` | ⏳ |
-
----
-
-## FASE 3: Sistema de Permisos Coordinador
-
-**Objetivo:** Permitir que el usuario coordinador tenga acceso "super" a reportes aunque no esté asignado directamente.
-
-**Archivos a crear/modificar:**
-- `src/infrastructure/permission.service.ts` (nuevo)
-- `src/domain/entities/` (tipos de roles)
-
-### Microtareas Fase 3
-
-| ID | Microtarea | Archivos (máx 2) | Estado |
-|----|------------|------------------|--------|
-| 3.1 | Crear servicio de permisos con rol coordinador | `permission.service.ts` | ⏳ |
-| 3.2 | Implementar verificación de permisos en rutas de reportes | Componente de ruta | ⏳ |
-| 3.3 | Agregar UI para acceso coordinador a reportes de cualquier docente | Componente de navegación | ⏳ |
-
----
-
-## FASE 4: Reportes Académicos (Requiere autorización)
-
-**Objetivo:** Optimizar diseño visual con Tailwind SIN cambiar estructura, columnas ni información presentada.
-
-**Restricciones críticas:**
-- NO cambiar cálculos de promedios
-- NO cambiar estructura de tablas
-- NO cambiar información mostrada
-- SOLO mejorar aspecto visual
-- MANTENER estilos de impresión funcionales
-
-### Microtareas Fase 4
-
-| ID | Microtarea | Archivos (máx 2) | Estado |
-|----|------------|------------------|--------|
-| 4.1 | Optimizar AcademicReport.tsx con Tailwind (visual) | `AcademicReport.tsx` + `.css` | ⏳ |
-| 4.2 | Optimizar InformePorSalon.tsx con Tailwind (visual) | `InformePorSalon.tsx` + `.css` | ⏳ |
-| 4.3 | Optimizar FinalReport.tsx con Tailwind (visual) | `FinalReport.tsx` | ⏳ |
-
----
-
-## FASE 5: Configuración de Fecha de Entrega
-
-**Objetivo:** Agregar capacidad de configurar fecha de entrega para reportes de período.
-
-### Microtareas Fase 5
-
-| ID | Microtarea | Archivos (máx 2) | Estado |
-|----|------------|------------------|--------|
-| 5.1 | Crear modelo de configuración de período con fecha de entrega | `domain/entities/` | ⏳ |
-| 5.2 | Crear servicio para guardar/obtener configuración de período | `infrastructure/` | ⏳ |
+| 5.1 | Crear modelo de configuración de período | `domain/entities/` | ⏳ |
+| 5.2 | Crear servicio para configuración de período | `infrastructure/` | ⏳ |
 | 5.3 | Agregar UI para configurar fecha de entrega | Componente nuevo | ⏳ |
-| 5.4 | Mostrar fecha de entrega en reportes de período | `AcademicReport.tsx` | ⏳ |
+| 5.4 | Mostrar fecha de entrega en reportes | `AcademicReport.tsx` | ⏳ |
 
 ---
 
-## Commits Planificados
+## Pendientes Menores
 
-Cada fase tendrá su propio commit:
+| ID | Tarea | Estado |
+|----|-------|--------|
+| 4.3 | Optimizar FinalReport.tsx con Tailwind | ✅ |
 
-1. `feat(academy): mejorar UX de selección de salones y asignaturas`
-2. `feat(notes): optimizar UI del registro de notas con Tailwind`
-3. `feat(permissions): implementar permisos de coordinador para reportes`
-4. `style(reports): optimizar diseño visual de reportes con Tailwind`
-5. `feat(reports): agregar configuración de fecha de entrega`
+**Cambios realizados en FinalReport.tsx:**
+- Migrado completamente a Tailwind CSS (sin archivo CSS externo)
+- Spinner de carga moderno con animación
+- Barra de título con gradiente ("INFORME FINAL – {año}")
+- Badges de calificación coloreados por período y promedio final
+- Leyenda visual con puntos de colores
+- Estructura y cálculos de datos sin modificar
 
 ---
 
 ## Progreso General
 
-- [x] Análisis inicial completado
-- [ ] **FASE 1: Vista Academy** ← INICIANDO
-- [ ] FASE 2: Vista de Notas
-- [ ] FASE 3: Permisos Coordinador
-- [ ] FASE 4: Reportes Académicos
-- [ ] FASE 5: Fecha de Entrega
+- [x] **FASE 1: Vista Academy** ✅ COMPLETADA
+- [x] **FASE 2: Vista de Notas** ✅ COMPLETADA
+- [x] **FASE 3: Permisos Coordinador** ✅ COMPLETADA
+- [x] **FASE 4: Reportes Académicos** ✅ COMPLETADA (4.1 ✅, 4.2 ✅, 4.3 ✅)
+- [x] **FASE 4B: Bugs y Mejoras** ✅ COMPLETADA
+- [x] **FASE 4C: Impresión Masiva Rediseño** ✅ COMPLETADA
+- [ ] **FASE 5: Fecha de Entrega** ← SIGUIENTE
 
 ---
 
-## Notas de Implementación
+## Notas Técnicas
 
-### Reglas AGENTS.md
+### Ordenamiento de Asignaturas
+- Las asignaturas tienen un campo `orden` en la colección `areas`
+- AcademicReport.tsx y InformePorSalon.tsx respetan este orden
+- BulkReportPrinter.tsx también respeta el orden
+- Secundaria agrupa por campo `area`, ordenando internamente
+
+### Impresión Masiva - Implementación Final
+- Documento único con todos los informes
+- CSS `@page { size: legal portrait }` para hoja legal
+- `page-break-after: always` entre informes de estudiantes
+- `window.print()` permite guardar como PDF desde el navegador
+
+### Carga de Achievements
+- teacher.service.ts ahora carga achievements junto con classrooms y areas
+- TeacherDataLoader.tsx hace dispatch de achievements al store Redux
+- TeacherAchievements.tsx filtra por classroomId, areaId y periodId
+
+### FinalReport.tsx - Migración Tailwind
+- Sin archivo CSS externo, todo en clases Tailwind
+- Función `getGradeCategory()` retorna colores según promedio
+- Tabla con encabezados estilizados y filas alternadas
+- Promedios por período muestran badges coloreados
+- Promedio final destacado con gradiente
+- Estados de carga/error modernos
+
+---
+
+## Reglas AGENTS.md
 - Máximo 2 archivos por microtarea
 - Una microtarea a la vez
-- Declarar objetivo, archivos y definición de done antes de codificar
 - No usar `any` ni `//@ts-ignore` sin explicación
-
-### Arquitectura
-- `presentation/` → React, hooks, UI
-- `infrastructure/` → Firebase & servicios
-- `domain/` → Entidades puras TypeScript
-
-### Estilos
-- Usar Tailwind CSS para todo lo nuevo
-- Mobile-first
-- No crear archivos `.css` nuevos

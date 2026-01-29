@@ -1,264 +1,52 @@
-/* Estilos generales del reporte */
-.report-container {
-  width: 65rem;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Nunito', sans-serif;
-}
-
-/* Estilos para tablas */
-.report-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-.table-header-info-report,
-.table-student-info-report {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-/* Encabezado del reporte */
-.thead-header-info {
-  font-size: 10pt;
-  font-weight: 400;
-  padding-left: 1em;
-  border: 1px solid #f1f1f1;
-}
-
-.tr-header {
-  height: 10em;
-}
-
-.td-header {
-  padding-top: 20px;
-  padding-left: 4em;
-  padding-right: 4em;
-  margin: 0;
-  line-height: 1.3;
-  border: 1px solid #f1f1f1;
-}
-
-.td-header p {
-  font-size: 11pt;
-}
-
-.td-logo-school {
-  display: flex;
-  width: 9rem;
-  height: 8rem;
-  justify-content: center;
-}
-
-.td-logo-school img {
-  padding-top: 1em;
-  width: 6rem;
-}
-
-.title-p{
-  font-size: 12pt;
-}
-
-
-/* Información del estudiante */
-.table-student-info-report {
-  border: 1px solid #9ea4ff;
-  width: 100%;
-}
-
-.thead-student-info {
-  background: #f5f5f5;
-  height: 2em;
-}
-
-.table-student-info-report tbody {
-  height: 2em;
-}
-
-.table-student-info-report tr td {
-  font-size: 11pt;
-  font-weight: 800;
-  padding-left: 1em;
-  border: 1px solid #f1f1f1;
-}
-
-.student-name {
-  text-transform: capitalize;
-}
-
-.student-classroom {
-  font-weight: bold;
-}
-
-/* Estilos para áreas (secundaria) */
-.area-group {
-  margin-top: 2rem;
-  width: 100%;
-}
-
-.area-title {
-  background: #eeeeee;
-  color: rgb(0, 0, 0);
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-}
-
-/* Celdas y filas */
-.table-header {
-  background: #f5f5f5;
-    color: #2f2f2f;
-    padding: 12px;
-    text-align: left;
-    font-size: 14px;
-}
-
-.table-cell {
-  padding: 12px;
-  border-bottom: 1px solid #ecf0f1;
-  vertical-align: top;
-  font-size: 14px;
-}
-
-.even-row {
-  background: #ffffff;
-}
-
-.odd-row {
-  background: #ffffff;
-}
-
-/* Logros */
-.achievements-container {
-  display: grid;
-  gap: 8px;
-}
-
-.achievement-item {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-}
-
-.achievement-number {
-  background: #a9ddff;
-  color: white;
-  min-width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-/* Notas */
-.grades-container {
-  width: 4em;
-  line-height: 1.6;
-}
-
-.grade-label {
-  display: inline-block;
-  width: 30px;
-  color: #7f8c8d;
-}
-
-/* Totales y promedios */
-.average-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.average-cell p {
-  margin: 0;
-}
-
-.average-cell span {
-  font-weight: bold;
-  font-size: 0.8em;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.total-row {
-  background-color: #e6e6e6;
-  font-weight: bold;
-}
-
-.grand-total {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  text-align: right;
-  font-size: 1.1em;
-  width: 100%;
-}
-
-/* Estados */
-.loading-state {
-  padding: 20px;
-  text-align: center;
-  font-size: 1.2em;
-}
-
-.error-state {
-  padding: 20px;
-  text-align: center;
-  color: #e74c3c;
-  font-size: 1.2em;
-}
-
-.report-container .firma{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 5em;
-  font-size: 10pt;
-  font-weight: 500;
-  font-family: 'Nunito', sans-serif;
-}
+/* ===========================================
+   AcademicReport - Estilos de Impresión
+   Solo contiene reglas @media print
+   El resto usa Tailwind CSS
+=========================================== */
 
 @media print {
-  .report-container .table-header-info-report .thead-header-info .tr-header .td-header b{
+  /* Resetear fondo para impresión */
+  body,
+  :root {
+    background-color: white !important;
+  }
+
+  /* Header de la escuela */
+  .report-container .thead-header-info .td-header b {
     font-size: 1.5em;
   }
 
-  .report-container .table-header-info-report .thead-header-info .tr-header .td-header p{
-    font-size: 11pt;
-  }
-  
-  .report-container .table-student-info-report tr td {
+  .report-container .thead-header-info .td-header p {
     font-size: 11pt;
   }
 
-  .report-container .table-notes-info-report tbody tr td ol li{
+  /* Información del estudiante */
+  .report-container .table-student-info tr td {
     font-size: 11pt;
   }
 
-  .report-container .table-notes-info-report tbody tr td ul li{
+  /* Logros y notas */
+  .report-container .achievement-item {
     font-size: 11pt;
   }
 
-  .report-container .table-notes-info-report .tr-title td{
+  .report-container .grades-container {
     font-size: 11pt;
   }
 
-  body{
-    background-color: white;
+  /* Ocultar elementos no necesarios */
+  .no-print {
+    display: none !important;
   }
-  
-  :root{
-    background-color: white;
+
+  /* Asegurar que las tablas no se corten */
+  .report-table,
+  .area-group {
+    page-break-inside: avoid;
+  }
+
+  /* Firmas siempre visibles */
+  .firma {
+    page-break-inside: avoid;
   }
 }

@@ -20,6 +20,7 @@ export const PrivateRoutes = {
     INDICADORES:                'indicadores',
     EVALUADORPREESCOLAR:        'evaluadorpreescolar',
     PRINT:                      'print',
+    BULKPRINT:                  'bulk-print',
     CLASSROOMS:                 'classrooms',
     AREA:                       'area',
     ASPIRANTS:                  'aspirants',

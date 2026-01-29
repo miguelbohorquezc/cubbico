@@ -19,6 +19,7 @@ import InformePreescolar from "../../../features/preschool/Evaluador/InformePree
 import AspirantesAdminPage from "./components/AspirantesAdminPage"
 import FinalReport from "./components/FinalReport"
 import PromotionManager from "../../../features/students/PromotionManager"
+import BulkReportPrinter from "../../../features/reports/BulkReportPrinter"
 
 /**
  * Dashboard - Rutas del panel principal
@@ -47,6 +48,8 @@ function Dashboard() {
         <Route path={PrivateRoutes.CREATESTUDENT} element={<StudentsPage/>}/>
         <Route path={PrivateRoutes.ASPIRANTS} element={<AspirantesAdminPage />} />
         <Route path={PrivateRoutes.PROMOTIONS} element={<PromotionManager />} />
+        {/* Impresión masiva de informes */}
+        <Route path={`${PrivateRoutes.BULKPRINT}/:periodId/:classroomId`} element={<BulkReportPrinter />} />
       </Route>
 
       {/* ═══════════════════════════════════════════════════════════════════

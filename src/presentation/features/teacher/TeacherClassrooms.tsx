@@ -1,6 +1,7 @@
 import { useAppSelector } from "../../../app/store/store";
 import DataTable from "../../components/datatable/DataTable";
 import { useNavigate, useParams } from "react-router-dom";
+import { IconSchoolOff } from "@tabler/icons-react";
 
 /**
  * Badge de nivel académico con Tailwind
@@ -14,7 +15,15 @@ const NIVEL_BADGES: Record<string, { bg: string; text: string; label: string }> 
 const TeacherClassrooms = () => {
   const { classrooms, loading } = useAppSelector((state) => state.teacherData);
   const navigate = useNavigate();
-  const { periodId } = useParams();
+  const { periodId, classroomId } = useParams();
+
+  /** Determina si un salón está seleccionado actualmente */
+  const getRowClassName = (row: { id?: string }) => {
+    if (row.id === classroomId) {
+      return 'bg-emerald-50 border-l-4 border-l-emerald-500';
+    }
+    return '';
+  };
 
   const handleSelectClassRoom = (classroomId: string, classroomNivel: string) => {
     navigate(`/private/dashboard/academy/${periodId}/${classroomNivel}/${classroomId}`);
@@ -81,6 +90,23 @@ const TeacherClassrooms = () => {
     }
   ];
 
+  // Estado vacío personalizado cuando no hay salones asignados
+  if (!loading && classrooms.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 px-4">
+        <div className="w-16 h-16 mb-4 bg-amber-50 rounded-full flex items-center justify-center">
+          <IconSchoolOff size={32} className="text-amber-500" />
+        </div>
+        <h3 className="text-sm font-semibold text-gray-700 mb-1">
+          Sin salones asignados
+        </h3>
+        <p className="text-xs text-gray-500 text-center max-w-xs">
+          Aún no tienes salones asignados. Contacta al coordinador para que te asigne los salones correspondientes.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <DataTable
       data={classrooms}
@@ -95,6 +121,7 @@ const TeacherClassrooms = () => {
       tableSize={{
         width: "100%"
       }}
+      rowClassName={getRowClassName}
     />
   );
 };

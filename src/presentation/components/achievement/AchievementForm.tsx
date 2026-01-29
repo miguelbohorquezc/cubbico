@@ -1,8 +1,6 @@
-//@ts-ignore
-import React from 'react';
 import { useAchievementForm } from './useAchievementForm';
-import './AchievementForm.css';
 import { useParams } from 'react-router-dom';
+import { IconLoader2, IconTargetArrow } from '@tabler/icons-react';
 
 const AchievementForm = () => {
   const { form, error, handleChange, handleSubmit, isSubmitting, loading, docId } = useAchievementForm();
@@ -13,67 +11,116 @@ const AchievementForm = () => {
     return Math.min((length / 200) * 100, 100);
   };
 
+  const getProgressColor = (progress: number) => {
+    if (progress < 30) return 'bg-red-400';
+    if (progress < 70) return 'bg-amber-400';
+    return 'bg-emerald-500';
+  };
+
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Cargando configuración de logros...</p>
+      <div className="flex flex-col items-center justify-center py-12 px-4">
+        <IconLoader2 size={32} className="text-blue-500 animate-spin mb-3" />
+        <p className="text-sm text-gray-600">Cargando configuración de logros...</p>
       </div>
     );
   }
 
   return (
-    <div className="achievement-container">
-      <div className="form-header">
-        <div className="title-badge">{docId ? 'Editar Logros académicos' : 'Nuevos Logros académicos'}</div>
-        <div className="period-badge">Periodo {periodId}</div>
+    <div className="w-full max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <IconTargetArrow size={18} className="text-blue-600" />
+          </div>
+          <span className="text-sm font-semibold text-gray-800">
+            {docId ? 'Editar Logros' : 'Nuevos Logros'}
+          </span>
+        </div>
+        <span className="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-700">
+          Periodo {periodId}
+        </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="achievement-form">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-5">
         {[1, 2, 3].map((num) => {
           const fieldName = `logro${num}` as keyof typeof form;
+          const progress = calculateProgress(form[fieldName]);
+          const hasError = error[fieldName];
+
           return (
-            <div key={num} className="logro-group">
-              <label className="logro-label">
-                <h3>Logro Académico: {num}</h3>
-                <div className="progress-container">
-                  <div className="progress-bar">
-                    <div 
-                      className="progress-fill"
-                      style={{ width: `${calculateProgress(form[fieldName])}%` }}
+            <div key={num} className="space-y-2">
+              {/* Label y progress */}
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-gray-700">
+                  Logro Académico {num}
+                </label>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${getProgressColor(progress)}`}
+                      style={{ width: `${progress}%` }}
                     />
                   </div>
-                  <div className="character-count">
+                  <span className="text-xs text-gray-500 tabular-nums w-12 text-right">
                     {form[fieldName].length}/200
-                  </div>
+                  </span>
                 </div>
-              </label>
+              </div>
+
+              {/* Textarea */}
               <textarea
                 name={fieldName}
                 value={form[fieldName]}
                 onChange={handleChange}
-                placeholder={`Ejemplo de logro ${num}...`}
+                placeholder={`Describe el logro académico ${num}...`}
                 rows={2}
                 maxLength={200}
-                className={`logro-textarea ${error[fieldName] ? 'input-error' : ''}`}
+                className={`
+                  w-full px-3 py-2.5 text-sm text-gray-700
+                  bg-gray-50 border rounded-lg
+                  placeholder:text-gray-400
+                  transition-all duration-200
+                  focus:outline-none focus:ring-2 focus:bg-white
+                  resize-none
+                  ${hasError
+                    ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
+                    : 'border-gray-200 focus:ring-blue-200 focus:border-blue-400 hover:border-gray-300'
+                  }
+                `}
               />
-              {error[fieldName] && (
-                <div className="error-message">
+
+              {/* Error message */}
+              {hasError && (
+                <p className="text-xs text-red-500 flex items-center gap-1">
+                  <span className="inline-block w-1 h-1 bg-red-500 rounded-full" />
                   {error[fieldName]}
-                </div>
+                </p>
               )}
             </div>
           );
         })}
 
+        {/* Submit button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`submit-button ${isSubmitting ? 'button-loading' : ''}`}
+          className={`
+            w-full py-2.5 px-4
+            text-sm font-semibold text-white
+            bg-gradient-to-r from-blue-500 to-indigo-600
+            rounded-lg shadow-sm
+            transition-all duration-200
+            hover:from-blue-600 hover:to-indigo-700 hover:shadow-md
+            focus:outline-none focus:ring-2 focus:ring-blue-300
+            disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-sm
+            flex items-center justify-center gap-2
+          `}
         >
-          <span className="button-text">
-            {isSubmitting ? 'Guardando...' : docId ? 'Actualizar' : 'Guardar'}
-          </span>
+          {isSubmitting && <IconLoader2 size={16} className="animate-spin" />}
+          {isSubmitting ? 'Guardando...' : docId ? 'Actualizar Logros' : 'Guardar Logros'}
         </button>
       </form>
     </div>

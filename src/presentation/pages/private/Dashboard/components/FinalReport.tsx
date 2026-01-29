@@ -4,8 +4,7 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../../../../../infrastructure/firebase/firebase";
 
-import "./AcademicReport.css";
-import logo from    "../../../../../assets/logo/logotipo.jpg";
+import logo from "../../../../../assets/logo/logotipo.jpg";
 import firmOne from "../../../../../assets/firm/01.jpg";
 import firmTwo from "../../../../../assets/firm/02.jpg";
 
@@ -25,7 +24,7 @@ type FinalAreaRow = {
   fallasTotal: number;
 };
 
-type FinalReport = {
+type FinalReportData = {
   meta: {
     studentId: string;
     studentName?: string;
@@ -45,7 +44,7 @@ function avgTriplet(g?: { l1?: number; l2?: number; l3?: number }) {
   );
   if (parts.length === 0) return null;
   const sum = parts.reduce((a, b) => a + b, 0);
-  return sum / parts.length; // sin redondear internamente
+  return sum / parts.length;
 }
 
 function inferPeriodsFromRows(rows: FinalAreaRow[]): string[] {
@@ -106,7 +105,6 @@ async function fetchStudentInfo(studentId: string): Promise<StudentInfo> {
   }
 }
 
-// Devuelve { name, directorName } desde classRooms/{classroomId}
 async function fetchClassroomMeta(
   classroomId?: string
 ): Promise<{ name?: string; directorName?: string }> {
@@ -117,8 +115,6 @@ async function fetchClassroomMeta(
     const c = cSnap.data() as any;
 
     const name = c?.name || c?.className || c?.grado || c?.grade;
-
-    // posibles campos para director de grupo
     const directorName =
       c?.directorGrupo ||
       c?.director ||
@@ -135,7 +131,6 @@ async function fetchClassroomMeta(
   }
 }
 
-// ---------- Extraer classroomId y teacherId desde history ----------
 function extractClassroomIdFromHistory(periodsObj: any): string | undefined {
   const pKeys = Object.keys(periodsObj || {});
   for (const p of pKeys) {
@@ -160,11 +155,10 @@ function extractTeacherIdFromHistory(periodsObj: any): string | undefined {
   return undefined;
 }
 
-// Busca nombre del docente en teachers/{id} o users/{id}
 async function fetchTeacherName(teacherId?: string): Promise<string | undefined> {
   if (!teacherId) return undefined;
 
-  const tryCollections = ["teachers", "teacher", "users"]; // por si varía el nombre
+  const tryCollections = ["teachers", "teacher", "users"];
   for (const col of tryCollections) {
     try {
       const tSnap = await getDoc(doc(db, col, teacherId));
@@ -190,7 +184,7 @@ async function fetchStudentYearHistoryAsFinalReport(
   studentId: string,
   year: string,
   opts?: { periods?: string[] }
-): Promise<{ report: FinalReport; historyPeriodsObj: any }> {
+): Promise<{ report: FinalReportData; historyPeriodsObj: any }> {
   const ref = doc(db as any, "history", studentId);
   const snap = await getDoc(ref);
   if (!snap.exists()) throw new Error("No existe historial para este estudiante.");
@@ -245,7 +239,7 @@ async function fetchStudentYearHistoryAsFinalReport(
   const generalAverage =
     finals.length > 0 ? finals.reduce((a, b) => a + b, 0) / finals.length : null;
 
-  const report: FinalReport = {
+  const report: FinalReportData = {
     meta: {
       studentId,
       year,
@@ -258,6 +252,15 @@ async function fetchStudentYearHistoryAsFinalReport(
   return { report, historyPeriodsObj: periodsObj };
 }
 
+// ---------- Helper para categoría de nota ----------
+function getGradeCategory(average: number | null) {
+  if (average === null) return { text: 'N/A', bgClass: 'bg-gray-100', textClass: 'text-gray-500' };
+  if (average >= 4.6) return { text: 'Superior', bgClass: 'bg-blue-100', textClass: 'text-blue-700' };
+  if (average >= 4.0) return { text: 'Alto', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' };
+  if (average >= 3.0) return { text: 'Básico', bgClass: 'bg-amber-100', textClass: 'text-amber-700' };
+  return { text: 'Bajo', bgClass: 'bg-red-100', textClass: 'text-red-700' };
+}
+
 // ---------- Tabla de promedios ----------
 function FinalReportTable({
   report,
@@ -265,7 +268,7 @@ function FinalReportTable({
   areaOrder,
   periods,
 }: {
-  report: FinalReport;
+  report: FinalReportData;
   areaLabels: Record<string, string>;
   areaOrder?: Record<string, number>;
   periods?: string[];
@@ -282,52 +285,91 @@ function FinalReportTable({
   });
 
   return (
-    <table className="table-header-info-report">
+    <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
       <thead>
-        <tr>
-          <th className="table-header">ÁREA</th>
+        <tr className="bg-gradient-to-r from-gray-100 to-gray-50">
+          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
+            ÁREA
+          </th>
           {pKeys.map((p) => (
-            <th className="table-header" key={p}>
-              P{p}
+            <th
+              key={p}
+              className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-20"
+            >
+              <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
+                P{p}
+              </span>
             </th>
           ))}
-          <th className="table-header">PROMEDIO ÁREA</th>
+          <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-32">
+            PROMEDIO
+          </th>
         </tr>
       </thead>
-      <tbody className={"odd-row"}>
-        {rows.map((row) => (
-          <tr key={row.areaId}>
-            <td className="table-cell">{areaLabels[row.areaId] ?? row.areaId}</td>
-            {pKeys.map((p) => (
-              <td className="table-cell" key={p}>
-                {typeof row.periodAverages[p] === "number"
-                  ? (row.periodAverages[p] as number).toFixed(2)
-                  : "N/A"}
+      <tbody>
+        {rows.map((row, idx) => {
+          const cat = getGradeCategory(row.finalAverage);
+          return (
+            <tr
+              key={row.areaId}
+              className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors`}
+            >
+              <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b border-gray-100">
+                {areaLabels[row.areaId] ?? row.areaId}
               </td>
-            ))}
-            <td className="table-cell" align="center">
-              {typeof row.finalAverage === "number"
-                ? row.finalAverage.toFixed(2)
-                : "N/A"}
-            </td>
-          </tr>
-        ))}
+              {pKeys.map((p) => {
+                const val = row.periodAverages[p];
+                const pCat = getGradeCategory(val);
+                return (
+                  <td key={p} className="px-3 py-3 text-center border-b border-gray-100">
+                    {typeof val === "number" ? (
+                      <span className={`inline-block px-2 py-1 rounded text-sm font-medium ${pCat.bgClass} ${pCat.textClass}`}>
+                        {val.toFixed(2)}
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 text-sm">N/A</span>
+                    )}
+                  </td>
+                );
+              })}
+              <td className="px-4 py-3 text-center border-b border-gray-100">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-lg font-bold text-gray-900">
+                    {typeof row.finalAverage === "number" ? row.finalAverage.toFixed(2) : "N/A"}
+                  </span>
+                  {row.finalAverage !== null && (
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${cat.bgClass} ${cat.textClass}`}>
+                      {cat.text}
+                    </span>
+                  )}
+                </div>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
       <tfoot>
-        <tr>
+        <tr className="bg-gradient-to-r from-indigo-50 to-blue-50">
           <th
-            className="table-header"
             colSpan={pKeys.length + 1}
-            style={{ textAlign: "right" }}
+            className="px-4 py-4 text-right text-sm font-bold text-gray-700 border-t-2 border-indigo-200"
           >
-            Promedio general
+            Promedio General Anual
           </th>
-          <th className="table-cell">
-            {typeof report.generalAverage === "number"
-              ? report.generalAverage.toFixed(2)
-              : "N/A"}
+          <th className="px-4 py-4 text-center border-t-2 border-indigo-200">
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-2xl font-bold text-indigo-700">
+                {typeof report.generalAverage === "number"
+                  ? report.generalAverage.toFixed(2)
+                  : "N/A"}
+              </span>
+              {report.generalAverage !== null && (
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getGradeCategory(report.generalAverage).bgClass} ${getGradeCategory(report.generalAverage).textClass}`}>
+                  {getGradeCategory(report.generalAverage).text}
+                </span>
+              )}
+            </div>
           </th>
-          <th></th>
         </tr>
       </tfoot>
     </table>
@@ -343,7 +385,7 @@ export default function FinalReport() {
 
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
-  const [data, setData] = React.useState<FinalReport | null>(null);
+  const [data, setData] = React.useState<FinalReportData | null>(null);
   const [areaLabels, setAreaLabels] = React.useState<Record<string, string>>({});
   const [areaOrder, setAreaOrder] = React.useState<Record<string, number>>({});
   const [directorName, setDirectorName] = React.useState<string | undefined>(undefined);
@@ -354,27 +396,19 @@ export default function FinalReport() {
       try {
         setLoading(true);
 
-        // 1) Informe + obtener periodsObj
         const { report, historyPeriodsObj } =
           await fetchStudentYearHistoryAsFinalReport(studentId, String(year), {
             periods: ["1", "2", "3", "4"],
           });
 
-        // 2) Áreas
         const areasMeta = await fetchAreasMeta();
-
-        // 3) Enriquecer con classroom y director
-        //    Primero intentamos desde student (por si lo usas más adelante)
         const sInfo = await fetchStudentInfo(studentId);
 
-        // Fallbacks desde history
         const classroomId =
           sInfo.classroomId || extractClassroomIdFromHistory(historyPeriodsObj);
 
-        // Traer meta del salón (nombre + director si existiera)
         const classroomMeta = await fetchClassroomMeta(classroomId);
 
-        // Si no vino director desde classRooms, intentamos con teacherId de history
         let director = classroomMeta.directorName;
         if (!director) {
           const teacherId = extractTeacherIdFromHistory(historyPeriodsObj);
@@ -411,70 +445,89 @@ export default function FinalReport() {
     };
   }, [studentId, year]);
 
-  if (error)
+  // Estado de carga
+  if (loading) {
     return (
-      <div className="report-container">
-        <p style={{ color: "#b00" }}>{error}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg text-gray-600">Cargando informe final...</p>
+        </div>
       </div>
     );
+  }
+
+  // Estado de error
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <p className="text-lg font-semibold text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!data) return null;
 
   return (
-    <div className="report-container">
-      {/* Encabezado */}
-      <table className="table-header-info-report">
-        <thead className="thead-header-info">
-          <tr className="tr-header">
-            <td className="td-logo-school" rowSpan={2}>
-              <img src={logo} alt="logotipo" />
+    <div className="w-full max-w-5xl mx-auto p-5 flex flex-col gap-3 font-['Nunito',sans-serif] bg-white">
+      {/* Header institucional */}
+      <table className="w-full border-collapse">
+        <tbody>
+          <tr className="h-28">
+            <td className="w-24 p-2 border border-gray-200 align-middle">
+              <img src={logo} alt="logotipo" className="w-20 mx-auto" />
             </td>
-            <td align="center" className="td-header">
-              <b>COLINA CAMPESTRE SCHOOL</b>
-              <p>
-                De Sincelejo, Sucre, <br />
-                con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y
-                Básica Secundaria por parte de Secretaría de Educación Municipal, <br />
+            <td className="px-6 py-3 border border-gray-200 text-center">
+              <b className="text-lg font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
+              <p className="text-[10pt] text-gray-600 mt-1 leading-relaxed">
+                De Sincelejo, Sucre, con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y
+                Básica Secundaria por parte de Secretaría de Educación Municipal,
                 según resolución No 2747 del 12 de diciembre de 2023. Carrera 34 No 38-158,
                 teléfonos: 2771068-3006781806
               </p>
-              <p>NIT: 901731191-3</p>
+              <p className="text-[10pt] text-gray-700 font-semibold">NIT: 901731191-3</p>
             </td>
-            <td align="center" className="td-dane">
+            <td className="w-28 px-3 py-2 border border-gray-200 text-center text-xs text-gray-600 align-middle">
               DANE 370001038852
             </td>
           </tr>
-        </thead>
+        </tbody>
       </table>
 
-      {/* Título */}
-      <table className="table-student-info-report">
-        <thead className="table-header-title">
-          <tr>
-            <td className="table-header-title">
-              INFORME FINAL – {data.meta.year}
-            </td>
-          </tr>
-        </thead>
-      </table>
+      {/* Título del informe */}
+      <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 px-6 rounded-lg shadow-md text-center">
+        <h1 className="text-xl font-bold tracking-wide">
+          INFORME FINAL – {data.meta.year}
+        </h1>
+      </div>
 
-      {/* Datos del estudiante */}
-      <table className="table-student-info-report">
-        <thead className="thead-student-info">
+      {/* Información del estudiante */}
+      <table className="w-full border-collapse border border-indigo-200 rounded-lg overflow-hidden">
+        <thead className="bg-gray-100">
           <tr>
-            <td>ESTUDIANTE</td>
-            <td>GRADO</td>
-            <td>FECHA</td>
+            <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">ESTUDIANTE</td>
+            <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">GRADO</td>
+            <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">FECHA</td>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td className="student-name">
+            <td className="px-4 py-3 text-[11pt] font-bold text-gray-900 border border-gray-200">
               {(data.meta.studentName || data.meta.studentId || "").toUpperCase()}
             </td>
-            <td className="student-classroom">
+            <td className="px-4 py-3 text-[11pt] font-bold text-gray-900 border border-gray-200">
               {(data.meta.classroom || "—").toUpperCase()}
             </td>
-            <td>{formatDateShort(new Date())}</td>
+            <td className="px-4 py-3 text-[11pt] font-bold text-gray-900 border border-gray-200">
+              {formatDateShort(new Date())}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -487,50 +540,60 @@ export default function FinalReport() {
         periods={["1", "2", "3", "4"]}
       />
 
-      {/* Observaciones y firmas */}
-      <table className="table-student-info-report">
-        <thead className="thead-student-info">
-          <tr>
-            <td colSpan={2}>
-              <p>
-                ESCALA DE VALORACIÓN: Superior: 4.6 - 5.0; Alto: 4.0 - 4.5; Básico: 3.0 - 3.9; Bajo: 1.0 - 2.9
-              </p>
-            </td>
-          </tr>
-        </thead>
-      </table>
+      {/* Escala de valoración */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <p className="text-sm font-semibold text-gray-700 mb-2">ESCALA DE VALORACIÓN</p>
+        <div className="flex flex-wrap gap-4 text-sm">
+          <span className="inline-flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
+            <span className="text-gray-700">Superior: 4.6 - 5.0</span>
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+            <span className="text-gray-700">Alto: 4.0 - 4.5</span>
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-amber-500"></span>
+            <span className="text-gray-700">Básico: 3.0 - 3.9</span>
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-red-500"></span>
+            <span className="text-gray-700">Bajo: 1.0 - 2.9</span>
+          </span>
+        </div>
+      </div>
 
-      <table className="table-student-info-report">
-        <thead className="thead-student-info">
-          <tr>
-            <td colSpan={3}>
-              <p>OBSERVACIONES</p>
-            </td>
-          </tr>
-        </thead>
+      {/* Observaciones */}
+      <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-gray-100 px-4 py-2">
+          <p className="text-sm font-bold text-gray-700">OBSERVACIONES</p>
+        </div>
+        <div className="h-16 bg-white"></div>
+      </div>
+
+      {/* Firmas */}
+      <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
         <tbody>
           <tr>
-            <td height={"40px"} colSpan={3}></td>
-          </tr>
-          <tr>
-            <td align="center">
-              <div className="firma">
-                <img src={firmTwo} alt="firma directora" width={"100px"} />
-                <p>ANA KARINA GOMEZ BUSTAMANTE</p>
-                <p>Directora</p>
+            <td className="text-center py-4 border border-gray-200 w-1/3">
+              <div className="flex flex-col items-center mt-8">
+                <img src={firmTwo} alt="firma directora" className="w-28 h-auto" />
+                <p className="text-[10pt] font-medium text-gray-900 mt-2">ANA KARINA GOMEZ BUSTAMANTE</p>
+                <p className="text-[10pt] text-gray-600">Directora</p>
               </div>
             </td>
-            <td align="center">
-              <div className="firma">
-                <img src={firmOne} alt="firma coordinadora" width={"100px"} />
-                <p>NURIA MILENA MONTES SALAS</p>
-                <p>Coordinadora Académica</p>
+            <td className="text-center py-4 border border-gray-200 w-1/3">
+              <div className="flex flex-col items-center mt-8">
+                <img src={firmOne} alt="firma coordinadora" className="w-28 h-auto" />
+                <p className="text-[10pt] font-medium text-gray-900 mt-2">NURIA MILENA MONTES SALAS</p>
+                <p className="text-[10pt] text-gray-600">Coordinadora Académica</p>
               </div>
             </td>
-            <td align="center">
-              <div className="firma">
-                <p>{directorName || "Director(a) de Grupo"}</p>
-                <p>Director(a) de Grupo</p>
+            <td className="text-center py-4 border border-gray-200 w-1/3">
+              <div className="flex flex-col items-center mt-8">
+                <div className="w-28 h-10 border-b border-gray-400"></div>
+                <p className="text-[10pt] font-medium text-gray-900 mt-2">{directorName || "Director(a) de Grupo"}</p>
+                <p className="text-[10pt] text-gray-600">Director(a) de Grupo</p>
               </div>
             </td>
           </tr>

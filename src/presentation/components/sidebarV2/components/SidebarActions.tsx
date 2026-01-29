@@ -12,9 +12,13 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SettingsIcon, LogoutIcon } from '../../icons/SidebarIcons';
+import { useSelector } from 'react-redux';
+import { SettingsIcon, LogoutIcon, CalendarIcon } from '../../icons/SidebarIcons';
 import { SidebarTooltip } from './SidebarTooltip';
 import { AuthService } from '../../../../infrastructure/firebase/auth.service';
+import Modal from '../../modal/Modal';
+import PeriodConfigManager from '../../../features/settings/PeriodConfigManager';
+import type { AppState } from '../../../../app/store/store';
 
 // ============================================
 // Types
@@ -46,6 +50,19 @@ export const SidebarActions: React.FC<SidebarActionsProps> = ({
 }) => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isPeriodConfigOpen, setIsPeriodConfigOpen] = useState(false);
+
+  // Obtener rol del usuario
+  const userRole = useSelector((state: AppState) => {
+    const user = state.user as { role?: string } | null;
+    return user?.role;
+  });
+  const isCoordinador = userRole === 'Coordinador';
+
+  // Handler para abrir configuración de períodos
+  const handlePeriodConfig = () => {
+    setIsPeriodConfigOpen(true);
+  };
 
   // Handler para Settings
   const handleSettings = () => {
@@ -151,6 +168,16 @@ export const SidebarActions: React.FC<SidebarActionsProps> = ({
 
       {/* Acciones */}
       <div className="py-2">
+        {/* Fechas de Entrega - Solo Coordinador */}
+        {isCoordinador && (
+          <ActionButton
+            icon={<CalendarIcon size={22} />}
+            label="Fechas de entrega"
+            onClick={handlePeriodConfig}
+            variant="default"
+          />
+        )}
+
         {/* Settings */}
         <ActionButton
           icon={<SettingsIcon size={22} />}
@@ -168,6 +195,16 @@ export const SidebarActions: React.FC<SidebarActionsProps> = ({
           disabled={isLoggingOut}
         />
       </div>
+
+      {/* Modal de configuración de períodos */}
+      <Modal
+        isOpen={isPeriodConfigOpen}
+        onClose={() => setIsPeriodConfigOpen(false)}
+        title="Configuración de Fechas de Entrega"
+        size="4xl"
+      >
+        <PeriodConfigManager />
+      </Modal>
     </div>
   );
 };

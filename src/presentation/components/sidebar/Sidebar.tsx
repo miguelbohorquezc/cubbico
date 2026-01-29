@@ -117,7 +117,7 @@ const Sidebar = () => {
           </div>
           {/* ---------------------------------------------- */}
           <div className={isOpen ? "icon": "icon-collapse"}
-            
+
           >
             <img className="sidebar-icons" src={dateIcon} alt="Configuración" />
             {isOpen && <span className="icon-text"><p>Fechas</p></span>}

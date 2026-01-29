@@ -16,11 +16,12 @@ const TeacherDataLoader = () => {
       try {
         dispatch(teacherActions.setLoading(true));
         const teacherData = await fetchTeacherData(user.uid);
-        
+
         // Actualizar el store con los datos obtenidos
         dispatch(teacherActions.setClassrooms(teacherData.classrooms));
         dispatch(teacherActions.setAreas(teacherData.areas));
-        
+        dispatch(teacherActions.setAchievements(teacherData.achievements));
+
         // Resetear error si tuvo éxito
         if (error) dispatch(teacherActions.setError(null));
       } catch (err) {

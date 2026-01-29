@@ -38,7 +38,7 @@ const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <div className="input-container">
+    <div className="relative">
       <input
         type={type}
         value={value}
@@ -58,9 +58,26 @@ const InputField: React.FC<InputFieldProps> = ({
           }
         }}
         onBlur={handleBlur}
-        className={`grade-input ${isValid ? '' : 'invalid'}`}
+        className={`
+          w-16 px-2 py-1.5
+          text-sm text-center font-medium
+          bg-white border rounded-lg
+          transition-all duration-200
+          focus:outline-none focus:ring-2
+          [appearance:textfield]
+          [&::-webkit-outer-spin-button]:appearance-none
+          [&::-webkit-inner-spin-button]:appearance-none
+          ${isValid
+            ? 'border-gray-200 text-gray-700 focus:ring-blue-200 focus:border-blue-400 hover:border-gray-300'
+            : 'border-red-300 text-red-600 bg-red-50 focus:ring-red-200 focus:border-red-400'
+          }
+        `}
       />
-      {!isValid && <span className="error-message">{errorMessage}</span>}
+      {!isValid && (
+        <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-red-500 whitespace-nowrap font-medium">
+          {errorMessage}
+        </span>
+      )}
     </div>
   );
 };

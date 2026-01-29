@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { SidebarV2 } from "../../../../components/sidebarV2";
 import { HeaderV2 } from "../../../../components/headerV2";
 import TeacherAreas from "../../../../features/teacher/TeacherAreas";
 import TeacherClassrooms from "../../../../features/teacher/TeacherClassrooms";
 import TeacherDataLoader from "../../../../features/teacher/TeacherDataLoader";
-import { IconSchool, IconBooks } from '@tabler/icons-react';
+import { useAppSelector } from "../../../../../app/store/store";
+import { IconSchool, IconBooks, IconChevronRight } from '@tabler/icons-react';
 
 // Key del localStorage usada por useSidebarV2
 const SIDEBAR_STORAGE_KEY = 'cubbico-sidebar-collapsed';
@@ -39,7 +40,14 @@ const useSidebarCollapsed = (): boolean => {
 
 function Academy() {
   const isSidebarCollapsed = useSidebarCollapsed();
-  const { classroomId, periodId } = useParams();
+  const { classroomId, periodId, classroomNivel } = useParams();
+  const { classrooms } = useAppSelector((state) => state.teacherData);
+
+  /** Obtiene el salón seleccionado actualmente */
+  const selectedClassroom = useMemo(() => {
+    if (!classroomId) return null;
+    return classrooms.find((c: { id: string }) => c.id === classroomId) || null;
+  }, [classroomId, classrooms]);
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -63,7 +71,7 @@ function Academy() {
         {/* Body */}
         <main className="flex-1 p-4 lg:p-6 overflow-auto min-h-0">
           {/* Page Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg shadow-emerald-200">
                 <IconSchool size={20} className="text-white" />
@@ -78,6 +86,23 @@ function Academy() {
               </div>
             </div>
           </div>
+
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-1 text-sm mb-6 px-1">
+            <span className="text-gray-500">Academia</span>
+            {periodId && (
+              <>
+                <IconChevronRight size={14} className="text-gray-400" />
+                <span className="text-emerald-600 font-medium">Período {periodId}</span>
+              </>
+            )}
+            {selectedClassroom && (
+              <>
+                <IconChevronRight size={14} className="text-gray-400" />
+                <span className="text-blue-600 font-medium">{selectedClassroom.nombreSalon}</span>
+              </>
+            )}
+          </nav>
 
           {/* Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -100,14 +125,25 @@ function Academy() {
             {/* Areas Card - Only show when classroom is selected */}
             {classroomId && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
-                <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <IconBooks size={18} className="text-blue-600" />
+                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <IconBooks size={18} className="text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-semibold text-gray-800">
+                        {selectedClassroom?.nombreSalon || 'Asignaturas'}
+                      </h2>
+                      <p className="text-xs text-gray-500">
+                        {classroomNivel ? `${classroomNivel} · ` : ''}Gestiona las notas y evaluaciones
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-sm font-semibold text-gray-800">Asignaturas</h2>
-                    <p className="text-xs text-gray-500">Gestiona las notas y evaluaciones</p>
-                  </div>
+                  {selectedClassroom && (
+                    <span className="hidden sm:inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-700">
+                      {selectedClassroom.identificador}
+                    </span>
+                  )}
                 </div>
                 <div className="p-4">
                   <TeacherAreas />
