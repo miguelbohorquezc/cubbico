@@ -59,7 +59,7 @@ const CubbicoLogo: React.FC<{ size?: number; className?: string }> = ({
       width="28"
       height="28"
       rx="6"
-      fill="#F5C518"
+      fill="#ffbf0e"
     />
     {/* Detalle interno */}
     <rect
@@ -68,7 +68,7 @@ const CubbicoLogo: React.FC<{ size?: number; className?: string }> = ({
       width="16"
       height="16"
       rx="3"
-      fill="#E5B000"
+      fill="#f2a306"
       fillOpacity="0.5"
     />
   </svg>
@@ -139,7 +139,7 @@ export const SidebarBrand: React.FC<SidebarBrandProps> = ({
         {/* Nombre de la aplicación */}
         {!isCollapsed && (
           <span className="font-bold text-lg text-gray-800 tracking-tight">
-            {name}
+            {"SIA"}
           </span>
         )}
       </Link>

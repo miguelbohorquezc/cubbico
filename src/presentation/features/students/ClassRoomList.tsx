@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconTrash, IconArrowUp } from "@tabler/icons-react";
 import DataTable from "../../components/datatable/DataTable";
 import { fetchClassrooms, deleteClassroom, updateClassroom } from "../../../infrastructure/classRoom.service";
 import { fetchDocentes } from "../../../infrastructure/user.service";
@@ -7,6 +7,8 @@ import Modal from "../../components/modal/Modal";
 import { ClassRoom } from "../../../domain/entities/classRoom";
 import { DocenteOption, DocentesMap } from "../../../shared/types/classRoomTypes";
 import ClassRoomForm from "../../components/classRoomForm/ClassRoomForm";
+import PromotionModal from "./components/PromotionModal";
+import { PromotionConfig, PromotionResult } from "../../../shared/types/studentManagementTypes";
 
 /**
  * Configuración de badges por nivel académico
@@ -22,6 +24,7 @@ const ClassRoomList = () => {
   const [docentes, setDocentes] = useState<DocenteOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingClassroom, setEditingClassroom] = useState<ClassRoom | null>(null);
+  const [promotionConfig, setPromotionConfig] = useState<PromotionConfig | null>(null);
 
   // Mapa de docentes para búsqueda rápida por ID
   const docentesMap: DocentesMap = useMemo(() => {
@@ -86,6 +89,30 @@ const ClassRoomList = () => {
     } catch (error) {
       console.error("Error al actualizar:", error);
       alert("Error al actualizar salón");
+    }
+  };
+
+  const handleOpenPromotion = (classroom: ClassRoom) => {
+    // La promoción es del año escolar que termina al que inicia
+    // Si estamos en enero 2026, promovemos de 2025 a 2026
+    const currentYear = (new Date().getFullYear() - 1).toString();
+    const targetYear = new Date().getFullYear().toString();
+
+    setPromotionConfig({
+      sourceClassroomId: classroom.id,
+      sourceClassName: classroom.nombreSalon,
+      sourceLevel: classroom.nivel,
+      currentYear,
+      targetYear,
+    });
+  };
+
+  const handlePromotionComplete = (result: PromotionResult) => {
+    if (result.success) {
+      alert(`Promoción completada: ${result.processed} estudiantes procesados`);
+      // Recargar datos si es necesario
+    } else {
+      alert(`Error en promoción: ${result.errorMessages?.join(', ') || 'Error desconocido'}`);
     }
   };
 
@@ -167,6 +194,20 @@ const ClassRoomList = () => {
       render: (classroom: ClassRoom) => (
         <div className="flex items-center gap-1">
           <button
+            onClick={() => handleOpenPromotion(classroom)}
+            className="
+              p-2 rounded-lg
+              text-gray-500 hover:text-green-600
+              hover:bg-green-50
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-green-200
+            "
+            title="Promover estudiantes"
+            aria-label="Promover estudiantes"
+          >
+            <IconArrowUp size={18} stroke={1.5} />
+          </button>
+          <button
             onClick={() => handleEdit(classroom)}
             className="
               p-2 rounded-lg
@@ -223,12 +264,22 @@ const ClassRoomList = () => {
         title="Editar Salón"
       >
         {editingClassroom && (
-          <ClassRoomForm 
+          <ClassRoomForm
             initialData={editingClassroom}
             onSubmit={handleUpdateClassroom}
           />
         )}
       </Modal>
+
+      {/* Promotion Modal */}
+      {promotionConfig && (
+        <PromotionModal
+          isOpen={!!promotionConfig}
+          onClose={() => setPromotionConfig(null)}
+          config={promotionConfig}
+          onPromotionComplete={handlePromotionComplete}
+        />
+      )}
     </>
   );
 };

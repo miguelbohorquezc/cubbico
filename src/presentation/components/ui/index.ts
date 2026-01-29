@@ -19,3 +19,11 @@ export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
 // FormError component
 export { default as FormError } from './FormError';
 export type { FormErrorProps, FormErrorVariant } from './FormError';
+
+// Select component
+export { default as Select } from './Select';
+export type { SelectProps, SelectOption } from './Select';
+
+// Label component
+export { default as Label } from './Label';
+export type { LabelProps, LabelSize } from './Label';

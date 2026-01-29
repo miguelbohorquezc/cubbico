@@ -23,6 +23,6 @@ export const PrivateRoutes = {
     CLASSROOMS:                 'classrooms',
     AREA:                       'area',
     ASPIRANTS:                  'aspirants',
-    FINALREPORT:                'final-report'
-    
+    FINALREPORT:                'final-report',
+    PROMOTIONS:                 'promotions'
 }

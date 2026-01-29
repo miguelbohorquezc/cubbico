@@ -18,6 +18,7 @@ import InformePorSalon from "../../../components/informeGeneral/InformePorSalon"
 import InformePreescolar from "../../../features/preschool/Evaluador/InformePreescolar"
 import AspirantesAdminPage from "./components/AspirantesAdminPage"
 import FinalReport from "./components/FinalReport"
+import PromotionManager from "../../../features/students/PromotionManager"
 
 /**
  * Dashboard - Rutas del panel principal
@@ -45,6 +46,7 @@ function Dashboard() {
         <Route path={PrivateRoutes.STUDENT} element={<StudentsPage/>}/>
         <Route path={PrivateRoutes.CREATESTUDENT} element={<StudentsPage/>}/>
         <Route path={PrivateRoutes.ASPIRANTS} element={<AspirantesAdminPage />} />
+        <Route path={PrivateRoutes.PROMOTIONS} element={<PromotionManager />} />
       </Route>
 
       {/* ═══════════════════════════════════════════════════════════════════

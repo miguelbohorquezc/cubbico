@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 *.env
+activos.html
+asistencia.html
+horarios.html
+piar.html
 
 # Editor directories and files
 .vscode/*

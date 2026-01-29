@@ -187,6 +187,16 @@ const Sidebar = () => {
               </Link>
           </Tooltip>
           {/* ---------------------------------------------- */}
+          <Tooltip text="Gestionar promociones de estudiantes al siguiente año" position="right">
+              <Link to={`/private/dashboard/${PrivateRoutes.PROMOTIONS}`} >
+                <div className={isOpen ? "icon": "icon-collapse"}>
+                      <img className="sidebar-icons" src={userIcon} alt="Promociones" />
+                      {isOpen && <span className="icon-text"><p>Promociones</p></span>}
+                      <span className="icon-text"></span>
+                </div>
+              </Link>
+          </Tooltip>
+          {/* ---------------------------------------------- */}
         </div>
       </div>
     </div>
