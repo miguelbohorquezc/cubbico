@@ -130,7 +130,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
 
   // Clases para modo colapsado
   const collapsedClasses = isCollapsed
-    ? 'justify-center w-12 px-0 mx-auto'
+    ? 'justify-center w-10 h-10 px-0 mx-auto'
     : 'w-full';
 
   // Clases para disabled

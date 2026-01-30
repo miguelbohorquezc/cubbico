@@ -212,7 +212,7 @@ export const SidebarV2: React.FC<SidebarV2Props> = ({ className = '' }) => {
         />
 
         {/* Navegación principal */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3" aria-label="Navegación">
+        <nav className={`flex-1 overflow-y-auto py-4 ${isCollapsed && !isMobile ? 'px-1' : 'px-3'}`} aria-label="Navegación">
           {/* Título de sección (solo expandido) */}
           {(!isCollapsed || isMobile) && (
             <h2 className="px-4 mb-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">

@@ -21,121 +21,76 @@ Optimizar la experiencia de usuario en el flujo docente: selección de salones �
 ## FASE 1: Vista de Salones y Asignaturas (Academy) ✅ COMPLETADA
 ## FASE 2: Vista de Notas ✅ COMPLETADA
 ## FASE 3: Sistema de Permisos Coordinador ✅ COMPLETADA
-
----
-
 ## FASE 4: Reportes Académicos ✅ COMPLETADA
-
-| ID | Microtarea | Estado |
-|----|------------|--------|
-| 4.1 | Optimizar AcademicReport.tsx con Tailwind | ✅ |
-| 4.2 | Optimizar InformePorSalon.tsx con Tailwind | ✅ |
-| 4.3 | Optimizar FinalReport.tsx con Tailwind | ✅ |
-
----
-
 ## FASE 4B: Corrección de Bugs y Mejoras ✅ COMPLETADA
-
-| ID | Microtarea | Estado |
-|----|------------|--------|
-| 4B.1 | Ampliar tamaño del modal de logros | ✅ |
-| 4B.2 | Corregir carga de logros al entrar a asignatura | ✅ |
-| 4B.3 | Corregir orden de asignaturas en informes | ✅ |
-
-**Cambios realizados:**
-- Modal.tsx: Agregados tamaños 3xl, 4xl, full
-- Notes.tsx: Modal de logros ahora usa size="3xl"
-- teacher.service.ts: Ahora carga achievements junto con classrooms y areas
-- TeacherDataLoader.tsx: Dispatch de achievements al store
-- InformePorSalon.tsx: Ordenamiento de asignaturas por campo 'orden'
-
----
-
 ## FASE 4C: Rediseño Impresión Masiva ✅ COMPLETADA
 
+---
+
+## FASE 5: Configuración de Fecha de Entrega ✅ COMPLETADA
+
+| ID | Microtarea | Archivos | Estado |
+|----|------------|----------|--------|
+| 5.1 | Crear modelo de configuración de período | `domain/entities/periodConfig.ts` | ✅ |
+| 5.2 | Crear servicio para configuración de período | `infrastructure/periodConfig.service.ts` | ✅ |
+| 5.3 | Agregar UI en modal desde SidebarV2 | `SidebarActions.tsx`, `PeriodConfigManager.tsx` | ✅ |
+| 5.4 | Mostrar fecha de entrega en reportes | `AcademicReport.tsx` | ✅ |
+
+**Archivos creados:**
+- `domain/entities/periodConfig.ts` - Entidad PeriodConfig con periodId, year, fechaEntrega, activo
+- `infrastructure/periodConfig.service.ts` - CRUD para colección `periodConfigs` en Firestore
+- `features/settings/PeriodConfigManager.tsx` - UI de configuración de fechas por período/año
+
+**Cambios realizados:**
+- `SidebarActions.tsx`: Botón "Fechas de entrega" (solo Coordinador) que abre modal
+- `AcademicReport.tsx`: Importa y muestra fecha de entrega configurada
+
+---
+
+## FASE 5B: Correcciones SidebarV2 ✅ COMPLETADA
+
 | ID | Microtarea | Estado |
 |----|------------|--------|
-| 4C.1 | Rediseñar BulkReportPrinter para documento único | ✅ |
-| 4C.2 | Configurar estilos para hoja legal y PDF | ✅ |
-| 4C.3 | Renderizar informes en secuencia (uno debajo de otro) | ✅ |
-| 4C.4 | Diferenciar vista primaria vs secundaria | ✅ |
+| 5B.1 | Corregir tooltips en botones superiores | ✅ |
+| 5B.2 | Corregir hover que se sale del sidebar | ✅ |
 
-**Cambios realizados en BulkReportPrinter.tsx:**
-- Genera UN documento único con todos los informes
-- Usa `@page { size: legal portrait }` para hoja legal
-- Usa `page-break-after: always` entre informes
-- Vista de previsualización antes de imprimir
-- Botón "Imprimir / Exportar PDF" que usa `window.print()`
-- Diferencia primaria (lista plana) vs secundaria (agrupado por áreas)
-- Ordena asignaturas por campo 'orden'
-
----
-
-## FASE 5: Configuración de Fecha de Entrega (PENDIENTE)
-
-| ID | Microtarea | Archivos (máx 2) | Estado |
-|----|------------|------------------|--------|
-| 5.1 | Crear modelo de configuración de período | `domain/entities/` | ⏳ |
-| 5.2 | Crear servicio para configuración de período | `infrastructure/` | ⏳ |
-| 5.3 | Agregar UI para configurar fecha de entrega | Componente nuevo | ⏳ |
-| 5.4 | Mostrar fecha de entrega en reportes | `AcademicReport.tsx` | ⏳ |
-
----
-
-## Pendientes Menores
-
-| ID | Tarea | Estado |
-|----|-------|--------|
-| 4.3 | Optimizar FinalReport.tsx con Tailwind | ✅ |
-
-**Cambios realizados en FinalReport.tsx:**
-- Migrado completamente a Tailwind CSS (sin archivo CSS externo)
-- Spinner de carga moderno con animación
-- Barra de título con gradiente ("INFORME FINAL – {año}")
-- Badges de calificación coloreados por período y promedio final
-- Leyenda visual con puntos de colores
-- Estructura y cálculos de datos sin modificar
+**Cambios realizados:**
+- `SidebarTooltip.tsx`: Cambiado `inline-flex` a `w-full` para tooltips correctos
+- `SidebarActions.tsx`: Padding dinámico, botones `w-10 h-10` colapsados, `overflow-hidden`
+- `SidebarNavItem.tsx`: Consistencia de tamaños (`w-10 h-10` colapsado)
+- `SidebarV2.tsx`: Padding nav dinámico (`px-1` colapsado, `px-3` expandido)
 
 ---
 
 ## Progreso General
 
-- [x] **FASE 1: Vista Academy** ✅ COMPLETADA
-- [x] **FASE 2: Vista de Notas** ✅ COMPLETADA
-- [x] **FASE 3: Permisos Coordinador** ✅ COMPLETADA
-- [x] **FASE 4: Reportes Académicos** ✅ COMPLETADA (4.1 ✅, 4.2 ✅, 4.3 ✅)
-- [x] **FASE 4B: Bugs y Mejoras** ✅ COMPLETADA
-- [x] **FASE 4C: Impresión Masiva Rediseño** ✅ COMPLETADA
-- [ ] **FASE 5: Fecha de Entrega** ← SIGUIENTE
+- [x] **FASE 1: Vista Academy** ✅
+- [x] **FASE 2: Vista de Notas** ✅
+- [x] **FASE 3: Permisos Coordinador** ✅
+- [x] **FASE 4: Reportes Académicos** ✅
+- [x] **FASE 4B: Bugs y Mejoras** ✅
+- [x] **FASE 4C: Impresión Masiva** ✅
+- [x] **FASE 5: Fecha de Entrega** ✅
+- [x] **FASE 5B: Correcciones SidebarV2** ✅
 
 ---
 
 ## Notas Técnicas
 
+### Configuración de Fechas de Entrega
+- Colección Firestore: `periodConfigs`
+- ID documento: `{year}_{periodId}` (ej: "2025_1")
+- Acceso: Modal desde SidebarV2 > "Fechas de entrega" (solo Coordinador)
+- AcademicReport.tsx consume `fetchPeriodConfig()` y muestra `formatFechaEntrega()`
+
+### SidebarV2 - Modo Colapsado
+- Botones nav y acciones: `w-10 h-10` centrados con `mx-auto`
+- Nav container: `px-1` colapsado, `px-3` expandido
+- Tooltips usan portal para evitar overflow
+
 ### Ordenamiento de Asignaturas
-- Las asignaturas tienen un campo `orden` en la colección `areas`
-- AcademicReport.tsx y InformePorSalon.tsx respetan este orden
-- BulkReportPrinter.tsx también respeta el orden
-- Secundaria agrupa por campo `area`, ordenando internamente
-
-### Impresión Masiva - Implementación Final
-- Documento único con todos los informes
-- CSS `@page { size: legal portrait }` para hoja legal
-- `page-break-after: always` entre informes de estudiantes
-- `window.print()` permite guardar como PDF desde el navegador
-
-### Carga de Achievements
-- teacher.service.ts ahora carga achievements junto con classrooms y areas
-- TeacherDataLoader.tsx hace dispatch de achievements al store Redux
-- TeacherAchievements.tsx filtra por classroomId, areaId y periodId
-
-### FinalReport.tsx - Migración Tailwind
-- Sin archivo CSS externo, todo en clases Tailwind
-- Función `getGradeCategory()` retorna colores según promedio
-- Tabla con encabezados estilizados y filas alternadas
-- Promedios por período muestran badges coloreados
-- Promedio final destacado con gradiente
-- Estados de carga/error modernos
+- Campo `orden` en colección `areas`
+- Respetado en: AcademicReport, InformePorSalon, BulkReportPrinter, FinalReport
 
 ---
 

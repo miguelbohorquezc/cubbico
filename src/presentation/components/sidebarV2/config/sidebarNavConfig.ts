@@ -83,13 +83,13 @@ export const navItems: NavItem[] = [
         label: 'Nuevo estudiante',
         path: buildPath(PrivateRoutes.CREATESTUDENT),
         description: 'Registrar nuevo estudiante',
-      },
+      }/* ,
       {
         id: 'matricula-lista',
         label: 'Lista de estudiantes',
         path: buildPath(PrivateRoutes.STUDENT),
         description: 'Ver todos los estudiantes',
-      },
+      }, */
     ],
   },
   {

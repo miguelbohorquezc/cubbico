@@ -163,7 +163,7 @@ export const SidebarTooltip: React.FC<SidebarTooltipProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative inline-flex ${className}`}
+      className={`relative w-full ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

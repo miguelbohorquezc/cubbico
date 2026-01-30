@@ -86,16 +86,18 @@ export const SidebarActions: React.FC<SidebarActionsProps> = ({
 
   // Clases base para los botones
   const buttonBaseClasses = `
-    group flex items-center w-full
-    px-3 py-2.5 mx-2 my-0.5
+    group flex items-center
+    py-2.5 my-0.5
     rounded-lg
     text-sm font-medium
     transition-all duration-200
     focus:outline-none focus:ring-2 focus:ring-offset-1
   `;
 
-  // Clases para modo colapsado
-  const collapsedClasses = isCollapsed ? 'justify-center px-2 mx-1' : '';
+  // Clases para modo colapsado vs expandido
+  const collapsedClasses = isCollapsed
+    ? 'justify-center w-10 h-10 mx-auto px-0'
+    : 'w-full px-3';
 
   // Componente de botón de acción
   const ActionButton: React.FC<{
@@ -162,12 +164,12 @@ export const SidebarActions: React.FC<SidebarActionsProps> = ({
   };
 
   return (
-    <div className={`mt-auto ${className}`}>
+    <div className={`mt-auto overflow-hidden ${className}`}>
       {/* Separador */}
-      <div className="mx-4 my-2 border-t border-gray-200" />
+      <div className={`my-2 border-t border-gray-200 ${isCollapsed ? 'mx-1' : 'mx-3'}`} />
 
       {/* Acciones */}
-      <div className="py-2">
+      <div className={`py-2 ${isCollapsed ? 'px-1' : 'px-2'}`}>
         {/* Fechas de Entrega - Solo Coordinador */}
         {isCoordinador && (
           <ActionButton
