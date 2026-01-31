@@ -20,6 +20,9 @@ import AspirantesAdminPage from "./components/AspirantesAdminPage"
 import FinalReport from "./components/FinalReport"
 import PromotionManager from "../../../features/students/PromotionManager"
 import BulkReportPrinter from "../../../features/reports/BulkReportPrinter"
+import ScheduleEditor from "../../../features/schedule/ScheduleEditor"
+import AttendanceList from "../../../features/attendance/AttendanceList"
+import AttendanceReport from "../../../features/attendance/AttendanceReport"
 
 /**
  * Dashboard - Rutas del panel principal
@@ -48,6 +51,8 @@ function Dashboard() {
         <Route path={PrivateRoutes.CREATESTUDENT} element={<StudentsPage/>}/>
         <Route path={PrivateRoutes.ASPIRANTS} element={<AspirantesAdminPage />} />
         <Route path={PrivateRoutes.PROMOTIONS} element={<PromotionManager />} />
+        {/* Horario docente */}
+        <Route path={PrivateRoutes.HORARIO} element={<ScheduleEditor />} />
         {/* Impresión masiva de informes */}
         <Route path={`${PrivateRoutes.BULKPRINT}/:periodId/:classroomId`} element={<BulkReportPrinter />} />
       </Route>
@@ -61,6 +66,10 @@ function Dashboard() {
         <Route path={`${PrivateRoutes.ACADEMY}/:periodId/:classroomNivel/:classroomId`} element={<Academy/>}/>
         <Route path={`${PrivateRoutes.ACADEMY}/:classroomId/:areaId`} element={<Academy/>}/>
         <Route path={`${PrivateRoutes.ACADEMY}/:periodId`} element={<Academy/>}/>
+
+        {/* Asistencias */}
+        <Route path={`${PrivateRoutes.ASISTENCIA}/:salonId/:profesorId/:areaId/:fecha/:hora`} element={<AttendanceList />} />
+        <Route path={`${PrivateRoutes.ASISTENCIA}/report/:salonId/:profesorId/:areaId/:hora`} element={<AttendanceReport />} />
 
         {/* Notas */}
         <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`} element={<Notes/>}/>

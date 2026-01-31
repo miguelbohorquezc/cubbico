@@ -117,6 +117,14 @@ export const navItems: NavItem[] = [
     allowedRoles: ['Coordinador'],
   },
   {
+    id: 'horario',
+    label: 'Horario',
+    path: buildPath(PrivateRoutes.HORARIO),
+    icon: CalendarIcon,
+    description: 'Editor de horarios semanal',
+    allowedRoles: ['Coordinador'],
+  },
+  {
     id: 'periodos',
     label: 'Períodos',
     path: null,

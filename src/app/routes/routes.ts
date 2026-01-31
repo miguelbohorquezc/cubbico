@@ -25,5 +25,7 @@ export const PrivateRoutes = {
     AREA:                       'area',
     ASPIRANTS:                  'aspirants',
     FINALREPORT:                'final-report',
-    PROMOTIONS:                 'promotions'
+    PROMOTIONS:                 'promotions',
+    HORARIO:                    'horario',
+    ASISTENCIA:                 'asistencia'
 }
