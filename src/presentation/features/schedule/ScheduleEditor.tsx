@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
 import { fetchDocentes } from '../../../infrastructure/user.service';
@@ -19,6 +20,7 @@ import { detectSlotConflict, TIME_SLOTS, DAYS_OF_WEEK } from '../../../domain/en
 import type { DocenteOption } from '../../../shared/types/classRoomTypes';
 import type { ClassRoom } from '../../../domain/entities/classRoom';
 import type { Area } from '../../../domain/entities/area';
+import { PrivateRoutes } from '../../../app/routes/routes';
 import {
   IconCalendar,
   IconDeviceFloppy,
@@ -29,6 +31,7 @@ import {
   IconX,
   IconLoader,
   IconPrinter,
+  IconFileAnalytics,
 } from '@tabler/icons-react';
 
 // ============================================
@@ -87,6 +90,7 @@ function useSidebarCollapsed(): boolean {
 
 export default function ScheduleEditor() {
   const isSidebarCollapsed = useSidebarCollapsed();
+  const navigate = useNavigate();
   const currentYear = String(new Date().getFullYear());
 
   // ── Estado ─────────────────────────────────────
@@ -133,6 +137,17 @@ export default function ScheduleEditor() {
     load();
     return () => { cancelled = true; };
   }, [year]);
+
+  // ── Estilos de impresión ───────────────────────
+  useEffect(() => {
+    const isFiltered = filterView !== 'all';
+    const size = isFiltered ? 'letter' : 'legal';
+    const style = document.createElement('style');
+    style.id = 'schedule-print-style';
+    style.textContent = '@media print { @page { size: ' + size + ' portrait; margin: 0.6in 0.7in; } body { background: white !important; } }';
+    document.head.appendChild(style);
+    return () => { const el = document.getElementById('schedule-print-style'); if (el) el.remove(); };
+  }, [filterView]);
 
   // ── Auto-save con debounce ─────────────────────
   function triggerSave(newSlots: ScheduleSlot[]) {
@@ -227,6 +242,20 @@ export default function ScheduleEditor() {
     return false;
   }
 
+  // ── Etiqueta de vista para impresión ───────────
+  const filterViewLabel = (() => {
+    if (filterView === 'all') return 'Vista General — todos los profesores';
+    if (filterView.startsWith('prof:')) {
+      const prof = professors.find((p) => p.id === filterView.slice(5));
+      return prof ? `Profesor: ${prof.displayName || prof.email}` : 'Profesor';
+    }
+    if (filterView.startsWith('room:')) {
+      const room = classrooms.find((r) => r.id === filterView.slice(5));
+      return room ? `Salón: ${room.nombreSalon}` : 'Salón';
+    }
+    return '';
+  })();
+
   // ══════════════════════════════════════════════
   // RENDER
   // ══════════════════════════════════════════════
@@ -247,11 +276,11 @@ export default function ScheduleEditor() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <SidebarV2 />
+      <div className="print:hidden"><SidebarV2 /></div>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <HeaderV2 title="Editor de Horarios" isSidebarCollapsed={isSidebarCollapsed} />
-        <div className="h-16 flex-shrink-0" />
+        <div className="print:hidden"><HeaderV2 title="Editor de Horarios" isSidebarCollapsed={isSidebarCollapsed} /></div>
+        <div className="print:hidden h-16 flex-shrink-0" />
 
         <main className="flex-1 flex flex-col overflow-hidden min-h-0 p-4 lg:p-5 gap-3">
           {/* ── Top bar ── */}
@@ -325,6 +354,15 @@ export default function ScheduleEditor() {
               {conflict}
             </div>
           )}
+
+          {/* ── Header de impresión ── */}
+          <div className="hidden print:block flex-shrink-0 text-center pb-3 border-b border-gray-200 mb-2">
+            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Institución Educativa</p>
+            <h2 className="text-[18px] font-black text-gray-900 mt-0.5">Colina Campestre School</h2>
+            <div className="mx-auto w-10 h-0.5 bg-indigo-500 rounded-full mt-1.5 mb-1.5" />
+            <p className="text-[12px] font-bold text-indigo-700">Horario Semanal {year}</p>
+            <p className="text-[10px] text-gray-500 mt-0.5">{filterViewLabel}</p>
+          </div>
 
           {/* ── Layout: panel lateral + grid ── */}
           <div className="flex gap-4 flex-1 min-h-0">
@@ -467,12 +505,21 @@ export default function ScheduleEditor() {
                                         <div className="text-[10px] opacity-75 truncate">{slot.profesorNombre}</div>
                                         <div className="text-[10px] opacity-75 truncate">{slot.salonNombre}</div>
                                       </div>
-                                      <button
-                                        onClick={() => removeSlot(globalIndex)}
-                                        className="print:hidden opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 p-0.5 rounded hover:bg-red-100 text-red-400 hover:text-red-600"
-                                      >
-                                        <IconX size={10} />
-                                      </button>
+                                      <div className="print:hidden flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                        <button
+                                          onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/report/${slot.salonId}/${slot.profesorId}/${slot.areaId}/${encodeURIComponent(slot.hora)}`)}
+                                          className="p-0.5 rounded hover:bg-indigo-100 text-indigo-400 hover:text-indigo-600"
+                                          title="Informe de asistencia"
+                                        >
+                                          <IconFileAnalytics size={10} />
+                                        </button>
+                                        <button
+                                          onClick={() => removeSlot(globalIndex)}
+                                          className="p-0.5 rounded hover:bg-red-100 text-red-400 hover:text-red-600"
+                                        >
+                                          <IconX size={10} />
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 ))}

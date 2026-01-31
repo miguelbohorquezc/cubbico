@@ -315,9 +315,9 @@ export default function AttendanceReport() {
                   <tr className="border-b-2 border-indigo-600">
                     <th className="text-left pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-8">#</th>
                     <th className="text-left pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide">Estudiante</th>
-                    <th className="text-center pb-2 text-[10px] font-bold text-emerald-600 uppercase tracking-wide w-14">P</th>
-                    <th className="text-center pb-2 text-[10px] font-bold text-amber-600 uppercase tracking-wide w-14">J</th>
-                    <th className="text-center pb-2 text-[10px] font-bold text-red-600 uppercase tracking-wide w-14">U</th>
+                    <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">P</th>
+                    <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">J</th>
+                    <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">U</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-16">Total</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-16">Asist.</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-12">⚠</th>
@@ -331,9 +331,9 @@ export default function AttendanceReport() {
                         <div className="font-semibold text-gray-800">{s.student.name} {s.student.lastName}</div>
                         <div className="text-[9px] text-gray-400">{s.student.document}</div>
                       </td>
-                      <td className="text-center font-bold text-emerald-700">{s.present}</td>
-                      <td className="text-center font-bold text-amber-700">{s.justified}</td>
-                      <td className="text-center font-bold text-red-700">{s.unjustified}</td>
+                      <td className="text-center font-bold text-gray-700">{s.present}</td>
+                      <td className="text-center font-bold text-gray-700">{s.justified}</td>
+                      <td className="text-center font-bold text-gray-700">{s.unjustified}</td>
                       <td className="text-center font-semibold text-gray-600">{s.total}</td>
                       <td className="text-center"><RateBadge rate={s.rate} /></td>
                       <td className="text-center">{s.unjustified >= 3 && <span className="text-amber-500 font-bold">⚠</span>}</td>
@@ -352,9 +352,9 @@ export default function AttendanceReport() {
                 <div className="flex items-center px-2 py-2.5 text-[11px] font-bold text-indigo-800">
                   <span className="flex-1">TOTALES</span>
                   <span className="w-8 text-center">{students.length}</span>
-                  <span className="w-14 text-center text-emerald-700">{totalP}</span>
-                  <span className="w-14 text-center text-amber-700">{totalJ}</span>
-                  <span className="w-14 text-center text-red-700">{totalU}</span>
+                  <span className="w-14 text-center">{totalP}</span>
+                  <span className="w-14 text-center">{totalJ}</span>
+                  <span className="w-14 text-center">{totalU}</span>
                   <span className="w-16 text-center text-indigo-700">{totalMarks}</span>
                   <span className="w-16 text-center text-indigo-700">{globalRate.toFixed(1)}%</span>
                   <span className="w-12" />

@@ -119,10 +119,24 @@ export const navItems: NavItem[] = [
   {
     id: 'horario',
     label: 'Horario',
-    path: buildPath(PrivateRoutes.HORARIO),
+    path: null,
     icon: CalendarIcon,
-    description: 'Editor de horarios semanal',
+    description: 'Horarios y asistencias',
     allowedRoles: ['Coordinador'],
+    submenu: [
+      {
+        id: 'horario-editor',
+        label: 'Editor de Horarios',
+        path: buildPath(PrivateRoutes.HORARIO),
+        description: 'Construir horario semanal',
+      },
+      {
+        id: 'horario-asistencias',
+        label: 'Informes de Asistencia',
+        path: buildPath(`${PrivateRoutes.ASISTENCIA}/overview`),
+        description: 'Ver informes por salón',
+      },
+    ],
   },
   {
     id: 'periodos',

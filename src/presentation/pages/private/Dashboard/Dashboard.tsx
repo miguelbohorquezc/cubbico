@@ -23,6 +23,7 @@ import BulkReportPrinter from "../../../features/reports/BulkReportPrinter"
 import ScheduleEditor from "../../../features/schedule/ScheduleEditor"
 import AttendanceList from "../../../features/attendance/AttendanceList"
 import AttendanceReport from "../../../features/attendance/AttendanceReport"
+import AttendanceOverview from "../../../features/attendance/AttendanceOverview"
 
 /**
  * Dashboard - Rutas del panel principal
@@ -53,6 +54,8 @@ function Dashboard() {
         <Route path={PrivateRoutes.PROMOTIONS} element={<PromotionManager />} />
         {/* Horario docente */}
         <Route path={PrivateRoutes.HORARIO} element={<ScheduleEditor />} />
+        {/* Panorámica de informes de asistencia */}
+        <Route path={`${PrivateRoutes.ASISTENCIA}/overview`} element={<AttendanceOverview />} />
         {/* Impresión masiva de informes */}
         <Route path={`${PrivateRoutes.BULKPRINT}/:periodId/:classroomId`} element={<BulkReportPrinter />} />
       </Route>

@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/store';
-import { fetchScheduleByProfessor } from '../../../infrastructure/schedule.service';
+import { fetchScheduleByProfessor, fetchSchedule } from '../../../infrastructure/schedule.service';
 import type { ScheduleSlot } from '../../../domain/entities/schedule';
 import { TIME_SLOTS } from '../../../domain/entities/schedule';
 import { PrivateRoutes } from '../../../app/routes/routes';
@@ -93,16 +93,20 @@ export default function TeacherCalendar() {
   const [isLoading, setIsLoading] = useState(true);
   const week = getCurrentWeek();
 
-  // ── Cargar horario del usuario ─────────────────
+  // ── Cargar horario ─────────────────────────────
   useEffect(() => {
     if (!user?.uid) { setIsLoading(false); return; }
 
     setIsLoading(true);
-    fetchScheduleByProfessor(String(new Date().getFullYear()), user.uid)
+    const year = String(new Date().getFullYear());
+    const loader = user.role === 'Coordinador'
+      ? fetchSchedule(year).then((doc) => doc.slots)
+      : fetchScheduleByProfessor(year, user.uid);
+    loader
       .then((data) => setSlots(data))
       .catch(() => setSlots([]))
       .finally(() => setIsLoading(false));
-  }, [user?.uid]);
+  }, [user?.uid, user?.role]);
 
   // ── Filas activas (solo slots que tienen clase esta semana) ──
   const activeTimeSlots = TIME_SLOTS.filter((hora) =>
@@ -138,10 +142,10 @@ export default function TeacherCalendar() {
           <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
             <IconCalendar size={16} className="text-white" />
           </div>
-          <h3 className="text-sm font-semibold text-gray-700">Mi Horario</h3>
+          <h3 className="text-sm font-semibold text-gray-700">{user?.role === 'Coordinador' ? 'Horario Completo' : 'Mi Horario'}</h3>
         </div>
         <p className="text-xs text-gray-400 text-center py-4">
-          No tienes clases asignadas esta semana.
+          {user?.role === 'Coordinador' ? 'No hay clases en el horario esta semana.' : 'No tienes clases asignadas esta semana.'}
           {user?.role === 'Coordinador' && (
             <Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.HORARIO}`} className="ml-1 text-indigo-500 font-semibold hover:underline">
               Ir al editor →
@@ -164,7 +168,7 @@ export default function TeacherCalendar() {
             <IconCalendar size={16} className="text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-700">Mi Horario</h3>
+            <h3 className="text-sm font-semibold text-gray-700">{user?.role === 'Coordinador' ? 'Horario Completo' : 'Mi Horario'}</h3>
             <p className="text-[10px] text-gray-400">{weekLabel}</p>
           </div>
         </div>
@@ -201,25 +205,28 @@ export default function TeacherCalendar() {
                   {hora}
                 </td>
                 {week.map((day) => {
-                  const slot = slots.find((s) => s.dia === day.dia && s.hora === hora) || null;
+                  const cellSlots = slots.filter((s) => s.dia === day.dia && s.hora === hora);
                   return (
                     <td
                       key={day.dia}
-                      className={`border border-gray-100 p-1 ${day.isToday ? 'bg-indigo-50/40' : 'bg-white'}`}
-                      style={{ minHeight: '42px', verticalAlign: 'middle' }}
+                      className={`border border-gray-100 p-0.5 ${day.isToday ? 'bg-indigo-50/40' : 'bg-white'}`}
+                      style={{ minHeight: '44px', verticalAlign: 'top' }}
                     >
-                      {slot ? (
-                        <button
-                          onClick={() => goToAttendance(slot, day.isoDate)}
-                          className={`w-full text-left px-2 py-1.5 rounded-lg border cursor-pointer transition-all shadow-sm hover:shadow-md active:scale-95 ${getBadgeColor(slot.areaNombre)}`}
-                        >
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="font-bold truncate text-[10px]">{slot.areaNombre}</span>
-                            <IconChevronRight size={10} className="flex-shrink-0 opacity-50" />
-                          </div>
-                          <div className="text-[9px] opacity-60 truncate mt-0.5">{slot.salonNombre}</div>
-                        </button>
-                      ) : null}
+                      <div className="flex flex-col gap-0.5">
+                        {cellSlots.map((slot, i) => (
+                          <button
+                            key={i}
+                            onClick={() => goToAttendance(slot, day.isoDate)}
+                            className={`w-full text-left px-1.5 py-1 rounded border cursor-pointer transition-all hover:shadow-sm active:scale-95 ${getBadgeColor(slot.areaNombre)}`}
+                          >
+                            <span className="font-bold truncate text-[10px] block">{slot.areaNombre}</span>
+                            {user?.role === 'Coordinador' && (
+                              <span className="text-[9px] opacity-60 truncate block">{slot.profesorNombre}</span>
+                            )}
+                            <span className="text-[9px] opacity-60 truncate block">{slot.salonNombre}</span>
+                          </button>
+                        ))}
+                      </div>
                     </td>
                   );
                 })}
