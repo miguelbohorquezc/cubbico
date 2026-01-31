@@ -296,7 +296,7 @@ function FinalReportTable({
               key={p}
               className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-20"
             >
-              <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
+              <span className="inline-flex items-center justify-center w-8 h-8 bg-gray-200 text-gray-700 rounded-full text-xs font-bold">
                 P{p}
               </span>
             </th>
@@ -312,7 +312,7 @@ function FinalReportTable({
           return (
             <tr
               key={row.areaId}
-              className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors`}
+              className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-gray-50/30 transition-colors`}
             >
               <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b border-gray-100">
                 {areaLabels[row.areaId] ?? row.areaId}
@@ -349,16 +349,16 @@ function FinalReportTable({
         })}
       </tbody>
       <tfoot>
-        <tr className="bg-gradient-to-r from-indigo-50 to-blue-50">
+        <tr className="bg-gradient-to-r from-gray-100 to-gray-50">
           <th
             colSpan={pKeys.length + 1}
-            className="px-4 py-4 text-right text-sm font-bold text-gray-700 border-t-2 border-indigo-200"
+            className="px-4 py-4 text-right text-sm font-bold text-gray-700 border-t-2 border-gray-300"
           >
             Promedio General Anual
           </th>
-          <th className="px-4 py-4 text-center border-t-2 border-indigo-200">
+          <th className="px-4 py-4 text-center border-t-2 border-gray-300">
             <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-bold text-indigo-700">
+              <span className="text-2xl font-bold text-gray-900">
                 {typeof report.generalAverage === "number"
                   ? report.generalAverage.toFixed(2)
                   : "N/A"}
@@ -502,14 +502,14 @@ export default function FinalReport() {
       </table>
 
       {/* Título del informe */}
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 px-6 rounded-lg shadow-md text-center">
+      <div className="bg-gradient-to-r from-gray-700 to-gray-600 text-white py-3 px-6 rounded-lg shadow-md text-center">
         <h1 className="text-xl font-bold tracking-wide">
           INFORME FINAL – {data.meta.year}
         </h1>
       </div>
 
       {/* Información del estudiante */}
-      <table className="w-full border-collapse border border-indigo-200 rounded-lg overflow-hidden">
+      <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
         <thead className="bg-gray-100">
           <tr>
             <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">ESTUDIANTE</td>

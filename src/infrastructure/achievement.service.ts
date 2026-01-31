@@ -4,14 +4,20 @@ import { db } from "./firebase/firebase";
 import { AchievementData } from "../domain/entities/achievementData";
 
 
-export const getAchievement = async (classroomId: string, areaId: string, period: number) => {
+export const getAchievement = async (classroomId: string, areaId: string, period: number, year?: string | null) => {
   try {
-    const q = query(
-      collection(db, "achievements"),
+    const filters = [
       where("classroomId", "==", classroomId),
       where("areaId", "==", areaId),
-      where("period", "==", period)
-    );
+      where("period", "==", period),
+    ];
+    // year === null → sin filtro de año (busca logros viejos sin campo year)
+    // year === undefined → usa año actual
+    // year === "2025" → busca ese año específico
+    if (year !== null) {
+      filters.push(where("year", "==", year || new Date().getFullYear().toString()));
+    }
+    const q = query(collection(db, "achievements"), ...filters);
     
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) return null;
@@ -31,6 +37,7 @@ export const addAchievement = async (achievement: Omit<AchievementData, 'id'>) =
   try {
     const docRef = await addDoc(collection(db, "achievements"), {
       ...achievement,
+      year: achievement.year || new Date().getFullYear().toString(),
       createdAt: new Date()
     });
     console.log('Document written with ID: ', docRef.id);
@@ -44,7 +51,7 @@ export const addAchievement = async (achievement: Omit<AchievementData, 'id'>) =
 
 export const updateAchievement = async (docId: string, achievement: Partial<AchievementData>) => {
   try {
-    await setDoc(doc(db, "achievements", docId), 
+    await setDoc(doc(db, "achievements", docId),
     achievement,
     { merge: true });
     return docId;

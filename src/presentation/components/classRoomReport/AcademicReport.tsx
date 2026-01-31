@@ -6,6 +6,8 @@ import logo from '../../../assets/logo/logotipo.jpg';
 import "./AcademicReport.css";
 import { SubjectData, AreaGroup, StudentData, PeriodInfo } from './AcademicInterface';
 import { fetchPeriodConfig, formatFechaEntrega } from '../../../infrastructure/periodConfig.service';
+import { fetchAttendanceByClassroom } from '../../../infrastructure/attendance.service';
+import { computeAttendanceSummary, AttendanceRecord } from '../../../domain/entities/attendance';
 
 import firmOne from "../../../assets/firm/01.jpg";
 import firmTwo from "../../../assets/firm/02.jpg";
@@ -95,9 +97,10 @@ const AcademicReport = () => {
         const periodData = (yearData.periods as Record<string, any>)[periodId!];
         if (!periodData) throw new Error(`Periodo ${periodId} no encontrado`);
 
-        // Obtener fecha de entrega configurada
+        // Obtener fecha de entrega y rango de fechas del período
+        let periodConfig = null;
         try {
-          const periodConfig = await fetchPeriodConfig(periodId!, year);
+          periodConfig = await fetchPeriodConfig(periodId!, year);
           if (periodConfig?.fechaEntrega) {
             setFechaEntrega(formatFechaEntrega(periodConfig.fechaEntrega));
           }
@@ -105,15 +108,46 @@ const AcademicReport = () => {
           // Si no hay configuración, usar fecha actual
         }
 
+        // Cargar registros de asistencia para calcular fallas
+        let attendanceRecords: AttendanceRecord[] = [];
+        if (periodConfig?.fechaInicio && periodConfig?.fechaFin && studentData.classroomId) {
+          try {
+            attendanceRecords = await fetchAttendanceByClassroom(
+              studentData.classroomId,
+              periodConfig.fechaInicio,
+              periodConfig.fechaFin
+            );
+          } catch {
+            // Si no hay datos de asistencia, usar fallas = 0
+          }
+        }
+
         for (const [areaId, areaData] of Object.entries(periodData.areas)) {
           const areaInfo = areasMap[areaId] || {};
           const achievements = await getAchievements((areaData as any).metadata?.achievementId);
+
+          // Calcular fallas desde registros de asistencia
+          const teacherId = (areaData as any).metadata?.teacherId;
+          let fallasTotales = 0;
+          let fallasInjustificadas = 0;
+          if (teacherId && attendanceRecords.length > 0) {
+            const areaRecords = attendanceRecords.filter(
+              (r) => r.profesorId === teacherId && r.areaId === areaId
+            );
+            const summary = computeAttendanceSummary(areaRecords, studentId!);
+            fallasTotales = summary.totalJustified + summary.totalUnjustified;
+            fallasInjustificadas = summary.totalUnjustified;
+          }
 
           const subject: SubjectData = {
             areaId,
             asignatura: areaInfo.asignatura || areaId,
             ihs: areaInfo.ihs || 'N/A',
-            grades: (areaData as any).grades || { l1: 0, l2: 0, l3: 0, fallas: 0 },
+            grades: {
+              ...((areaData as any).grades || { l1: 0, l2: 0, l3: 0 }),
+              fallas: fallasTotales,
+              fallasVerificadas: fallasInjustificadas,
+            },
             achievements: achievements || { logro1: 'N/A', logro2: 'N/A', logro3: 'N/A' },
             _orden: areaInfo.orden
           };
@@ -295,24 +329,28 @@ const AcademicReport = () => {
     </table>
   );
 
-  const SignaturesTable = () => (
+  const SignaturesTable = ({ periodId: pid }: { periodId?: string }) => (
     <table className="w-full border-collapse border border-indigo-200">
       <tbody>
         <tr>
-          <td className="text-center py-4 border border-gray-100">
-            <div className="firma flex flex-col items-center mt-12">
-              <img src={firmTwo} alt="firma directora" className="w-36 h-auto" />
-              <p className="text-[10pt] font-medium text-gray-900 mt-2">ANA KARINA GOMEZ BUSTAMANTE</p>
-              <p className="text-[10pt] text-gray-600">Directora</p>
-            </div>
-          </td>
-          <td className="text-center py-4 border border-gray-100">
-            <div className="firma flex flex-col items-center mt-12">
-              <img src={firmOne} alt="firma coordinadora" className="w-36 h-auto" />
-              <p className="text-[10pt] font-medium text-gray-900 mt-2">NURIA MILENA MONTES SALAS</p>
-              <p className="text-[10pt] text-gray-600">Coordinadora Académica</p>
-            </div>
-          </td>
+          {pid === '4' && (
+            <td className="text-center py-4 border border-gray-100">
+              <div className="firma flex flex-col items-center mt-12">
+                <img src={firmTwo} alt="firma directora" className="w-36 h-auto" />
+                <p className="text-[10pt] font-medium text-gray-900 mt-2">ANA KARINA GOMEZ BUSTAMANTE</p>
+                <p className="text-[10pt] text-gray-600">Directora</p>
+              </div>
+            </td>
+          )}
+          {pid === '4' && (
+            <td className="text-center py-4 border border-gray-100">
+              <div className="firma flex flex-col items-center mt-12">
+                <img src={firmOne} alt="firma coordinadora" className="w-36 h-auto" />
+                <p className="text-[10pt] font-medium text-gray-900 mt-2">NURIA MILENA MONTES SALAS</p>
+                <p className="text-[10pt] text-gray-600">Coordinadora Académica</p>
+              </div>
+            </td>
+          )}
           <td className="text-center py-4 border border-gray-100">
             <div className="firma flex flex-col items-center mt-12">
               <div className="w-36 h-12 border-b border-gray-400"></div>
@@ -429,7 +467,7 @@ const AcademicReport = () => {
       <ConventionsTable />
       <GradeScaleTable />
       <ObservationsTable />
-      <SignaturesTable />
+      <SignaturesTable periodId={periodId} />
     </div>
   );
 
@@ -475,7 +513,7 @@ const AcademicReport = () => {
         <ConventionsTable />
         <GradeScaleTable />
         <ObservationsTable />
-        <SignaturesTable />
+        <SignaturesTable periodId={periodId} />
       </div>
     </div>
   );

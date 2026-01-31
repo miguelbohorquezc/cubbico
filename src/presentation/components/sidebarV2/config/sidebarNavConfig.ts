@@ -181,6 +181,14 @@ export const navItems: NavItem[] = [
     allowedRoles: ['Docente', 'Coordinador'],
   },
   {
+    id: 'historial',
+    label: 'Historial',
+    path: buildPath('academic-history'),
+    icon: BookIcon,
+    description: 'Historial académico de estudiantes',
+    allowedRoles: ['Docente', 'Coordinador'],
+  },
+  {
     id: 'usuarios',
     label: 'Usuarios',
     path: buildPath(PrivateRoutes.USER),

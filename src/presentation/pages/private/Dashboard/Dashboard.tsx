@@ -4,6 +4,7 @@ import RoutesWithNotFound from "../../../../shared/utils/routesWithNotFound"
 import { AuthGuardV2 } from "../../../../app/guard/AuthGuard.v2"
 import StudentsPage from "./components/StudentsPage"
 import Home from "./components/Home"
+import History from "./components/History"
 import Academy from "./components/Academy"
 import Notes from "./components/Notes"
 import AcademicReport from "../../../components/classRoomReport/AcademicReport"
@@ -69,6 +70,9 @@ function Dashboard() {
         <Route path={`${PrivateRoutes.ACADEMY}/:periodId/:classroomNivel/:classroomId`} element={<Academy/>}/>
         <Route path={`${PrivateRoutes.ACADEMY}/:classroomId/:areaId`} element={<Academy/>}/>
         <Route path={`${PrivateRoutes.ACADEMY}/:periodId`} element={<Academy/>}/>
+
+        {/* Historial académico */}
+        <Route path="academic-history" element={<History/>}/>
 
         {/* Asistencias */}
         <Route path={`${PrivateRoutes.ASISTENCIA}/:salonId/:profesorId/:areaId/:fecha/:hora`} element={<AttendanceList />} />

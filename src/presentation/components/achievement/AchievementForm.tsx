@@ -1,9 +1,9 @@
 import { useAchievementForm } from './useAchievementForm';
 import { useParams } from 'react-router-dom';
-import { IconLoader2, IconTargetArrow } from '@tabler/icons-react';
+import { IconLoader2, IconTargetArrow, IconRefresh } from '@tabler/icons-react';
 
 const AchievementForm = () => {
-  const { form, error, handleChange, handleSubmit, isSubmitting, loading, docId } = useAchievementForm();
+  const { form, error, handleChange, handleSubmit, isSubmitting, loading, docId, previousYearLogros, copyFromPreviousYear } = useAchievementForm();
   const { periodId } = useParams<{ periodId: string }>();
 
   const calculateProgress = (text: string) => {
@@ -42,6 +42,23 @@ const AchievementForm = () => {
           Periodo {periodId}
         </span>
       </div>
+
+      {/* Copiar logros del año anterior */}
+      {previousYearLogros && !form.logro1 && !form.logro2 && !form.logro3 && (
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-between">
+          <span className="text-sm text-amber-700">
+            Hay logros del año anterior disponibles
+          </span>
+          <button
+            type="button"
+            onClick={copyFromPreviousYear}
+            className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-colors"
+          >
+            <IconRefresh size={14} />
+            Copiar logros
+          </button>
+        </div>
+      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-5">

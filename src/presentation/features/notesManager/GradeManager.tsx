@@ -117,12 +117,6 @@ const GradeManager: React.FC = () => {
               <th className="px-2 py-3 text-center text-xs font-semibold text-blue-600 uppercase tracking-wider w-20">
                 L3
               </th>
-              <th className="px-2 py-3 text-center text-xs font-semibold text-amber-600 uppercase tracking-wider w-20">
-                Fallas
-              </th>
-              <th className="px-2 py-3 text-center text-xs font-semibold text-red-600 uppercase tracking-wider w-20">
-                F. Injust.
-              </th>
               <th className="px-2 py-3 text-center text-xs font-semibold text-emerald-600 uppercase tracking-wider w-20">
                 Prom.
               </th>
@@ -165,31 +159,6 @@ const GradeManager: React.FC = () => {
                       </td>
                     ))}
 
-                    {/* Fallas */}
-                    <td className="px-1 py-4 text-center">
-                      <InputField
-                        type="number"
-                        value={g.fallas}
-                        min={0}
-                        step={1}
-                        onChange={(value) => setCampoNota(student.id, 'fallas', value)}
-                        isValid={!showErrors || validarCantidadFallas(g.fallas)}
-                        errorMessage="Máx. 99"
-                      />
-                    </td>
-
-                    {/* Fallas injustificadas */}
-                    <td className="px-1 py-4 text-center">
-                      <InputField
-                        type="number"
-                        value={g.fallasVerificadas ?? ''}
-                        min={0}
-                        step={1}
-                        onChange={(value) => setCampoNota(student.id, 'fallasVerificadas', value)}
-                        isValid={!showErrors || validarCantidadFallas(g.fallasVerificadas ?? '')}
-                        errorMessage="Máx. 99"
-                      />
-                    </td>
 
                     {/* Promedio */}
                     <td className="px-2 py-4 text-center">

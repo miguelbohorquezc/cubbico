@@ -3,6 +3,7 @@ export interface AchievementData {
     classroomId: string;
     areaId: string;
     period: number;
+    year?: string;
     logros: {
       logro1: string;
       logro2: string;

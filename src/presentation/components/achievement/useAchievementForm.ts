@@ -25,6 +25,7 @@ export const useAchievementForm = () => {
   const [error, setError] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [previousYearLogros, setPreviousYearLogros] = useState<AchievementFormState | null>(null);
 
   // Cargar datos iniciales
   useEffect(() => {
@@ -51,6 +52,17 @@ export const useAchievementForm = () => {
             setDocId(snapshot.id);
           }
           dispatch(teacherActions.upsertAchievement(achievementData));
+        } else {
+          // Buscar logros de años anteriores (null = sin filtro de año,
+          // encuentra logros viejos sin campo year)
+          try {
+            const prevSnapshot = await getAchievement(classroomId, areaId, periodNumber, null);
+            if (prevSnapshot) {
+              setPreviousYearLogros(prevSnapshot.logros);
+            }
+          } catch {
+            // No bloquear si no hay logros previos
+          }
         }
       } catch (error) {
         console.error('Error loading achievements:', error);
@@ -141,6 +153,12 @@ export const useAchievementForm = () => {
     return Math.min((text.length / 200) * 100, 100);
   }, []);
 
+  const copyFromPreviousYear = useCallback(() => {
+    if (previousYearLogros) {
+      setForm(previousYearLogros);
+    }
+  }, [previousYearLogros]);
+
   return {
     form,
     error,
@@ -149,6 +167,8 @@ export const useAchievementForm = () => {
     isSubmitting,
     handleChange,
     handleSubmit,
-    calculateProgress
+    calculateProgress,
+    previousYearLogros,
+    copyFromPreviousYear
   };
 };
