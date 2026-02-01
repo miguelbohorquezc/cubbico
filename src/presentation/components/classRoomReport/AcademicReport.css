@@ -11,27 +11,61 @@
     background-color: white !important;
   }
 
+  /* Escala del reporte para impresión */
+  .report-container {
+    zoom: 0.85;
+  }
+
   /* Header de la escuela */
   .report-container .thead-header-info .td-header b {
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
 
   .report-container .thead-header-info .td-header p {
-    font-size: 11pt;
+    font-size: 9pt;
   }
 
   /* Información del estudiante */
   .report-container .table-student-info tr td {
-    font-size: 11pt;
+    font-size: 9pt;
+    padding: 3px 8px !important;
   }
 
-  /* Logros y notas */
+  /* Logros: compacto para impresión */
   .report-container .achievement-item {
-    font-size: 11pt;
+    font-size: 9pt;
   }
 
+  .report-container .achievement-item span {
+    line-height: 1.3 !important;
+  }
+
+  /* Círculos numerados más pequeños */
+  .report-container .achievement-item > span:first-child {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 7.5pt;
+  }
+
+  /* Reducir gap entre logros */
+  .report-container .space-y-2 > * + * {
+    margin-top: 2px !important;
+  }
+
+  /* Notas compactas */
   .report-container .grades-container {
-    font-size: 11pt;
+    font-size: 8.5pt;
+  }
+
+  /* Celdas de la tabla: menos padding vertical */
+  .report-table td {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+
+  /* Permitir que las filas se corten entre páginas */
+  .report-table tr {
+    break-inside: auto;
   }
 
   /* Ocultar elementos no necesarios */
@@ -39,13 +73,7 @@
     display: none !important;
   }
 
-  /* Asegurar que las tablas no se corten */
-  .report-table,
-  .area-group {
-    page-break-inside: avoid;
-  }
-
-  /* Firmas siempre visibles */
+  /* Firmas siempre en la misma página */
   .firma {
     page-break-inside: avoid;
   }

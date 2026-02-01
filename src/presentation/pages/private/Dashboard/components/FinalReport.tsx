@@ -7,6 +7,7 @@ import { db } from "../../../../../infrastructure/firebase/firebase";
 import logo from "../../../../../assets/logo/logotipo.jpg";
 import firmOne from "../../../../../assets/firm/01.jpg";
 import firmTwo from "../../../../../assets/firm/02.jpg";
+import { usePrintSetup } from "../../../../components/PrintableReport";
 
 // ---------- Tipos ----------
 type AreaPeriodGrades = {
@@ -287,7 +288,7 @@ function FinalReportTable({
   return (
     <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
       <thead>
-        <tr className="bg-gradient-to-r from-gray-100 to-gray-50">
+        <tr className="bg-gradient-to-r from-gray-100 to-gray-50 print:bg-white">
           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
             ÁREA
           </th>
@@ -312,7 +313,7 @@ function FinalReportTable({
           return (
             <tr
               key={row.areaId}
-              className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-gray-50/30 transition-colors`}
+              className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-gray-50/30 transition-colors print:bg-white`}
             >
               <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b border-gray-100">
                 {areaLabels[row.areaId] ?? row.areaId}
@@ -349,7 +350,7 @@ function FinalReportTable({
         })}
       </tbody>
       <tfoot>
-        <tr className="bg-gradient-to-r from-gray-100 to-gray-50">
+        <tr className="bg-gradient-to-r from-gray-100 to-gray-50 print:bg-white">
           <th
             colSpan={pKeys.length + 1}
             className="px-4 py-4 text-right text-sm font-bold text-gray-700 border-t-2 border-gray-300"
@@ -382,6 +383,8 @@ export default function FinalReport() {
   const studentId =
     (params as any).studentId || (params as any).id || (params as any).uid;
   const year = (params as any).year || String(new Date().getFullYear());
+
+  usePrintSetup();
 
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -502,15 +505,15 @@ export default function FinalReport() {
       </table>
 
       {/* Título del informe */}
-      <div className="bg-gradient-to-r from-gray-700 to-gray-600 text-white py-3 px-6 rounded-lg shadow-md text-center">
-        <h1 className="text-xl font-bold tracking-wide">
+      <h2 className="text-center my-4">
+        <span className="text-lg font-bold text-gray-800">
           INFORME FINAL – {data.meta.year}
-        </h1>
-      </div>
+        </span>
+      </h2>
 
       {/* Información del estudiante */}
       <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-gray-100">
+        <thead className="bg-gray-100 print:bg-white">
           <tr>
             <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">ESTUDIANTE</td>
             <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">GRADO</td>
@@ -541,7 +544,7 @@ export default function FinalReport() {
       />
 
       {/* Escala de valoración */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+      <div className="bg-gray-50 print:bg-white border border-gray-200 rounded-lg p-4">
         <p className="text-sm font-semibold text-gray-700 mb-2">ESCALA DE VALORACIÓN</p>
         <div className="flex flex-wrap gap-4 text-sm">
           <span className="inline-flex items-center gap-2">
@@ -565,7 +568,7 @@ export default function FinalReport() {
 
       {/* Observaciones */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-100 px-4 py-2">
+        <div className="bg-gray-100 print:bg-white px-4 py-2">
           <p className="text-sm font-bold text-gray-700">OBSERVACIONES</p>
         </div>
         <div className="h-16 bg-white"></div>

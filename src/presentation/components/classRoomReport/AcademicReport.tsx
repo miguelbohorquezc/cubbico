@@ -8,6 +8,7 @@ import { SubjectData, AreaGroup, StudentData, PeriodInfo } from './AcademicInter
 import { fetchPeriodConfig, formatFechaEntrega } from '../../../infrastructure/periodConfig.service';
 import { fetchAttendanceByClassroom } from '../../../infrastructure/attendance.service';
 import { computeAttendanceSummary, AttendanceRecord } from '../../../domain/entities/attendance';
+import { usePrintSetup } from '../../components/PrintableReport';
 
 import firmOne from "../../../assets/firm/01.jpg";
 import firmTwo from "../../../assets/firm/02.jpg";
@@ -20,6 +21,8 @@ const AcademicReport = () => {
     year?: string;
     director?: string;
   }>();
+
+  usePrintSetup();
 
   const [reportData, setReportData] = React.useState<{
     primary: Omit<SubjectData, '_orden'>[];
@@ -79,7 +82,7 @@ const AcademicReport = () => {
         }, {} as Record<string, any>);
 
         const yearData = historySnap.data()?.years[year];
-        if (!yearData) throw new Error('No hay datos para este año');
+        if (!yearData) return;
 
         const primaryData: SubjectData[] = [];
         const secondaryGroups: Record<string, AreaGroup> = {};
@@ -95,7 +98,7 @@ const AcademicReport = () => {
         };
 
         const periodData = (yearData.periods as Record<string, any>)[periodId!];
-        if (!periodData) throw new Error(`Periodo ${periodId} no encontrado`);
+        if (!periodData) return;
 
         // Obtener fecha de entrega y rango de fechas del período
         let periodConfig = null;
@@ -235,7 +238,7 @@ const AcademicReport = () => {
 
   const StudentInfoTable = () => (
     <table className="w-full border-collapse border border-indigo-200 table-student-info">
-      <thead className="bg-gray-100">
+      <thead className="bg-gray-100 print:bg-white">
         <tr className="h-10">
           <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-100">ESTUDIANTE</td>
           <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-100">GRADO</td>
@@ -278,7 +281,7 @@ const AcademicReport = () => {
 
   const GradeScaleTable = () => (
     <table className="w-full border-collapse border border-indigo-200">
-      <thead className="bg-gray-100">
+      <thead className="bg-gray-100 print:bg-white">
         <tr>
           <td colSpan={2} className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-100">
             <p>ESCALA DE VALORACIÓN</p>
@@ -314,7 +317,7 @@ const AcademicReport = () => {
 
   const ObservationsTable = () => (
     <table className="w-full border-collapse border border-indigo-200">
-      <thead className="bg-gray-100">
+      <thead className="bg-gray-100 print:bg-white">
         <tr>
           <td colSpan={3} className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-100">
             <p>OBSERVACIONES</p>
@@ -373,17 +376,17 @@ const AcademicReport = () => {
     const gradeCategory = getGradeCategory(average);
 
     return (
-      <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors`}>
+      <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors print:bg-white`}>
         <td className="px-3 py-3 border-b border-gray-100 text-sm font-medium text-gray-900 align-top">
           {subject.asignatura}
         </td>
-        <td className="px-3 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+        <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
           {subject.ihs}
         </td>
-        <td className="px-3 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+        <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
           {subject.grades.fallas}
         </td>
-        <td className="px-3 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+        <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
           {subject.grades.fallasVerificadas}
         </td>
         <td className="px-3 py-3 border-b border-gray-100 align-top">
@@ -445,13 +448,13 @@ const AcademicReport = () => {
       <ReportHeader />
       <StudentInfoTable />
 
-      <table className="report-table w-full border-collapse mt-4 bg-white rounded-lg overflow-hidden shadow-sm">
+      <table className="report-table w-full border-collapse mt-4 bg-white rounded-lg overflow-hidden print:overflow-visible shadow-sm print:shadow-none">
         <thead>
-          <tr className="bg-gray-100">
+          <tr className="bg-gray-100 print:bg-white">
             <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Área</th>
-            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-14">IHS</th>
-            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-12">F</th>
-            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-12">FI</th>
+            <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-10">IHS</th>
+            <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">F</th>
+            <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">FI</th>
             <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Logros</th>
             <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Notas</th>
             <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Promedio</th>
@@ -485,16 +488,16 @@ const AcademicReport = () => {
 
       {reportData.secondary.map((group, groupIndex) => (
         <div key={groupIndex} className="area-group mt-6 w-full">
-          <h3 className="bg-gray-200 text-gray-900 px-4 py-2.5 rounded-md font-semibold text-sm mb-3">
+          <h3 className="bg-gray-200 print:bg-white text-gray-900 px-4 py-2.5 rounded-md font-semibold text-sm mb-3">
             {group.nombreArea}
           </h3>
-          <table className="report-table w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
+          <table className="report-table w-full border-collapse bg-white rounded-lg overflow-hidden print:overflow-visible shadow-sm print:shadow-none">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-100 print:bg-white">
                 <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Asignatura</th>
-                <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-14">IHS</th>
-                <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-12">F</th>
-                <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-12">FI</th>
+                <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-10">IHS</th>
+                <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">F</th>
+                <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">FI</th>
                 <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Logros</th>
                 <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Notas</th>
                 <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Promedio</th>
@@ -552,12 +555,16 @@ const AcademicReport = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md">
-          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
-          <p className="text-lg font-semibold text-gray-700">No se encontraron datos académicos</p>
+          <p className="text-lg font-semibold text-gray-800">Sin datos aún</p>
+          <p className="text-sm text-gray-500 mt-2">
+            No hay calificaciones registradas para el período {periodId} de {year}.
+            Los datos aparecerán cuando el docente ingrese las notas.
+          </p>
         </div>
       </div>
     );

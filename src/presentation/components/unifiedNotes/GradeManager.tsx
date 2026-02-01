@@ -28,6 +28,7 @@ const GradeManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showErrors, setShowErrors] = useState(false);
+  const anioActual = new Date().getFullYear().toString();
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -239,7 +240,7 @@ const GradeManager: React.FC = () => {
                   student.classRoom === 'Primaria' ? (
                     <Tooltip text="Ver informe" position='bottom'>
                       <button className="nav-options">
-                        <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1/${periodId}/${classroom?.directorGrupo}/${student.id}/2025`}>
+                        <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/1/${periodId}/${classroom?.directorGrupo}/${student.id}/${anioActual}`}>
                           <img src={informe} 
                               alt="informe"
                               />
@@ -251,7 +252,7 @@ const GradeManager: React.FC = () => {
                   ) : (
                     <Tooltip text="Ver informe" position='bottom'>
                       <button className="nav-options">
-                        <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/2/${periodId}/${classroom?.directorGrupo}/${student.id}/2025`}>
+                        <Link to={`/private/dashboard/${PrivateRoutes.REPORT}/2/${periodId}/${classroom?.directorGrupo}/${student.id}/${anioActual}`}>
                           <img src={informe} 
                               alt="informe"
                               />

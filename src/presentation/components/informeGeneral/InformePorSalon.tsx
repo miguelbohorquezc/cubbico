@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { db } from '../../../infrastructure/firebase/firebase';
 import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
 import logo from '../../../assets/logo/logotipo.jpg';
+import { usePrintSetup, PrintControls } from '../PrintableReport';
+import { IconClipboardList, IconX, IconEye } from '@tabler/icons-react';
 import './InformePorSalon.css';
 
 interface Grades {
@@ -53,6 +55,8 @@ const ClassAveragesReport: React.FC = () => {
   const [studentAverages, setStudentAverages] = useState<StudentAverage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const { paperSize, setPaperSize, handlePrint } = usePrintSetup();
 
   useEffect(() => {
     const fetchClassAverages = async () => {
@@ -156,6 +160,14 @@ const ClassAveragesReport: React.FC = () => {
     fetchClassAverages();
   }, [classroomId, schoolLevel, periodId, year]);
 
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isPreviewOpen) setIsPreviewOpen(false);
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [isPreviewOpen]);
+
   // ==========================================
   // Estados de carga y error
   // ==========================================
@@ -208,6 +220,76 @@ const ClassAveragesReport: React.FC = () => {
   };
 
   return (
+    <>
+      {/* Página de inicio */}
+      <div className="preview-landing min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 max-w-sm w-full overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-blue-500 to-indigo-600" />
+          <div className="p-8">
+            <div className="w-14 h-14 mx-auto mb-5 bg-blue-50 rounded-2xl flex items-center justify-center">
+              <IconClipboardList size={28} className="text-blue-600" />
+            </div>
+            <h1 className="text-xl font-bold text-gray-900 text-center">Reporte de Promedios</h1>
+            <p className="text-sm text-gray-500 text-center mt-1">
+              {classroomName} · {schoolLevel?.toUpperCase()} · Período {periodId}
+            </p>
+            <div className="flex justify-center gap-6 mt-5 pt-5 border-t border-gray-100">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{studentAverages.length}</p>
+                <p className="text-xs text-gray-500">Estudiantes</p>
+              </div>
+              <div className="w-px bg-gray-200" />
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{classAverage.toFixed(2)}</p>
+                <p className="text-xs text-gray-500">Prom. Salón</p>
+              </div>
+              <div className="w-px bg-gray-200" />
+              <div className="text-center">
+                <p className="text-2xl font-bold text-gray-900">{subjectsMeta.length}</p>
+                <p className="text-xs text-gray-500">Asignaturas</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsPreviewOpen(true)}
+              className="mt-6 w-full flex items-center justify-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md"
+            >
+              <IconEye size={18} />
+              Vista Previa
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Backdrop */}
+      {isPreviewOpen && (
+        <div
+          className="preview-modal-backdrop fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsPreviewOpen(false)}
+        />
+      )}
+
+      {/* Modal de previsualización */}
+      {isPreviewOpen && (
+        <div className="preview-modal-scroll fixed inset-0 z-50 overflow-y-auto flex items-start justify-center p-4 py-8">
+          <div className="preview-modal-shell bg-white rounded-2xl shadow-2xl w-full max-w-6xl relative">
+            {/* Header modal */}
+            <div className="preview-modal-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-5 py-3 rounded-t-2xl flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800">Reporte de Promedios</h3>
+                <p className="text-xs text-gray-500">{classroomName} · Período {periodId}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <PrintControls paperSize={paperSize} onPaperSizeChange={setPaperSize} onPrint={handlePrint} />
+                <button
+                  onClick={() => setIsPreviewOpen(false)}
+                  className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <IconX size={18} />
+                </button>
+              </div>
+            </div>
+            {/* Contenido del reporte */}
+            <div className="p-4">
     <div className="class-averages-report font-['Nunito',sans-serif] bg-white rounded-lg p-4">
       {/* Header de la escuela */}
       <table className="w-full border-collapse mb-4">
@@ -243,7 +325,7 @@ const ClassAveragesReport: React.FC = () => {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse table-fixed">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-gray-100 print:bg-white">
               <th className="th-vertical w-12 px-2 py-3 border border-gray-200 text-center text-xs font-semibold text-gray-600 align-bottom">
                 <p className="m-0">Pos.</p>
               </th>
@@ -267,16 +349,13 @@ const ClassAveragesReport: React.FC = () => {
             {studentAverages.map((student, idx) => (
               <tr
                 key={student.studentId}
-                className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors`}
+                className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-gray-50/30 transition-colors print:bg-white`}
               >
                 {/* Posición */}
                 <td className="px-2 py-2 border border-gray-100 text-center align-middle">
                   <span className={`
                     inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold
-                    ${student.position === 1 ? 'bg-amber-400 text-white' :
-                      student.position === 2 ? 'bg-gray-300 text-gray-700' :
-                      student.position === 3 ? 'bg-amber-600 text-white' :
-                      'bg-gray-100 text-gray-600'}
+                    ${student.position === 1 ? 'bg-gray-200 text-gray-800' : 'bg-gray-100 text-gray-600'}
                   `}>
                     {student.position}
                   </span>
@@ -310,7 +389,7 @@ const ClassAveragesReport: React.FC = () => {
                 })}
 
                 {/* Promedio general */}
-                <td className="px-2 py-2 border border-gray-100 text-center align-middle bg-gray-50">
+                <td className="px-2 py-2 border border-gray-100 text-center align-middle bg-gray-50 print:bg-white">
                   <div className="flex flex-col items-center gap-0.5">
                     <span className="text-sm font-bold text-gray-900">{student.generalAverage.toFixed(2)}</span>
                     <GradeBadge average={student.generalAverage} />
@@ -323,7 +402,7 @@ const ClassAveragesReport: React.FC = () => {
       </div>
 
       {/* Resumen del salón */}
-      <div className="mt-6 flex justify-end items-center gap-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
+      <div className="resumen-salon mt-6 flex justify-end items-center gap-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 print:bg-white rounded-lg">
         <span className="text-sm font-semibold text-gray-700">Promedio general del salón:</span>
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold text-gray-900">{classAverage.toFixed(2)}</span>
@@ -351,6 +430,11 @@ const ClassAveragesReport: React.FC = () => {
         </span>
       </div>
     </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

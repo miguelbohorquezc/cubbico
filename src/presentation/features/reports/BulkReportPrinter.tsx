@@ -6,7 +6,7 @@
  * uno debajo de otro, configurado para hoja legal y exportable a PDF.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
@@ -25,6 +25,7 @@ import {
   IconLock,
   IconFileTypePdf
 } from '@tabler/icons-react';
+import { usePrintSetup, PrintControls } from '../../components/PrintableReport';
 
 // ============================================
 // Tipos
@@ -72,30 +73,28 @@ interface StudentReportData {
 // ============================================
 
 const printStyles = `
-  @page {
-    size: legal portrait;
-    margin: 1cm;
-  }
-
   @media print {
     body {
       background: white !important;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
-
-    .no-print {
-      display: none !important;
+    .no-print { display: none !important; }
+    .page-break { page-break-after: always; break-after: page; }
+    .student-report { page-break-inside: avoid; }
+    .bulk-preview-backdrop { display: none !important; }
+    .bulk-preview-scroll {
+      position: static !important;
+      overflow: visible !important;
+      display: block !important;
+      padding: 0 !important;
     }
-
-    .page-break {
-      page-break-after: always;
-      break-after: page;
+    .bulk-preview-shell {
+      max-width: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
     }
-
-    .student-report {
-      page-break-inside: avoid;
-    }
+    .bulk-preview-header { display: none !important; }
   }
 `;
 
@@ -333,8 +332,6 @@ const StudentReportCard: React.FC<{
 
 const BulkReportPrinter: React.FC = () => {
   const { periodId, classroomId } = useParams<{ periodId: string; classroomId: string }>();
-  const printRef = useRef<HTMLDivElement>(null);
-
   const { permissions } = usePermissions();
   const classroom = useAppSelector(state =>
     state.teacherData.classrooms.find(c => c.id === classroomId)
@@ -349,7 +346,8 @@ const BulkReportPrinter: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const isSecondary = classroom?.nivel === '2' || classroom?.nivel === 'secundaria';
-  const year = '2025';
+  const year = new Date().getFullYear().toString();
+  const { paperSize, setPaperSize, handlePrint } = usePrintSetup('legal');
 
   // Cargar estudiantes del salón
   useEffect(() => {
@@ -463,10 +461,13 @@ const BulkReportPrinter: React.FC = () => {
     }
   };
 
-  // Imprimir/Exportar PDF
-  const handlePrint = () => {
-    window.print();
-  };
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showPreview) setShowPreview(false);
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [showPreview]);
 
   // Verificar permisos
   if (!permissions.canViewAllReports) {
@@ -510,55 +511,13 @@ const BulkReportPrinter: React.FC = () => {
     }
   };
 
-  // Vista de previsualización/impresión
-  if (showPreview) {
-    return (
-      <>
-        <style>{printStyles}</style>
-
-        {/* Toolbar - no se imprime */}
-        <div className="no-print fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 py-3 z-50 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setShowPreview(false)}
-              className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
-            >
-              <IconArrowLeft size={18} />
-              Volver
-            </button>
-            <span className="text-sm text-gray-600">
-              {reportsData.length} informes generados
-            </span>
-          </div>
-          <button
-            onClick={handlePrint}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg hover:from-blue-600 hover:to-indigo-700"
-          >
-            <IconFileTypePdf size={18} />
-            Imprimir / Exportar PDF
-          </button>
-        </div>
-
-        {/* Contenido imprimible */}
-        <div ref={printRef} className="pt-16 no-print:pt-0 bg-white">
-          {reportsData.map((reportData, index) => (
-            <StudentReportCard
-              key={reportData.student.id}
-              data={reportData}
-              periodId={periodId || ''}
-              director={classroom?.directorGrupo || ''}
-              isLast={index === reportsData.length - 1}
-              isSecondary={isSecondary}
-            />
-          ))}
-        </div>
-      </>
-    );
-  }
-
-  // Vista de selección
+  // Vista principal
   return (
-    <div className="min-h-screen bg-gray-50 p-4 lg:p-8">
+    <>
+      {showPreview && <style>{printStyles}</style>}
+
+      {/* Página de selección */}
+      <div className="min-h-screen bg-gray-50 p-4 lg:p-8 print:hidden">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
@@ -679,6 +638,52 @@ const BulkReportPrinter: React.FC = () => {
         </div>
       </div>
     </div>
+
+      {/* Backdrop del modal */}
+      {showPreview && (
+        <div
+          className="bulk-preview-backdrop fixed inset-0 bg-black/50 z-40"
+          onClick={() => setShowPreview(false)}
+        />
+      )}
+
+      {/* Modal de previsualización */}
+      {showPreview && (
+        <div className="bulk-preview-scroll fixed inset-0 z-50 overflow-y-auto flex items-start justify-center p-4 py-8">
+          <div className="bulk-preview-shell bg-white rounded-2xl shadow-2xl w-full max-w-6xl relative">
+            {/* Header modal */}
+            <div className="bulk-preview-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-5 py-3 rounded-t-2xl flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800">Informes del Período</h3>
+                <p className="text-xs text-gray-500">{classroom?.nombreSalon} · Período {periodId} · {reportsData.length} informes</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <PrintControls paperSize={paperSize} onPaperSizeChange={setPaperSize} onPrint={handlePrint} />
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <IconX size={18} />
+                </button>
+              </div>
+            </div>
+            {/* Contenido imprimible */}
+            <div className="p-4 bg-white">
+              {reportsData.map((reportData, index) => (
+                <StudentReportCard
+                  key={reportData.student.id}
+                  data={reportData}
+                  periodId={periodId || ''}
+                  director={classroom?.directorGrupo || ''}
+                  isLast={index === reportsData.length - 1}
+                  isSecondary={isSecondary}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

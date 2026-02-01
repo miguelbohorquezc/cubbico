@@ -14,13 +14,14 @@ import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
 import { fetchAttendanceByProfessorAndClassroom } from '../../../infrastructure/attendance.service';
 import { fetchStudentsByClassroom } from '../../../infrastructure/student.service';
+import { usePrintSetup, PrintControls } from '../../components/PrintableReport';
+import logo from '../../../assets/logo/logotipo.jpg';
 import type { AttendanceRecord } from '../../../domain/entities/attendance';
 import type { studentInfo } from '../../../domain/entities/studentInfo';
 import {
   IconLoader,
   IconAlertCircle,
   IconArrowBack,
-  IconPrinter,
   IconChevronLeft,
   IconChevronRight,
 } from '@tabler/icons-react';
@@ -80,6 +81,7 @@ export default function AttendanceReport() {
   const horaDecoded = decodeURIComponent(hora);
   const navigate = useNavigate();
   const isSidebarCollapsed = useSidebarCollapsed();
+  const { paperSize, setPaperSize, handlePrint } = usePrintSetup();
 
   const [students, setStudents]       = useState<studentInfo[]>([]);
   const [records, setRecords]         = useState<AttendanceRecord[]>([]);
@@ -89,14 +91,6 @@ export default function AttendanceReport() {
   // Mes actual por defecto
   const now = new Date();
   const [currentMonth, setCurrentMonth] = useState(`${now.getFullYear()}-${pad(now.getMonth() + 1)}`);
-
-  // Inyectar estilos de impresión (hoja legal)
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = '@media print { @page { size: legal; margin: 0.7in 0.8in; } body { background: white !important; } }';
-    document.head.appendChild(style);
-    return () => { document.head.removeChild(style); };
-  }, []);
 
   // ── Cargar datos ───────────────────────────────
   useEffect(() => {
@@ -211,14 +205,14 @@ export default function AttendanceReport() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 overflow-hidden print:h-auto print:overflow-visible print:bg-white">
       <div className="print:hidden"><SidebarV2 /></div>
 
       <div className="flex-1 flex flex-col min-w-0">
         <div className="print:hidden"><HeaderV2 title="Informe de Asistencia" isSidebarCollapsed={isSidebarCollapsed} /></div>
         <div className="print:hidden h-16 flex-shrink-0" />
 
-        <main className="flex-1 overflow-auto min-h-0 p-4 lg:p-5">
+        <main className="flex-1 overflow-auto min-h-0 p-4 lg:p-5 print:overflow-visible">
 
           {/* ── Controls (ocultos en impresión) ── */}
           <div className="print:hidden flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -242,12 +236,7 @@ export default function AttendanceReport() {
               <button onClick={nextMonth} className="p-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
                 <IconChevronRight size={14} className="text-gray-500" />
               </button>
-              <button
-                onClick={() => window.print()}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-all"
-              >
-                <IconPrinter size={13} /> Imprimir
-              </button>
+              <PrintControls paperSize={paperSize} onPaperSizeChange={setPaperSize} onPrint={handlePrint} />
             </div>
           </div>
 
@@ -264,43 +253,64 @@ export default function AttendanceReport() {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none" style={{ maxWidth: '816px', margin: '0 auto' }}>
 
             {/* ── Header institucional ── */}
-            <div className="px-8 pt-7 pb-4 text-center border-b border-gray-100">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Institución Educativa</p>
-              <h1 className="text-[22px] font-black text-gray-900 tracking-tight">Colina Campestre School</h1>
-              <div className="mt-2 mx-auto w-12 h-0.5 bg-indigo-500 rounded-full" />
-              <p className="mt-2.5 text-[13px] font-bold text-indigo-700">Informe Mensual de Asistencia</p>
-              <p className="mt-0.5 text-[11px] text-gray-500">Hora {horaDecoded} · {monthLabelCap}</p>
-            </div>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="h-28">
+                  <td className="w-24 p-2 border border-gray-100 align-middle">
+                    <img src={logo} alt="logotipo" className="w-16 mx-auto" />
+                  </td>
+                  <td className="px-6 py-3 border border-gray-100 text-center" colSpan={2}>
+                    <b className="text-base font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
+                    <p className="text-[10pt] text-gray-600 mt-1 leading-relaxed">
+                      De Sincelejo, Sucre, con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria
+                      por parte de Secretaria de Educación Municipal, según resolución No 2747 del 12 de diciembre de 2023.
+                      Carrera 34 No 38-158, teléfonos: 2771068-3006781806
+                    </p>
+                    <p className="text-[10pt] text-gray-700 font-semibold">NIT: 901731191-3</p>
+                  </td>
+                  <td className="w-28 px-3 py-2 border border-gray-100 text-center text-xs text-gray-600 align-middle">
+                    DANE 370001038852
+                  </td>
+                </tr>
+              </thead>
+            </table>
 
-            {/* ── Banda resumen (indigo) ── */}
-            <div className="bg-indigo-600 px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+            {/* ── Título del reporte ── */}
+            <h2 className="text-center my-4">
+              <span className="text-lg font-bold text-gray-800">
+                {`INFORME MENSUAL DE ASISTENCIA - HORA ${horaDecoded} - ${monthLabelCap.toUpperCase()}`}
+              </span>
+            </h2>
+
+            {/* ── Banda resumen ── */}
+            <div className="bg-gray-100 print:bg-white px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-6">
                 <div className="text-center">
-                  <p className="text-[9px] font-bold text-indigo-200 uppercase tracking-wide">Días registrados</p>
-                  <p className="text-[20px] font-black text-white">{activeDays}</p>
+                  <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wide">Días registrados</p>
+                  <p className="text-[20px] font-black text-gray-800">{activeDays}</p>
                 </div>
-                <div className="w-px h-8 bg-indigo-400" />
+                <div className="w-px h-8 bg-gray-300" />
                 <div className="text-center">
-                  <p className="text-[9px] font-bold text-indigo-200 uppercase tracking-wide">Asistencia global</p>
-                  <p className="text-[20px] font-black text-white">{globalRate.toFixed(1)}%</p>
+                  <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wide">Asistencia global</p>
+                  <p className="text-[20px] font-black text-gray-800">{globalRate.toFixed(1)}%</p>
                 </div>
-                <div className="w-px h-8 bg-indigo-400" />
+                <div className="w-px h-8 bg-gray-300" />
                 <div className="text-center">
-                  <p className="text-[9px] font-bold text-indigo-200 uppercase tracking-wide">Estudiantes</p>
-                  <p className="text-[20px] font-black text-white">{students.length}</p>
+                  <p className="text-[9px] font-bold text-gray-500 uppercase tracking-wide">Estudiantes</p>
+                  <p className="text-[20px] font-black text-gray-800">{students.length}</p>
                 </div>
               </div>
 
               {/* Barra segmentada P / J / U */}
               <div className="flex-1 min-w-[160px] max-w-[260px]">
-                <div className="flex rounded-full overflow-hidden h-2.5 bg-indigo-800">
+                <div className="flex rounded-full overflow-hidden h-2.5 bg-gray-300">
                   {totalMarks > 0 && <>
                     <div className="bg-emerald-500 h-full" style={{ width: `${(totalP / totalMarks) * 100}%` }} />
                     <div className="bg-amber-400 h-full" style={{ width: `${(totalJ / totalMarks) * 100}%` }} />
                     <div className="bg-red-500 h-full" style={{ width: `${(totalU / totalMarks) * 100}%` }} />
                   </>}
                 </div>
-                <div className="mt-1 flex justify-between text-[9px] font-bold text-indigo-200">
+                <div className="mt-1 flex justify-between text-[9px] font-bold text-gray-500">
                   <span>✓ P {totalP}</span>
                   <span>J {totalJ}</span>
                   <span>✕ U {totalU}</span>
@@ -312,7 +322,7 @@ export default function AttendanceReport() {
             <div className="px-6 py-5">
               <table className="w-full border-collapse text-[11px]">
                 <thead>
-                  <tr className="border-b-2 border-indigo-600">
+                  <tr className="border-b-2 border-gray-300">
                     <th className="text-left pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-8">#</th>
                     <th className="text-left pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide">Estudiante</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">P</th>
@@ -325,7 +335,7 @@ export default function AttendanceReport() {
                 </thead>
                 <tbody>
                   {studentSummaries.map((s, idx) => (
-                    <tr key={s.student.id} className={`border-b border-gray-100 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                    <tr key={s.student.id} className={`border-b border-gray-100 print:bg-white ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                       <td className="py-2 text-gray-400 font-semibold">{idx + 1}</td>
                       <td className="py-2">
                         <div className="font-semibold text-gray-800">{s.student.name} {s.student.lastName}</div>
@@ -348,15 +358,15 @@ export default function AttendanceReport() {
               </table>
 
               {/* Fila totales */}
-              <div className="mt-0 border-t-2 border-indigo-600 bg-indigo-50 rounded-b-lg">
-                <div className="flex items-center px-2 py-2.5 text-[11px] font-bold text-indigo-800">
+              <div className="mt-0 border-t-2 border-gray-300 bg-gray-50 print:bg-white rounded-b-lg">
+                <div className="flex items-center px-2 py-2.5 text-[11px] font-bold text-gray-800">
                   <span className="flex-1">TOTALES</span>
                   <span className="w-8 text-center">{students.length}</span>
                   <span className="w-14 text-center">{totalP}</span>
                   <span className="w-14 text-center">{totalJ}</span>
                   <span className="w-14 text-center">{totalU}</span>
-                  <span className="w-16 text-center text-indigo-700">{totalMarks}</span>
-                  <span className="w-16 text-center text-indigo-700">{globalRate.toFixed(1)}%</span>
+                  <span className="w-16 text-center text-gray-700">{totalMarks}</span>
+                  <span className="w-16 text-center text-gray-700">{globalRate.toFixed(1)}%</span>
                   <span className="w-12" />
                 </div>
               </div>
@@ -375,7 +385,7 @@ export default function AttendanceReport() {
             </div>
 
             {/* ── Footer ── */}
-            <div className="px-8 py-3 bg-gray-50 border-t border-gray-100 text-center">
+            <div className="px-8 py-3 bg-gray-50 print:bg-white border-t border-gray-100 text-center">
               <p className="text-[9px] text-gray-400">
                 Informe generado el {generatedAt} · Hora {horaDecoded} · {monthLabelCap} · Sistema Cubbico
               </p>

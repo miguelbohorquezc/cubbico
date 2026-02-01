@@ -4,11 +4,6 @@
    El resto usa Tailwind CSS
 =========================================== */
 
-@page {
-  size: legal portrait;
-  margin: 0.5cm;
-}
-
 /* Rotación vertical para headers de asignaturas */
 .th-vertical {
   writing-mode: vertical-rl;
@@ -26,9 +21,41 @@
     background-color: #ffffff !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    zoom: 0.85;
+  }
+
+  /* Permitir que la tabla fluya sin recorte en impresión */
+  .class-averages-report .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  /* Remover table-fixed en impresión para que las columnas se adapten al ancho del papel */
+  .class-averages-report table {
+    table-layout: auto !important;
+  }
+
+  /* Resumen y leyenda no se cortan entre páginas */
+  .class-averages-report .resumen-salon {
+    page-break-inside: avoid;
   }
 
   .no-print {
     display: none !important;
   }
+
+  /* Modal preview - estilos de impresión */
+  .preview-landing { display: none !important; }
+  .preview-modal-backdrop { display: none !important; }
+  .preview-modal-scroll {
+    position: static !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
+  }
+  .preview-modal-shell {
+    max-width: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .preview-modal-header { display: none !important; }
 }

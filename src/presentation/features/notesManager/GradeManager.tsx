@@ -171,7 +171,7 @@ const GradeManager: React.FC = () => {
                     <td className="px-1 py-4 text-center">
                       {permissions.canViewAllReports ? (
                         <Link
-                          to={`/private/dashboard/${PrivateRoutes.REPORT}/${classroom?.nivel}/${periodId}/${classroom?.directorGrupo}/${student.id}/2025`}
+                          to={`/private/dashboard/${PrivateRoutes.REPORT}/${classroom?.nivel}/${periodId}/${classroom?.directorGrupo}/${student.id}/${anioActual}`}
                           className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Ver informe de período"
                         >
@@ -191,7 +191,7 @@ const GradeManager: React.FC = () => {
                     <td className="px-1 py-4 text-center">
                       {permissions.canViewAllReports ? (
                         <Link
-                          to={`/private/dashboard/${PrivateRoutes.FINALREPORT}/${student.id}/2025`}
+                          to={`/private/dashboard/${PrivateRoutes.FINALREPORT}/${student.id}/${anioActual}`}
                           className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                           title="Ver informe final"
                         >

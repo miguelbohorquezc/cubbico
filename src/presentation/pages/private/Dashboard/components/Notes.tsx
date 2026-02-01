@@ -48,6 +48,7 @@ function Notes() {
   const { classroomId, periodId, areaId } = useParams();
   const navigate = useNavigate();
   const { permissions } = usePermissions();
+  const anioActual = new Date().getFullYear().toString();
 
   const classroom = useAppSelector(state =>
     state.teacherData.classrooms.find(c => c.id === classroomId)
@@ -112,7 +113,7 @@ function Notes() {
               </button>
 
               <Link
-                to={`/private/dashboard/${PrivateRoutes.REPORT}/${classroom?.id}/${periodId}/${classroom?.nivel}/2025`}
+                to={`/private/dashboard/${PrivateRoutes.REPORT}/${classroom?.id}/${periodId}/${classroom?.nivel}/${anioActual}`}
                 className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 hover:border-emerald-300 transition-all duration-200"
                 title={`Ver informe general periodo ${periodId}`}
               >
