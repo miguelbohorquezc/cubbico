@@ -22,6 +22,7 @@ import FinalReport from "./components/FinalReport"
 import PromotionManager from "../../../features/students/PromotionManager"
 import BulkReportPrinter from "../../../features/reports/BulkReportPrinter"
 import ScheduleEditor from "../../../features/schedule/ScheduleEditor"
+import TimeBlockManager from "../../../features/schedule/TimeBlockManager"
 import AttendanceList from "../../../features/attendance/AttendanceList"
 import AttendanceReport from "../../../features/attendance/AttendanceReport"
 import AttendanceOverview from "../../../features/attendance/AttendanceOverview"
@@ -55,6 +56,8 @@ function Dashboard() {
         <Route path={PrivateRoutes.PROMOTIONS} element={<PromotionManager />} />
         {/* Horario docente */}
         <Route path={PrivateRoutes.HORARIO} element={<ScheduleEditor />} />
+        {/* Configuración de bloques horarios */}
+        <Route path={PrivateRoutes.TIMEBLOCKS} element={<TimeBlockManager />} />
         {/* Panorámica de informes de asistencia */}
         <Route path={`${PrivateRoutes.ASISTENCIA}/overview`} element={<AttendanceOverview />} />
         {/* Impresión masiva de informes */}

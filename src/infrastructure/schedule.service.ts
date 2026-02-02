@@ -79,3 +79,26 @@ export const fetchScheduleByProfessor = async (
   const schedule = await fetchSchedule(year);
   return schedule.slots.filter((slot) => slot.profesorId === professorId);
 };
+
+// ============================================
+// Utilidades para bloques horarios
+// ============================================
+
+/**
+ * Extrae las horas únicas de un array de slots, ordenadas.
+ * Útil para generar la lista de horas dinámicamente desde los datos reales.
+ * @param slots - Array de slots de horario
+ * @returns Array de strings hora únicos, ordenados
+ */
+export const extractUniqueTimeSlots = (slots: ScheduleSlot[]): string[] => {
+  const uniqueHoras = new Set<string>();
+  slots.forEach(slot => uniqueHoras.add(slot.hora));
+  return Array.from(uniqueHoras).sort((a, b) => {
+    // Ordenar por hora numérica
+    const [hoursA, minutesA] = a.split(':').map(Number);
+    const [hoursB, minutesB] = b.split(':').map(Number);
+    const minutesFromMidnightA = hoursA * 60 + minutesA;
+    const minutesFromMidnightB = hoursB * 60 + minutesB;
+    return minutesFromMidnightA - minutesFromMidnightB;
+  });
+};

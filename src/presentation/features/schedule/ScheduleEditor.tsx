@@ -14,9 +14,12 @@ import { HeaderV2 } from '../../components/headerV2';
 import { fetchDocentes } from '../../../infrastructure/user.service';
 import { fetchClassrooms } from '../../../infrastructure/classRoom.service';
 import { getAreas } from '../../../infrastructure/user.service';
-import { fetchSchedule, saveSchedule } from '../../../infrastructure/schedule.service';
+import { fetchSchedule, saveSchedule, extractUniqueTimeSlots } from '../../../infrastructure/schedule.service';
 import type { ScheduleSlot } from '../../../domain/entities/schedule';
 import { detectSlotConflict, TIME_SLOTS, DAYS_OF_WEEK } from '../../../domain/entities/schedule';
+import { fetchTimeBlockConfig } from '../../../infrastructure/timeBlock.service';
+import type { TimeBlockConfiguration } from '../../../domain/entities/timeBlock';
+import { blockToHoraString, getBlockEndTime } from '../../../domain/entities/timeBlock';
 import type { DocenteOption } from '../../../shared/types/classRoomTypes';
 import type { ClassRoom } from '../../../domain/entities/classRoom';
 import type { Area } from '../../../domain/entities/area';
@@ -32,6 +35,7 @@ import {
   IconLoader,
   IconPrinter,
   IconFileAnalytics,
+  IconClock,
 } from '@tabler/icons-react';
 
 // ============================================
@@ -105,6 +109,8 @@ export default function ScheduleEditor() {
   const [isLoading, setIsLoading]             = useState(true);
   const [saveStatus, setSaveStatus]           = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [conflict, setConflict]               = useState<string | null>(null);
+  const [timeBlockConfig, setTimeBlockConfig] = useState<TimeBlockConfiguration | null>(null);
+  const [useCustomBlocks, setUseCustomBlocks] = useState(false);
 
   const dragAreaRef   = useRef<Area | null>(null);
   const saveTimeout   = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -116,17 +122,23 @@ export default function ScheduleEditor() {
     async function load() {
       setIsLoading(true);
       try {
-        const [profs, rooms, areasData, schedule] = await Promise.all([
+        const [profs, rooms, areasData, schedule, blockConfig] = await Promise.all([
           fetchDocentes(),
           fetchClassrooms(),
           getAreas(),
           fetchSchedule(year),
+          fetchTimeBlockConfig(year),
         ]);
         if (cancelled) return;
         setProfessors(profs);
         setClassrooms(rooms);
         setAreas(areasData);
         setSlots(schedule.slots);
+        setTimeBlockConfig(blockConfig);
+        // Detectar si hay bloques personalizados (si difieren de TIME_SLOTS)
+        const hasCustom = blockConfig.blocks.length > 0 &&
+          blockConfig.blocks.some(b => !TIME_SLOTS.includes(blockToHoraString(b)));
+        setUseCustomBlocks(hasCustom);
       } catch {
         if (!cancelled) setConflict('Error al cargar datos.');
       } finally {
@@ -256,6 +268,34 @@ export default function ScheduleEditor() {
     return '';
   })();
 
+  // ── Bloques horarios activos ───────────────────
+  // Si hay bloques personalizados, usar esos. Si no, usar TIME_SLOTS legacy.
+  // IMPORTANTE: Incluir tanto bloques configurados COMO horas con asignaciones existentes
+  // para no ocultar clases ya asignadas
+  const activeTimeSlots = (() => {
+    const uniqueHoras = new Set<string>();
+
+    if (useCustomBlocks && timeBlockConfig) {
+      // Agregar horas de bloques personalizados
+      timeBlockConfig.blocks.forEach(block => {
+        uniqueHoras.add(blockToHoraString(block));
+      });
+    } else {
+      // Agregar TIME_SLOTS legacy
+      TIME_SLOTS.forEach(hora => uniqueHoras.add(hora));
+    }
+
+    // SIEMPRE agregar horas de slots existentes para no ocultar asignaciones
+    slots.forEach(slot => uniqueHoras.add(slot.hora));
+
+    // Ordenar por hora
+    return Array.from(uniqueHoras).sort((a, b) => {
+      const [hA, mA] = a.split(':').map(Number);
+      const [hB, mB] = b.split(':').map(Number);
+      return (hA * 60 + mA) - (hB * 60 + mB);
+    });
+  })();
+
   // ══════════════════════════════════════════════
   // RENDER
   // ══════════════════════════════════════════════
@@ -321,6 +361,15 @@ export default function ScheduleEditor() {
                   <option key={`r:${r.id}`} value={`room:${r.id}`}>Salón: {r.nombreSalon}</option>
                 ))}
               </select>
+
+              {/* Configurar bloques */}
+              <button
+                onClick={() => navigate(`/private/dashboard/${PrivateRoutes.TIMEBLOCKS}`)}
+                className="inline-flex items-center gap-1.5 h-10 px-4 text-sm font-medium bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-all"
+              >
+                <IconClock size={16} />
+                <span>Configurar Bloques</span>
+              </button>
 
               {/* Guardar */}
               <button
@@ -470,10 +519,11 @@ export default function ScheduleEditor() {
                     </tr>
                   </thead>
                   <tbody>
-                    {TIME_SLOTS.map((hora) => (
+                    {activeTimeSlots.map((hora) => {
+                      return (
                       <tr key={hora}>
                         <td className="p-1 text-center font-bold text-gray-500 bg-gray-50 border-r border-gray-200 border-b border-gray-100 text-[10px]">
-                          {hora}
+                          <div>{hora}</div>
                         </td>
                         {DAYS_OF_WEEK.map((_, dia) => {
                           const cellSlots  = getSlotsForCell(dia, hora);
@@ -490,9 +540,9 @@ export default function ScheduleEditor() {
                               onDragOver={onDragOver}
                               onDrop={(e) => onDrop(e, dia, hora)}
                               className={`border border-gray-100 p-0.5 transition-colors ${cellBg}`}
-                              style={{ minHeight: '48px', verticalAlign: 'top' }}
+                              style={{ minHeight: '72px', verticalAlign: 'top' }}
                             >
-                              <div className="flex flex-col gap-0.5 min-h-[44px]">
+                              <div className="flex flex-col gap-0.5 min-h-[68px]">
                                 {cellSlots.map(({ slot, globalIndex }) => (
                                   <div
                                     key={globalIndex}
@@ -528,7 +578,8 @@ export default function ScheduleEditor() {
                           );
                         })}
                       </tr>
-                    ))}
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

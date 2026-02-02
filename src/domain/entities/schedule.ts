@@ -87,3 +87,16 @@ export function detectSlotConflict(
   }
   return null;
 }
+
+// ============================================
+// Extensión V2: Soporte para bloques horarios personalizables
+// ============================================
+
+/**
+ * Versión extendida del documento de horario con soporte para bloques personalizables.
+ * Compatible con ScheduleDocument legacy.
+ */
+export interface ScheduleDocumentV2 extends ScheduleDocument {
+  timeBlockConfigId?: string;  // Referencia a la configuración de bloques
+  version?: 'v1' | 'v2';       // Versión del formato (v1 = legacy, v2 = bloques configurables)
+}

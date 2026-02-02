@@ -9,9 +9,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppSelector } from '../../../app/store/store';
-import { fetchScheduleByProfessor, fetchSchedule } from '../../../infrastructure/schedule.service';
+import { fetchScheduleByProfessor, fetchSchedule, extractUniqueTimeSlots } from '../../../infrastructure/schedule.service';
 import type { ScheduleSlot } from '../../../domain/entities/schedule';
-import { TIME_SLOTS } from '../../../domain/entities/schedule';
 import { PrivateRoutes } from '../../../app/routes/routes';
 import { IconCalendar, IconLoader, IconChevronRight } from '@tabler/icons-react';
 
@@ -108,10 +107,22 @@ export default function TeacherCalendar() {
       .finally(() => setIsLoading(false));
   }, [user?.uid, user?.role]);
 
-  // ── Filas activas (solo slots que tienen clase esta semana) ──
-  const activeTimeSlots = TIME_SLOTS.filter((hora) =>
-    week.some((day) => slots.some((s) => s.dia === day.dia && s.hora === hora))
-  );
+  // ── Filas activas (extraer horas únicas de los slots reales) ──
+  const activeTimeSlots = (() => {
+    // Extraer horas únicas de slots que tienen clase esta semana
+    const uniqueHoras = new Set<string>();
+    week.forEach((day) => {
+      slots
+        .filter((s) => s.dia === day.dia)
+        .forEach((s) => uniqueHoras.add(s.hora));
+    });
+    // Ordenar por hora
+    return Array.from(uniqueHoras).sort((a, b) => {
+      const [hA, mA] = a.split(':').map(Number);
+      const [hB, mB] = b.split(':').map(Number);
+      return (hA * 60 + mA) - (hB * 60 + mB);
+    });
+  })();
 
   // ── Navegar a asistencia ───────────────────────
   function goToAttendance(slot: ScheduleSlot, isoDate: string) {

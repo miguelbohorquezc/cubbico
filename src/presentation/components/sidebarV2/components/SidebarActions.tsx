@@ -180,13 +180,15 @@ export const SidebarActions: React.FC<SidebarActionsProps> = ({
           />
         )}
 
-        {/* Settings */}
-        <ActionButton
-          icon={<SettingsIcon size={22} />}
-          label="Configuración"
-          onClick={handleSettings}
-          variant="default"
-        />
+        {/* Settings - Solo Coordinador */}
+        {isCoordinador && (
+          <ActionButton
+            icon={<SettingsIcon size={22} />}
+            label="Configuración"
+            onClick={handleSettings}
+            variant="default"
+          />
+        )}
 
         {/* Logout */}
         <ActionButton

@@ -131,6 +131,12 @@ export const navItems: NavItem[] = [
         description: 'Construir horario semanal',
       },
       {
+        id: 'horario-bloques',
+        label: 'Configurar Bloques',
+        path: buildPath(PrivateRoutes.TIMEBLOCKS),
+        description: 'Configurar bloques horarios',
+      },
+      {
         id: 'horario-asistencias',
         label: 'Informes de Asistencia',
         path: buildPath(`${PrivateRoutes.ASISTENCIA}/overview`),
@@ -178,7 +184,7 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.ACADEMY),
     icon: EvaluationIcon,
     description: 'Gestión de evaluaciones',
-    allowedRoles: ['Docente', 'Coordinador'],
+    allowedRoles: ['Coordinador'],
   },
   {
     id: 'historial',
@@ -186,7 +192,7 @@ export const navItems: NavItem[] = [
     path: buildPath('academic-history'),
     icon: BookIcon,
     description: 'Historial académico de estudiantes',
-    allowedRoles: ['Docente', 'Coordinador'],
+    allowedRoles: ['Coordinador'],
   },
   {
     id: 'usuarios',
