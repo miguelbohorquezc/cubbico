@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { PrivateRoutes } from '../../../app/routes/routes';
 import { useAppSelector } from '../../../app/store/store';
 import InputField from './InputField';
+import Portal from '../../components/common/Portal';
 import { IconFileDescription, IconLoader2, IconAlertCircle, IconUsersGroup, IconCheck, IconX, IconLock } from '@tabler/icons-react';
 import { usePermissions } from '../../hooks/usePermissions';
 
@@ -241,8 +242,9 @@ const GradeManager: React.FC = () => {
 
       {/* Modal de confirmación */}
       {showConfirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-fade-in">
+        <Portal>
+          <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-fade-in">
             {/* Header */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
@@ -337,6 +339,7 @@ const GradeManager: React.FC = () => {
             </div>
           </div>
         </div>
+        </Portal>
       )}
     </div>
   );

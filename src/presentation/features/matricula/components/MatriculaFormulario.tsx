@@ -3,6 +3,7 @@ import { useMatriculaForm } from "../hooks/useMatriculaForm";
 import type { GradoAspirado, Matricula, TipoIdentificacion } from "../types/matricula";
 import "../styles/matricula.css";
 import { findApplicantByNameInsensitive, findStudentById } from "../services/prefill.service";
+import Modal from "../../../components/modal/Modal";
 
 type Props = { isEnabled?: boolean; onGuardado?: (id:string)=>void; };
 
@@ -26,9 +27,11 @@ function mapTipoFromStudent(docType: string, fallback: TipoIdentificacion): Tipo
 }
 
 export default function MatriculaFormulario({ isEnabled=true, onGuardado }:Props){
-  const { form, setCampo, errores, enviando, enviar, paso, siguiente, anterior, setPaso, reiniciarParaOtro } = useMatriculaForm();
+  const { form, setCampo, errores, enviando, enviar, validarDuplicado, paso, siguiente, anterior, setPaso, reiniciarParaOtro } = useMatriculaForm();
   const [enviado, setEnviado] = useState(false);
   const [folio, setFolio] = useState<string | null>(null);
+  const [modalConfirmAbierto, setModalConfirmAbierto] = useState(false);
+  const [errorDuplicado, setErrorDuplicado] = useState<string | null>(null);
 
   // Paso 0: precarga
   const [prefDone, setPrefDone] = useState(false);
@@ -406,28 +409,12 @@ export default function MatriculaFormulario({ isEnabled=true, onGuardado }:Props
                 <button className="btn" onClick={()=>setPaso(1)}>Editar</button>
                 <button
                   className="btn btn--primary"
-                  disabled={enviando}
-                  onClick={async ()=>{
-                    const r = await enviar();
-
-                    if (!r.ok) {
-                      if (!form.aceptaTerminos) {
-                        setPaso(4);
-                        setTimeout(()=>{
-                          document.getElementById('aceptaTerminos')?.scrollIntoView({behavior:'smooth', block:'center'});
-                          (document.getElementById('aceptaTerminos') as HTMLInputElement | null)?.focus?.();
-                        }, 0);
-                      }
-                      showAlert('error','Revisa los campos: faltan requisitos para enviar.');
-                      return;
-                    }
-
-                    setFolio(r.id!);
-                    setEnviado(true);
-                    onGuardado?.(r.id!);
+                  onClick={()=>{
+                    setErrorDuplicado(null);
+                    setModalConfirmAbierto(true);
                   }}
                 >
-                  {enviando ? 'Enviando…' : 'Confirmar y enviar'}
+                  Confirmar y enviar
                 </button>
               </div>
             </fieldset>
@@ -435,6 +422,45 @@ export default function MatriculaFormulario({ isEnabled=true, onGuardado }:Props
 
         </div>
       </div>
+
+      {/* Modal de confirmación */}
+      <ConfirmacionMatriculaModal
+        open={modalConfirmAbierto}
+        onClose={() => setModalConfirmAbierto(false)}
+        data={form}
+        enviando={enviando}
+        errorDuplicado={errorDuplicado}
+        onConfirmar={async () => {
+          // Primero validar duplicado
+          const validacion = await validarDuplicado();
+          if (!validacion.ok) {
+            setErrorDuplicado(validacion.msg || "Error de validación");
+            return;
+          }
+
+          // Si pasa la validación, enviar
+          const r = await enviar();
+
+          if (!r.ok) {
+            if (!form.aceptaTerminos) {
+              setModalConfirmAbierto(false);
+              setPaso(4);
+              setTimeout(() => {
+                document.getElementById('aceptaTerminos')?.scrollIntoView({behavior:'smooth', block:'center'});
+                (document.getElementById('aceptaTerminos') as HTMLInputElement | null)?.focus?.();
+              }, 0);
+            }
+            showAlert('error','Revisa los campos: faltan requisitos para enviar.');
+            return;
+          }
+
+          // Éxito: cerrar modal y mostrar pantalla de éxito
+          setModalConfirmAbierto(false);
+          setFolio(r.id!);
+          setEnviado(true);
+          onGuardado?.(r.id!);
+        }}
+      />
     </div>
   );
 }
@@ -505,6 +531,257 @@ function AcudientePanel({titulo, base, valores, errores, onChange, onPrev, onNex
         <button className="btn btn--primary" type="button" onClick={onNext}>Siguiente</button>
       </div>
     </fieldset>
+  );
+}
+
+/* Helper para filas de detalle en el modal */
+function DetailRow({label, value}: {label: string; value: string | React.ReactNode}) {
+  return (
+    <div className="flex justify-between py-2 border-b border-gray-100">
+      <span className="text-sm font-medium text-gray-600">{label}</span>
+      <span className="text-sm text-gray-900">{value}</span>
+    </div>
+  );
+}
+
+/* Modal de confirmación de matrícula */
+function ConfirmacionMatriculaModal({
+  open,
+  onClose,
+  data,
+  onConfirmar,
+  enviando,
+  errorDuplicado
+}: {
+  open: boolean;
+  onClose: () => void;
+  data: Matricula;
+  onConfirmar: () => void;
+  enviando: boolean;
+  errorDuplicado: string | null;
+}) {
+  const g = (v: GradoAspirado) => {
+    const m = new Map(GRADOS.map(x => [x.v, x.t]));
+    return m.get(v) ?? v;
+  };
+
+  return (
+    <Modal isOpen={open} onClose={onClose} title="Confirmar matrícula" size="2xl">
+      <div className="space-y-6">
+        {/* Alerta de error de duplicado */}
+        {errorDuplicado && (
+          <div
+            className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg"
+            role="alert"
+          >
+            <div className="flex items-start">
+              <svg
+                className="w-5 h-5 text-red-500 mt-0.5 mr-3"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <div>
+                <h3 className="text-sm font-semibold text-red-800">
+                  Error: Documento duplicado
+                </h3>
+                <p className="text-sm text-red-700 mt-1">{errorDuplicado}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Grado con gradiente */}
+        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-4 text-white">
+          <p className="text-sm font-medium opacity-90">Grado solicitado</p>
+          <p className="text-2xl font-bold mt-1">{g(data.grado)}</p>
+        </div>
+
+        {/* Datos del estudiante */}
+        <div className="border border-gray-200 rounded-lg p-4">
+          <h3 className="text-base font-semibold text-gray-900 mb-3">
+            Datos del estudiante
+          </h3>
+          <div className="space-y-1">
+            <DetailRow
+              label="Nombre completo"
+              value={`${data.estudiante.primerApellido} ${data.estudiante.segundoApellido} ${data.estudiante.nombres}`}
+            />
+            <DetailRow
+              label="Identificación"
+              value={`${ID_LABEL[data.estudiante.tipoIdentificacion as TipoIdentificacion]} - ${data.estudiante.numeroIdentificacion}`}
+            />
+            <DetailRow
+              label="Fecha de nacimiento"
+              value={`${data.estudiante.fechaNacimiento} (${data.estudiante.edadAnos} años)`}
+            />
+            <DetailRow
+              label="Lugar de nacimiento"
+              value={data.estudiante.lugarNacimiento}
+            />
+            <DetailRow
+              label="Dirección"
+              value={data.estudiante.direccion}
+            />
+            <DetailRow
+              label="Teléfono"
+              value={data.estudiante.telefono}
+            />
+            <DetailRow
+              label="Colegio anterior"
+              value={data.estudiante.colegioAnterior}
+            />
+          </div>
+        </div>
+
+        {/* Datos de la mamá */}
+        <div className="border border-gray-200 rounded-lg p-4">
+          <h3 className="text-base font-semibold text-gray-900 mb-3">
+            Datos de la mamá
+          </h3>
+          <div className="space-y-1">
+            <DetailRow
+              label="Nombre completo"
+              value={data.madre.nombreCompleto}
+            />
+            <DetailRow
+              label="Fecha de nacimiento"
+              value={data.madre.fechaNacimiento}
+            />
+            <DetailRow
+              label="Empresa"
+              value={data.madre.empresa}
+            />
+            <DetailRow
+              label="Cargo actual"
+              value={data.madre.cargoActual}
+            />
+            <DetailRow
+              label="Ciudad"
+              value={data.madre.ciudad}
+            />
+            <DetailRow
+              label="Email"
+              value={data.madre.email}
+            />
+            <DetailRow
+              label="Celular"
+              value={data.madre.celular}
+            />
+            <DetailRow
+              label="Cédula"
+              value={data.madre.cedula}
+            />
+          </div>
+        </div>
+
+        {/* Datos del papá */}
+        <div className="border border-gray-200 rounded-lg p-4">
+          <h3 className="text-base font-semibold text-gray-900 mb-3">
+            Datos del papá
+          </h3>
+          <div className="space-y-1">
+            <DetailRow
+              label="Nombre completo"
+              value={data.padre.nombreCompleto}
+            />
+            <DetailRow
+              label="Fecha de nacimiento"
+              value={data.padre.fechaNacimiento}
+            />
+            <DetailRow
+              label="Empresa"
+              value={data.padre.empresa}
+            />
+            <DetailRow
+              label="Cargo actual"
+              value={data.padre.cargoActual}
+            />
+            <DetailRow
+              label="Ciudad"
+              value={data.padre.ciudad}
+            />
+            <DetailRow
+              label="Email"
+              value={data.padre.email}
+            />
+            <DetailRow
+              label="Celular"
+              value={data.padre.celular}
+            />
+            <DetailRow
+              label="Cédula"
+              value={data.padre.cedula}
+            />
+          </div>
+        </div>
+
+        {/* Responsable económico */}
+        <div className="border border-gray-200 rounded-lg p-4">
+          <h3 className="text-base font-semibold text-gray-900 mb-3">
+            Responsable económico
+          </h3>
+          <div className="space-y-1">
+            <DetailRow
+              label="Responsable de costos"
+              value={data.responsableCostos}
+            />
+            <DetailRow
+              label="Compromiso de pago (primeros 10 días)"
+              value={data.compromisoPagoPrimerosDiezDias === 'si' ? 'Sí' : 'No'}
+            />
+          </div>
+        </div>
+
+        {/* Botones de acción */}
+        <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={enviando}
+            className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={onConfirmar}
+            disabled={enviando}
+            className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+          >
+            {enviando && (
+              <svg
+                className="animate-spin h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            )}
+            {enviando ? 'Enviando...' : 'Confirmar y enviar'}
+          </button>
+        </div>
+      </div>
+    </Modal>
   );
 }
 

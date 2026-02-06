@@ -1,19 +1,42 @@
-import { useMemo } from "react";
-import { useAppSelector } from "../../../app/store/store";
+import { useMemo, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../../../app/store/store";
 import { useParams } from "react-router-dom";
 import { IconTargetArrow, IconAlertCircle } from "@tabler/icons-react";
+import { loadTeacherAchievements } from "../../../app/store/states/teacher.slice";
 
 const TeacherAchievements = () => {
+  const dispatch = useAppDispatch();
   const { achievements, loading } = useAppSelector((state) => state.teacherData);
+  const user = useAppSelector((state) => state.user);
   const { periodId, classroomId, areaId } = useParams();
 
+  // ✅ Cargar achievements automáticamente cuando cambian los parámetros
+  useEffect(() => {
+    if (user?.uid && classroomId && areaId && periodId) {
+      console.log('🔄 Cargando achievements para:', { classroomId, areaId, periodId });
+      dispatch(loadTeacherAchievements(user.uid));
+    }
+  }, [dispatch, user?.uid, classroomId, areaId, periodId]);
+
   // Filtrar logros por classroomId y areaId
-  const filteredAchievements = useMemo(() =>
-    achievements.filter(achievement =>
+  const filteredAchievements = useMemo(() => {
+    console.log('📊 Filtrando achievements:', {
+      total: achievements.length,
+      buscando: { classroomId, areaId, periodId: Number(periodId) },
+      achievements: achievements.map(a => ({
+        id: a.id,
+        classroomId: a.classroomId,
+        areaId: a.areaId,
+        period: a.period
+      }))
+    });
+
+    return achievements.filter(achievement =>
       achievement.classroomId === classroomId &&
       achievement.areaId === areaId &&
       achievement.period === Number(periodId)
-    ), [achievements, classroomId, areaId, periodId]);
+    );
+  }, [achievements, classroomId, areaId, periodId]);
 
   // Estado de carga
   if (loading) {

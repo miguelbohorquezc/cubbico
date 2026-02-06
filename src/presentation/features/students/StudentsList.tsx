@@ -16,21 +16,9 @@ const StudentList = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
-  const [evaluationFilter, setEvaluationFilter] = useState<EvaluationFilter>('all');
   const navigate = useNavigate();
 
-  // Filtered students based on evaluation mode
-  const filteredStudents = useMemo(() => {
-    if (evaluationFilter === 'all') return students;
-    return students.filter(s => s.caracter?.toLowerCase() === evaluationFilter);
-  }, [students, evaluationFilter]);
 
-  // Stats for filter badges
-  const stats = useMemo(() => ({
-    total: students.length,
-    normal: students.filter(s => s.caracter?.toLowerCase() === 'normal').length,
-    ajustes: students.filter(s => s.caracter?.toLowerCase() === 'ajustes').length,
-  }), [students]);
 
   const handleDelete = async (studentId: string) => {
     if (window.confirm("¿Estás seguro de eliminar este estudiante?")) {
@@ -194,67 +182,13 @@ const StudentList = () => {
 
   return (
     <div className="flex flex-col w-full">
-      {/* Evaluation Mode Filter */}
-      <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 bg-white rounded-xl border border-gray-200 shadow-sm">
-        <span className="text-sm font-medium text-gray-700">
-          Filtrar:
-        </span>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => setEvaluationFilter('all')}
-            className={`
-              px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200
-              ${evaluationFilter === 'all'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }
-            `}
-          >
-            Todos
-            <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${evaluationFilter === 'all' ? 'bg-blue-500' : 'bg-gray-200'}`}>
-              {stats.total}
-            </span>
-          </button>
-          <button
-            onClick={() => setEvaluationFilter('normal')}
-            className={`
-              px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200
-              ${evaluationFilter === 'normal'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-              }
-            `}
-          >
-            Normal
-            <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${evaluationFilter === 'normal' ? 'bg-emerald-500' : 'bg-emerald-100'}`}>
-              {stats.normal}
-            </span>
-          </button>
-          <button
-            onClick={() => setEvaluationFilter('ajustes')}
-            className={`
-              px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200
-              ${evaluationFilter === 'ajustes'
-                ? 'bg-amber-600 text-white shadow-sm'
-                : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
-              }
-            `}
-          >
-            Con Ajustes
-            <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${evaluationFilter === 'ajustes' ? 'bg-amber-500' : 'bg-amber-100'}`}>
-              {stats.ajustes}
-            </span>
-          </button>
-        </div>
-      </div>
-
       <DataTable
-        data={filteredStudents}
+        data={students}
         columns={columns}
         isLoading={loading}
         exportFileName={`estudiantes-db`}
         initialItemsPerPage={10}
-        enableExport={true}
+        enableExport={false}
         enablePagination={true}
         enableSearch={true}
         skeletonCount={10}

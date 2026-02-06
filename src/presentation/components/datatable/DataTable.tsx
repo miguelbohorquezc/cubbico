@@ -94,7 +94,7 @@ function DataTable<T>({
 
   return (
     <div
-      className="relative bg-white rounded-xl animate-fade-in"
+      className="relative bg-white rounded-xl shadow-sm border border-gray-200 animate-fade-in"
       style={{
         width: tableSize.width,
         height: tableSize.height,
@@ -112,12 +112,12 @@ function DataTable<T>({
               className="
                 px-3 py-2
                 text-sm font-medium text-gray-700
-                bg-gray-50 border border-gray-200
+                bg-white border border-gray-300
                 rounded-lg
                 cursor-pointer
                 transition-all duration-200
-                hover:border-gray-300
-                focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400
+                hover:border-gray-400
+                focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400
               "
             >
               {[5, 10, 20, 50].map((size) => (
@@ -146,12 +146,12 @@ function DataTable<T>({
                   w-full sm:w-64
                   pl-10 pr-4 py-2
                   text-sm text-gray-700
-                  bg-gray-50 border border-gray-200
+                  bg-white border border-gray-300
                   rounded-lg
                   transition-all duration-200
                   placeholder:text-gray-400
-                  hover:border-gray-300
-                  focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 focus:bg-white
+                  hover:border-gray-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400
                 "
               />
             </div>
@@ -186,17 +186,17 @@ function DataTable<T>({
       <div className="overflow-x-auto">
         <table className={`w-full ${tableClassName}`}>
           <thead>
-            <tr className="bg-gray-50/80">
+            <tr className="bg-gray-100/60 border-b-2 border-gray-200">
               {columns.map((col) => (
                 <th
                   key={String(col.key)}
                   onClick={() => handleSort(col.key)}
                   className="
                     px-4 py-3
-                    text-left text-xs font-semibold text-gray-600 uppercase tracking-wider
+                    text-left text-xs font-semibold text-gray-700 uppercase tracking-wider
                     cursor-pointer
                     transition-colors duration-200
-                    hover:bg-gray-100
+                    hover:bg-gray-200/60
                     select-none
                   "
                 >
@@ -247,7 +247,7 @@ function DataTable<T>({
                   key={index}
                   className={`
                     transition-colors duration-150
-                    hover:bg-emerald-50/50
+                    hover:bg-gray-50
                     ${rowClassName ? rowClassName(row) : ''}
                   `}
                 >

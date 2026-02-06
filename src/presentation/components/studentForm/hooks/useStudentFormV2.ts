@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../../infrastructure/firebase/firebase';
 import { ClassRoom } from '../../../../domain/entities/classRoom';
 import { fetchClassrooms } from '../../../../infrastructure/classRoom.service';
 import { addStudent, updateStudent } from '../../../../infrastructure/student.service';
@@ -174,8 +176,12 @@ export interface UseStudentFormV2Return {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   /** Handle field blur */
   handleBlur: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  /** Handle form submission */
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  /** Handle form submission - returns true if valid */
+  handleSubmit: (e: React.FormEvent) => Promise<boolean>;
+  /** Validate if document already exists */
+  validateDuplicate: () => Promise<{ok: boolean; msg?: string}>;
+  /** Submit the form (called from modal after validation) */
+  submitForm: () => Promise<void>;
   /** Set a specific field value programmatically */
   setFieldValue: (name: keyof StudentFormData, value: string) => void;
   /** Set evaluation mode specifically */
@@ -369,9 +375,88 @@ export const useStudentFormV2 = ({
     setTouched(INITIAL_TOUCHED_STATE);
   }, [initialData]);
 
-  // Handle form submission
+  // Validate if document already exists
+  const validateDuplicate = useCallback(async (): Promise<{ok: boolean; msg?: string}> => {
+    const numeroDoc = formData.id.trim();
+    if (!numeroDoc) {
+      return { ok: false, msg: "Número de identificación es obligatorio." };
+    }
+
+    try {
+      // Check if a student with this ID already exists in Firestore
+      // The document ID in Firestore is the student's identification number
+      const docRef = doc(db, "student", numeroDoc);
+      const docSnap = await getDoc(docRef);
+
+      console.log('🔍 Validando duplicado para ID:', numeroDoc);
+      console.log('📊 Existe en Firestore:', docSnap.exists());
+
+      if (docSnap.exists()) {
+        const studentData = docSnap.data();
+        console.log('📄 Estudiante encontrado:', studentData);
+        return {
+          ok: false,
+          msg: `Ya existe un estudiante registrado con el número de identificación ${numeroDoc}. Estudiante: ${studentData.name} ${studentData.lastName} - ${studentData.className}`
+        };
+      }
+      return { ok: true };
+    } catch (error) {
+      console.error("❌ Error al validar documento:", error);
+      return {
+        ok: false,
+        msg: "Error al verificar el número de identificación. Intenta nuevamente."
+      };
+    }
+  }, [formData.id]);
+
+  // Submit the form (called from modal after validation)
+  const submitForm = useCallback(async () => {
+    setIsSubmitting(true);
+
+    try {
+      if (mode === 'edit') {
+        await updateStudent(formData.id, {
+          document: formData.document,
+          name: formData.name,
+          lastName: formData.lastName,
+          classRoom: formData.classRoom,
+          className: formData.className,
+          caracter: formData.caracter,
+          classroomId: formData.classroomId,
+        });
+      } else {
+        await addStudent({
+          id: formData.id,
+          document: formData.document,
+          name: formData.name,
+          lastName: formData.lastName,
+          classRoom: formData.classRoom,
+          className: formData.className,
+          caracter: formData.caracter,
+          classroomId: formData.classroomId,
+        });
+      }
+
+      // Reset form only in create mode
+      if (mode === 'create') {
+        resetForm();
+      }
+
+      onSuccess?.();
+    } catch (error) {
+      console.error('Error submitting student form:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      setErrors((prev) => ({ ...prev, general: errorMessage }));
+      onError?.(error instanceof Error ? error : new Error(errorMessage));
+      throw error; // Re-throw to be handled by modal
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [formData, mode, resetForm, onSuccess, onError]);
+
+  // Handle form submission (validates and returns true if valid)
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.FormEvent): Promise<boolean> => {
       e.preventDefault();
 
       // Validate all fields
@@ -390,7 +475,7 @@ export const useStudentFormV2 = ({
 
       if (Object.keys(validationErrors).length > 0) {
         setErrors(validationErrors);
-        return;
+        return false;
       }
 
       // Verify classroom selection
@@ -402,53 +487,18 @@ export const useStudentFormV2 = ({
             className: 'Salón no válido',
             general: 'No se pudo determinar el salón',
           }));
-          return;
+          return false;
         }
         formData.classroomId = selectedClassroom.id;
       }
 
-      setIsSubmitting(true);
+      // Clear any previous errors
+      setErrors({});
 
-      try {
-        if (mode === 'edit') {
-          await updateStudent(formData.id, {
-            document: formData.document,
-            name: formData.name,
-            lastName: formData.lastName,
-            classRoom: formData.classRoom,
-            className: formData.className,
-            caracter: formData.caracter,
-            classroomId: formData.classroomId,
-          });
-        } else {
-          await addStudent({
-            id: formData.id,
-            document: formData.document,
-            name: formData.name,
-            lastName: formData.lastName,
-            classRoom: formData.classRoom,
-            className: formData.className,
-            caracter: formData.caracter,
-            classroomId: formData.classroomId,
-          });
-        }
-
-        // Reset form only in create mode
-        if (mode === 'create') {
-          resetForm();
-        }
-
-        onSuccess?.();
-      } catch (error) {
-        console.error('Error submitting student form:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-        setErrors((prev) => ({ ...prev, general: errorMessage }));
-        onError?.(error instanceof Error ? error : new Error(errorMessage));
-      } finally {
-        setIsSubmitting(false);
-      }
+      // Form is valid
+      return true;
     },
-    [formData, classrooms, mode, resetForm, onSuccess, onError]
+    [formData, classrooms]
   );
 
   return {
@@ -464,6 +514,8 @@ export const useStudentFormV2 = ({
     handleChange,
     handleBlur,
     handleSubmit,
+    validateDuplicate,
+    submitForm,
     setFieldValue,
     setEvaluationMode,
     resetForm,

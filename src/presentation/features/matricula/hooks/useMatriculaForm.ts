@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { crearMatricula, generarMatriculaId } from "../services/matricula.service";
+import { checkDocumentExists } from "../../../../infrastructure/student.service";
 import type {
   DatosAcudiente,
   DatosEstudiante,
@@ -121,6 +122,30 @@ export function useMatriculaForm() {
     return e;
   }
 
+  async function validarDuplicado(): Promise<{ok: boolean; msg?: string}> {
+    const numeroDoc = form.estudiante.numeroIdentificacion.trim();
+    if (!numeroDoc) {
+      return { ok: false, msg: "Número de identificación es obligatorio." };
+    }
+
+    try {
+      const existe = await checkDocumentExists(numeroDoc);
+      if (existe) {
+        return {
+          ok: false,
+          msg: `Ya existe un estudiante registrado con el documento ${numeroDoc}. No se puede duplicar el registro.`
+        };
+      }
+      return { ok: true };
+    } catch (error) {
+      console.error("Error al validar documento:", error);
+      return {
+        ok: false,
+        msg: "Error al verificar el documento. Intenta nuevamente."
+      };
+    }
+  }
+
   function siguiente() {
     const e = validarPaso(paso);
     if (Object.keys(e).length === 0) setPaso(p => Math.min(5, p+1));
@@ -156,7 +181,7 @@ export function useMatriculaForm() {
     });
   }
 
-  return { form, setCampo, errores, enviando, enviar, paso, siguiente, anterior, setPaso, reiniciarParaOtro };
+  return { form, setCampo, errores, enviando, enviar, validarDuplicado, paso, siguiente, anterior, setPaso, reiniciarParaOtro };
 }
 
 /* Campos obligatorios por paso */

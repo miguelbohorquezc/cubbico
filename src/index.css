@@ -69,15 +69,15 @@ h4{
 } 
 
 .body-container-page {
-  flex: 1; 
-  background: #f4faff;
-  padding: 20px; 
+  flex: 1;
+  background: #f8fafc;
+  padding: 20px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   /* margin-top: 3em; */
   margin-left: 3em;
-  gap: 5px; 
+  gap: 5px;
 }
 
 .classroom-name{
@@ -315,4 +315,156 @@ h4{
 /* Botón de ancho completo */
 .btn-full {
   width: 100%;
+}
+
+/* ========== ANIMACIONES PERSONALIZADAS ========== */
+
+/* Animación para Toast - Slide in desde la derecha */
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animación para fade in */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-in;
+}
+
+/* Animación para slide up */
+@keyframes slide-up {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== MEJORAS DE CONTRASTE VISUAL ========== */
+
+/* Cards con mejor contraste */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+/* Tablas con mejor contraste */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+.table thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.table tbody td {
+  padding: 12px 16px;
+  color: #1f2937;
+  font-size: 0.9375rem;
+}
+
+/* Contenedor de tabla con scroll */
+.table-wrap {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Inputs y selects con mejor contraste */
+input, select, textarea {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #1f2937;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Fieldsets */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.field label.small {
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+/* Texto muted */
+.muted {
+  color: #6b7280;
+}
+
+/* Texto nowrap */
+.nowrap {
+  white-space: nowrap;
 }

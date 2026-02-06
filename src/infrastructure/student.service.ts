@@ -4,6 +4,31 @@ import { studentInfo } from "../domain/entities/studentInfo";
 import {  Student } from "../presentation/components/notes/types";
 import { BatchStudentData } from "../domain/entities/batchStudentData";
 
+/**
+ * Verifica si ya existe un estudiante con el mismo número de documento
+ * @param document - Número de documento a verificar
+ * @returns true si el documento ya existe, false si no existe
+ */
+export const checkDocumentExists = async (document: string): Promise<boolean> => {
+  try {
+    console.log('🔍 Buscando documento:', document);
+    const q = query(
+      collection(db, "student"),
+      where("document", "==", document)
+    );
+    const querySnapshot = await getDocs(q);
+    console.log('📊 Resultados encontrados:', querySnapshot.size);
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
+        console.log('📄 Documento encontrado:', doc.id, doc.data());
+      });
+    }
+    return !querySnapshot.empty;
+  } catch (error) {
+    console.error('❌ Error al verificar documento:', error);
+    throw new Error("Error al verificar el documento");
+  }
+};
 
 export const addStudent = async (student: studentInfo ) =>{
 
@@ -17,8 +42,8 @@ export const addStudent = async (student: studentInfo ) =>{
         caracter: student.caracter,
         classroomId: student.classroomId
     },{merge: true});
-    
-    alert(`El estudiante: ${student.name} ${student.lastName} Ha sido matriculado en el salón ${student.classRoom}.`);
+
+    // Alert removed - now handled by Toast notification in the UI
 }
 
 export const fetchStudentsByClassroom = async (classroomId: string): Promise<Student[]> => {
@@ -155,9 +180,24 @@ export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
   const timestamp = serverTimestamp();
 
   try {
+    // Validar que hay datos para guardar
+    if (!studentsData || studentsData.length === 0) {
+      throw new Error('No hay datos de estudiantes para guardar');
+    }
+
+    // Validar que todos los datos necesarios están presentes
+    studentsData.forEach((studentData, index) => {
+      if (!studentData.studentId || !studentData.year || !studentData.period || !studentData.areaId) {
+        throw new Error(`Datos incompletos en el estudiante ${index + 1}`);
+      }
+      if (!studentData.teacherId) {
+        throw new Error('teacherId es requerido para guardar las calificaciones');
+      }
+    });
+
     studentsData.forEach((studentData) => {
       const studentRef = doc(db, "history", studentData.studentId);
-      
+
       const updateData = {
         years: {
           [studentData.year]: {
@@ -169,7 +209,7 @@ export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
                     metadata: {
                       teacherId: studentData.teacherId,
                       classroomId: studentData.classroomId,
-                      achievementId: studentData.achievementId, // Nuevo campo
+                      achievementId: studentData.achievementId,
                       lastUpdate: timestamp
                     }
                   }
@@ -184,9 +224,12 @@ export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
     });
 
     await batch.commit();
+    console.log(`✅ Calificaciones guardadas exitosamente: ${studentsData.length} estudiantes`);
     return { success: true, count: studentsData.length };
   } catch (error) {
-    throw new Error(`Error al guardar: ${error instanceof Error ? error.message : error}`);
+    console.error('❌ Error en bulkSaveStudents:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido al guardar';
+    throw new Error(`Error al guardar calificaciones: ${errorMessage}`);
   }
 }
 

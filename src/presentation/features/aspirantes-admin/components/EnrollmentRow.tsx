@@ -8,6 +8,7 @@ import {
   revocarMatricula,
   escucharAuditoria,
 } from "../services/matriculasAdmin.service";
+import { checkDocumentExists } from "../../../../infrastructure/student.service";
 import FichaMatriculaPrint from "./print/FichaMatriculaPrint";
 
 /* -------------------- Util fecha local (independiente) -------------------- */
@@ -228,11 +229,28 @@ export function EnrollmentRow({ fila }: { fila: MatriculaRow }) {
     if (matriculando) return;
     setMatriculando(true);
     try {
+      // ✅ Validar que el documento no exista antes de matricular
+      const numeroDoc = fila.estudiante?.numeroIdentificacion;
+      if (numeroDoc) {
+        const documentExists = await checkDocumentExists(numeroDoc);
+        if (documentExists) {
+          setToast({
+            type: "error",
+            message: `Ya existe un estudiante con el documento ${numeroDoc}. No se puede duplicar el registro.`
+          });
+          setMatriculando(false);
+          setConfirmOpen(false);
+          return;
+        }
+      }
+
+      // Continuar con el proceso normal de activación
       await activarMatricula(fila.id);
       setToast({ type: "success", message: "Matrícula activada correctamente." });
       setConfirmOpen(false);
-    } catch {
-      setToast({ type: "error", message: "No se pudo activar la matrícula." });
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : "No se pudo activar la matrícula.";
+      setToast({ type: "error", message: errorMsg });
     } finally {
       setMatriculando(false);
     }
