@@ -10,6 +10,7 @@ import { Area } from "../../domain/entities/area";
 import { ClassRoom } from "../../domain/entities/classRoom";
 import teacherReducer from "./states/teacher.slice";
 import { AchievementData } from "../../domain/entities/achievementData";
+import flexibleScheduleReducer, { FlexibleScheduleState } from "./states/flexibleSchedule.slice";
 
 export interface AppState {
   user: FirebaseUser;
@@ -30,6 +31,7 @@ export interface AppState {
     loading: boolean;
     error: string | null;
   };
+  flexibleSchedule: FlexibleScheduleState;
 }
 
 export const appStore = configureStore({
@@ -38,6 +40,7 @@ export const appStore = configureStore({
     students: studentReducer,
     users: usersReducer,
     teacherData: teacherReducer,
+    flexibleSchedule: flexibleScheduleReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

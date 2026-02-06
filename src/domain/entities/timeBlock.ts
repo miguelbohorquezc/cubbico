@@ -33,8 +33,12 @@ export interface TimeBlockConfiguration {
 
 /**
  * Duraciones válidas para bloques horarios (en minutos)
+ * Extendido para soportar calendario flexible con duraciones desde 10 min hasta 120 min.
+ * Incluye duraciones comunes para preescolar (10, 15, 20 min) y clases extendidas (100, 120 min).
  */
-export const VALID_DURATIONS = [40, 45, 50, 60] as const;
+export const VALID_DURATIONS = [
+  10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 100, 120
+] as const;
 export type ValidDuration = typeof VALID_DURATIONS[number];
 
 // ============================================

@@ -131,12 +131,6 @@ export const navItems: NavItem[] = [
         description: 'Construir horario semanal',
       },
       {
-        id: 'horario-bloques',
-        label: 'Configurar Bloques',
-        path: buildPath(PrivateRoutes.TIMEBLOCKS),
-        description: 'Configurar bloques horarios',
-      },
-      {
         id: 'horario-asistencias',
         label: 'Informes de Asistencia',
         path: buildPath(`${PrivateRoutes.ASISTENCIA}/overview`),

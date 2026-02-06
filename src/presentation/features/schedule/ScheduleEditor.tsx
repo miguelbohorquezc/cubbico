@@ -11,12 +11,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
+import { FlexibleSchedulePanel } from './components/FlexibleSchedulePanel';
+import { FlexibleCalendar } from './FlexibleCalendar';
+import { ActivityInfoModal } from './components/ActivityInfoModal';
 import { fetchDocentes } from '../../../infrastructure/user.service';
 import { fetchClassrooms } from '../../../infrastructure/classRoom.service';
 import { getAreas } from '../../../infrastructure/user.service';
-import { fetchSchedule, saveSchedule, extractUniqueTimeSlots } from '../../../infrastructure/schedule.service';
-import type { ScheduleSlot } from '../../../domain/entities/schedule';
-import { detectSlotConflict, TIME_SLOTS, DAYS_OF_WEEK } from '../../../domain/entities/schedule';
+import type { FlexibleScheduleActivity } from '../../../domain/entities/schedule';
+import { TIME_SLOTS, DAYS_OF_WEEK, minutesToTime, timeToMinutes, detectActivityOverlap } from '../../../domain/entities/schedule';
 import { fetchTimeBlockConfig } from '../../../infrastructure/timeBlock.service';
 import type { TimeBlockConfiguration } from '../../../domain/entities/timeBlock';
 import { blockToHoraString, getBlockEndTime } from '../../../domain/entities/timeBlock';
@@ -24,6 +26,14 @@ import type { DocenteOption } from '../../../shared/types/classRoomTypes';
 import type { ClassRoom } from '../../../domain/entities/classRoom';
 import type { Area } from '../../../domain/entities/area';
 import { PrivateRoutes } from '../../../app/routes/routes';
+import { useAppDispatch, useAppSelector } from '../../../app/store/store';
+import {
+  selectAllActivities,
+  selectSaving,
+  loadFlexibleSchedule,
+  saveActivity,
+  removeActivity,
+} from '../../../app/store/states/flexibleSchedule.slice';
 import {
   IconCalendar,
   IconDeviceFloppy,
@@ -97,9 +107,13 @@ export default function ScheduleEditor() {
   const navigate = useNavigate();
   const currentYear = String(new Date().getFullYear());
 
-  // ── Estado ─────────────────────────────────────
+  // ── Redux ──────────────────────────────────────
+  const dispatch = useAppDispatch();
+  const activities = useAppSelector(selectAllActivities);
+  const isSaving = useAppSelector(selectSaving);
+
+  // ── Estado local ───────────────────────────────
   const [year, setYear]                       = useState(currentYear);
-  const [slots, setSlots]                     = useState<ScheduleSlot[]>([]);
   const [professors, setProfessors]           = useState<DocenteOption[]>([]);
   const [classrooms, setClassrooms]           = useState<ClassRoom[]>([]);
   const [areas, setAreas]                     = useState<Area[]>([]);
@@ -111,9 +125,10 @@ export default function ScheduleEditor() {
   const [conflict, setConflict]               = useState<string | null>(null);
   const [timeBlockConfig, setTimeBlockConfig] = useState<TimeBlockConfiguration | null>(null);
   const [useCustomBlocks, setUseCustomBlocks] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<FlexibleScheduleActivity | null>(null);
+  const [clickPosition, setClickPosition] = useState<{ x: number; y: number } | undefined>(undefined);
 
   const dragAreaRef   = useRef<Area | null>(null);
-  const saveTimeout   = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── Carga de datos ─────────────────────────────
   useEffect(() => {
@@ -122,19 +137,24 @@ export default function ScheduleEditor() {
     async function load() {
       setIsLoading(true);
       try {
-        const [profs, rooms, areasData, schedule, blockConfig] = await Promise.all([
+        // Cargar horario flexible desde Redux
+        await dispatch(loadFlexibleSchedule(year)).unwrap();
+
+        // Cargar otros datos en paralelo
+        const [profs, rooms, areasData, blockConfig] = await Promise.all([
           fetchDocentes(),
           fetchClassrooms(),
           getAreas(),
-          fetchSchedule(year),
           fetchTimeBlockConfig(year),
         ]);
+
         if (cancelled) return;
+
         setProfessors(profs);
         setClassrooms(rooms);
         setAreas(areasData);
-        setSlots(schedule.slots);
         setTimeBlockConfig(blockConfig);
+
         // Detectar si hay bloques personalizados (si difieren de TIME_SLOTS)
         const hasCustom = blockConfig.blocks.length > 0 &&
           blockConfig.blocks.some(b => !TIME_SLOTS.includes(blockToHoraString(b)));
@@ -148,7 +168,7 @@ export default function ScheduleEditor() {
 
     load();
     return () => { cancelled = true; };
-  }, [year]);
+  }, [year, dispatch]);
 
   // ── Estilos de impresión ───────────────────────
   useEffect(() => {
@@ -161,45 +181,61 @@ export default function ScheduleEditor() {
     return () => { const el = document.getElementById('schedule-print-style'); if (el) el.remove(); };
   }, [filterView]);
 
-  // ── Auto-save con debounce ─────────────────────
-  function triggerSave(newSlots: ScheduleSlot[]) {
-    if (saveTimeout.current) clearTimeout(saveTimeout.current);
-    setSaveStatus('saving');
-    saveTimeout.current = setTimeout(async () => {
-      try {
-        await saveSchedule(year, newSlots);
-        setSaveStatus('saved');
-      } catch {
-        setSaveStatus('error');
-      }
-    }, 900);
-  }
+  // ── Sincronizar estado de guardado con Redux ───
+  useEffect(() => {
+    if (isSaving) {
+      setSaveStatus('saving');
+    } else if (saveStatus === 'saving') {
+      // Solo cambiar a 'saved' si estábamos en 'saving'
+      setSaveStatus('saved');
+      // Auto-limpiar después de 2 segundos
+      const timer = setTimeout(() => setSaveStatus('idle'), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSaving, saveStatus]);
 
   // ── Drag & Drop ────────────────────────────────
   function onDragStart(e: React.DragEvent<HTMLSpanElement>, area: Area) {
+    console.log('🚀 Iniciando drag desde panel:', area.asignatura);
     dragAreaRef.current = area;
     e.dataTransfer.effectAllowed = 'copy';
     e.dataTransfer.setData('text/plain', area.id);
+    console.log('✅ dragAreaRef.current establecido:', !!dragAreaRef.current);
   }
 
-  function onDragOver(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
-  }
+  // R5: Handler para crear actividad desde drag & drop (con Redux)
+  async function handleCreateActivity(dayOfWeek: number, startMinutes: number) {
+    console.log('📝 handleCreateActivity llamado:', { dayOfWeek, startMinutes, hasArea: !!dragAreaRef.current, selectedProfId, selectedRoomId });
 
-  function onDrop(e: React.DragEvent<HTMLDivElement>, dia: number, hora: string) {
-    e.preventDefault();
     const area = dragAreaRef.current;
-    if (!area || !selectedProfId || !selectedRoomId) return;
+    if (!area || !selectedProfId || !selectedRoomId) {
+      let errorMsg = '⚠️ ';
+      if (!area) errorMsg += 'Primero arrastra una asignatura desde el panel lateral. ';
+      if (!selectedProfId) errorMsg += 'Selecciona un profesor. ';
+      if (!selectedRoomId) errorMsg += 'Selecciona un salón.';
 
-    const msg = detectSlotConflict(slots, {
-      profesorId: selectedProfId,
-      salonId: selectedRoomId,
-      dia,
-      hora,
+      console.warn('❌ Validación falló:', { area: !!area, selectedProfId, selectedRoomId });
+      setConflict(errorMsg);
+      setTimeout(() => setConflict(null), 5000);
+      return;
+    }
+
+    console.log('✅ Validación pasada, creando actividad...');
+
+    const startTime = minutesToTime(startMinutes);
+    const durationMinutes = 30; // Duración por defecto más compacta
+
+    // Validar conflictos usando el nuevo sistema flexible
+    const conflictMsg = detectActivityOverlap(activities, {
+      teacherId: selectedProfId,
+      classroomId: selectedRoomId,
+      dayOfWeek,
+      startTime,
+      durationMinutes,
     });
-    if (msg) {
-      setConflict(msg);
+
+    if (conflictMsg) {
+      setConflict(conflictMsg);
       setTimeout(() => setConflict(null), 3000);
       return;
     }
@@ -207,52 +243,47 @@ export default function ScheduleEditor() {
     const prof = professors.find((p) => p.id === selectedProfId);
     const room = classrooms.find((r) => r.id === selectedRoomId);
 
-    const newSlot: ScheduleSlot = {
-      profesorId: selectedProfId,
-      profesorNombre: prof?.displayName || prof?.email || '',
-      salonId: selectedRoomId,
-      salonNombre: room?.nombreSalon || '',
-      areaId: area.id,
-      areaNombre: area.asignatura,
-      dia,
-      hora,
+    // Crear nueva actividad flexible
+    const newActivity: FlexibleScheduleActivity = {
+      id: `activity-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      dayOfWeek,
+      startTime,
+      durationMinutes,
+      endTime: minutesToTime(startMinutes + durationMinutes),
+      courseId: area.id,
+      courseName: area.asignatura,
+      teacherId: selectedProfId,
+      teacherName: prof?.displayName || prof?.email || '',
+      classroomId: selectedRoomId,
+      classroomName: room?.nombreSalon || '',
     };
 
-    const updated = [...slots, newSlot];
-    setSlots(updated);
-    triggerSave(updated);
+    // Guardar con Redux
+    try {
+      await dispatch(saveActivity({ year, activity: newActivity })).unwrap();
+      // Éxito - el estado se actualiza automáticamente via Redux
+    } catch (error) {
+      setSaveStatus('error');
+      setConflict('Error al guardar la actividad.');
+      setTimeout(() => setConflict(null), 3000);
+    }
+
+    // Limpiar selección visual
+    dragAreaRef.current = null;
   }
 
-  function removeSlot(index: number) {
-    const updated = slots.filter((_, i) => i !== index);
-    setSlots(updated);
-    triggerSave(updated);
+  // R5: Handler para eliminar actividad (con Redux)
+  async function handleRemoveActivity(activityId: string) {
+    try {
+      await dispatch(removeActivity({ year, activityId })).unwrap();
+      // Éxito - el estado se actualiza automáticamente via Redux
+    } catch (error) {
+      setSaveStatus('error');
+      setConflict('Error al eliminar la actividad.');
+      setTimeout(() => setConflict(null), 3000);
+    }
   }
 
-  // ── Cálculos de celda ──────────────────────────
-  function cellIsAvailable(dia: number, hora: string): boolean {
-    if (!selectedProfId || !selectedRoomId) return false;
-    return detectSlotConflict(slots, { profesorId: selectedProfId, salonId: selectedRoomId, dia, hora }) === null;
-  }
-
-  function cellHasProf(dia: number, hora: string): boolean {
-    if (!selectedProfId) return false;
-    return slots.some((s) => s.profesorId === selectedProfId && s.dia === dia && s.hora === hora);
-  }
-
-  function getSlotsForCell(dia: number, hora: string): { slot: ScheduleSlot; globalIndex: number }[] {
-    const out: { slot: ScheduleSlot; globalIndex: number }[] = [];
-    slots.forEach((s, i) => { if (s.dia === dia && s.hora === hora) out.push({ slot: s, globalIndex: i }); });
-    return out;
-  }
-
-  // ── Filtro de vista ────────────────────────────
-  function isDimmed(slot: ScheduleSlot): boolean {
-    if (filterView === 'all') return false;
-    if (filterView.startsWith('prof:')) return slot.profesorId !== filterView.slice(5);
-    if (filterView.startsWith('room:')) return slot.salonId !== filterView.slice(5);
-    return false;
-  }
 
   // ── Etiqueta de vista para impresión ───────────
   const filterViewLabel = (() => {
@@ -266,34 +297,6 @@ export default function ScheduleEditor() {
       return room ? `Salón: ${room.nombreSalon}` : 'Salón';
     }
     return '';
-  })();
-
-  // ── Bloques horarios activos ───────────────────
-  // Si hay bloques personalizados, usar esos. Si no, usar TIME_SLOTS legacy.
-  // IMPORTANTE: Incluir tanto bloques configurados COMO horas con asignaciones existentes
-  // para no ocultar clases ya asignadas
-  const activeTimeSlots = (() => {
-    const uniqueHoras = new Set<string>();
-
-    if (useCustomBlocks && timeBlockConfig) {
-      // Agregar horas de bloques personalizados
-      timeBlockConfig.blocks.forEach(block => {
-        uniqueHoras.add(blockToHoraString(block));
-      });
-    } else {
-      // Agregar TIME_SLOTS legacy
-      TIME_SLOTS.forEach(hora => uniqueHoras.add(hora));
-    }
-
-    // SIEMPRE agregar horas de slots existentes para no ocultar asignaciones
-    slots.forEach(slot => uniqueHoras.add(slot.hora));
-
-    // Ordenar por hora
-    return Array.from(uniqueHoras).sort((a, b) => {
-      const [hA, mA] = a.split(':').map(Number);
-      const [hB, mB] = b.split(':').map(Number);
-      return (hA * 60 + mA) - (hB * 60 + mB);
-    });
   })();
 
   // ══════════════════════════════════════════════
@@ -362,23 +365,6 @@ export default function ScheduleEditor() {
                 ))}
               </select>
 
-              {/* Configurar bloques */}
-              <button
-                onClick={() => navigate(`/private/dashboard/${PrivateRoutes.TIMEBLOCKS}`)}
-                className="inline-flex items-center gap-1.5 h-10 px-4 text-sm font-medium bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-all"
-              >
-                <IconClock size={16} />
-                <span>Configurar Bloques</span>
-              </button>
-
-              {/* Guardar */}
-              <button
-                onClick={() => triggerSave(slots)}
-                className="inline-flex items-center gap-1.5 h-10 px-4 text-sm font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all shadow-md shadow-indigo-200"
-              >
-                <IconDeviceFloppy size={15} /> Guardar
-              </button>
-
               {/* Imprimir */}
               <button
                 onClick={() => window.print()}
@@ -415,179 +401,58 @@ export default function ScheduleEditor() {
 
           {/* ── Layout: panel lateral + grid ── */}
           <div className="flex gap-4 flex-1 min-h-0">
-            {/* Panel lateral (oculto en impresión) */}
-            <div className="print:hidden w-56 flex-shrink-0 overflow-y-auto space-y-3 pr-1">
-              {/* Profesores */}
-              <div className="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <IconUsers size={13} className="text-gray-400" />
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">Profesores</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {professors.map((p) => (
-                    <button
-                      key={p.id}
-                      onClick={() => setSelectedProfId(selectedProfId === p.id ? null : p.id)}
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border transition-all ${
-                        selectedProfId === p.id
-                          ? 'bg-indigo-500 text-white border-indigo-500 shadow-sm shadow-indigo-200'
-                          : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
-                      }`}
-                    >
-                      {p.displayName || p.email}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {/* Panel lateral (R2: Extraído a componente) */}
+            <FlexibleSchedulePanel
+              professors={professors}
+              classrooms={classrooms}
+              areas={areas}
+              selectedProfId={selectedProfId}
+              selectedRoomId={selectedRoomId}
+              onSelectProf={setSelectedProfId}
+              onSelectRoom={setSelectedRoomId}
+              onDragStartArea={onDragStart}
+            />
 
-              {/* Salones */}
-              <div className="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <span className="text-[13px]">🏫</span>
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">Salones</span>
+            {/* ── Grid del horario (R3: Reemplazado por FlexibleCalendar) ── */}
+            <div className="flex-1 min-w-0 flex flex-col">
+              {isLoading ? (
+                <div className="flex items-center justify-center h-96 bg-gray-50 rounded-lg">
+                  <div className="text-center">
+                    <IconLoader size={32} className="animate-spin text-indigo-500 mx-auto mb-4" />
+                    <p className="text-gray-600">Cargando horario...</p>
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {classrooms.map((r) => (
-                    <button
-                      key={r.id}
-                      onClick={() => setSelectedRoomId(selectedRoomId === r.id ? null : r.id)}
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border transition-all ${
-                        selectedRoomId === r.id
-                          ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm shadow-emerald-200'
-                          : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-300'
-                      }`}
-                    >
-                      {r.nombreSalon}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Asignaturas (drag sources) */}
-              <div className="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <IconBook size={13} className="text-gray-400" />
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">Asignaturas</span>
-                </div>
-                <p className="text-[9px] text-gray-400 mb-2">Arrastra al horario</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {areas.map((a) => (
-                    <span
-                      key={a.id}
-                      draggable
-                      onDragStart={(e) => onDragStart(e, a)}
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border cursor-grab active:cursor-grabbing select-none hover:shadow-sm transition-shadow ${getBadgeColor(a.asignatura)}`}
-                    >
-                      {a.asignatura}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Hint si no hay selección */}
-                {(!selectedProfId || !selectedRoomId) && (
-                  <p className="mt-2 text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1">
-                    {!selectedProfId && !selectedRoomId
-                      ? 'Selecciona un profesor y un salón'
-                      : !selectedProfId
-                        ? 'Selecciona un profesor'
-                        : 'Selecciona un salón'}
-                  </p>
-                )}
-              </div>
-
-              {/* Leyenda */}
-              <div className="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">Leyenda</span>
-                <div className="mt-1.5 space-y-1 text-[10px] text-gray-500">
-                  <div className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm bg-emerald-50 border border-emerald-200" /> Celda disponible</div>
-                  <div className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm bg-indigo-50 border border-indigo-200" /> Clase del profesor seleccionado</div>
-                  <div className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 rounded-sm bg-white border border-gray-200" /> Celda con conflicto</div>
-                </div>
-              </div>
-            </div>
-
-            {/* ── Grid del horario ── */}
-            <div className="flex-1 min-w-0 overflow-auto">
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden print:shadow-none" style={{ minWidth: '560px' }}>
-                <table className="w-full border-collapse text-[11px]" style={{ tableLayout: 'fixed' }}>
-                  <thead>
-                    <tr className="bg-gray-50">
-                      <th className="w-14 p-2 text-center font-bold text-gray-500 border-b border-gray-200 border-r border-gray-200 text-[10px]">Hora</th>
-                      {DAYS_OF_WEEK.map((day) => (
-                        <th key={day} className="p-2 text-center font-bold text-gray-600 border-b border-gray-200 text-[11px]">{day}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activeTimeSlots.map((hora) => {
-                      return (
-                      <tr key={hora}>
-                        <td className="p-1 text-center font-bold text-gray-500 bg-gray-50 border-r border-gray-200 border-b border-gray-100 text-[10px]">
-                          <div>{hora}</div>
-                        </td>
-                        {DAYS_OF_WEEK.map((_, dia) => {
-                          const cellSlots  = getSlotsForCell(dia, hora);
-                          const available  = cellIsAvailable(dia, hora);
-                          const hasProf    = cellHasProf(dia, hora);
-
-                          let cellBg = 'bg-white';
-                          if (selectedProfId && selectedRoomId && available) cellBg = 'bg-emerald-50';
-                          if (hasProf) cellBg = 'bg-indigo-50';
-
-                          return (
-                            <td
-                              key={dia}
-                              onDragOver={onDragOver}
-                              onDrop={(e) => onDrop(e, dia, hora)}
-                              className={`border border-gray-100 p-0.5 transition-colors ${cellBg}`}
-                              style={{ minHeight: '72px', verticalAlign: 'top' }}
-                            >
-                              <div className="flex flex-col gap-0.5 min-h-[68px]">
-                                {cellSlots.map(({ slot, globalIndex }) => (
-                                  <div
-                                    key={globalIndex}
-                                    className={`group relative px-1.5 py-0.5 rounded border font-semibold leading-snug transition-opacity ${getBadgeColor(slot.areaNombre)} ${isDimmed(slot) ? 'opacity[0.08]' : 'opacity-100'}`}
-                                    style={isDimmed(slot) ? { opacity: 0.08 } : {}}
-                                  >
-                                    <div className="flex items-start justify-between gap-0.5">
-                                      <div className="min-w-0">
-                                        <div className="text-[10px] font-bold truncate">{slot.areaNombre}</div>
-                                        <div className="text-[10px] opacity-75 truncate">{slot.profesorNombre}</div>
-                                        <div className="text-[10px] opacity-75 truncate">{slot.salonNombre}</div>
-                                      </div>
-                                      <div className="print:hidden flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                        <button
-                                          onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/report/${slot.salonId}/${slot.profesorId}/${slot.areaId}/${encodeURIComponent(slot.hora)}`)}
-                                          className="p-0.5 rounded hover:bg-indigo-100 text-indigo-400 hover:text-indigo-600"
-                                          title="Informe de asistencia"
-                                        >
-                                          <IconFileAnalytics size={10} />
-                                        </button>
-                                        <button
-                                          onClick={() => removeSlot(globalIndex)}
-                                          className="p-0.5 rounded hover:bg-red-100 text-red-400 hover:text-red-600"
-                                        >
-                                          <IconX size={10} />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              ) : (
+                <FlexibleCalendar
+                  year={year}
+                  filter={filterView}
+                  onActivityClick={(activity, position) => {
+                    setSelectedActivity(activity);
+                    setClickPosition(position);
+                  }}
+                  onCreateActivity={handleCreateActivity}
+                  onDelete={handleRemoveActivity}
+                  readOnly={false}
+                />
+              )}
             </div>
           </div>
 
         </main>
       </div>
+
+      {/* Modal de información de actividad */}
+      {selectedActivity && (
+        <ActivityInfoModal
+          activity={selectedActivity}
+          position={clickPosition}
+          onClose={() => {
+            setSelectedActivity(null);
+            setClickPosition(undefined);
+          }}
+          onDelete={() => handleRemoveActivity(selectedActivity.id)}
+        />
+      )}
     </div>
   );
 }
