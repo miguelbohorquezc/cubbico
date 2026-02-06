@@ -150,19 +150,19 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
           </div>
 
           {/* Contenedor de columnas con la misma estructura que el header */}
-          <div className="absolute inset-0 z-10 flex">
+          <div className="absolute inset-0 z-10 flex pointer-events-none">
             {DAYS_OF_WEEK.map((_, index) => (
               <div
                 key={index}
                 className={`flex-1 relative ${index < DAYS_OF_WEEK.length - 1 ? 'border-r border-gray-200' : ''}`}
               >
-                {/* Children se renderizan dentro pero FlexibleCalendar los posiciona */}
+                {/* Solo estructura visual - sin eventos */}
               </div>
             ))}
           </div>
 
-          {/* Children: actividades posicionadas absolutamente */}
-          <div className="absolute inset-0 z-20 pointer-events-none">{children}</div>
+          {/* Children: actividades y área clickeable */}
+          <div className="absolute inset-0 z-20">{children}</div>
         </div>
       </div>
     </div>

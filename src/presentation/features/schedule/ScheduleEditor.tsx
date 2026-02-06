@@ -223,7 +223,7 @@ export default function ScheduleEditor() {
     console.log('✅ Validación pasada, creando actividad...');
 
     const startTime = minutesToTime(startMinutes);
-    const durationMinutes = 30; // Duración por defecto más compacta
+    const durationMinutes = 50; // Duración por defecto
 
     // Validar conflictos usando el nuevo sistema flexible
     const conflictMsg = detectActivityOverlap(activities, {
