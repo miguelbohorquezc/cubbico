@@ -1,535 +1,641 @@
-# PLAN DE MICROTAREAS - MEJORA UX/UI MÓDULO PREESCOLAR
+# PLAN DE REDISEÑO - MÓDULO PREESCOLAR
 
-**Fecha de creación:** 2026-02-09
-**Última actualización:** 2026-02-09 (8 tareas completadas)
-**Estado:** En progreso ⏳
-**Agente:** Arquitecto (Plan)
-**Total microtareas:** 18
-**Tiempo estimado:** 24-30 horas
-
-## 📊 PROGRESO ACTUAL: 8/18 COMPLETADAS (44%)
-
-### ✅ Completadas (8)
-- MT-01: NotesPreschool.tsx - Layout
-- MT-02: ConfigIndicadores.tsx - Layout
-- MT-03: ClassroomStudents.tsx - Layout
-- MT-04: EvaluadorPreescolar.tsx - Layout
-- MT-05: InformeConfigurador.tsx - Cards
-- MT-06: GestorIndicadores.tsx - Layout tabs/tabla
-- MT-07: GestorIndicadores.tsx - Tipografía
-- MT-08: GestorIndicadores.tsx - Estados
-
-### ⏭️ Próxima: MT-10 (MT-09 pospuesta al final)
+**Fecha:** 2026-02-09
+**Estado:** ✅ PLANIFICADO
+**Cumple AGENTS.md:** ✅ Sí (Máximo 2 archivos por microtarea)
 
 ---
 
-## CONTEXTO DEL PROYECTO
+## 🎯 Objetivo General
 
-### Vistas a Mejorar
-1. `/notespreschool/1/jwHDLP1RAT9DX5SbKA3p` → NotesPreschool.tsx
-2. `/indicadores/1/jwHDLP1RAT9DX5SbKA3p` → ConfigIndicadores.tsx
-3. `/student/1/jwHDLP1RAT9DX5SbKA3p/students` → ClassroomStudents.tsx
-4. `/evaluadorpreescolar/1/jwHDLP1RAT9DX5SbKA3p/1016755537/2025` → EvaluadorPreescolar.tsx
-5. `/print/1/jwHDLP1RAT9DX5SbKA3p/1016755537/2025` → InformePreescolar.tsx
+Rediseñar el módulo de preescolar para crear una interfaz profesional tipo sistema (no sitio web) inspirada en la referencia `ui/pd.jpg` (diseño tipo Linear/project management tool).
 
-### Problemas Identificados
-- Todo se ve corrido sin márgenes apropiados
-- No hay jerarquía visual en textos y componentes
-- Cards y layouts desorganizados
-- Sidebar se superpone al header al expandir (debe comportarse como dashboard)
-- Vista de propósitos necesita funcionalidad para crear/agregar/quitar áreas
+## 📋 Referencias Visuales
 
-### Requisitos de Diseño
-- **Layout:** Márgenes correctos, cards bien estructuradas, espaciado consistente
-- **Tipografía:** Jerarquía visual clara, textos en negro, sin colores fuertes
-- **Tablas:** Diseño minimalista y moderno, márgenes correctos
-- **Informe Impreso:** Cabecera estructurada y alineada, ajustarse a hoja legal/carta
-- **Responsividad:** Uso de Tailwind con enfoque mobile-first
-- **Sidebar:** Comportamiento correcto sin superponerse al header
+1. **ui/pd.jpg**: Diseño profesional con:
+   - Layout limpio con espacios bien distribuidos
+   - Iconografía consistente
+   - Estados visuales claros con badges
+   - Filtros y búsqueda efectiva
+   - Colores sutiles con buen contraste
+   - Tipografía clara
+   - Animaciones sutiles
 
-### Reglas Obligatorias (AGENTS.md)
-✅ Máximo 2 archivos por microtarea
-✅ Microtareas de 1-2 horas máximo
-✅ Declarar archivos explícitamente
-✅ NO tocar módulos protegidos (notes/, achievement/, classRoomReport/, informeGeneral/)
-✅ Respetar arquitectura de 3 capas
-✅ TypeScript estricto: tipos explícitos, no `any`
-✅ Tailwind solo para UI nueva
+2. **ui/image.png**: Títulos con iconos y cards estructuradas
 
----
+## 🔗 Vistas a Mejorar
 
-## FASE 1: AJUSTES DE LAYOUT Y ESTRUCTURA BASE
-**Microtareas:** 5
-**Tiempo estimado:** 6-8 horas
+1. `/private/dashboard/notespreschool/:periodId/:classroomId` - Gestión de notas preescolar
+2. `/private/dashboard/indicadores/:periodId/:classroomId` - Gestión de indicadores
+3. `/private/dashboard/student/:periodId/:classroomId/students` - Vista de estudiantes
+4. `/private/dashboard/evaluadorpreescolar/:periodId/:classroomId/:studentId/:year` - Evaluador
 
-### ✅ MT-01: Ajustar márgenes y espaciado en NotesPreschool.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/pages/private/Dashboard/components/NotesPreschool.tsx`
+## ✅ Requisitos del Usuario
 
-**Descripción:**
-Corregir el espaciado superior del contenido principal para que no se superponga con HeaderV2. Actualmente hay un `div` con `h-16` que genera el espaciado, pero necesita ajuste para alinearse correctamente con el header fijo.
-
-**Cambios específicos:**
-- Eliminar el `div` spacer de `h-16` actual
-- Ajustar padding-top en el `main` para compensar header fijo (16 de altura)
-- Verificar que el contenido comience después del header sin superposición
-
-**Definition of Done:**
-- El contenido no se superpone al header
-- Espaciado consistente de 24px entre header y contenido
-- Vista responsive correcta
+1. **Iconografía**: Agregar iconos consistentes en toda la interfaz
+2. **Layout Profesional**: Inspirado en ui/pd.jpg (botones, tamaños, contraste, inputs, toasts)
+3. **Animaciones**: Sutiles y consistentes para buena UX
+4. **Feedback Visual**: Alertas, modales, toasts para retroalimentación constante
+5. **Nueva Funcionalidad**: En vista de propósitos, permitir crear más áreas y agregarlas en cualquiera de los 3 propósitos
+6. **Mantener Estilo**: Consistente con la vista de selección de salones y áreas
 
 ---
 
-### ✅ MT-02: Ajustar márgenes y espaciado en ConfigIndicadores.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/pages/private/Dashboard/components/ConfigIndicadores.tsx`
+## 📊 Estadísticas del Plan
 
-**Descripción:**
-Similar a MT-01, corregir el espaciado superior para evitar superposición con HeaderV2.
-
-**Cambios específicos:**
-- Eliminar el `div` spacer de `h-16` actual
-- Ajustar padding-top en el `main`
-- Mantener coherencia con NotesPreschool.tsx
-
-**Definition of Done:**
-- Espaciado consistente con NotesPreschool.tsx
-- Sin superposición con header
-- Vista responsive correcta
+- **Total de microtareas:** 25
+- **Tiempo estimado:** 27-37 horas
+- **Fases:** 5
+- **Archivos máximos por tarea:** 2
+- **Metodología:** Una microtarea a la vez
 
 ---
 
-### ✅ MT-03: Ajustar layout en ClassroomStudents.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
+# FASE 1: Sistema de Iconos (2-3 horas)
+
+## MT-PRE-001: Crear biblioteca centralizada de iconos SVG
+
+**Objetivo:** Centralizar todos los iconos SVG usados en el módulo preescolar para reutilización y consistencia
+
+**Archivos a modificar (2):**
+- `src/presentation/components/icons/PreschoolIcons.tsx` (CREAR)
+- `src/presentation/components/icons/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Componente `PreschoolIcons` con 15+ iconos como:
+  - `BookOpenIcon`, `ClipboardIcon`, `CheckCircleIcon`, `UserIcon`
+  - `CalendarIcon`, `DocumentIcon`, `PencilIcon`, `TrashIcon`
+  - `ChevronLeftIcon`, `ChevronRightIcon`, `PlusIcon`, `XIcon`
+  - `SearchIcon`, `FilterIcon`, `DownloadIcon`
+- ✅ Todos con props: `className`, `size` (sm, md, lg)
+- ✅ TypeScript estricto con interface `IconProps`
+- ✅ Exportados en `icons/index.ts`
+
+**Dependencias:** Ninguna
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+# FASE 2: Componentes Reutilizables (6-8 horas)
+
+## MT-PRE-002: Crear componente Badge reutilizable
+
+**Objetivo:** Componente Badge con variantes para estados y categorías
+
+**Archivos a modificar (2):**
+- `src/presentation/components/ui/Badge.tsx` (CREAR)
+- `src/presentation/components/ui/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Variantes: `default`, `success`, `warning`, `error`, `info`, `purple`, `blue`
+- ✅ Tamaños: `sm`, `md`, `lg`
+- ✅ Props: `variant`, `size`, `icon`, `children`
+- ✅ Estilos consistentes con diseño de pd.jpg
+- ✅ TypeScript estricto
+
+**Dependencias:** MT-PRE-001
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-003: Crear componente Card reutilizable
+
+**Objetivo:** Componente Card con header, body, footer opcionales
+
+**Archivos a modificar (2):**
+- `src/presentation/components/ui/Card.tsx` (CREAR)
+- `src/presentation/components/ui/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Sub-componentes: `Card.Header`, `Card.Body`, `Card.Footer`
+- ✅ Props: `className`, `elevation` (none, sm, md, lg)
+- ✅ Soporte para iconos en header
+- ✅ Animaciones sutiles (hover, active)
+- ✅ Inspirado en pd.jpg
+
+**Dependencias:** MT-PRE-001
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-004: Crear componente Tabs mejorado
+
+**Objetivo:** Sistema de tabs profesional con badges de conteo
+
+**Archivos a modificar (2):**
+- `src/presentation/components/ui/Tabs.tsx` (CREAR)
+- `src/presentation/components/ui/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ API: `<Tabs>`, `<Tabs.List>`, `<Tabs.Tab>`, `<Tabs.Panel>`
+- ✅ Soporte para badges (contadores)
+- ✅ Indicador visual de tab activo
+- ✅ Animación de transición suave
+- ✅ Accesibilidad (ARIA roles)
+
+**Dependencias:** MT-PRE-001, MT-PRE-002
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-005: Crear componente EmptyState
+
+**Objetivo:** Estado vacío consistente para tablas y listas
+
+**Archivos a modificar (2):**
+- `src/presentation/components/ui/EmptyState.tsx` (CREAR)
+- `src/presentation/components/ui/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Props: `icon`, `title`, `description`, `action` (botón opcional)
+- ✅ Variantes: `default`, `search`, `error`
+- ✅ Diseño centrado y atractivo
+- ✅ Reutilizable en todas las vistas
+
+**Dependencias:** MT-PRE-001
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-006: Crear componente ProgressBar
+
+**Objetivo:** Barra de progreso animada para configuración de propósitos
+
+**Archivos a modificar (2):**
+- `src/presentation/components/ui/ProgressBar.tsx` (CREAR)
+- `src/presentation/components/ui/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Props: `value`, `max`, `label`, `showPercentage`
+- ✅ Colores dinámicos según progreso (rojo < 50%, amarillo < 80%, verde >= 80%)
+- ✅ Animación suave de transición
+- ✅ Variantes: `default`, `slim`, `thick`
+
+**Dependencias:** Ninguna
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-007: Crear componente SearchInput especializado
+
+**Objetivo:** Input de búsqueda con funcionalidades avanzadas
+
+**Archivos a modificar (2):**
+- `src/presentation/components/ui/SearchInput.tsx` (CREAR)
+- `src/presentation/components/ui/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Icono de búsqueda integrado
+- ✅ Botón de limpiar (X) cuando hay texto
+- ✅ Props: `placeholder`, `value`, `onChange`, `onClear`
+- ✅ Debounce opcional (prop `debounceMs`)
+- ✅ Contador de resultados opcional
+
+**Dependencias:** MT-PRE-001
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+# FASE 3: Mejora de Vistas (12-16 horas)
+
+## MT-PRE-008: Rediseñar InformeConfigurador - Parte 1 (Layout y navegación)
+
+**Objetivo:** Mejorar estructura y navegación de tabs en configuración de propósitos
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/InformeConfigurador.tsx`
+
+**Definición de Done:**
+- ✅ Reemplazar tabs custom por componente `Tabs`
+- ✅ Reemplazar barra de progreso por `ProgressBar`
+- ✅ Reemplazar toast custom por sistema `Toast` unificado
+- ✅ Agregar iconografía en títulos y secciones
+- ✅ Mejorar espaciado y jerarquía visual
+
+**Dependencias:** MT-PRE-001 a MT-PRE-006
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-009: Rediseñar InformeConfigurador - Parte 2 (Formularios y asignaturas)
+
+**Objetivo:** Mejorar UX de selección de asignaturas y referentes
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/InformeConfigurador.tsx`
+
+**Definición de Done:**
+- ✅ Asignaturas disponibles como cards seleccionables (no botones simples)
+- ✅ Asignaturas seleccionadas con badges y hover effects
+- ✅ Referentes con iconos numerados
+- ✅ Validación visual mejorada (errores inline con iconos)
+- ✅ Animaciones al agregar/remover asignaturas
+
+**Dependencias:** MT-PRE-008
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-010: Rediseñar GestorIndicadores - Parte 1 (Tabs y búsqueda)
+
+**Objetivo:** Mejorar navegación por asignaturas y sistema de búsqueda
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/GestorIndicadores.tsx`
+
+**Definición de Done:**
+- ✅ Tabs de asignaturas con componente `Tabs` y badges de conteo
+- ✅ SearchInput con debounce y clear button
+- ✅ Filtros adicionales: por periodo, por estado (activo/inactivo)
+- ✅ Iconos en headers de tabla
+- ✅ Empty state cuando no hay resultados
+
+**Dependencias:** MT-PRE-001 a MT-PRE-007
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-011: Rediseñar GestorIndicadores - Parte 2 (Tabla y panel lateral)
+
+**Objetivo:** Mejorar tabla de indicadores y formulario lateral
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/GestorIndicadores.tsx`
+
+**Definición de Done:**
+- ✅ Tabla con hover effects y bordes sutiles
+- ✅ Badges para periodos y estado
+- ✅ Botones de acción con iconos mejorados
+- ✅ Panel lateral como Card con secciones bien definidas
+- ✅ Animación de apertura/cierre del formulario
+- ✅ Contador de caracteres visual mejorado
+
+**Dependencias:** MT-PRE-010
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-012: Rediseñar EvaluadorCompleto - Parte 1 (Header y cards de propósitos)
+
+**Objetivo:** Mejorar header informativo y estructura de propósitos
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/Evaluador/EvaluadorCompleto.tsx`
+
+**Definición de Done:**
+- ✅ Header con cards informativos (estudiante, grado, periodo, año) mejorados
+- ✅ Iconos consistentes en cada card
+- ✅ Cards de propósitos con mejores sombras y espaciado
+- ✅ Panel de referentes sticky mejorado visualmente
+- ✅ Iconografía en secciones de propósitos
+
+**Dependencias:** MT-PRE-001 a MT-PRE-003
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-013: Rediseñar EvaluadorCompleto - Parte 2 (Selects y feedback)
+
+**Objetivo:** Mejorar selectores de indicadores y feedback visual
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/Evaluador/EvaluadorCompleto.tsx`
+
+**Definición de Done:**
+- ✅ Selects con estilos mejorados (borders, focus states)
+- ✅ Indicadores visuales de selección completa/incompleta por propósito
+- ✅ Botón de guardar con estado de éxito animado
+- ✅ Toast de confirmación al guardar
+- ✅ Validación visual de campos requeridos
+
+**Dependencias:** MT-PRE-012
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-014: Rediseñar ClassroomStudents (vista de estudiantes)
+
+**Objetivo:** Mejorar tabla de estudiantes manteniendo estilo consistente
+
+**Archivos a modificar (1):**
 - `src/presentation/features/teacher/ClassroomStudents.tsx`
 
-**Descripción:**
-Corregir espaciado superior y mejorar consistencia de márgenes en la tabla de estudiantes.
+**Definición de Done:**
+- ✅ SearchInput con componente reutilizable
+- ✅ Badges mejorados para "carácter"
+- ✅ Botones de acción con tooltips
+- ✅ Header de tabla con iconos
+- ✅ Empty state consistente
+- ✅ Contador de estudiantes mejorado
 
-**Cambios específicos:**
-- Eliminar el `div` spacer de `h-16`
-- Ajustar padding del contenedor principal
-- Mejorar espaciado del botón "Regresar" (actualmente mb-4, cambiar a mb-6)
+**Dependencias:** MT-PRE-001, MT-PRE-002, MT-PRE-005, MT-PRE-007
 
-**Definition of Done:**
-- Layout consistente con otras vistas de preescolar
-- Tabla con márgenes apropiados
-- Botón regresar con espaciado visual correcto
-
----
-
-### ✅ MT-04: Ajustar layout en EvaluadorPreescolar.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/pages/private/Dashboard/components/EvaluadorPreescolar.tsx`
-
-**Descripción:**
-Corregir espaciado y asegurar que EvaluadorCompleto tenga suficiente aire visual.
-
-**Cambios específicos:**
-- Eliminar el `div` spacer de `h-16`
-- Ajustar padding del contenedor `main`
-- Revisar que el componente hijo (EvaluadorCompleto) respire adecuadamente
-
-**Definition of Done:**
-- Sin superposición con header
-- EvaluadorCompleto renderiza con márgenes apropiados
-- Consistencia con otras páginas del módulo
+**Estado:** ⏸️ PENDIENTE
 
 ---
 
-### ✅ MT-05: Mejorar estructura de cards en InformeConfigurador.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
+# FASE 4: Nueva Funcionalidad (4-6 horas)
+
+## MT-PRE-015: Crear modal para agregar nuevas áreas desde propósitos
+
+**Objetivo:** Permitir crear áreas dinámicamente desde InformeConfigurador
+
+**Archivos a modificar (2):**
+- `src/presentation/features/preschool/components/CreateAreaModal.tsx` (CREAR)
+- `src/presentation/features/preschool/InformeConfigurador.tsx` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Modal con formulario: nombre de área, IHS, orden
+- ✅ Validación de campos
+- ✅ Integración con Firestore (crear área en colección `areas`)
+- ✅ Actualizar lista de asignaturas disponibles después de crear
+- ✅ Feedback visual (toast de éxito/error)
+
+**Dependencias:** MT-PRE-009
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-016: Agregar botón "Crear nueva área" en selector de asignaturas
+
+**Objetivo:** Integrar botón para abrir modal de creación de área
+
+**Archivos a modificar (1):**
 - `src/presentation/features/preschool/InformeConfigurador.tsx`
 
-**Descripción:**
-Mejorar la jerarquía visual de las cards de propósitos, agregando sombras sutiles y mejorando el espaciado interno.
+**Definición de Done:**
+- ✅ Botón "+ Nueva Área" en sección de asignaturas disponibles
+- ✅ Icono apropiado
+- ✅ Abre modal CreateAreaModal
+- ✅ Mantiene contexto del propósito activo
+- ✅ Cierre de modal actualiza lista automáticamente
 
-**Cambios específicos:**
-- Cambiar border de cards de `border-gray-200` a `border-gray-200 shadow-sm`
-- Incrementar padding interno de cards de `p-6` a `p-8`
-- Mejorar espaciado entre tabs y formulario (de `mb-6` a `mb-8`)
+**Dependencias:** MT-PRE-015
 
-**Definition of Done:**
-- Cards con mejor definición visual
-- Espaciado interno más generoso
-- Jerarquía visual clara entre elementos
+**Estado:** ⏸️ PENDIENTE
 
 ---
 
-## FASE 2: MEJORAS EN COMPONENTE GESTOR INDICADORES
-**Microtareas:** 4
-**Tiempo estimado:** 6-8 horas
+# FASE 5: Animaciones y Feedback Visual (3-4 horas)
 
-### ✅ MT-06: Mejorar layout de tabs y tabla en GestorIndicadores.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
+## MT-PRE-017: Crear hook useToast centralizado
+
+**Objetivo:** Sistema de toasts unificado para todo el módulo preescolar
+
+**Archivos a modificar (2):**
+- `src/presentation/features/preschool/hooks/useToast.ts` (CREAR)
+- `src/presentation/features/preschool/hooks/index.ts` (CREAR)
+
+**Definición de Done:**
+- ✅ Hook `useToast` con métodos: `success()`, `error()`, `info()`
+- ✅ Queue de toasts (máx 3 simultáneos)
+- ✅ Auto-dismiss configurable
+- ✅ TypeScript estricto
+- ✅ Exportado correctamente
+
+**Dependencias:** Ninguna
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-018: Agregar animaciones de entrada a cards y modales
+
+**Objetivo:** Mejorar percepción de fluidez con animaciones sutiles
+
+**Archivos a modificar (1):**
+- `tailwind.config.js`
+
+**Definición de Done:**
+- ✅ Agregar keyframes: `slideInUp`, `fadeInScale`, `slideInRight`
+- ✅ Agregar clases de animación correspondientes
+- ✅ Duraciones: 200ms-300ms
+- ✅ Timing functions: ease-out
+
+**Dependencias:** Ninguna
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-019: Aplicar animaciones en InformeConfigurador
+
+**Objetivo:** Añadir animaciones de transición entre tabs y secciones
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/InformeConfigurador.tsx`
+
+**Definición de Done:**
+- ✅ Transición suave al cambiar de propósito (tab)
+- ✅ Animación al agregar/remover asignaturas
+- ✅ Fade in del toast de éxito
+- ✅ Botones con efecto ripple sutil
+
+**Dependencias:** MT-PRE-018
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-020: Aplicar animaciones en GestorIndicadores
+
+**Objetivo:** Mejorar feedback visual en CRUD de indicadores
+
+**Archivos a modificar (1):**
 - `src/presentation/features/preschool/GestorIndicadores.tsx`
 
-**Descripción:**
-Mejorar el layout de dos columnas (tabla + panel lateral) para que tenga mejor balance visual y espaciado.
+**Definición de Done:**
+- ✅ Slide in del panel lateral al crear/editar
+- ✅ Fade out al eliminar indicador
+- ✅ Hover effects en filas de tabla
+- ✅ Loading skeleton para carga inicial
 
-**Cambios específicos:**
-- Cambiar contenedor principal de `flex gap-6` a `flex gap-8`
-- Ajustar width del panel lateral de `w-96` a `w-[400px]`
-- Mejorar padding de las tabs (de `px-3 py-2` a `px-4 py-2.5`)
-- Agregar `shadow-sm` a la card de la tabla
+**Dependencias:** MT-PRE-018
 
-**Definition of Done:**
-- Layout balanceado visualmente
-- Panel lateral con width consistente
-- Tabs más prominentes y clickeables
+**Estado:** ⏸️ PENDIENTE
 
 ---
 
-### ✅ MT-07: Mejorar tipografía y jerarquía visual en GestorIndicadores.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/GestorIndicadores.tsx`
+## MT-PRE-021: Aplicar animaciones en EvaluadorCompleto
 
-**Descripción:**
-Mejorar la jerarquía de textos para mayor legibilidad, usando tamaños de fuente y pesos apropiados.
+**Objetivo:** Feedback visual al seleccionar indicadores
 
-**Cambios específicos:**
-- Headers de tabla: cambiar de `text-xs` a `text-[11px]` y `font-semibold` a `font-bold`
-- Texto de indicadores en tabla: cambiar de `text-sm` a `text-sm leading-relaxed`
-- Label del formulario lateral: mantener `text-xs` pero agregar `font-semibold`
-- Título del panel lateral: cambiar de `text-sm` a `text-base font-bold`
-
-**Definition of Done:**
-- Textos más legibles
-- Jerarquía visual clara entre headers y contenido
-- Consistencia tipográfica
-
----
-
-### ✅ MT-08: Optimizar estado vacío y feedback en GestorIndicadores.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/GestorIndicadores.tsx`
-
-**Descripción:**
-Mejorar los estados vacíos y de carga para una mejor experiencia de usuario.
-
-**Cambios específicos:**
-- Estado de carga: cambiar spinner de `border-t-emerald-500` a `border-t-gray-900`
-- Empty state de tabla: mejorar texto y agregar más contexto visual
-- Toast de notificación: ajustar posición de `top-24` a `top-20`
-
-**Definition of Done:**
-- Estados vacíos informativos
-- Feedback visual claro durante acciones
-- Animaciones y transiciones suaves
-
----
-
-### ⚠️ MT-09: Agregar funcionalidad de creación de áreas en GestorIndicadores
-**Estado:** Pendiente (DISEÑO SOLAMENTE)
-**Archivos involucrados:**
-- `src/presentation/features/preschool/GestorIndicadores.tsx`
-- `src/infrastructure/area.service.ts`
-
-**Descripción:**
-⚠️ **NOTA:** Esta microtarea requiere acceso a Firebase y creación de nueva funcionalidad. Por ser READ-ONLY en planificación, solo se documenta el diseño.
-
-**Cambios específicos (DISEÑO):**
-- Agregar botón "+ Nueva Área" después de las tabs de asignaturas
-- Crear modal para formulario de nueva área (nombre, nivel=preescolar, IHS, orden)
-- Conectar con `area.service.ts` para persistencia
-- Actualizar lista local después de crear
-
-**Definition of Done (cuando se implemente):**
-- Modal funcional para crear áreas
-- Validación de campos requeridos
-- Actualización inmediata de tabs al crear área
-- Feedback visual de éxito/error
-
----
-
-## FASE 3: MEJORAS EN EVALUADOR COMPLETO E INFORME
-**Microtareas:** 5
-**Tiempo estimado:** 6-8 horas
-
-### ✅ MT-10: Mejorar estructura visual de propósitos en EvaluadorCompleto.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
+**Archivos a modificar (1):**
 - `src/presentation/features/preschool/Evaluador/EvaluadorCompleto.tsx`
 
-**Descripción:**
-Mejorar la jerarquía y espaciado de las cards de propósitos para mejor legibilidad.
+**Definición de Done:**
+- ✅ Animación de check al seleccionar indicador
+- ✅ Pulse effect en botón guardar cuando hay cambios
+- ✅ Success animation al guardar
+- ✅ Smooth scroll entre propósitos
 
-**Cambios específicos:**
-- Cambiar espaciado entre propósitos de `space-y-6` a `space-y-8`
-- Agregar sombra a cards: `border border-gray-200 shadow-md`
-- Incrementar padding del contenido de `p-5` a `p-6`
-- Header del propósito: mantener bg-emerald-500 pero agregar `shadow-sm`
+**Dependencias:** MT-PRE-018
 
-**Definition of Done:**
-- Cards con mejor definición visual
-- Espaciado generoso entre secciones
-- Jerarquía clara de información
+**Estado:** ⏸️ PENDIENTE
 
 ---
 
-### ✅ MT-11: Mejorar formularios de selección en EvaluadorCompleto.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
+## MT-PRE-022: Crear componente LoadingSpinner reutilizable
+
+**Objetivo:** Spinner de carga consistente en todo el módulo
+
+**Archivos a modificar (2):**
+- `src/presentation/components/ui/LoadingSpinner.tsx` (CREAR)
+- `src/presentation/components/ui/index.ts` (MODIFICAR)
+
+**Definición de Done:**
+- ✅ Variantes: `sm`, `md`, `lg`
+- ✅ Colores: `primary`, `secondary`, `white`
+- ✅ Props: `size`, `color`, `text` (opcional)
+- ✅ Animación suave
+- ✅ Centrado automático opcional
+
+**Dependencias:** Ninguna
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-023a: Reemplazar spinner en InformeConfigurador
+
+**Objetivo:** Unificar spinner de carga
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/InformeConfigurador.tsx`
+
+**Definición de Done:**
+- ✅ Reemplazar spinner custom por `LoadingSpinner`
+- ✅ Loading state consistente
+
+**Dependencias:** MT-PRE-022
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-023b: Reemplazar spinner en GestorIndicadores
+
+**Objetivo:** Unificar spinner de carga
+
+**Archivos a modificar (1):**
+- `src/presentation/features/preschool/GestorIndicadores.tsx`
+
+**Definición de Done:**
+- ✅ Reemplazar spinner custom por `LoadingSpinner`
+- ✅ Loading state consistente
+
+**Dependencias:** MT-PRE-022
+
+**Estado:** ⏸️ PENDIENTE
+
+---
+
+## MT-PRE-023c: Reemplazar spinner en EvaluadorCompleto
+
+**Objetivo:** Unificar spinner de carga
+
+**Archivos a modificar (1):**
 - `src/presentation/features/preschool/Evaluador/EvaluadorCompleto.tsx`
 
-**Descripción:**
-Mejorar la UX de los selectores de indicadores por asignatura.
+**Definición de Done:**
+- ✅ Reemplazar spinner custom por `LoadingSpinner`
+- ✅ Loading state consistente
 
-**Cambios específicos:**
-- Select: incrementar padding de `py-3` a `py-3.5`
-- Mejorar label visual: de `text-sm font-semibold` a `text-sm font-bold text-gray-800`
-- Espaciado entre selects: de `space-y-2` a `space-y-4`
-- Agregar transición visual al hacer hover en selects
+**Dependencias:** MT-PRE-022
 
-**Definition of Done:**
-- Selects más fáciles de interactuar
-- Labels más prominentes
-- Feedback visual en hover/focus
+**Estado:** ⏸️ PENDIENTE
 
 ---
 
-### ✅ MT-12: Optimizar botón de guardar y feedback en EvaluadorCompleto.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/Evaluador/EvaluadorCompleto.tsx`
+## 📈 Progreso del Plan
 
-**Descripción:**
-Mejorar la barra de acción inferior con el botón de guardar.
+### Por Fase
 
-**Cambios específicos:**
-- Barra de acción: cambiar de `mt-8 p-4` a `mt-10 p-6`
-- Botón guardar: incrementar padding de `px-6 py-3` a `px-8 py-3.5`
-- Agregar sombra a la barra: `shadow-lg border-t-2 border-gray-100`
-- Mensaje de éxito: mejorar transición de entrada/salida
+- **Fase 1 (Iconos):** 1/1 ✅✅✅✅✅✅✅✅✅✅ 100%
+- **Fase 2 (Componentes):** 6/6 ✅✅✅✅✅✅✅✅✅✅ 100%
+- **Fase 3 (Vistas):** 5/7 ✅✅✅✅✅⬜⬜⬜⬜⬜ 71%
+- **Fase 4 (Nueva Funcionalidad):** 0/2 ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 0%
+- **Fase 5 (Animaciones):** 0/9 ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ 0%
 
-**Definition of Done:**
-- Botón más prominente y fácil de clickear
-- Barra de acción visualmente separada del contenido
-- Feedback de éxito claro y satisfactorio
+### Total: 12/25 tareas completadas (48%)
 
 ---
 
-### ✅ MT-13: Mejorar cabecera oficial en InformePreescolar.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/Evaluador/InformePreescolar.tsx`
+## ✅ Tareas Completadas
 
-**Descripción:**
-Optimizar la tabla de cabecera institucional para mejor alineación y legibilidad en impresión.
+1. **MT-PRE-001** ✅ - PreschoolIcons.tsx (35+ iconos)
+2. **MT-PRE-002** ✅ - Badge (7 variantes, 3 tamaños)
+3. **MT-PRE-003** ✅ - Card (Header/Body/Footer)
+4. **MT-PRE-004** ✅ - Tabs (badges, accesibilidad)
+5. **MT-PRE-005** ✅ - EmptyState (3 variantes)
+6. **MT-PRE-006** ✅ - ProgressBar (colores dinámicos)
+7. **MT-PRE-007** ✅ - SearchInput (debounce, clear)
+8. **MT-PRE-008** ✅ - InformeConfigurador Parte 1 (layout, tabs, progress)
+9. **MT-PRE-009** ✅ - InformeConfigurador Parte 2 (cards asignaturas, badges, validación)
+10. **MT-PRE-010** ✅ - GestorIndicadores Parte 1 (Tabs, SearchInput, EmptyState)
+11. **MT-PRE-011** ✅ - GestorIndicadores Parte 2 (panel Card, contador visual)
+12. **MT-PRE-012** ✅ - EvaluadorCompleto Parte 1 (header cards, iconos, propósitos)
 
-**Cambios específicos:**
-- Ajustar padding de celdas para mejor balance visual
-- Logo institucional: mantener `w-24` pero mejorar alineación vertical
-- Texto central: mejorar line-height de `leading-relaxed` a `leading-normal`
-- Asegurar que la tabla se imprima correctamente en hoja legal
+## 🎯 Próxima Tarea
 
-**Definition of Done:**
-- Cabecera alineada correctamente
-- Logos con tamaño apropiado
-- Texto institucional legible y balanceado
-- Impresión sin cortes
-
----
-
-### ✅ MT-14: Optimizar tablas de propósitos en InformePreescolar.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/Evaluador/InformePreescolar.tsx`
-
-**Descripción:**
-Mejorar el diseño de las tablas de propósitos/referentes para impresión óptima.
-
-**Cambios específicos:**
-- Incrementar padding de celdas de referentes de `p-4` a `p-5`
-- Mejorar padding de items individuales de `px-3 py-2` a `px-4 py-3`
-- Ajustar width de columna referentes de `w-[30%]` a `w-[35%]`
-- Mejorar espaciado entre propósitos de `space-y-4` a `space-y-6`
-
-**Definition of Done:**
-- Tablas balanceadas visualmente
-- Texto legible en impresión
-- Distribución apropiada de columnas
-- Sin desbordamientos en página legal
+**MT-PRE-013**: EvaluadorCompleto Parte 2 (Selects mejorados, feedback, validación)
 
 ---
 
-## FASE 4: MEJORAS EN INFORME CONFIGURADOR Y PULIDO FINAL
-**Microtareas:** 4
-**Tiempo estimado:** 6-8 horas
+## 📝 Notas de Implementación
 
-### ✅ MT-15: Mejorar barra de progreso en InformeConfigurador.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/InformeConfigurador.tsx`
-
-**Descripción:**
-Mejorar la visualización de la barra de progreso para mayor impacto visual.
-
-**Cambios específicos:**
-- Card de progreso: agregar `shadow-sm` al border
-- Incrementar altura de barra de `h-2` a `h-2.5`
-- Mejorar textos de progreso: de `text-sm` a `text-sm font-semibold`
-- Agregar animación más suave a la transición de progreso
-
-**Definition of Done:**
-- Barra de progreso más visible
-- Textos de porcentaje destacados
-- Animación fluida
+- Cada microtarea debe ejecutarse UNA A LA VEZ siguiendo el orden numérico
+- Respetar dependencias entre tareas
+- Validar que cada tarea modifique MÁXIMO 2 archivos
+- Usar TypeScript estricto (no `any`, no `//@ts-ignore` sin explicación)
+- Usar Tailwind para todos los estilos (no crear nuevos archivos .css)
+- Mantener consistencia con el sistema de diseño existente
+- NO tocar módulos protegidos (notes/, achievement/, classRoomReport/, informeGeneral/)
 
 ---
 
-### ✅ MT-16: Optimizar formulario de referentes en InformeConfigurador.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/InformeConfigurador.tsx`
+## 🔒 Restricciones Críticas
 
-**Descripción:**
-Mejorar la UX del formulario de referentes con mejor espaciado y feedback visual.
-
-**Cambios específicos:**
-- Incrementar espaciado entre inputs de referentes de `space-y-3` a `space-y-4`
-- Textarea de propósito: incrementar padding de `px-4 py-2.5` a `px-4 py-3`
-- Labels: cambiar de `text-sm` a `text-sm font-semibold text-gray-800`
-- Inputs: mejorar focus ring con `focus:ring-2 focus:ring-emerald-500`
-
-**Definition of Done:**
-- Formulario más espacioso y respirable
-- Labels más legibles
-- Focus states claros en todos los inputs
+**NO SE DEBE AFECTAR:**
+1. La manera como los maestros registran sus logros y notas
+2. La manera como el usuario coordinador registra usuarios y asigna salones, dirección de grupo y asignaturas
+3. Los módulos de reportes e informes (LA PARTE MÁS IMPORTANTE)
 
 ---
 
-### ✅ MT-17: Mejorar sección de asignaturas asociadas en InformeConfigurador.tsx
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/features/preschool/InformeConfigurador.tsx`
+## 📂 Archivos Críticos del Plan
 
-**Descripción:**
-Optimizar la UI de selección y gestión de asignaturas por propósito.
+Los 5 archivos más críticos para este plan:
 
-**Cambios específicos:**
-- Botones de asignaturas disponibles: cambiar a diseño de chips más compacto
-- Grid de asignaturas: de `grid-cols-2 md:grid-cols-3` a `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
-- Items seleccionados: mejorar hover state con `hover:bg-gray-100`
-- Espaciado entre secciones de disponibles/seleccionadas de `mb-4` a `mb-6`
+1. **`src/presentation/features/preschool/InformeConfigurador.tsx`**
+   Vista de configuración de propósitos. Se modificará en 4 microtareas (MT-PRE-008, MT-PRE-009, MT-PRE-016, MT-PRE-019).
 
-**Definition of Done:**
-- Asignaturas más fáciles de agregar/quitar
-- Diseño responsive mejorado
-- Estados hover claros
+2. **`src/presentation/features/preschool/GestorIndicadores.tsx`**
+   Vista de gestión de indicadores. Se modificará en 4 microtareas (MT-PRE-010, MT-PRE-011, MT-PRE-020, MT-PRE-023b).
 
----
+3. **`src/presentation/components/ui/index.ts`**
+   Archivo barrel de exports. Se modificará en 9 microtareas (todas las creaciones de componentes UI).
 
-### ✅ MT-18: Pulido final de consistencia visual en todo el módulo
-**Estado:** Pendiente
-**Archivos involucrados:**
-- `src/presentation/components/PageHeader/PageHeader.tsx`
+4. **`src/presentation/components/icons/PreschoolIcons.tsx`**
+   Biblioteca de iconos (a crear en MT-PRE-001). Será importado por casi todas las vistas mejoradas.
 
-**Descripción:**
-Revisar y ajustar PageHeader para consistencia con el módulo de preescolar.
-
-**Cambios específicos:**
-- Asegurar que el ícono circular mantenga `bg-emerald-500` consistente
-- Verificar que breadcrumbs usen `text-emerald-600` para links activos
-- Ajustar espaciado inferior de `mb-6` a `mb-8` para más aire
-- Título: mantener `text-2xl font-bold` pero asegurar color `text-gray-900`
-
-**Definition of Done:**
-- PageHeader consistente en todas las vistas
-- Colores emerald aplicados correctamente
-- Espaciado uniforme
+5. **`tailwind.config.js`**
+   Configuración de Tailwind. Se modificará en MT-PRE-018 para agregar animaciones personalizadas.
 
 ---
 
-## RESUMEN EJECUTIVO
-
-### Estadísticas
-- **Total de microtareas:** 18
-- **Fases:** 4
-- **Tiempo estimado total:** 24-30 horas
-- **Archivos únicos afectados:** 8
-
-### Distribución por Fase
-| Fase | Microtareas | Horas Estimadas | Enfoque |
-|------|-------------|-----------------|---------|
-| 1 | 5 | 6-8h | Layout y estructura base |
-| 2 | 4 | 6-8h | Gestor de indicadores |
-| 3 | 5 | 6-8h | Evaluador e informe |
-| 4 | 4 | 6-8h | Configurador y pulido |
-
-### Archivos Críticos
-
-1. **NotesPreschool.tsx** - Página de notas (MT-01)
-2. **ConfigIndicadores.tsx** - Página de configuración de indicadores (MT-02)
-3. **ClassroomStudents.tsx** - Página de estudiantes del salón (MT-03)
-4. **EvaluadorPreescolar.tsx** - Página del evaluador (MT-04)
-5. **InformeConfigurador.tsx** - Configurador de propósitos (MT-05, MT-15, MT-16, MT-17)
-6. **GestorIndicadores.tsx** - Gestor de indicadores (MT-06, MT-07, MT-08, MT-09)
-7. **EvaluadorCompleto.tsx** - Evaluador completo (MT-10, MT-11, MT-12)
-8. **InformePreescolar.tsx** - Informe imprimible (MT-13, MT-14)
-9. **PageHeader.tsx** - Componente compartido (MT-18)
-
-### Prioridades de Implementación
-
-#### ALTA PRIORIDAD (Implementar primero)
-- MT-01 a MT-04: Corregir superposición de header en todas las vistas
-- MT-06, MT-07: Mejorar layout y tipografía del gestor de indicadores
-
-#### MEDIA PRIORIDAD
-- MT-05, MT-15, MT-16, MT-17: Mejoras en formularios y cards
-- MT-10, MT-11, MT-12: Optimización del evaluador
-
-#### BAJA PRIORIDAD (Pulido)
-- MT-08, MT-18: Estados vacíos y consistencia final
-- MT-13, MT-14: Ajustes de impresión
-
-### Notas Importantes
-
-1. **MT-09 está marcada como "DISEÑO SOLAMENTE"** porque requiere creación de nuevos componentes (modal) y lógica de persistencia. Debe implementarse con cuidado siguiendo la arquitectura de 3 capas.
-
-2. **Todas las microtareas respetan AGENTS.md:**
-   - ✅ Máximo 2 archivos por tarea
-   - ✅ Tiempo estimado 1-2 horas
-   - ✅ No tocan módulos protegidos
-   - ✅ Usan Tailwind CSS
-   - ✅ TypeScript estricto
-
-3. **HeaderV2 y SidebarV2 NO se modifican** - Son componentes compartidos del sistema
-
-4. **Enfoque en diseño minimalista:**
-   - Textos en negro/gris oscuro
-   - Colores fuertes solo en emerald para acciones principales
-   - Sombras sutiles (shadow-sm, shadow-md)
-   - Espaciado generoso
-
-5. **Informe impreso requiere atención especial:**
-   - Debe ajustarse a hoja legal
-   - Cabecera institucional bien alineada
-   - Tablas sin desbordamiento
-   - Uso de media queries para print
-
----
-
-## PRÓXIMOS PASOS
-
-1. **Revisar y aprobar este plan** con el equipo/usuario
-2. **Comenzar con FASE 1** - ajustes de layout base
-3. **Implementar una microtarea a la vez** siguiendo el orden establecido
-4. **Validar cada Definition of Done** antes de pasar a la siguiente
-5. **Documentar cambios** y mantener NOTES.md actualizado con el progreso
-
----
-
-**Fin del plan de microtareas**
-**Generado por:** Agente Arquitecto (Plan)
-**ID del agente:** af41d3e
-**Fecha:** 2026-02-09
+**Agente Arquitecto ID:** abe6fbb (para retomar si es necesario)

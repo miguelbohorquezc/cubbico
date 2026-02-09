@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
 import { AreaIhsInfo } from '../../../domain/entities/area';
+import { Tabs, SearchInput, Card, EmptyState, Badge } from '../../components/ui';
+import {
+  BookOpenIcon,
+  ClipboardIcon,
+  PencilIcon,
+  TrashIcon,
+  CheckCircleIcon,
+  AlertCircleIcon
+} from '../../components/icons';
 
 interface Indicador {
   id: string;
@@ -194,39 +203,35 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
 
   if (cargando) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] bg-white rounded-lg border border-gray-200">
-        <div className="w-12 h-12 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin"></div>
-        <p className="mt-4 text-sm font-medium text-gray-700">Cargando indicadores...</p>
+      <div className="flex flex-col items-center justify-center min-h-[500px] bg-white rounded-lg border border-light-gray-200 shadow-sm">
+        <div className="w-12 h-12 border-4 border-light-gray-200 border-t-deep-blue-600 rounded-full animate-spin"></div>
+        <p className="mt-4 text-sm font-medium text-light-gray-700">Cargando indicadores...</p>
       </div>
     );
   }
 
   return (
     <div className="flex gap-8">
-      {/* Toast de notificación */}
+      {/* Toast de notificación mejorado */}
       {mensaje.texto && (
-        <div className={`fixed top-20 right-6 z-50 max-w-md ${
+        <div className={`fixed top-20 right-6 z-50 max-w-md animate-fadeIn ${
           mensaje.tipo === 'success'
-            ? 'bg-white border border-emerald-200 shadow-lg'
+            ? 'bg-white border border-green-200 shadow-lg'
             : 'bg-white border border-red-200 shadow-lg'
         } rounded-lg p-4 flex items-start gap-3`}>
-          <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-            mensaje.tipo === 'success' ? 'bg-emerald-100' : 'bg-red-100'
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+            mensaje.tipo === 'success' ? 'bg-green-100' : 'bg-red-100'
           }`}>
             {mensaje.tipo === 'success' ? (
-              <svg className="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
+              <CheckCircleIcon className="w-4 h-4 text-green-600" />
             ) : (
-              <svg className="w-3 h-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="3">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <AlertCircleIcon className="w-4 h-4 text-red-600" />
             )}
           </div>
-          <p className="text-sm font-medium text-gray-900">{mensaje.texto}</p>
+          <p className="text-sm font-medium text-light-gray-900">{mensaje.texto}</p>
           <button
             onClick={() => setMensaje({ texto: '', tipo: '' })}
-            className="ml-auto text-gray-400 hover:text-gray-600"
+            className="ml-auto text-light-gray-400 hover:text-light-gray-600 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -237,54 +242,47 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
 
       {/* Columna principal - Tabla de indicadores */}
       <div className="flex-1 min-w-0">
-        {/* Tabs de asignaturas */}
-        <div className="mb-4 flex flex-wrap gap-2">
-          {asignaturas.map(asig => {
-            const count = contarPorAsignatura(asig.id);
-            return (
-              <button
+        {/* Tabs de asignaturas con Tabs component */}
+        <Tabs
+          defaultValue={asignaturaActiva}
+          onChange={(value) => {
+            setAsignaturaActiva(value);
+            setSearchTerm('');
+          }}
+          className="mb-6"
+        >
+          <Tabs.List>
+            {asignaturas.map(asig => (
+              <Tabs.Tab
                 key={asig.id}
-                onClick={() => {
-                  setAsignaturaActiva(asig.id);
-                  setSearchTerm('');
-                }}
-                className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors flex items-center gap-2 ${
-                  asignaturaActiva === asig.id
-                    ? 'bg-emerald-50 text-emerald-700 border-2 border-emerald-500'
-                    : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
-                }`}
+                value={asig.id}
+                icon={<BookOpenIcon />}
+                badge={contarPorAsignatura(asig.id)}
               >
                 {asig.asignatura}
-                <span className={`px-1.5 py-0.5 text-xs rounded-full ${
-                  asignaturaActiva === asig.id
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-gray-200 text-gray-600'
-                }`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+              </Tabs.Tab>
+            ))}
+          </Tabs.List>
 
-        {/* Barra de búsqueda y filtros */}
-        <div className="mb-4 flex items-center gap-3">
-          <div className="relative flex-1">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Buscar indicadores..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            />
-          </div>
+          {asignaturas.map(asig => (
+            <Tabs.Panel key={asig.id} value={asig.id}></Tabs.Panel>
+          ))}
+        </Tabs>
+
+        {/* Barra de búsqueda con SearchInput y filtros */}
+        <div className="mb-6 flex items-center gap-3">
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            onClear={() => setSearchTerm('')}
+            placeholder="Buscar indicadores..."
+            resultCount={indicadoresFiltrados.length}
+            debounceMs={300}
+          />
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="px-3 py-2 text-sm border border-light-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-blue-300 focus:border-deep-blue-500 bg-white"
           >
             <option value={10}>Mostrar 10</option>
             <option value={25}>Mostrar 25</option>
@@ -294,80 +292,78 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
         </div>
 
         {/* Tabla de indicadores */}
-        <div className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
+        <Card elevation="sm" className="overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-light-gray-50 border-b border-light-gray-200">
               <tr>
-                <th className="px-4 py-3 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-                  Indicador
+                <th className="px-4 py-3 text-left">
+                  <div className="flex items-center gap-2">
+                    <ClipboardIcon className="w-4 h-4 text-light-gray-500" />
+                    <span className="text-[11px] font-bold text-light-gray-600 uppercase tracking-wider">
+                      Indicador
+                    </span>
+                  </div>
                 </th>
-                <th className="px-4 py-3 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider w-32">
-                  Periodos
+                <th className="px-4 py-3 text-left w-32">
+                  <span className="text-[11px] font-bold text-light-gray-600 uppercase tracking-wider">
+                    Periodos
+                  </span>
                 </th>
-                <th className="px-4 py-3 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider w-24">
-                  Estado
+                <th className="px-4 py-3 text-left w-24">
+                  <span className="text-[11px] font-bold text-light-gray-600 uppercase tracking-wider">
+                    Estado
+                  </span>
                 </th>
-                <th className="px-4 py-3 text-center text-[11px] font-bold text-gray-500 uppercase tracking-wider w-32">
-                  Acciones
+                <th className="px-4 py-3 text-center w-32">
+                  <span className="text-[11px] font-bold text-light-gray-600 uppercase tracking-wider">
+                    Acciones
+                  </span>
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-light-gray-200">
               {indicadoresPaginados.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center text-gray-400">
-                      <svg className="w-12 h-12 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <p className="text-sm font-medium">
-                        {searchTerm ? 'No se encontraron indicadores' : 'No hay indicadores registrados'}
-                      </p>
-                      {!searchTerm && (
-                        <p className="text-xs mt-1">Haz clic en "Agregar indicador" para crear uno</p>
-                      )}
-                    </div>
+                  <td colSpan={4} className="px-6 py-12">
+                    <EmptyState
+                      variant={searchTerm ? 'search' : 'default'}
+                      icon={<ClipboardIcon />}
+                      title={searchTerm ? 'No se encontraron indicadores' : 'No hay indicadores registrados'}
+                      description={searchTerm ? 'Intenta con otros términos de búsqueda' : 'Haz clic en "Agregar indicador" para crear uno'}
+                    />
                   </td>
                 </tr>
               ) : (
                 indicadoresPaginados.map((indicador) => (
-                  <tr key={indicador.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3">
-                      <p className="text-sm text-gray-900 leading-relaxed">{indicador.texto}</p>
+                  <tr key={indicador.id} className="hover:bg-light-gray-50 transition-colors">
+                    <td className="px-4 py-4">
+                      <p className="text-sm text-light-gray-900 leading-relaxed">{indicador.texto}</p>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                    <td className="px-4 py-4">
+                      <Badge variant="info" size="sm">
                         {indicador.periodos.map(p => `P${p}`).join(', ')}
-                      </span>
+                      </Badge>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        indicador.activo
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
+                    <td className="px-4 py-4">
+                      <Badge variant={indicador.activo ? 'success' : 'default'} size="sm">
                         {indicador.activo ? 'Activo' : 'Inactivo'}
-                      </span>
+                      </Badge>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-4">
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => editarIndicador(indicador)}
-                          className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                          className="p-2 text-deep-blue-600 hover:bg-deep-blue-50 rounded-lg transition-colors"
                           title="Editar"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
+                          <PencilIcon className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => eliminarIndicador(indicador.id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-error-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Eliminar"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
@@ -376,7 +372,7 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
               )}
             </tbody>
           </table>
-        </div>
+        </Card>
 
         {/* Info de paginación */}
         {indicadoresFiltrados.length > itemsPerPage && (
@@ -388,39 +384,48 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
 
       {/* Columna lateral - Panel de gestión */}
       <div className="w-[400px] flex-shrink-0">
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden sticky top-6">
-          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-            <h3 className="text-base font-bold text-gray-900">Gestión de Indicadores</h3>
-          </div>
+        <Card elevation="md" className="sticky top-6">
+          <Card.Header icon={<ClipboardIcon />}>
+            Gestión de Indicadores
+          </Card.Header>
 
-          <div className="p-4">
+          <Card.Body noPadding>
             {!mostrarFormulario ? (
-              <div className="text-center py-8">
-                <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <div className="text-center py-12 px-6">
+                <div className="w-16 h-16 bg-deep-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-deep-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
                 </div>
-                <p className="text-sm text-gray-500 mb-4">Crea un nuevo indicador de desempeño</p>
+                <p className="text-sm text-light-gray-600 mb-6">Crea un nuevo indicador de desempeño</p>
                 <button
                   onClick={iniciarNuevoIndicador}
-                  className="w-full px-4 py-2.5 text-sm font-medium text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2"
+                  className="w-full px-4 py-3 text-sm font-medium text-white bg-deep-blue-600 rounded-lg hover:bg-deep-blue-700 transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                   </svg>
                   Agregar indicador
                 </button>
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-gray-200">
-                  <h4 className="text-sm font-medium text-gray-900">
-                    {indicadorEditando ? 'Editar Indicador' : 'Nuevo Indicador'}
-                  </h4>
+              <div className="p-6 space-y-5">
+                <div className="flex items-center justify-between pb-3 border-b border-light-gray-200">
+                  <div className="flex items-center gap-2">
+                    {indicadorEditando ? (
+                      <PencilIcon className="w-4 h-4 text-deep-blue-600" />
+                    ) : (
+                      <svg className="w-4 h-4 text-deep-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                      </svg>
+                    )}
+                    <h4 className="text-sm font-semibold text-deep-blue-900">
+                      {indicadorEditando ? 'Editar Indicador' : 'Nuevo Indicador'}
+                    </h4>
+                  </div>
                   <button
                     onClick={resetFormulario}
-                    className="p-1 text-gray-400 hover:text-gray-600"
+                    className="p-1.5 text-light-gray-400 hover:text-error-600 hover:bg-red-50 rounded-md transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -430,13 +435,14 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
 
                 {/* Asignatura */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="flex items-center gap-2 text-xs font-semibold text-deep-blue-800 mb-2">
+                    <BookOpenIcon className="w-3.5 h-3.5" />
                     Asignatura
                   </label>
                   <select
                     value={formulario.asignatura}
                     onChange={(e) => setFormulario({ ...formulario, asignatura: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-3 py-2.5 text-sm border border-light-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-blue-200 focus:border-deep-blue-500 transition-all bg-white"
                   >
                     <option value="">Seleccione...</option>
                     {asignaturas.map(asig => (
@@ -447,48 +453,67 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
 
                 {/* Texto */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="flex items-center gap-2 text-xs font-semibold text-deep-blue-800 mb-2">
+                    <ClipboardIcon className="w-3.5 h-3.5" />
                     Descripción del indicador
                   </label>
                   <textarea
                     value={formulario.texto}
                     onChange={(e) => setFormulario({ ...formulario, texto: e.target.value })}
                     placeholder="Describe el indicador de desempeño..."
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    rows={4}
+                    className="w-full px-3 py-2.5 text-sm border border-light-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-deep-blue-200 focus:border-deep-blue-500 transition-all"
+                    rows={5}
                     maxLength={MAX_CARACTERES}
                   />
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-xs text-gray-500">Máx. {MAX_CARACTERES} caracteres</span>
-                    <span className={`text-xs font-medium ${
-                      formulario.texto.length > MAX_CARACTERES * 0.9
-                        ? 'text-red-600'
-                        : 'text-gray-500'
-                    }`}>
-                      {formulario.texto.length}/{MAX_CARACTERES}
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-xs text-light-gray-500">
+                      Máximo {MAX_CARACTERES} caracteres
                     </span>
+                    <div className="flex items-center gap-2">
+                      {/* Progress bar visual */}
+                      <div className="w-16 h-1.5 bg-light-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-300 ${
+                            formulario.texto.length > MAX_CARACTERES * 0.9
+                              ? 'bg-error-500'
+                              : formulario.texto.length > MAX_CARACTERES * 0.7
+                              ? 'bg-yellow-500'
+                              : 'bg-green-500'
+                          }`}
+                          style={{ width: `${(formulario.texto.length / MAX_CARACTERES) * 100}%` }}
+                        />
+                      </div>
+                      <span className={`text-xs font-medium ${
+                        formulario.texto.length > MAX_CARACTERES * 0.9
+                          ? 'text-error-600'
+                          : 'text-light-gray-600'
+                      }`}>
+                        {formulario.texto.length}/{MAX_CARACTERES}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Periodos */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-2">
-                    Periodos
+                  <label className="block text-xs font-semibold text-deep-blue-800 mb-2">
+                    Periodos aplicables
                   </label>
                   <div className="grid grid-cols-4 gap-2">
                     {[1, 2, 3, 4].map(p => (
                       <button
                         key={p}
+                        type="button"
                         onClick={() => {
                           const newPeriodos = formulario.periodos.includes(p)
                             ? formulario.periodos.filter(per => per !== p)
                             : [...formulario.periodos, p].sort();
                           setFormulario({ ...formulario, periodos: newPeriodos });
                         }}
-                        className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                        className={`px-3 py-2 text-sm font-medium rounded-lg transition-all ${
                           formulario.periodos.includes(p)
-                            ? 'bg-emerald-500 text-white'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-deep-blue-600 text-white shadow-sm'
+                            : 'bg-light-gray-100 text-light-gray-600 hover:bg-light-gray-200'
                         }`}
                       >
                         P{p}
@@ -498,46 +523,54 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
                 </div>
 
                 {/* Estado */}
-                <div>
-                  <label className="flex items-center gap-2 cursor-pointer">
+                <div className="pt-2">
+                  <label className="flex items-center gap-3 cursor-pointer group">
                     <input
                       type="checkbox"
                       checked={formulario.activo}
                       onChange={(e) => setFormulario({ ...formulario, activo: e.target.checked })}
-                      className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                      className="w-4 h-4 text-deep-blue-600 border-light-gray-300 rounded focus:ring-deep-blue-500 transition-colors"
                     />
-                    <span className="text-sm text-gray-700">Indicador activo</span>
+                    <span className="text-sm text-light-gray-700 group-hover:text-deep-blue-700 transition-colors">
+                      Indicador activo
+                    </span>
                   </label>
                 </div>
 
                 {/* Errores */}
                 {errores.length > 0 && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 space-y-1">
                     {errores.map((error, i) => (
-                      <p key={i} className="text-xs text-red-600">{error}</p>
+                      <div key={i} className="flex items-start gap-2">
+                        <AlertCircleIcon className="w-4 h-4 text-error-600 flex-shrink-0 mt-0.5" />
+                        <p className="text-xs text-error-700">{error}</p>
+                      </div>
                     ))}
                   </div>
                 )}
 
                 {/* Botones */}
-                <div className="flex gap-2 pt-2">
+                <div className="flex gap-3 pt-4">
                   <button
+                    type="button"
                     onClick={resetFormulario}
-                    className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-light-gray-700 bg-white border border-light-gray-300 rounded-lg hover:bg-light-gray-50 transition-all"
                   >
                     Cancelar
                   </button>
                   <button
+                    type="button"
                     onClick={guardarIndicador}
-                    className="flex-1 px-4 py-2 text-sm font-medium text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 transition-colors"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
                   >
+                    <CheckCircleIcon className="w-4 h-4" />
                     {indicadorEditando ? 'Actualizar' : 'Guardar'}
                   </button>
                 </div>
               </div>
             )}
-          </div>
-        </div>
+          </Card.Body>
+        </Card>
       </div>
     </div>
   );

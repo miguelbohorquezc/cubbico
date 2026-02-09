@@ -30,7 +30,7 @@ const useSidebarCollapsed = (): boolean => {
 
 function EvaluadorPreescolar() {
   const isSidebarCollapsed = useSidebarCollapsed();
-  const { classroomId = '', studentId = '', periodId = '0' } = useParams();
+  const { classroomId = '', studentId = '', periodId = '0', year = '' } = useParams();
   const safePeriodId = parseInt(periodId, 10) || 0;
   const navigate = useNavigate();
 
@@ -61,7 +61,7 @@ function EvaluadorPreescolar() {
 
           <EvaluadorCompleto
             studentId={studentId}
-            year="2025"
+            year={year}
             classRoomId={classroomId}
             periodo={safePeriodId}
           />

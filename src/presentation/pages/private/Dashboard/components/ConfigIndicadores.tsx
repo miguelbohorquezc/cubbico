@@ -32,6 +32,7 @@ function ConfigIndicadores() {
   const isSidebarCollapsed = useSidebarCollapsed();
   const { classroomId = '', periodId = '' } = useParams();
   const navigate = useNavigate();
+  const currentYear = new Date().getFullYear().toString();
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -74,7 +75,7 @@ function ConfigIndicadores() {
 
           <GestorIndicadores
             classRoomId={classroomId}
-            year="2025"
+            year={currentYear}
             periodo={parseInt(periodId)}
           />
         </main>

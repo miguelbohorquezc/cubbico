@@ -32,6 +32,7 @@ function NotesPreschool() {
   const isSidebarCollapsed = useSidebarCollapsed();
   const { classroomId = '' } = useParams();
   const navigate = useNavigate();
+  const currentYear = new Date().getFullYear().toString();
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -74,7 +75,7 @@ function NotesPreschool() {
 
           <InformeConfigurador
             classRoomId={classroomId}
-            year="2025"
+            year={currentYear}
           />
         </main>
       </div>

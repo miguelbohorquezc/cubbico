@@ -5,6 +5,9 @@ import logo from '../../../../assets/logo/logotipo.jpg';
 import logoPreschool from '../../../../assets/logo/logoPreschool.svg';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../infrastructure/firebase/firebase';
+import { UserIcon, BookOpenIcon, CalendarIcon, ClockIcon } from '../../../components/icons';
+import { Badge } from '../../../components/ui';
+import { fetchPeriodConfig, formatFechaEntrega } from '../../../../infrastructure/periodConfig.service';
 
 import firmOne from "../../../../assets/firm/01.jpg";
 import firmTwo from "../../../../assets/firm/02.jpg";
@@ -44,6 +47,7 @@ const InformePreescolar: React.FC = () => {
   });
 
   const [directorGrupo, setDirectorGrupo] = useState<string>('');
+  const [fechaEntrega, setFechaEntrega] = useState<string>('');
 
   useEffect(() => {
     if (!classroomId) return;
@@ -61,6 +65,35 @@ const InformePreescolar: React.FC = () => {
     };
     fetchDirector();
   }, [classroomId]);
+
+  useEffect(() => {
+    if (!periodId || !year) return;
+    const fetchFecha = async () => {
+      try {
+        const config = await fetchPeriodConfig(periodId, year);
+        if (config && config.fechaEntrega) {
+          const formatted = formatFechaEntrega(config.fechaEntrega);
+          setFechaEntrega(formatted);
+        } else {
+          // Si no hay configuración, mostrar fecha actual
+          setFechaEntrega(new Date().toLocaleDateString('es-CO', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }));
+        }
+      } catch (err) {
+        console.error('Error fetching fecha entrega:', err);
+        // En caso de error, mostrar fecha actual
+        setFechaEntrega(new Date().toLocaleDateString('es-CO', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }));
+      }
+    };
+    fetchFecha();
+  }, [periodId, year]);
 
   return (
     <>
@@ -99,27 +132,64 @@ const InformePreescolar: React.FC = () => {
           </table>
 
           {/* Información del estudiante */}
-          <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-white print:bg-white">
-            <div className="flex flex-wrap gap-6 justify-around">
-              <div className="flex flex-col">
-                <span className="text-xs font-bold uppercase text-gray-600">Estudiante:</span>
-                <span className="text-sm font-semibold text-gray-900">
-                  {studentName.toUpperCase() || studentId}
-                </span>
+          <div className="mb-6 bg-gradient-to-r from-deep-blue-50 to-blue-50 border border-deep-blue-100 rounded-xl p-6 print:bg-white print:border-gray-300">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-light-gray-200 shadow-sm print:shadow-none">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <UserIcon className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-light-gray-500 mb-1 tracking-wide">Estudiante</p>
+                  <p className="text-sm font-semibold text-deep-blue-900 leading-tight">
+                    {studentName || studentId}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold uppercase text-gray-600">Salón de Clases:</span>
-                <span className="text-sm font-semibold text-gray-900">
-                  {classroomName.toUpperCase() || classroomId}
-                </span>
+
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-light-gray-200 shadow-sm print:shadow-none">
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <BookOpenIcon className="w-5 h-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-light-gray-500 mb-1 tracking-wide">Grado</p>
+                  <p className="text-sm font-semibold text-deep-blue-900 leading-tight">
+                    {classroomName || 'N/A'}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold uppercase text-gray-600">Periodo:</span>
-                <span className="text-sm font-semibold text-gray-900">{safePeriod}</span>
+
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-light-gray-200 shadow-sm print:shadow-none">
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CalendarIcon className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-light-gray-500 mb-1 tracking-wide">Periodo</p>
+                  <Badge variant="success" size="sm">
+                    Periodo {safePeriod}
+                  </Badge>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold uppercase text-gray-600">Fecha:</span>
-                <span className="text-sm font-semibold text-gray-900">19/11/2025</span>
+
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-light-gray-200 shadow-sm print:shadow-none">
+                <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <ClockIcon className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-light-gray-500 mb-1 tracking-wide">Año</p>
+                  <p className="text-sm font-semibold text-deep-blue-900 leading-tight">{year}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border border-light-gray-200 shadow-sm print:shadow-none">
+                <div className="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CalendarIcon className="w-5 h-5 text-rose-600" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-light-gray-500 mb-1 tracking-wide">Fecha de Entrega</p>
+                  <p className="text-xs font-semibold text-deep-blue-900 leading-tight">
+                    {fechaEntrega || 'Cargando...'}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -129,20 +199,20 @@ const InformePreescolar: React.FC = () => {
             {propositos.map((p, i) => (
               <div
                 key={p.id}
-                className="border border-gray-300 rounded-lg overflow-hidden print:break-inside-avoid"
+                className="border-2 border-deep-blue-200 rounded-xl overflow-hidden shadow-sm print:break-inside-avoid print:shadow-none print:border-gray-300"
               >
                 <table className="w-full border-collapse">
                   <thead>
                     <tr>
                       <th
                         colSpan={2}
-                        className="bg-gray-50 p-4 text-left text-sm font-bold text-gray-900 border-b border-gray-200 print:bg-gray-50"
+                        className="bg-gradient-to-r from-deep-blue-50 to-blue-50 p-4 text-left text-sm font-bold text-deep-blue-900 border-b-2 border-deep-blue-200 print:bg-gray-50 print:border-gray-300"
                       >
-                        <div className="flex items-center gap-2">
-                          <span className="w-6 h-6 bg-emerald-100 rounded flex items-center justify-center text-emerald-700 text-xs font-bold">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 bg-deep-blue-600 rounded-lg flex items-center justify-center text-white text-sm font-bold shadow-sm">
                             {i + 1}
                           </span>
-                          <span>Propósito: {p.texto}</span>
+                          <span className="leading-relaxed">Propósito: {p.texto}</span>
                         </div>
                       </th>
                     </tr>
@@ -150,16 +220,18 @@ const InformePreescolar: React.FC = () => {
                   <tbody>
                     <tr className="align-top">
                       {/* Columna Referentes */}
-                      <td className="w-[35%] p-5 border-r border-gray-200 bg-gray-50 print:bg-white">
-                        <h4 className="text-xs font-bold uppercase text-gray-600 mb-3 tracking-wide">
+                      <td className="w-[35%] p-5 border-r-2 border-deep-blue-200 bg-deep-blue-50/30 print:bg-white print:border-gray-300">
+                        <h4 className="text-xs font-bold uppercase text-deep-blue-700 mb-3 tracking-wide flex items-center gap-2">
+                          <span className="w-1 h-4 bg-deep-blue-600 rounded-full"></span>
                           Referentes
                         </h4>
                         <ul className="space-y-2">
                           {p.referentes.map((r, idx) => (
                             <li
                               key={idx}
-                              className="bg-white border border-gray-200 rounded-lg px-4 py-3 text-xs text-gray-800 print:bg-white print:border-gray-300"
+                              className="bg-white border border-deep-blue-200 rounded-lg px-3 py-2.5 text-xs text-gray-800 leading-relaxed print:bg-white print:border-gray-300"
                             >
+                              <span className="font-semibold text-deep-blue-600 mr-1">{idx + 1}.</span>
                               {r}
                             </li>
                           ))}
@@ -168,8 +240,9 @@ const InformePreescolar: React.FC = () => {
 
                       {/* Columna Indicadores */}
                       <td className="p-5 bg-white">
-                        <h4 className="text-xs font-bold uppercase text-gray-600 mb-3 tracking-wide">
-                          Indicadores
+                        <h4 className="text-xs font-bold uppercase text-deep-blue-700 mb-3 tracking-wide flex items-center gap-2">
+                          <span className="w-1 h-4 bg-green-600 rounded-full"></span>
+                          Indicadores de Desempeño
                         </h4>
                         <div className="space-y-2">
                           {p.asignaturas.map((aId) => {
@@ -182,10 +255,11 @@ const InformePreescolar: React.FC = () => {
                             return (
                               <div
                                 key={aId}
-                                className="border border-gray-200 rounded-lg px-4 py-3 bg-white"
+                                className="border border-green-200 rounded-lg px-3 py-2.5 bg-green-50/30 print:bg-white print:border-gray-300"
                               >
                                 {indicador ? (
                                   <p className="text-xs text-gray-800 leading-relaxed">
+                                    <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></span>
                                     {indicador.texto}
                                   </p>
                                 ) : (
@@ -216,19 +290,16 @@ const InformePreescolar: React.FC = () => {
           )}
 
           {/* Observaciones */}
-          <div className="mt-6">
-            <h4 className="text-sm font-bold uppercase text-gray-800 mb-2">
-              Observaciones
-            </h4>
-            <table className="w-full border-collapse mb-8 border border-gray-300">
-              <tbody>
-                {Array.from({ length: 1 }).map((_, idx) => (
-                  <tr key={idx}>
-                    <td className="h-12 border border-gray-300 px-3">&nbsp;</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-8">
+            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-5 print:bg-white print:border-gray-300">
+              <h4 className="text-sm font-bold uppercase text-amber-900 mb-3 flex items-center gap-2">
+                <span className="w-1.5 h-5 bg-amber-600 rounded-full"></span>
+                Observaciones
+              </h4>
+              <div className="bg-white border border-amber-200 rounded-lg p-4 min-h-[60px] print:border-gray-300">
+                <p className="text-xs text-gray-500 italic">Espacio para observaciones del docente...</p>
+              </div>
+            </div>
           </div>
 
           {/* Firmas */}

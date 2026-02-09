@@ -27,3 +27,30 @@ export type { SelectProps, SelectOption } from './Select';
 // Label component
 export { default as Label } from './Label';
 export type { LabelProps, LabelSize } from './Label';
+
+// Badge component
+export { default as Badge } from './Badge';
+export type { BadgeProps, BadgeVariant, BadgeSize } from './Badge';
+
+// Card component
+export { default as Card } from './Card';
+export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps, CardElevation } from './Card';
+
+// Tabs component
+export { default as Tabs } from './Tabs';
+export type { TabsProps, TabsListProps, TabProps, TabPanelProps } from './Tabs';
+
+// EmptyState component
+export { default as EmptyState } from './EmptyState';
+export type { EmptyStateProps, EmptyStateVariant } from './EmptyState';
+
+// ProgressBar component
+export { default as ProgressBar } from './ProgressBar';
+export type { ProgressBarProps, ProgressBarVariant } from './ProgressBar';
+
+// SearchInput component
+export { default as SearchInput } from './SearchInput';
+export type { SearchInputProps } from './SearchInput';
+
+// ConfirmModal component
+export { default as ConfirmModal } from './ConfirmModal';
