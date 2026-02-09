@@ -3,6 +3,8 @@ import { db } from "./firebase/firebase";
 import { studentInfo } from "../domain/entities/studentInfo";
 import {  Student } from "../presentation/components/notes/types";
 import { BatchStudentData } from "../domain/entities/batchStudentData";
+import { ClassRoom } from "../domain/entities/classRoom";
+import { FirebaseUser } from "../domain/entities/firebaseUser";
 
 /**
  * Verifica si ya existe un estudiante con el mismo número de documento
@@ -90,6 +92,58 @@ export const fetchStudents = async (): Promise<Student[]> => {
     
   } catch (error) {
     throw new Error("Error al cargar estudiantes");
+  }
+};
+
+/**
+ * Obtiene los metadatos históricos del salón para guardar en el historial académico
+ * @param classroomId - ID del salón
+ * @returns Metadatos del salón (nivel, nombreGrado, nombreDirector)
+ */
+const getClassroomHistoricalMetadata = async (
+  classroomId: string
+): Promise<{ nivel: string; nombreGrado: string; nombreDirector: string }> => {
+  try {
+    // Obtener datos del salón
+    const classroomDoc = await getDoc(doc(db, "classRooms", classroomId));
+
+    if (!classroomDoc.exists()) {
+      console.warn(`⚠️ Salón ${classroomId} no encontrado, usando valores por defecto`);
+      return {
+        nivel: 'Primaria',
+        nombreGrado: 'Sin especificar',
+        nombreDirector: 'Sin asignar'
+      };
+    }
+
+    const classroomData = classroomDoc.data() as ClassRoom;
+    const nivel = classroomData.nivel || 'Primaria';
+    const nombreGrado = classroomData.nombreSalon || 'Sin especificar';
+    const directorGrupoUid = classroomData.directorGrupo;
+
+    // Obtener nombre del director si existe
+    let nombreDirector = 'Sin asignar';
+    if (directorGrupoUid) {
+      try {
+        const userDoc = await getDoc(doc(db, "users", directorGrupoUid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data() as FirebaseUser;
+          nombreDirector = userData.displayName || userData.email || 'Sin nombre';
+        }
+      } catch (error) {
+        console.warn(`⚠️ No se pudo obtener el nombre del director ${directorGrupoUid}:`, error);
+      }
+    }
+
+    return { nivel, nombreGrado, nombreDirector };
+  } catch (error) {
+    console.error('❌ Error al obtener metadatos del salón:', error);
+    // Retornar valores por defecto en caso de error
+    return {
+      nivel: 'Primaria',
+      nombreGrado: 'Sin especificar',
+      nombreDirector: 'Sin asignar'
+    };
   }
 };
 
@@ -195,8 +249,27 @@ export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
       }
     });
 
+    // Obtener metadatos históricos de todos los salones únicos
+    const uniqueClassroomIds = [...new Set(studentsData.map(s => s.classroomId).filter(Boolean))];
+    const classroomMetadataCache = new Map<string, { nivel: string; nombreGrado: string; nombreDirector: string }>();
+
+    // Cachear metadatos de salones para evitar consultas duplicadas
+    await Promise.all(
+      uniqueClassroomIds.map(async (classroomId) => {
+        if (classroomId) {
+          const metadata = await getClassroomHistoricalMetadata(classroomId);
+          classroomMetadataCache.set(classroomId, metadata);
+        }
+      })
+    );
+
     studentsData.forEach((studentData) => {
       const studentRef = doc(db, "history", studentData.studentId);
+
+      // Obtener metadatos del salón del caché
+      const classroomMetadata = studentData.classroomId
+        ? classroomMetadataCache.get(studentData.classroomId)
+        : null;
 
       const updateData = {
         years: {
@@ -210,7 +283,13 @@ export const bulkSaveStudents = async (studentsData: BatchStudentData[]) => {
                       teacherId: studentData.teacherId,
                       classroomId: studentData.classroomId,
                       achievementId: studentData.achievementId,
-                      lastUpdate: timestamp
+                      lastUpdate: timestamp,
+                      // Metadatos históricos del salón
+                      ...(classroomMetadata && {
+                        nivel: classroomMetadata.nivel,
+                        nombreGrado: classroomMetadata.nombreGrado,
+                        nombreDirector: classroomMetadata.nombreDirector
+                      })
                     }
                   }
                 }

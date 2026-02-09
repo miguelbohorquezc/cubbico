@@ -39,6 +39,7 @@ const useSidebarCollapsed = (): boolean => {
 interface YearRecord {
   year: string;
   nivel: string;
+  nombreGrado: string;
   directorGrupo: string;
   periodsAvailable: string[];
 }
@@ -81,40 +82,86 @@ function useStudentHistory(studentId: string | null) {
 
           if (periodsAvailable.length === 0) continue;
 
-          // Extraer classroomId del primer área disponible en metadata
+          // Extraer metadata del primer área disponible
+          let nivel = 'primaria';
+          let nombreGrado = '';
+          let directorGrupo = '';
           let classroomId = '';
+          let metadataFound = false;
+
+          // Intentar obtener metadatos históricos guardados
           for (const pKey of periodsAvailable) {
             const areas = (periods[pKey] as Record<string, unknown>)?.areas as Record<string, unknown> || {};
             for (const aKey of Object.keys(areas)) {
               const areaData = areas[aKey] as Record<string, unknown>;
               const meta = areaData?.metadata as Record<string, unknown>;
-              const cid = meta?.classroomId;
-              if (typeof cid === 'string' && cid) {
-                classroomId = cid;
-                break;
+
+              if (meta) {
+                // Guardar classroomId para fallback
+                const cid = meta?.classroomId;
+                if (typeof cid === 'string' && cid) {
+                  classroomId = cid;
+                }
+
+                // Intentar leer metadatos históricos (guardados desde Tarea #4)
+                const nivelMeta = meta?.nivel;
+                const nombreGradoMeta = meta?.nombreGrado;
+                const nombreDirectorMeta = meta?.nombreDirector;
+
+                if (typeof nivelMeta === 'string' && nivelMeta) {
+                  nivel = nivelMeta;
+                  metadataFound = true;
+                }
+
+                if (typeof nombreGradoMeta === 'string' && nombreGradoMeta) {
+                  nombreGrado = nombreGradoMeta;
+                  metadataFound = true;
+                }
+
+                if (typeof nombreDirectorMeta === 'string' && nombreDirectorMeta) {
+                  directorGrupo = nombreDirectorMeta;
+                  metadataFound = true;
+                }
+
+                if (metadataFound) break;
               }
             }
-            if (classroomId) break;
+            if (metadataFound) break;
           }
 
-          // Obtener nivel y director de grupo del salón
-          let nivel = 'primaria';
-          let directorGrupo = '';
-
-          if (classroomId) {
+          // Fallback: si no hay metadatos históricos, consultar el salón actual (compatibilidad con datos antiguos)
+          if (!metadataFound && classroomId) {
             try {
               const crSnap = await getDoc(doc(db, 'classRooms', classroomId));
               if (crSnap.exists()) {
                 const cr = crSnap.data();
                 nivel = cr?.nivel || 'primaria';
-                directorGrupo = cr?.directorGrupo || '';
+                nombreGrado = cr?.nombreSalon || 'Sin especificar';
+                const directorUid = cr?.directorGrupo || '';
+
+                // Consultar nombre del director si existe UID
+                if (directorUid) {
+                  try {
+                    const userSnap = await getDoc(doc(db, 'users', directorUid));
+                    if (userSnap.exists()) {
+                      const userData = userSnap.data();
+                      directorGrupo = userData?.displayName || userData?.email || directorUid;
+                    } else {
+                      directorGrupo = directorUid;
+                    }
+                  } catch {
+                    directorGrupo = directorUid;
+                  }
+                } else {
+                  directorGrupo = '';
+                }
               }
             } catch {
               // usar defaults si el salón no se encuentra
             }
           }
 
-          records.push({ year, nivel, directorGrupo, periodsAvailable });
+          records.push({ year, nivel, nombreGrado, directorGrupo, periodsAvailable });
         }
 
         // Años más recientes primero
@@ -280,9 +327,16 @@ function History() {
                   {/* Encabezado del año */}
                   <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-gray-200">
                     <div>
-                      <span className="text-lg font-bold text-indigo-700">{yr.year}</span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg font-bold text-indigo-700">{yr.year}</span>
+                        {yr.nombreGrado && (
+                          <span className="text-sm font-medium text-indigo-600">
+                            {yr.nombreGrado}
+                          </span>
+                        )}
+                      </div>
                       {yr.directorGrupo && (
-                        <span className="ml-3 text-xs text-gray-500">
+                        <span className="text-xs text-gray-500">
                           Dir. de grupo: {yr.directorGrupo}
                         </span>
                       )}

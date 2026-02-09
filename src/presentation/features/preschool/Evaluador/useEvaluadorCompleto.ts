@@ -48,6 +48,7 @@ export function useEvaluadorCompleto({
   classRoomId
 }: Params) {
   const [studentName, setStudentName] = useState<string>('');
+  const [classroomName, setClassroomName] = useState<string>('');
   const [propositos, setPropositos] = useState<Proposito[]>([]);
   const [indicadores, setIndicadores] = useState<Indicador[]>([]);
   const [selecciones, setSelecciones] = useState<Record<string, string>>({});
@@ -87,14 +88,23 @@ export function useEvaluadorCompleto({
         setIndicadores(filtrados);
         setSelecciones(selSnap.exists() ? selSnap.data().selecciones || {} : {});
 
-        // 3. Nombre del estudiante
-        const studentSnap = await getDoc(doc(db, 'student', studentId));
+        // 3. Nombre del estudiante y salón
+        const [studentSnap, classroomSnap] = await Promise.all([
+          getDoc(doc(db, 'student', studentId)),
+          getDoc(doc(db, 'classRooms', classRoomId))
+        ]);
+
         if (studentSnap.exists()) {
           const { name, lastName } = studentSnap.data() as {
             name: string;
             lastName: string;
           };
           setStudentName(`${name} ${lastName}`);
+        }
+
+        if (classroomSnap.exists()) {
+          const { salon } = classroomSnap.data() as { salon: string };
+          setClassroomName(salon || '');
         }
       } catch (e) {
         console.error(e);
@@ -142,6 +152,7 @@ export function useEvaluadorCompleto({
 
   return {
     studentName,
+    classroomName,
     propositos,
     indicadores,
     selecciones,
