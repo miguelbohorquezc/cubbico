@@ -32,6 +32,7 @@ const AcademicReport = () => {
 
   const [studentInfo, setStudentInfo] = React.useState<StudentData | null>(null);
   const [fechaEntrega, setFechaEntrega] = React.useState<string>('');
+  const [directorName, setDirectorName] = React.useState<string>('');
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
 
@@ -65,6 +66,23 @@ const AcademicReport = () => {
           id: studentData.id,
           classroomId: studentData.classroomId
         });
+
+        // Resolver director: si parece un UID de Firebase, buscar el nombre
+        if (director && director.length > 15) {
+          try {
+            const userDoc = await getDoc(doc(db, 'users', director));
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              setDirectorName(userData?.displayName || userData?.email || director);
+            } else {
+              setDirectorName(director);
+            }
+          } catch {
+            setDirectorName(director);
+          }
+        } else if (director) {
+          setDirectorName(director);
+        }
 
         const [historySnap, areasSnapshot] = await Promise.all([
           getDoc(doc(db, 'history', studentId)),
@@ -332,7 +350,7 @@ const AcademicReport = () => {
     </table>
   );
 
-  const SignaturesTable = ({ periodId: pid }: { periodId?: string }) => (
+  const SignaturesTable = ({ periodId: pid, directorName: dirName }: { periodId?: string; directorName?: string }) => (
     <table className="w-full border-collapse border border-indigo-200">
       <tbody>
         <tr>
@@ -357,7 +375,7 @@ const AcademicReport = () => {
           <td className="text-center py-4 border border-gray-100">
             <div className="firma flex flex-col items-center mt-12">
               <div className="w-36 h-12 border-b border-gray-400"></div>
-              <p className="text-[10pt] font-medium text-gray-900 mt-2">{director || "Director(a) de Grupo"}</p>
+              <p className="text-[10pt] font-medium text-gray-900 mt-2">{dirName || "Director(a) de Grupo"}</p>
               <p className="text-[10pt] text-gray-600">Director(a) de Grupo</p>
             </div>
           </td>
@@ -470,7 +488,7 @@ const AcademicReport = () => {
       <ConventionsTable />
       <GradeScaleTable />
       <ObservationsTable />
-      <SignaturesTable periodId={periodId} />
+      <SignaturesTable periodId={periodId} directorName={directorName} />
     </div>
   );
 
@@ -516,7 +534,7 @@ const AcademicReport = () => {
         <ConventionsTable />
         <GradeScaleTable />
         <ObservationsTable />
-        <SignaturesTable periodId={periodId} />
+        <SignaturesTable periodId={periodId} directorName={directorName} />
       </div>
     </div>
   );

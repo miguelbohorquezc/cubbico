@@ -4,36 +4,62 @@
  *
  * Muestra las clases de la semana del usuario autenticado usando FlexibleCalendar.
  * Cada clase es clickeable y navega a la página de asistencia correspondiente.
+ *
+ * Flujo de interacción mejorado:
+ * - Al hacer clic en una actividad, se muestra un modal de confirmación
+ * - El modal presenta información de la clase: asignatura, hora y salón
+ * - El usuario puede confirmar ("Pasar Lista") o cancelar
+ * - El modal se puede cerrar con Escape o haciendo clic fuera
+ * - Solo al confirmar se navega a la página de asistencia
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../../app/store/store';
 import { loadFlexibleSchedule } from '../../../app/store/states/flexibleSchedule.slice';
 import { FlexibleCalendar } from './FlexibleCalendar';
 import type { FlexibleScheduleActivity } from '../../../domain/entities/schedule';
 import { PrivateRoutes } from '../../../app/routes/routes';
-import { IconCalendar } from '@tabler/icons-react';
+import { IconCalendar, IconX, IconClipboardCheck } from '@tabler/icons-react';
 
 export default function TeacherCalendar() {
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const year = String(new Date().getFullYear());
+  const [selectedActivity, setSelectedActivity] = useState<FlexibleScheduleActivity | null>(null);
 
   // Cargar horario
   useEffect(() => {
     dispatch(loadFlexibleSchedule(year));
   }, [dispatch, year]);
 
+  // Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedActivity) {
+        setSelectedActivity(null);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [selectedActivity]);
+
   // Navegar a asistencia al hacer clic en actividad
   const handleActivityClick = (activity: FlexibleScheduleActivity, _position: { x: number; y: number }) => {
+    setSelectedActivity(activity);
+  };
+
+  // Confirmar y navegar a asistencia
+  const handleConfirmAttendance = () => {
+    if (!selectedActivity) return;
+
     // Calcular la fecha correcta basándose en el día de la semana de la actividad
     const today = new Date();
     const currentDayOfWeek = today.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
 
     // Convertir dayOfWeek de la actividad (0 = Lunes) a formato de JS (1 = Lunes)
-    const activityDayOfWeek = activity.dayOfWeek + 1; // 0 -> 1 (Lunes), 4 -> 5 (Viernes)
+    const activityDayOfWeek = selectedActivity.dayOfWeek + 1; // 0 -> 1 (Lunes), 4 -> 5 (Viernes)
 
     // Calcular diferencia de días
     let daysDifference = activityDayOfWeek - currentDayOfWeek;
@@ -56,7 +82,7 @@ export default function TeacherCalendar() {
     const isoDate = `${year}-${month}-${day}`;
 
     navigate(
-      `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/${activity.classroomId}/${activity.teacherId}/${activity.courseId}/${isoDate}/${encodeURIComponent(activity.startTime)}`
+      `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/${selectedActivity.classroomId}/${selectedActivity.teacherId}/${selectedActivity.courseId}/${isoDate}/${encodeURIComponent(selectedActivity.startTime)}`
     );
   };
 
@@ -91,6 +117,77 @@ export default function TeacherCalendar() {
           onActivityClick={handleActivityClick}
         />
       </div>
+
+      {/* Modal de confirmación */}
+      {selectedActivity && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-40 animate-fade-in"
+            onClick={() => setSelectedActivity(null)}
+          />
+
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full pointer-events-auto animate-scale-in">
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <IconClipboardCheck size={20} className="text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900">Pasar Asistencia</h3>
+                    <p className="text-xs text-gray-500">Confirma para continuar</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedActivity(null)}
+                  className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <IconX size={18} />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="px-6 py-5 space-y-4">
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Asignatura</p>
+                  <p className="text-sm font-medium text-gray-900">{selectedActivity.courseName}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Hora</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {selectedActivity.startTime} - {selectedActivity.endTime}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Salón</p>
+                    <p className="text-sm font-medium text-gray-900">{selectedActivity.classroomName}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 rounded-b-2xl">
+                <button
+                  onClick={() => setSelectedActivity(null)}
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleConfirmAttendance}
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow-md"
+                >
+                  Pasar Lista
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

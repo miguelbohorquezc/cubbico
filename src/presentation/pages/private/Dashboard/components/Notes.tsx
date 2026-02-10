@@ -9,7 +9,7 @@ import TeacherAchievements from '../../../../features/teacher/TeacherAchivement'
 import { PrivateRoutes } from '../../../../../app/routes/routes';
 import { useAppSelector } from '../../../../../app/store/store';
 import { usePermissions } from '../../../../hooks/usePermissions';
-import { IconArrowLeft, IconPlus, IconFileDescription, IconClipboardList, IconChevronRight, IconPrinter } from '@tabler/icons-react';
+import { IconArrowLeft, IconPlus, IconFileDescription, IconClipboardList, IconChevronRight, IconPrinter, IconFiles } from '@tabler/icons-react';
 
 // Key del localStorage usada por useSidebarV2
 const SIDEBAR_STORAGE_KEY = 'cubbico-sidebar-collapsed';
@@ -119,6 +119,16 @@ function Notes() {
               >
                 <IconFileDescription size={18} />
                 <span className="hidden sm:inline">Informe</span>
+              </Link>
+
+              {/* Botón de informes del salón - Vista masiva */}
+              <Link
+                to={`/private/dashboard/informe/salon/${classroom?.nivel}/${periodId}/${classroomId}/${anioActual}`}
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-all duration-200"
+                title="Ver todos los informes del salón"
+              >
+                <IconFiles size={18} />
+                <span className="hidden sm:inline">Informes Salón</span>
               </Link>
 
               {/* Botón de impresión masiva - Solo coordinadores */}

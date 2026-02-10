@@ -7,6 +7,7 @@ import {
   setDoc
 } from 'firebase/firestore';
 import { db } from '../../../../infrastructure/firebase/firebase';
+import { savePreschoolToHistory } from '../../../../infrastructure/preschoolHistory.service';
 
 // Tipos reutilizados
 interface Indicador {
@@ -126,6 +127,8 @@ export function useEvaluadorCompleto({
   const guardarEvaluacion = async () => {
     try {
       setGuardando(true);
+
+      // 1. Guardar selecciones del periodo
       await setDoc(
         doc(db, 'preschool_selections', `${classRoomId}_${year}_${studentId}`),
         {
@@ -141,10 +144,25 @@ export function useEvaluadorCompleto({
         },
         { merge: true }
       );
+
+      // 2. Guardar en el historial académico
+      await savePreschoolToHistory(
+        studentId,
+        year,
+        periodo,
+        classRoomId,
+        selecciones,
+        {
+          studentName,
+          classroomName,
+          nivel: 'preescolar'
+        }
+      );
+
       setMostrarExito(true);
       setTimeout(() => setMostrarExito(false), 3000);
     } catch (e) {
-      console.error(e);
+      console.error('Error guardando evaluación:', e);
     } finally {
       setGuardando(false);
     }

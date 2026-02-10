@@ -11,6 +11,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../infrastructure/firebase/firebase';
 import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
 import { fetchStudentsByClassroom } from '../../../infrastructure/student.service';
@@ -28,6 +30,7 @@ import {
   IconChevronRight,
   IconArrowBack,
   IconFileAnalytics,
+  IconDoor,
 } from '@tabler/icons-react';
 import JustificationModal from './JustificationModal';
 
@@ -135,6 +138,7 @@ export default function AttendanceList() {
   const [isLoading, setIsLoading]     = useState(true);
   const [error, setError]             = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(() => fecha.slice(0, 7));
+  const [classroomName, setClassroomName] = useState<string>('');
 
   // Estado del modal de justificación (se conecta en microtask 4.2)
   const [modalData, setModalData]     = useState<{ fecha: string; studentId: string; studentName: string } | null>(null);
@@ -148,6 +152,25 @@ export default function AttendanceList() {
   })();
 
   const monthDays = getMonthDays(currentMonth, classDow);
+
+  // ── Cargar nombre del salón ──────────────────────
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadClassroom() {
+      try {
+        const classroomDoc = await getDoc(doc(db, 'classRooms', salonId));
+        if (!cancelled && classroomDoc.exists()) {
+          setClassroomName(classroomDoc.data()?.nombreSalon || 'Salón');
+        }
+      } catch {
+        if (!cancelled) setClassroomName('Salón');
+      }
+    }
+
+    loadClassroom();
+    return () => { cancelled = true; };
+  }, [salonId]);
 
   // ── Cargar datos ─────────────────────────────────
   useEffect(() => {
@@ -297,7 +320,11 @@ export default function AttendanceList() {
       <SidebarV2 />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <HeaderV2 title="Asistencia" isSidebarCollapsed={isSidebarCollapsed} />
+        <HeaderV2
+          title={classroomName ? `Asistencia - ${classroomName}` : 'Asistencia'}
+          subtitle={classroomName ? `Hora: ${horaDecoded}` : undefined}
+          isSidebarCollapsed={isSidebarCollapsed}
+        />
         <div className="h-16 flex-shrink-0" />
 
         <main className="flex-1 overflow-auto min-h-0 p-4 lg:p-5">
@@ -310,11 +337,18 @@ export default function AttendanceList() {
               >
                 <IconArrowBack size={13} /> Volver
               </button>
-              <div>
-                <h1 className="text-base font-bold text-gray-900">Listado de Asistencia</h1>
-                <p className="text-[11px] text-gray-400">
-                  Hora {horaDecoded} · Click en celda para marcar
-                </p>
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <IconDoor size={18} className="text-white" />
+                </div>
+                <div>
+                  <h1 className="text-base font-bold text-gray-900">
+                    {classroomName || 'Listado de Asistencia'}
+                  </h1>
+                  <p className="text-[11px] text-gray-500">
+                    Hora {horaDecoded} · Click en celda para marcar
+                  </p>
+                </div>
               </div>
             </div>
             <button

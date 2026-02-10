@@ -1,6 +1,13 @@
 /**
  * @fileoverview Componente visual para una actividad en el calendario flexible
  * @module presentation/features/schedule/components/CalendarActivity
+ *
+ * Mejoras visuales implementadas:
+ * - Bordes completos (border-2) en lugar de solo borde izquierdo para mejor diferenciación
+ * - Separación vertical (mb-1) entre actividades consecutivas
+ * - Efecto hover mejorado con escala sutil (scale-[1.02]) y sombra pronunciada
+ * - Z-index elevado en hover (z-20) para resaltar la actividad sobre las demás
+ * - Bordes redondeados mejorados (rounded-lg) para un look más moderno
  */
 
 import React from 'react';
@@ -97,11 +104,12 @@ export const CalendarActivity: React.FC<CalendarActivityProps> = ({
 
   // Clases CSS dinámicas - diseño profesional compacto
   const baseClasses = `
-    absolute rounded p-2 cursor-pointer pointer-events-auto
+    absolute rounded-lg p-2 cursor-pointer pointer-events-auto
     transition-all duration-150 ease-in-out
-    shadow-sm hover:shadow-md hover:z-10
+    shadow-sm hover:shadow-lg hover:scale-[1.02] hover:z-20
     ${colors.bg} ${colors.text}
-    border-l-4 ${colors.border}
+    border-2 ${colors.border}
+    mb-1
   `;
 
   const stateClasses = `

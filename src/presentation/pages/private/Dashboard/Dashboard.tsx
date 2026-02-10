@@ -26,6 +26,9 @@ import TimeBlockManager from "../../../features/schedule/TimeBlockManager"
 import AttendanceList from "../../../features/attendance/AttendanceList"
 import AttendanceReport from "../../../features/attendance/AttendanceReport"
 import AttendanceOverview from "../../../features/attendance/AttendanceOverview"
+import UnifiedReport from "../../../features/reports/UnifiedReport"
+import AcademicReportView from "../../../features/reports/AcademicReportView"
+import ClassroomBulkReportView from "../../../features/reports/ClassroomBulkReportView"
 
 /**
  * Dashboard - Rutas del panel principal
@@ -97,6 +100,14 @@ function Dashboard() {
         <Route path={`${PrivateRoutes.REPORT}/:studentId/:year`} element={<AcademicReport />} />
         <Route path={`${PrivateRoutes.REPORT}/:classroomId/:periodId/:schoolLevel/:year`} element={<InformePorSalon/>}/>
         <Route path={`${PrivateRoutes.REPORT}/:schoolLevel/:periodId/:director/:studentId/:year`} element={<AcademicReport/>}/>
+
+        {/* Nueva vista de informes (tipo AttendanceReport) */}
+        <Route path="informe/:nivel/:periodId/:studentId/:year" element={<AcademicReportView/>}/>
+
+        {/* Vista masiva de informes por salón */}
+        <Route path="informe/salon/:nivel/:periodId/:classroomId/:year" element={<ClassroomBulkReportView/>}/>
+
+        <Route path={`${PrivateRoutes.REPORT}/:nivel/:periodId/:studentId/:year`} element={<UnifiedReport/>}/>
         <Route path={`${PrivateRoutes.FINALREPORT}/:studentId/:year`} element={<FinalReport />} />
       </Route>
     </RoutesWithNotFound>

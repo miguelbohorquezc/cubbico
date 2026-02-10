@@ -42,6 +42,7 @@ interface YearRecord {
   nombreGrado: string;
   directorGrupo: string;
   periodsAvailable: string[];
+  classroomId?: string;
 }
 
 // ─── Hook: useStudentHistory ──────────────────────────────────────────────
@@ -66,6 +67,13 @@ function useStudentHistory(studentId: string | null) {
       try {
         setLoading(true);
         setError(null);
+
+        // Obtener datos actuales del estudiante para usar su nivel/salón correcto
+        const studentSnap = await getDoc(doc(db, 'student', studentId));
+        let currentStudentData = null;
+        if (studentSnap.exists()) {
+          currentStudentData = studentSnap.data();
+        }
 
         const historySnap = await getDoc(doc(db, 'history', studentId));
         if (!historySnap.exists()) {
@@ -161,11 +169,30 @@ function useStudentHistory(studentId: string | null) {
             }
           }
 
-          records.push({ year, nivel, nombreGrado, directorGrupo, periodsAvailable });
+          records.push({ year, nivel, nombreGrado, directorGrupo, periodsAvailable, classroomId });
         }
 
         // Años más recientes primero
         records.sort((a, b) => Number(b.year) - Number(a.year));
+
+        // CORRECCIÓN GLOBAL: Usar el nivel del salón ACTUAL del estudiante para TODOS los años
+        // Esto evita problemas cuando los metadatos históricos tienen nivel incorrecto
+        if (currentStudentData?.classroomId) {
+          try {
+            const currentClassroomSnap = await getDoc(doc(db, 'classRooms', currentStudentData.classroomId));
+            if (currentClassroomSnap.exists()) {
+              const currentClassroom = currentClassroomSnap.data();
+              const correctNivel = currentClassroom?.nivel || 'primaria';
+
+              // Actualizar el nivel en TODOS los registros de años
+              records.forEach(record => {
+                record.nivel = correctNivel;
+              });
+            }
+          } catch (error) {
+            console.warn('No se pudo obtener el salón actual del estudiante, usando metadatos históricos', error);
+          }
+        }
 
         if (!alive) return;
         setYears(records);
@@ -352,22 +379,29 @@ function History() {
                   {/* Grid de períodos */}
                   <div className="p-4">
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {yr.periodsAvailable.map(pId => (
-                        <div
-                          key={pId}
-                          className="border border-gray-200 rounded-lg p-3 flex flex-col items-center gap-2"
-                        >
-                          <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
-                            P{pId}
-                          </span>
-                          <Link
-                            to={`/private/dashboard/report/${yr.nivel}/${pId}/${yr.directorGrupo || 'sin-director'}/${selected.id}/${yr.year}`}
-                            className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                      {yr.periodsAvailable.map(pId => {
+                        // Usar la nueva vista de informes (tipo AttendanceReport)
+                        const reportLink = yr.nivel === 'preescolar'
+                          ? `/private/dashboard/print/${pId}/${yr.classroomId || 'sin-classroom'}/${selected.id}/${yr.year}`
+                          : `/private/dashboard/informe/${yr.nivel}/${pId}/${selected.id}/${yr.year}`;
+
+                        return (
+                          <div
+                            key={pId}
+                            className="border border-gray-200 rounded-lg p-3 flex flex-col items-center gap-2"
                           >
-                            Ver Informe
-                          </Link>
-                        </div>
-                      ))}
+                            <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
+                              P{pId}
+                            </span>
+                            <Link
+                              to={reportLink}
+                              className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                            >
+                              Ver Informe
+                            </Link>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
