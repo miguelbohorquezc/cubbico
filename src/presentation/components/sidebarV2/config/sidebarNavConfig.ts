@@ -173,14 +173,6 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    id: 'evaluaciones',
-    label: 'Evaluaciones',
-    path: buildPath(PrivateRoutes.ACADEMY),
-    icon: EvaluationIcon,
-    description: 'Gestión de evaluaciones',
-    allowedRoles: ['Coordinador'],
-  },
-  {
     id: 'historial',
     label: 'Historial',
     path: buildPath('academic-history'),
@@ -194,14 +186,6 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.USER),
     icon: UsersIcon,
     description: 'Gestión de usuarios del sistema',
-    allowedRoles: ['Coordinador'],
-  },
-  {
-    id: 'aspirantes',
-    label: 'Aspirantes',
-    path: buildPath(PrivateRoutes.ASPIRANTS),
-    icon: AspirantIcon,
-    description: 'Gestión de admisiones',
     allowedRoles: ['Coordinador'],
   },
 ];

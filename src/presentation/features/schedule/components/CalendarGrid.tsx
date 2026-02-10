@@ -86,11 +86,11 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   };
 
   return (
-    <div className="flex flex-col bg-white border rounded-lg shadow-sm overflow-hidden h-full">
+    <div className="flex flex-col bg-white border border-gray-100 overflow-hidden h-full">
       {/* Header: Días de la semana */}
-      <div className="flex border-b bg-gray-50 sticky top-0 z-10">
+      <div className="flex border-b border-gray-100 bg-gray-50 sticky top-0 z-10">
         {/* Columna de horas */}
-        <div className="w-16 flex-shrink-0 border-r bg-gray-100 font-semibold text-xs text-gray-600 flex items-center justify-center">
+        <div className="w-16 flex-shrink-0 border-r border-gray-100 bg-white font-medium text-xs text-gray-500 flex items-center justify-center">
           Hora
         </div>
 
@@ -99,7 +99,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
           {DAYS_OF_WEEK.map((day, index) => (
             <div
               key={index}
-              className="flex-1 py-2 text-center font-semibold text-sm text-gray-700 border-r last:border-r-0"
+              className="flex-1 py-2 text-center font-medium text-sm text-gray-600 border-r border-gray-100 last:border-r-0"
             >
               {day}
             </div>
@@ -110,7 +110,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
       {/* Contenedor con scroll - para ver todas las horas */}
       <div className="flex overflow-y-auto overflow-x-hidden relative flex-1 min-h-0">
         {/* Columna de labels de tiempo */}
-        <div className="w-16 flex-shrink-0 border-r bg-gray-50 relative">
+        <div className="w-16 flex-shrink-0 border-r border-gray-100 bg-white relative">
           {timeLines
             .filter((line) => line.isMajor)
             .map((line) => {
@@ -118,8 +118,8 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
               return (
                 <div
                   key={line.minutes}
-                  className={`absolute text-xs text-gray-600 -translate-y-2 px-1 ${
-                    onHourClick ? 'cursor-pointer hover:text-indigo-600 hover:font-bold transition-all' : ''
+                  className={`absolute text-xs text-gray-500 -translate-y-2 px-1 font-medium ${
+                    onHourClick ? 'cursor-pointer hover:text-indigo-600 hover:font-semibold transition-all' : ''
                   }`}
                   style={{ top: `${top}px` }}
                   onClick={onHourClick ? () => onHourClick(line.label) : undefined}
@@ -141,7 +141,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                 <div
                   key={line.minutes}
                   className={`absolute left-0 right-0 ${
-                    line.isMajor ? 'border-t border-gray-300' : 'border-t border-gray-100'
+                    line.isMajor ? 'border-t border-gray-200' : 'border-t border-gray-50'
                   }`}
                   style={{ top: `${top}px` }}
                 />
@@ -154,7 +154,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
             {DAYS_OF_WEEK.map((_, index) => (
               <div
                 key={index}
-                className={`flex-1 relative ${index < DAYS_OF_WEEK.length - 1 ? 'border-r border-gray-200' : ''}`}
+                className={`flex-1 relative ${index < DAYS_OF_WEEK.length - 1 ? 'border-r border-gray-100' : ''}`}
               >
                 {/* Solo estructura visual - sin eventos */}
               </div>

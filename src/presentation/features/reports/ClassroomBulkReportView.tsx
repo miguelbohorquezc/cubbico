@@ -182,7 +182,7 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
         <div className="px-8 py-3 bg-gray-50 print:bg-white border-t border-gray-100 text-center mt-4">
           <p className="text-[9px] text-gray-400">
             Informe generado el {new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} ·
-            Periodo {periodId} · {year} · Sistema Cubbico
+            Periodo {periodId} · {year} · SIA Colina Campestre
           </p>
         </div>
       </div>

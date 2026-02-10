@@ -218,6 +218,24 @@ const CreateUserForm = () => {
       {/* Asignaciones de enseñanza */}
       {showTeachingAssignments && (
         <div className="space-y-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          {/* Nota para Coordinadores */}
+          {form.role === 'Coordinador' && form.willTeach && (
+            <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg mb-4">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <p className="font-medium text-purple-900 text-sm">Acceso automático para Coordinadores</p>
+                  <p className="mt-1 text-xs text-purple-700">
+                    Al seleccionar niveles, se asignarán automáticamente todas las áreas y salones.
+                    Para preescolar solo se asignan salones (las asignaturas son internas).
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Niveles Educativos */}
           <div>
             <label className="block text-sm font-medium text-blue-900 mb-2">
@@ -256,35 +274,44 @@ const CreateUserForm = () => {
             <>
               {/* Asignaturas */}
               <div>
-                <h4 className="text-sm font-medium text-blue-900 mb-2">
-                  Asignaturas ({selectedLevels.join(', ')}) *
+                <h4 className="text-sm font-medium text-blue-900 mb-2 flex items-center justify-between">
+                  <span>Asignaturas ({selectedLevels.join(', ')}) *</span>
+                  {form.role === 'Coordinador' && form.willTeach && (
+                    <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                      Selección automática
+                    </span>
+                  )}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 bg-white rounded-lg border border-blue-100">
-                  {areas.map(area => (
-                    <label
-                      key={area.id}
-                      className={`
-                        flex items-center gap-2 p-2 rounded cursor-pointer transition-colors
-                        ${area.nivel.toLowerCase().includes('preescolar')
-                          ? 'bg-yellow-50 hover:bg-yellow-100'
-                          : 'hover:bg-gray-50'
-                        }
-                      `}
-                    >
-                      <input
-                        type="checkbox"
-                        name={area.id}
-                        checked={form.areas[area.id] || false}
-                        onChange={handleCheckboxChange('areas')}
-                        disabled={loading}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">
-                        {area.asignatura}
-                        <span className="text-xs text-gray-500 ml-1">({area.nivel})</span>
-                      </span>
-                    </label>
-                  ))}
+                  {areas.map(area => {
+                    const isCoordinadorAutoSelect = form.role === 'Coordinador' && form.willTeach;
+                    return (
+                      <label
+                        key={area.id}
+                        className={`
+                          flex items-center gap-2 p-2 rounded transition-colors
+                          ${area.nivel.toLowerCase().includes('preescolar')
+                            ? 'bg-yellow-50 hover:bg-yellow-100'
+                            : 'hover:bg-gray-50'
+                          }
+                          ${isCoordinadorAutoSelect ? 'opacity-60' : 'cursor-pointer'}
+                        `}
+                      >
+                        <input
+                          type="checkbox"
+                          name={area.id}
+                          checked={form.areas[area.id] || false}
+                          onChange={handleCheckboxChange('areas')}
+                          disabled={loading || isCoordinadorAutoSelect}
+                          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {area.asignatura}
+                          <span className="text-xs text-gray-500 ml-1">({area.nivel})</span>
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
                 {errors.areas && (
                   <p className="mt-1 text-sm text-red-600">{errors.areas}</p>
@@ -293,26 +320,38 @@ const CreateUserForm = () => {
 
               {/* Salones */}
               <div>
-                <h4 className="text-sm font-medium text-blue-900 mb-2">
-                  Salones ({selectedLevels.join(', ')}) *
+                <h4 className="text-sm font-medium text-blue-900 mb-2 flex items-center justify-between">
+                  <span>Salones ({selectedLevels.join(', ')}) *</span>
+                  {form.role === 'Coordinador' && form.willTeach && (
+                    <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                      Selección automática
+                    </span>
+                  )}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 bg-white rounded-lg border border-blue-100">
-                  {classRooms.map(salon => (
-                    <label
-                      key={salon.id}
-                      className="flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-gray-50 transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        name={salon.id}
-                        checked={form.salones[salon.id] || false}
-                        onChange={handleCheckboxChange('salones')}
-                        disabled={loading}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700">{salon.nombreSalon}</span>
-                    </label>
-                  ))}
+                  {classRooms.map(salon => {
+                    const isCoordinadorAutoSelect = form.role === 'Coordinador' && form.willTeach;
+                    return (
+                      <label
+                        key={salon.id}
+                        className={`
+                          flex items-center gap-2 p-2 rounded transition-colors
+                          hover:bg-gray-50
+                          ${isCoordinadorAutoSelect ? 'opacity-60' : 'cursor-pointer'}
+                        `}
+                      >
+                        <input
+                          type="checkbox"
+                          name={salon.id}
+                          checked={form.salones[salon.id] || false}
+                          onChange={handleCheckboxChange('salones')}
+                          disabled={loading || isCoordinadorAutoSelect}
+                          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed"
+                        />
+                        <span className="text-sm text-gray-700">{salon.nombreSalon}</span>
+                      </label>
+                    );
+                  })}
                 </div>
                 {errors.salones && (
                   <p className="mt-1 text-sm text-red-600">{errors.salones}</p>

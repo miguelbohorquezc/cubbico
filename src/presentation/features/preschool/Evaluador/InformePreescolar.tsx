@@ -263,7 +263,7 @@ const InformePreescolar: React.FC = () => {
             <div className="px-8 py-3 bg-gray-50 print:bg-white border-t border-gray-100 text-center mt-4">
               <p className="text-[9px] text-gray-400">
                 Informe generado el {new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} ·
-                Periodo {safePeriod} · {year} · Sistema Cubbico
+                Periodo {safePeriod} · {year} · SIA Colina Campestre
               </p>
             </div>
           </div>

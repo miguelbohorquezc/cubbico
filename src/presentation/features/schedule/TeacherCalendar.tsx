@@ -94,7 +94,7 @@ export default function TeacherCalendar() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 flex-shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+          <div className="flex items-center justify-center w-8 h-8 bg-indigo-500 rounded-lg">
             <IconCalendar size={16} className="text-white" />
           </div>
           <div>
@@ -121,19 +121,19 @@ export default function TeacherCalendar() {
       {/* Modal de confirmación */}
       {selectedActivity && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop con blur */}
           <div
-            className="fixed inset-0 bg-black/50 z-40 animate-fade-in"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] animate-fade-in"
             onClick={() => setSelectedActivity(null)}
           />
 
           {/* Modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full pointer-events-auto animate-scale-in">
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center">
                     <IconClipboardCheck size={20} className="text-white" />
                   </div>
                   <div>
@@ -179,7 +179,7 @@ export default function TeacherCalendar() {
                 </button>
                 <button
                   onClick={handleConfirmAttendance}
-                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow-md"
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md"
                 >
                   Pasar Lista
                 </button>

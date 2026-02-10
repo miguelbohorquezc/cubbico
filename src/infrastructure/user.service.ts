@@ -138,6 +138,29 @@ export const updateUserNames = async (
   }
 };
 
+/**
+ * Actualiza las asignaciones de áreas, salones y niveles educativos de un usuario
+ */
+export const updateUserAssignments = async (
+  userId: string,
+  assignments: {
+    areas: Record<string, boolean>;
+    salones: Record<string, boolean>;
+    nivelesEducativos: string[];
+  }
+): Promise<void> => {
+  try {
+    await setDoc(doc(db, "users", userId), {
+      areas: assignments.areas,
+      salones: assignments.salones,
+      nivelesEducativos: assignments.nivelesEducativos,
+      updatedAt: new Date()
+    }, { merge: true });
+  } catch (error) {
+    throw new Error("Error al actualizar asignaciones del usuario: " + error);
+  }
+};
+
 export const getUsers = async (): Promise<UserProfile[]> => {
   const snapshot = await getDocs(collection(db, "users"));
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as UserProfile));

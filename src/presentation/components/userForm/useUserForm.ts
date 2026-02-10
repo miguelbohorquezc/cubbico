@@ -75,6 +75,36 @@ export const useUserForm = () => {
     );
   }, [classRooms, selectedLevels]);
 
+  // Auto-seleccionar todo para Coordinadores cuando seleccionan niveles
+  useEffect(() => {
+    const isCoordinador = form.role === 'Coordinador';
+    const shouldAutoSelect = isCoordinador && form.willTeach && selectedLevels.length > 0;
+
+    if (shouldAutoSelect) {
+      const newAreas: Record<string, boolean> = {};
+      const newSalones: Record<string, boolean> = {};
+
+      // Para áreas: NO incluir las de preescolar (son internas)
+      filteredAreas.forEach(area => {
+        const isPreschoolArea = area.nivel.toLowerCase().includes('preescolar');
+        if (!isPreschoolArea) {
+          newAreas[area.id] = true;
+        }
+      });
+
+      // Para salones: incluir TODOS (incluido preescolar)
+      filteredClassRooms.forEach(salon => {
+        newSalones[salon.id] = true;
+      });
+
+      setForm(prev => ({
+        ...prev,
+        areas: newAreas,
+        salones: newSalones
+      }));
+    }
+  }, [form.role, form.willTeach, selectedLevels, filteredAreas, filteredClassRooms]);
+
   const toggleNivelEducativo = (nivel: 'Preescolar' | 'Primaria' | 'Secundaria') => {
     setSelectedLevels(prev => 
       prev.includes(nivel)
@@ -223,12 +253,12 @@ export const useUserForm = () => {
     try {
       const areasToSend = Object.fromEntries(
         Object.entries(form.areas)
-          .filter(([id]) => filteredAreas.some(a => a.id === id))
+          .filter(([id]) => id && id.trim() && filteredAreas.some(a => a.id === id))
       );
 
       const salonesToSend = Object.fromEntries(
         Object.entries(form.salones)
-          .filter(([id]) => filteredClassRooms.some(s => s.id === id))
+          .filter(([id]) => id && id.trim() && filteredClassRooms.some(s => s.id === id))
       );
 
       const userId = await createUser({

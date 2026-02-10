@@ -258,7 +258,7 @@ export default function AcademicReportView() {
             <div className="px-8 py-3 bg-gray-50 print:bg-white border-t border-gray-100 text-center">
               <p className="text-[9px] text-gray-400">
                 Informe generado el {new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} ·
-                Periodo {currentPeriod} · {year} · Sistema Cubbico
+                Periodo {currentPeriod} · {year} · SIA Colina Campestre
               </p>
             </div>
           </div>

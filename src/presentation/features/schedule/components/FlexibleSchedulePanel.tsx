@@ -153,18 +153,29 @@ export const FlexibleSchedulePanel: React.FC<FlexibleSchedulePanelProps> = ({
         </div>
         <p className="text-[9px] text-gray-400 mb-2">Arrastra al horario</p>
         <div className="flex flex-wrap gap-1.5">
-          {areas.map((a) => (
-            <span
-              key={a.id}
-              draggable
-              onDragStart={(e) => onDragStartArea(e, a)}
-              className={`px-2.5 py-0.5 rounded-md text-xs font-semibold border cursor-grab active:cursor-grabbing select-none hover:shadow-sm transition-shadow ${getBadgeColor(
-                a.asignatura
-              )}`}
-            >
-              {a.asignatura}
-            </span>
-          ))}
+          {areas.map((a) => {
+            // Formatear el nivel para mostrar
+            const nivelLabel = a.nivel
+              ? a.nivel.charAt(0).toUpperCase() + a.nivel.slice(1).toLowerCase()
+              : '';
+            const displayName = nivelLabel
+              ? `${a.asignatura} (${nivelLabel})`
+              : a.asignatura;
+
+            return (
+              <span
+                key={a.id}
+                draggable
+                onDragStart={(e) => onDragStartArea(e, a)}
+                className={`px-2.5 py-0.5 rounded-md text-xs font-semibold border cursor-grab active:cursor-grabbing select-none hover:shadow-sm transition-shadow ${getBadgeColor(
+                  a.asignatura
+                )}`}
+                title={`${a.asignatura} - Nivel: ${nivelLabel || 'No especificado'}`}
+              >
+                {displayName}
+              </span>
+            );
+          })}
         </div>
 
         {/* Hint si no hay selección */}

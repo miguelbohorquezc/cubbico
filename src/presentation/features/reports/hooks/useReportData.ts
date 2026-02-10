@@ -262,25 +262,52 @@ export function useReportData({
           }
         }
 
-        // Obtener fecha de entrega y rango de fechas del período
+        // Obtener fecha de entrega y calcular rango de fechas del período
         let periodConfig = null;
+        let fechaInicio: string | null = null;
+        let fechaFin: string | null = null;
+
         try {
           periodConfig = await fetchPeriodConfig(periodId!, year);
           if (periodConfig?.fechaEntrega) {
             setFechaEntrega(formatFechaEntrega(periodConfig.fechaEntrega));
+            // Fecha de fin del periodo = fecha de entrega configurada
+            fechaFin = periodConfig.fechaEntrega;
+          }
+
+          // Calcular fecha de inicio del periodo
+          const currentPeriodNum = parseInt(periodId!);
+
+          if (currentPeriodNum === 1) {
+            // Periodo 1: inicia el 1 de enero del año
+            fechaInicio = `${year}-01-01`;
+          } else {
+            // Periodos 2, 3, 4: inician en la fecha de entrega del periodo anterior
+            try {
+              const prevPeriodConfig = await fetchPeriodConfig(String(currentPeriodNum - 1), year);
+              if (prevPeriodConfig?.fechaEntrega) {
+                fechaInicio = prevPeriodConfig.fechaEntrega;
+              } else {
+                // Fallback: inicio del año si no hay configuración previa
+                fechaInicio = `${year}-01-01`;
+              }
+            } catch {
+              // Fallback: inicio del año
+              fechaInicio = `${year}-01-01`;
+            }
           }
         } catch {
-          // Si no hay configuración, usar fecha actual
+          // Si no hay configuración, no cargar asistencias
         }
 
         // Cargar registros de asistencia para calcular fallas
         let attendanceRecords: AttendanceRecord[] = [];
-        if (periodConfig?.fechaInicio && periodConfig?.fechaFin && studentData.classroomId) {
+        if (fechaInicio && fechaFin && studentData.classroomId) {
           try {
             attendanceRecords = await fetchAttendanceByClassroom(
               studentData.classroomId,
-              periodConfig.fechaInicio,
-              periodConfig.fechaFin
+              fechaInicio,
+              fechaFin
             );
           } catch {
             // Si no hay datos de asistencia, usar fallas = 0

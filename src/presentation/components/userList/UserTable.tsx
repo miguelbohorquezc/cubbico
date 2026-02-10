@@ -10,6 +10,7 @@ import {
 } from '../../../app/store/states/user.slice';
 import { toggleUserStatus, updateUserRole, updateUserNames } from '../../../infrastructure/user.service';
 import Tooltip from '../toolTip/Tooltip';
+import EditAssignmentsModal from '../userForm/EditAssignmentsModal';
 
 interface ConfirmModalState {
   isOpen: boolean;
@@ -24,6 +25,13 @@ interface EditModalState {
   userId: string;
   firstName: string;
   lastName: string;
+}
+
+interface EditAssignmentsModalState {
+  isOpen: boolean;
+  userId: string;
+  userName: string;
+  userRole: string;
 }
 
 interface UserTableProps {
@@ -50,6 +58,13 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
     userId: '',
     firstName: '',
     lastName: ''
+  });
+
+  const [editAssignmentsModal, setEditAssignmentsModal] = useState<EditAssignmentsModalState>({
+    isOpen: false,
+    userId: '',
+    userName: '',
+    userRole: ''
   });
 
   const [actionLoading, setActionLoading] = useState(false);
@@ -90,6 +105,14 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
 
   const closeEditModal = () => {
     setEditModal({ isOpen: false, userId: '', firstName: '', lastName: '' });
+  };
+
+  const openEditAssignmentsModal = (userId: string, userName: string, userRole: string) => {
+    setEditAssignmentsModal({ isOpen: true, userId, userName, userRole });
+  };
+
+  const closeEditAssignmentsModal = () => {
+    setEditAssignmentsModal({ isOpen: false, userId: '', userName: '', userRole: '' });
   };
 
   const handleConfirmAction = async () => {
@@ -364,6 +387,20 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                           </button>
                         </Tooltip>
 
+                        {/* Editar asignaciones - Solo para Docentes o Coordinadores que dan clases */}
+                        {(role === 'Docente' || (role === 'Coordinador' && (user as any).willTeach)) && (
+                          <Tooltip text="Editar asignaciones" position="top">
+                            <button
+                              onClick={() => openEditAssignmentsModal(user.id!, displayName, role)}
+                              className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                              </svg>
+                            </button>
+                          </Tooltip>
+                        )}
+
                         {/* Cambiar rol */}
                         <Tooltip text="Cambiar rol" position="top">
                           <button
@@ -586,6 +623,19 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de edición de asignaciones */}
+      {editAssignmentsModal.isOpen && (
+        <EditAssignmentsModal
+          userId={editAssignmentsModal.userId}
+          userName={editAssignmentsModal.userName}
+          userRole={editAssignmentsModal.userRole}
+          onClose={closeEditAssignmentsModal}
+          onSuccess={() => {
+            dispatch(fetchUsers());
+          }}
+        />
       )}
     </div>
   );
