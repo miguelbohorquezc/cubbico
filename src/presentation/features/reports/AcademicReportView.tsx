@@ -16,7 +16,9 @@ import { usePrintSetup, PrintControls } from '../../components/PrintableReport';
 import { useReportData } from './hooks/useReportData';
 import { PrimaryReportContent } from '../../components/reports/PrimaryReportContent';
 import { SecondaryReportContent } from '../../components/reports/SecondaryReportContent';
+import { PreschoolReportContent } from '../../components/reports/PreschoolReportContent';
 import logo from '../../../assets/logo/logotipo.jpg';
+import logoPreschool from '../../../assets/logo/logoPreschool.svg';
 import {
   IconLoader,
   IconAlertCircle,
@@ -188,7 +190,11 @@ export default function AcademicReportView() {
               <thead>
                 <tr className="h-28">
                   <td className="w-24 p-2 border border-gray-100 align-middle">
-                    <img src={logo} alt="logotipo" className="w-16 mx-auto" />
+                    <img
+                      src={nivel.toLowerCase() === 'preescolar' ? logoPreschool : logo}
+                      alt="logotipo"
+                      className="w-16 mx-auto"
+                    />
                   </td>
                   <td className="px-6 py-3 border border-gray-100 text-center td-header" colSpan={2}>
                     <b className="text-base font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
@@ -229,12 +235,13 @@ export default function AcademicReportView() {
               )}
 
               {nivel.toLowerCase() === 'preescolar' && (
-                <div className="text-center p-8">
-                  <p className="text-gray-500">Vista de preescolar - Por implementar</p>
-                  <p className="text-sm text-gray-400 mt-2">
-                    Aquí se mostrará el informe de preescolar
-                  </p>
-                </div>
+                <PreschoolReportContent
+                  reportData={reportData.preschool}
+                  studentInfo={studentInfo}
+                  periodId={currentPeriod}
+                  director={director}
+                  fechaEntrega={fechaEntrega}
+                />
               )}
 
               {!reportData.primary.length && !reportData.secondary.length && nivel.toLowerCase() !== 'preescolar' && (

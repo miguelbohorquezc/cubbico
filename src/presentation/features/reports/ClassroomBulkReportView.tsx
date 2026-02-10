@@ -18,7 +18,9 @@ import { usePrintSetup, PrintControls } from '../../components/PrintableReport';
 import { useReportData } from './hooks/useReportData';
 import { PrimaryReportContent } from '../../components/reports/PrimaryReportContent';
 import { SecondaryReportContent } from '../../components/reports/SecondaryReportContent';
+import { PreschoolReportContent } from '../../components/reports/PreschoolReportContent';
 import logo from '../../../assets/logo/logotipo.jpg';
+import logoPreschool from '../../../assets/logo/logoPreschool.svg';
 import {
   IconLoader,
   IconAlertCircle,
@@ -92,10 +94,16 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
   }
 
   if (error) {
+    const studentName = studentInfo
+      ? `${studentInfo.name} ${studentInfo.lastName}`.trim()
+      : 'Estudiante';
+
     return (
-      <div className="text-center p-8 bg-red-50 border border-red-200 rounded-lg">
-        <IconAlertCircle size={20} className="text-red-500 mb-2 inline-block" />
-        <p className="text-sm text-red-600">Error: {error}</p>
+      <div className="text-center p-6 bg-amber-50 border border-amber-200 rounded-lg">
+        <IconAlertCircle size={20} className="text-amber-500 mb-2 inline-block" />
+        <p className="text-sm text-amber-700 font-medium">
+          {studentName}: {error}
+        </p>
       </div>
     );
   }
@@ -109,7 +117,11 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
           <thead>
             <tr className="h-28">
               <td className="w-24 p-2 border border-gray-100 align-middle">
-                <img src={logo} alt="logotipo" className="w-16 mx-auto" />
+                <img
+                  src={nivel.toLowerCase() === 'preescolar' ? logoPreschool : logo}
+                  alt="logotipo"
+                  className="w-16 mx-auto"
+                />
               </td>
               <td className="px-6 py-3 border border-gray-100 text-center td-header" colSpan={2}>
                 <b className="text-base font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
@@ -150,9 +162,13 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
           )}
 
           {nivel.toLowerCase() === 'preescolar' && (
-            <div className="text-center p-8">
-              <p className="text-gray-500">Vista de preescolar - Por implementar</p>
-            </div>
+            <PreschoolReportContent
+              reportData={reportData.preschool}
+              studentInfo={studentInfo}
+              periodId={periodId}
+              director={director}
+              fechaEntrega={fechaEntrega}
+            />
           )}
 
           {!reportData.primary.length && !reportData.secondary.length && nivel.toLowerCase() !== 'preescolar' && (

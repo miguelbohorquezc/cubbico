@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
 import { fetchStudentsByClassroom } from '../../../infrastructure/student.service';
 import { Student } from '../../../presentation/components/notes/types';
 import { SearchInput, Badge, Card, EmptyState } from '../../components/ui';
 import { UserIcon, PencilIcon, DocumentIcon, ChevronLeftIcon } from '../../components/icons';
+import { IconFiles } from '@tabler/icons-react';
 
 const SIDEBAR_STORAGE_KEY = 'cubbico-sidebar-collapsed';
 
@@ -88,13 +89,24 @@ const ClassroomStudents = () => {
 
         <main className="flex-1 p-4 lg:p-6 overflow-auto">
           <div>
-            <button
-              onClick={() => navigate(-1)}
-              className="mb-6 px-4 py-2.5 text-sm font-medium text-light-gray-700 bg-white border border-light-gray-300 rounded-lg hover:bg-light-gray-50 transition-all flex items-center gap-2"
-            >
-              <ChevronLeftIcon className="w-4 h-4" />
-              Regresar
-            </button>
+            {/* Controls */}
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => navigate(-1)}
+                className="px-4 py-2.5 text-sm font-medium text-light-gray-700 bg-white border border-light-gray-300 rounded-lg hover:bg-light-gray-50 transition-all flex items-center gap-2"
+              >
+                <ChevronLeftIcon className="w-4 h-4" />
+                Regresar
+              </button>
+
+              <Link
+                to={`/private/dashboard/informe/salon/preescolar/${periodId}/${classroomId}/${new Date().getFullYear()}`}
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
+              >
+                <IconFiles size={18} />
+                <span className="hidden sm:inline">Informes Salón</span>
+              </Link>
+            </div>
 
             {/* Search bar con SearchInput */}
             <div className="mb-6">

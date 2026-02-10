@@ -41,6 +41,13 @@ export interface AreaGroup {
   subjects: SubjectData[];
 }
 
+export interface ProposedData {
+  id: string;
+  texto: string;
+  referentes: string[];
+  indicadores: { asignaturaId: string; texto: string }[];
+}
+
 export interface StudentData {
   name: string;
   lastName: string;
@@ -59,6 +66,7 @@ export interface PeriodInfo {
 export interface ReportData {
   primary: SubjectData[];
   secondary: AreaGroup[];
+  preschool: ProposedData[];
   periodInfo?: PeriodInfo;
 }
 
@@ -88,7 +96,7 @@ export function useReportData({
   periodId,
   schoolLevel,
 }: UseReportDataParams): UseReportDataReturn {
-  const [reportData, setReportData] = useState<ReportData>({ primary: [], secondary: [] });
+  const [reportData, setReportData] = useState<ReportData>({ primary: [], secondary: [], preschool: [] });
   const [studentInfo, setStudentInfo] = useState<StudentData | null>(null);
   const [fechaEntrega, setFechaEntrega] = useState<string>('');
   const [director, setDirector] = useState<string>('');
@@ -120,17 +128,27 @@ export function useReportData({
             const classroomDoc = await getDoc(doc(db, 'classRooms', studentData.classroomId));
             if (classroomDoc.exists()) {
               const classroomData = classroomDoc.data();
-              const directorUid = classroomData?.directorGrupo;
-              if (directorUid) {
-                const userDoc = await getDoc(doc(db, 'users', directorUid));
-                if (userDoc.exists()) {
-                  const userData = userDoc.data();
-                  setDirector(userData?.displayName || userData?.email || 'Director(a) de Grupo');
+              const directorValue = classroomData?.directorGrupo;
+
+              if (directorValue) {
+                // Intentar buscar como UID primero
+                try {
+                  const userDoc = await getDoc(doc(db, 'users', directorValue));
+                  if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    setDirector(userData?.displayName || userData?.email || 'Director(a) de Grupo');
+                  } else {
+                    // Si no existe como UID, asumir que es un nombre y usarlo directamente
+                    setDirector(directorValue);
+                  }
+                } catch {
+                  // Si falla la búsqueda, usar el valor directamente como nombre
+                  setDirector(directorValue);
                 }
               }
             }
-          } catch {
-            // Si falla, dejar vacío
+          } catch (error) {
+            console.error('Error cargando director de grupo:', error);
           }
         }
 
@@ -139,7 +157,9 @@ export function useReportData({
           getDocs(collection(db, 'areas'))
         ]);
 
-        if (!historySnap.exists()) throw new Error('Historial académico no encontrado');
+        if (!historySnap.exists()) {
+          throw new Error('Este informe aún no ha sido diligenciado');
+        }
 
         const areasMap = areasSnapshot.docs.reduce((acc, doc) => {
           acc[doc.id] = {
@@ -150,7 +170,9 @@ export function useReportData({
         }, {} as Record<string, any>);
 
         const yearData = historySnap.data()?.years[year];
-        if (!yearData) return;
+        if (!yearData) {
+          throw new Error('Este informe aún no ha sido diligenciado');
+        }
 
         const primaryData: Array<SubjectData & { _orden?: string }> = [];
         const secondaryGroups: Record<string, AreaGroup & { _orden?: string }> = {};
@@ -166,7 +188,79 @@ export function useReportData({
         };
 
         const periodData = (yearData.periods as Record<string, any>)[periodId!];
-        if (!periodData) return;
+        if (!periodData) {
+          throw new Error('Este informe aún no ha sido diligenciado');
+        }
+
+        // Verificar si es preescolar
+        const isPreschool = periodData.preschool === true;
+
+        // ============================================
+        // CARGA DE DATOS PARA PREESCOLAR
+        // ============================================
+        let preschoolData: ProposedData[] = [];
+        if (isPreschool && studentData.classroomId) {
+          try {
+            // Cargar configuración de propósitos e indicadores del salón
+            const configDocId = `${studentData.classroomId}_${year}`;
+            const [configSnap, indicatorsSnap] = await Promise.all([
+              getDoc(doc(db, 'preschool_config', configDocId)),
+              getDoc(doc(db, 'preschool_indicators', configDocId))
+            ]);
+
+            if (!configSnap.exists() || !indicatorsSnap.exists()) {
+              return;
+            }
+
+            // Obtener propósitos
+            const propositos = configSnap.data()?.propositos || [];
+
+            // Obtener indicadores activos para este periodo
+            const allIndicators = indicatorsSnap.data()?.indicadores || [];
+            const activeIndicators = allIndicators.filter((ind: any) =>
+              ind.activo && ind.periodos && ind.periodos.includes(parseInt(periodId!))
+            );
+
+            // Obtener selecciones del estudiante desde history
+            const selecciones = periodData.selecciones || {};
+
+            // Construir mapa de indicadores por ID
+            const indicatorsMap = new Map();
+            activeIndicators.forEach((ind: any) => {
+              indicatorsMap.set(ind.id, ind);
+            });
+
+            // Para cada propósito, buscar los indicadores evaluados
+            preschoolData = propositos.map((proposito: any) => {
+              const indicadoresEvaluados: { asignaturaId: string; texto: string }[] = [];
+
+              // Para cada asignatura del propósito, buscar si hay indicador seleccionado
+              (proposito.asignaturas || []).forEach((asignaturaId: string) => {
+                const selectedIndicatorId = selecciones[asignaturaId];
+
+                if (selectedIndicatorId) {
+                  const indicator = indicatorsMap.get(selectedIndicatorId);
+                  if (indicator) {
+                    indicadoresEvaluados.push({
+                      asignaturaId: asignaturaId,
+                      texto: indicator.texto || 'Sin texto'
+                    });
+                  }
+                }
+              });
+
+              return {
+                id: proposito.id || '',
+                texto: proposito.texto || '',
+                referentes: proposito.referentes || [],
+                indicadores: indicadoresEvaluados
+              };
+            }).filter((p: ProposedData) => p.indicadores.length > 0);
+
+          } catch (error) {
+            console.error('Error cargando datos de preescolar:', error);
+          }
+        }
 
         // Obtener fecha de entrega y rango de fechas del período
         let periodConfig = null;
@@ -260,6 +354,7 @@ export function useReportData({
                 .sort(sortByOrder)
                 .map(({ _orden, ...subjectRest }) => subjectRest)
             })),
+          preschool: preschoolData,
           periodInfo: {
             periodo: yearData.periodo || '',
             curso: yearData.curso || ''
