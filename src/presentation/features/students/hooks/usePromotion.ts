@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { ClassRoom } from '../../../../domain/entities/classRoom';
 import { studentInfo } from '../../../../domain/entities/studentInfo';
 import { fetchClassrooms } from '../../../../infrastructure/classRoom.service';
-import { fetchStudentsByClassroom } from '../../../../infrastructure/student.service';
+import { fetchActiveStudentsByClassroom } from '../../../../infrastructure/student.service';
 import {
   promoteStudentsBatch,
   getNextClassroomSuggestion,
@@ -186,7 +186,7 @@ export const usePromotion = ({
         // Load classrooms and students in parallel
         const [loadedClassrooms, loadedStudents] = await Promise.all([
           fetchClassrooms(),
-          fetchStudentsByClassroom(sourceClassroomId),
+          fetchActiveStudentsByClassroom(sourceClassroomId),
         ]);
 
         setClassrooms(loadedClassrooms);
@@ -380,7 +380,8 @@ export const usePromotion = ({
   const refreshStudents = useCallback(async () => {
     setIsLoading(true);
     try {
-      const loadedStudents = await fetchStudentsByClassroom(sourceClassroomId);
+      // Solo cargar estudiantes activos para promoción
+      const loadedStudents = await fetchActiveStudentsByClassroom(sourceClassroomId);
 
       const promotionData = loadedStudents.map((s) =>
         toPromotionData(

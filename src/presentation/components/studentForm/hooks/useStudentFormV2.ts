@@ -24,6 +24,7 @@ const INITIAL_FORM_STATE: StudentFormData = {
   className: '',
   caracter: '',
   classroomId: '',
+  status: 'activo',
 };
 
 /**
@@ -37,6 +38,7 @@ const INITIAL_TOUCHED_STATE: StudentFormTouched = {
   classRoom: false,
   className: false,
   caracter: false,
+  status: false,
 };
 
 /**
@@ -423,6 +425,7 @@ export const useStudentFormV2 = ({
           className: formData.className,
           caracter: formData.caracter,
           classroomId: formData.classroomId,
+          status: formData.status || 'activo',
         });
       } else {
         await addStudent({
@@ -434,6 +437,7 @@ export const useStudentFormV2 = ({
           className: formData.className,
           caracter: formData.caracter,
           classroomId: formData.classroomId,
+          status: formData.status || 'activo',
         });
       }
 
@@ -471,6 +475,7 @@ export const useStudentFormV2 = ({
         classRoom: true,
         className: true,
         caracter: true,
+        status: true,
       });
 
       if (Object.keys(validationErrors).length > 0) {

@@ -9,6 +9,7 @@ export interface Student extends DocumentData {
   caracter: string;
   className: string;
   classRoom: string;
+  status?: 'activo' | 'retirado' | 'expulsado' | 'inactivo' | 'suspendido' | 'graduado' | 'transferido';
 }
 
 export interface Grade {

@@ -80,7 +80,15 @@ export default function ExportStudentsOfficialCSV({
       return;
     }
 
-    const csv = buildOfficialCSV(students);
+    // Filtrar solo estudiantes activos para el listado oficial
+    const activeStudents = students.filter(s => (s.status || 'activo') === 'activo');
+
+    if (activeStudents.length === 0) {
+      alert("No hay estudiantes activos para exportar");
+      return;
+    }
+
+    const csv = buildOfficialCSV(activeStudents);
     const now = new Date();
     const timestamp = now.toISOString().slice(0, 19).replace("T", "_").replace(/:/g, "-");
     const filename = `listado_oficial_estudiantes_${timestamp}.csv`;

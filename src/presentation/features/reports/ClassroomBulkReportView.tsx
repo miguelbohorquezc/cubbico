@@ -228,11 +228,14 @@ export default function ClassroomBulkReportView() {
         );
         const studentsSnap = await getDocs(studentsQuery);
 
-        const studentsList = studentsSnap.docs.map(doc => ({
-          id: doc.id,
-          name: doc.data().name || '',
-          lastName: doc.data().lastName || ''
-        }));
+        const studentsList = studentsSnap.docs
+          // Filtrar solo estudiantes activos
+          .filter(doc => (doc.data().status || 'activo') === 'activo')
+          .map(doc => ({
+            id: doc.id,
+            name: doc.data().name || '',
+            lastName: doc.data().lastName || ''
+          }));
 
         // Ordenar alfabéticamente por apellido
         studentsList.sort((a, b) => a.lastName.localeCompare(b.lastName));

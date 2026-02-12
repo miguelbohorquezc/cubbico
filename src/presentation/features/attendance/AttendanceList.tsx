@@ -15,7 +15,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../infrastructure/firebase/firebase';
 import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
-import { fetchStudentsByClassroom } from '../../../infrastructure/student.service';
+import { fetchActiveStudentsByClassroom } from '../../../infrastructure/student.service';
 import {
   fetchAttendanceByProfessorAndClassroom,
   saveAttendance,
@@ -182,7 +182,8 @@ export default function AttendanceList() {
       try {
         const lastDay = new Date(Number(currentMonth.slice(0, 4)), Number(currentMonth.slice(5, 7)), 0).getDate();
         const [studs, attendRecords] = await Promise.all([
-          fetchStudentsByClassroom(salonId),
+          // Solo mostrar estudiantes activos en lista de asistencia
+          fetchActiveStudentsByClassroom(salonId),
           fetchAttendanceByProfessorAndClassroom(
             salonId, profesorId, areaId,
             `${currentMonth}-01`,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { RootState, useAppSelector } from '../../../app/store/store';
-import { fetchStudentsByClassroom, bulkSaveStudents } from '../../../infrastructure/student.service';
+import { fetchActiveStudentsByClassroom, bulkSaveStudents } from '../../../infrastructure/student.service';
 import useGradeManager from './useGradeManager';
 import StudentRow from './StudentRow';
 import './styles.css';
@@ -30,6 +30,9 @@ const GradeManager: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showErrors, setShowErrors] = useState(false);
   
+  console.log('⭐⭐⭐ GradeManager MONTADO - classroomId:', classroomId);
+  console.log('⭐⭐⭐ TEST DE COMPILACION:', new Date().toISOString());
+
   const currentYear = new Date().getFullYear().toString();
   const achievements = useAppSelector(
     (state) => selectFilteredAchievements(state, areaId),
@@ -60,9 +63,12 @@ const GradeManager: React.FC = () => {
     const loadStudents = async () => {
       try {
         if (!classroomId) throw new Error('ID de salón no proporcionado');
-        
+
         setLoading(true);
-        const data = await fetchStudentsByClassroom(classroomId);
+        console.log('🚀 GRADEMANAGER: Cargando estudiantes del salón:', classroomId);
+        // Solo cargar estudiantes activos (excluye retirados, expulsados, etc.)
+        const data = await fetchActiveStudentsByClassroom(classroomId);
+        console.log('🚀 GRADEMANAGER: Estudiantes cargados:', data.length);
         
         if (isMounted) {
           if (data.length === 0) throw new Error('No se encontraron estudiantes');

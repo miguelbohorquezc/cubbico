@@ -279,6 +279,33 @@ const StudentFormV2: React.FC<StudentFormV2Props> = ({
             <span className="font-medium">Con Ajustes:</span> Evaluación con logros adaptados.
           </p>
         </div>
+
+        {/* Estado del Estudiante - Solo en modo edición */}
+        {mode === 'edit' && (
+          <div className="md:col-span-2">
+            <Select
+              name="status"
+              label="Estado del Estudiante"
+              placeholder="Seleccione estado"
+              options={[
+                { value: 'activo', label: 'Activo' },
+                { value: 'retirado', label: 'Retirado' },
+                { value: 'expulsado', label: 'Expulsado' },
+                { value: 'inactivo', label: 'Inactivo' },
+                { value: 'suspendido', label: 'Suspendido' },
+                { value: 'graduado', label: 'Graduado' },
+                { value: 'transferido', label: 'Transferido' },
+              ]}
+              value={formData.status || 'activo'}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.status ? errors.status : undefined}
+            />
+            <p className="mt-1.5 text-xs text-light-gray-500">
+              Los estudiantes con estado diferente a <strong>Activo</strong> no aparecerán en las vistas operativas.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Form Actions */}

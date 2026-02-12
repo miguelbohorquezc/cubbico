@@ -1,6 +1,6 @@
 // useCargarEstudiantesYNotas.ts
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchStudentsByClassroom, fetchStudentGrades } from '../../../infrastructure/student.service';
+import { fetchActiveStudentsByClassroom, fetchStudentGrades } from '../../../infrastructure/student.service';
 import { Student, MapaNotas, CampoCalificacion } from './types';
 
 type RawGrades = any;
@@ -53,7 +53,8 @@ export const useCargarEstudiantesYNotas = ({
           throw new Error('Faltan parámetros requeridos');
         }
 
-        const studentsData = await fetchStudentsByClassroom(classroomId);
+        // Solo cargar estudiantes activos (excluye retirados, expulsados, etc.)
+        const studentsData = await fetchActiveStudentsByClassroom(classroomId);
         setStudents(studentsData);
 
         const gradesPromises = studentsData.map(async (student) => {

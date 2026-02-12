@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
-import { fetchStudentsByClassroom } from '../../../infrastructure/student.service';
+import { fetchActiveStudentsByClassroom } from '../../../infrastructure/student.service';
 import { Student } from '../../../presentation/components/notes/types';
 import { SearchInput, Badge, Card, EmptyState } from '../../components/ui';
 import { UserIcon, PencilIcon, DocumentIcon, ChevronLeftIcon } from '../../components/icons';
@@ -44,7 +44,8 @@ const ClassroomStudents = () => {
     const loadStudents = async () => {
       try {
         if (classroomId) {
-          const studentsData = await fetchStudentsByClassroom(classroomId);
+          // Solo mostrar estudiantes activos a los profesores
+          const studentsData = await fetchActiveStudentsByClassroom(classroomId);
           setStudents(studentsData);
         }
       } catch (error) {

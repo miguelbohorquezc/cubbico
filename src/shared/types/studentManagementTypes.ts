@@ -3,7 +3,7 @@
  * Incluye tipos para promoción, modos de evaluación y configuración
  */
 
-import { studentInfo } from '../../domain/entities/studentInfo';
+import { studentInfo, StudentStatus } from '../../domain/entities/studentInfo';
 
 // ============================================
 // TIPOS BASE
@@ -59,6 +59,8 @@ export interface StudentFormData {
   caracter: EvaluationMode | string;
   /** ID del salón en Firestore */
   classroomId: string;
+  /** Estado del estudiante */
+  status?: StudentStatus;
 }
 
 /**
@@ -87,6 +89,7 @@ export interface StudentFormTouched {
   classRoom: boolean;
   className: boolean;
   caracter: boolean;
+  status: boolean;
 }
 
 // ============================================
@@ -359,4 +362,30 @@ export const EVALUATION_MODE_LABELS: Record<EvaluationMode, string> = {
 export const EVALUATION_MODE_COLORS: Record<EvaluationMode, string> = {
   normal: 'bg-slate-100 text-slate-700 border-slate-200',
   ajustes: 'bg-amber-100 text-amber-800 border-amber-200',
+};
+
+/**
+ * Etiquetas de estado de estudiante para UI
+ */
+export const STUDENT_STATUS_LABELS: Record<StudentStatus, string> = {
+  activo: 'Activo',
+  retirado: 'Retirado',
+  expulsado: 'Expulsado',
+  inactivo: 'Inactivo',
+  suspendido: 'Suspendido',
+  graduado: 'Graduado',
+  transferido: 'Transferido',
+};
+
+/**
+ * Colores para badges de estado (Tailwind)
+ */
+export const STUDENT_STATUS_COLORS: Record<StudentStatus, string> = {
+  activo: 'bg-green-100 text-green-800 border-green-200',
+  retirado: 'bg-gray-100 text-gray-800 border-gray-200',
+  expulsado: 'bg-red-100 text-red-800 border-red-200',
+  inactivo: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  suspendido: 'bg-orange-100 text-orange-800 border-orange-200',
+  graduado: 'bg-blue-100 text-blue-800 border-blue-200',
+  transferido: 'bg-purple-100 text-purple-800 border-purple-200',
 };

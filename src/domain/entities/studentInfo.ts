@@ -3,7 +3,14 @@ import { EvaluationMode } from '../../shared/types/studentManagementTypes';
 /**
  * Student status in the system
  */
-export type StudentStatus = 'activo' | 'retirado' | 'graduado' | 'transferido';
+export type StudentStatus =
+  | 'activo'
+  | 'retirado'
+  | 'expulsado'
+  | 'inactivo'
+  | 'suspendido'
+  | 'graduado'
+  | 'transferido';
 
 /**
  * Record of a student's promotion history

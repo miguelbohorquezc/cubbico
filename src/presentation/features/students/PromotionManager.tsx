@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { ClassRoom } from '../../../domain/entities/classRoom';
 import { fetchClassrooms } from '../../../infrastructure/classRoom.service';
-import { fetchStudentsByClassroom } from '../../../infrastructure/student.service';
+import { fetchActiveStudentsByClassroom } from '../../../infrastructure/student.service';
 import PromotionModal from './components/PromotionModal';
 import { PromotionConfig, PromotionResult } from '../../../shared/types/studentManagementTypes';
 
@@ -71,7 +71,8 @@ const PromotionManager: React.FC = () => {
         // Load student counts in parallel
         const countsPromises = data.map(async (classroom) => {
           try {
-            const students = await fetchStudentsByClassroom(classroom.id);
+            // Solo contar estudiantes activos para promoción
+            const students = await fetchActiveStudentsByClassroom(classroom.id);
             return { id: classroom.id, count: students.length };
           } catch {
             return { id: classroom.id, count: 0 };

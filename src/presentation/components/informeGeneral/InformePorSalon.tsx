@@ -107,10 +107,13 @@ const ClassAveragesReport: React.FC = () => {
           where('classroomId', '==', classroomId)
         );
         const studentsSnap = await getDocs(studentsQuery);
-        const studentsData = studentsSnap.docs.map(snap => ({
-          id: snap.id,
-          ...(snap.data() as any)
-        }));
+        const studentsData = studentsSnap.docs
+          // Filtrar solo estudiantes activos
+          .filter(snap => ((snap.data() as any).status || 'activo') === 'activo')
+          .map(snap => ({
+            id: snap.id,
+            ...(snap.data() as any)
+          }));
 
         // 3. Calcular promedios y general
         const averagesArr = await Promise.all(

@@ -42,7 +42,8 @@ export const addStudent = async (student: studentInfo ) =>{
         classRoom: student.classRoom,
         className: student.className,
         caracter: student.caracter,
-        classroomId: student.classroomId
+        classroomId: student.classroomId,
+        status: student.status || 'activo'
     },{merge: true});
 
     // Alert removed - now handled by Toast notification in the UI
@@ -54,7 +55,7 @@ export const fetchStudentsByClassroom = async (classroomId: string): Promise<Stu
       collection(db, "student"),
       where("classroomId", "==", classroomId)
     );
-    
+
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
@@ -64,7 +65,8 @@ export const fetchStudentsByClassroom = async (classroomId: string): Promise<Stu
       classroomId: doc.data().classroomId,
       caracter: doc.data().caracter,
       className: doc.data().className,
-      classRoom: doc.data().classRoom
+      classRoom: doc.data().classRoom,
+      status: doc.data().status || 'activo'
     }));
     
   } catch (error) {
@@ -77,7 +79,7 @@ export const fetchStudents = async (): Promise<Student[]> => {
     const q = query(
       collection(db, "student")
     );
-    
+
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
@@ -87,7 +89,8 @@ export const fetchStudents = async (): Promise<Student[]> => {
       classroomId: doc.data().classroomId,
       caracter: doc.data().caracter,
       className: doc.data().className,
-      classRoom: doc.data().classRoom
+      classRoom: doc.data().classRoom,
+      status: doc.data().status || 'activo'
     }));
     
   } catch (error) {
@@ -328,4 +331,34 @@ export const deleteStudent = async (studentId: string) => {
   } catch (error) {
     throw new Error("Error al eliminar estudiante");
   }
+};
+
+/**
+ * Filtra estudiantes por estado
+ * Por defecto retorna solo estudiantes activos
+ * @param students - Lista de estudiantes a filtrar
+ * @param status - Estado a filtrar (default: 'activo')
+ * @returns Estudiantes filtrados
+ */
+export const filterStudentsByStatus = (
+  students: Student[],
+  status: 'activo' | 'all' = 'activo'
+): Student[] => {
+  if (status === 'all') return students;
+  return students.filter(s => (s.status || 'activo') === status);
+};
+
+/**
+ * Obtiene estudiantes activos de un salón
+ * Wrapper de fetchStudentsByClassroom que filtra solo activos
+ */
+export const fetchActiveStudentsByClassroom = async (
+  classroomId: string
+): Promise<Student[]> => {
+  const allStudents = await fetchStudentsByClassroom(classroomId);
+  console.log('🔍 Total estudiantes en salón:', allStudents.length);
+  console.log('🔍 Estados de estudiantes:', allStudents.map(s => ({ id: s.id, name: s.name, status: s.status })));
+  const activeStudents = filterStudentsByStatus(allStudents, 'activo');
+  console.log('✅ Estudiantes activos:', activeStudents.length);
+  return activeStudents;
 };
