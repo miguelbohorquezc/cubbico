@@ -20,6 +20,7 @@ import { useCalendarDragDrop } from './hooks/useCalendarDragDrop';
 import { useActivityResize } from './hooks/useActivityResize';
 import type { FlexibleScheduleActivity } from '../../../domain/entities/schedule';
 import { timeToMinutes } from '../../../domain/entities/schedule';
+import { IconCalendarOff } from '@tabler/icons-react';
 
 // ============================================
 // Tipos
@@ -370,10 +371,12 @@ export const FlexibleCalendar: React.FC<FlexibleCalendarProps> = ({
       {/* Indicador de estado vacío */}
       {!loading && !error && activities.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-center text-gray-400">
-            <div className="text-6xl mb-4">📅</div>
-            <p className="text-lg">No hay actividades programadas</p>
-            <p className="text-sm">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+              <IconCalendarOff size={48} className="text-gray-400" />
+            </div>
+            <p className="text-lg font-medium text-gray-600">No hay actividades programadas</p>
+            <p className="text-sm text-gray-400 mt-1">
               {readOnly ? '' : 'Haz clic en una celda para crear una actividad'}
             </p>
           </div>

@@ -180,7 +180,7 @@ const ClassroomStudents = () => {
                           <td className="px-6 py-4 text-sm text-light-gray-900 font-medium">
                             {student.document}
                           </td>
-                          <td className="px-6 py-4 text-sm font-semibold text-deep-blue-900">
+                          <td className="px-6 py-4 text-sm font-semibold text-deep-blue-900 uppercase">
                             {student.name} {student.lastName}
                           </td>
                           <td className="px-6 py-4">
