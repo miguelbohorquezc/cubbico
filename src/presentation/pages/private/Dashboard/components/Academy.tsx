@@ -73,7 +73,7 @@ function Academy() {
           {/* Page Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-60 rounded-lg">
                 <IconSchool size={20} className="text-white" />
               </div>
               <div>
@@ -93,13 +93,13 @@ function Academy() {
             {periodId && (
               <>
                 <IconChevronRight size={14} className="text-gray-400" />
-                <span className="text-tosca-600 font-medium">Período {periodId}</span>
+                <span className="text-orchid-blue-60 font-medium">Período {periodId}</span>
               </>
             )}
             {selectedClassroom && (
               <>
                 <IconChevronRight size={14} className="text-gray-400" />
-                <span className="text-blue-600 font-medium">{selectedClassroom.nombreSalon}</span>
+                <span className="text-orchid-blue-60 font-medium">{selectedClassroom.nombreSalon}</span>
               </>
             )}
           </nav>
@@ -109,8 +109,8 @@ function Academy() {
             {/* Classrooms Card */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden">
               <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-white">
-                <div className="p-2 bg-tosca/20 rounded-lg">
-                  <IconSchool size={18} className="text-tosca-600" />
+                <div className="p-2 bg-orchid-blue-10 rounded-lg">
+                  <IconSchool size={18} className="text-orchid-blue-60" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold text-gray-800">Mis Salones</h2>
@@ -127,8 +127,8 @@ function Academy() {
               <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-white">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <IconBooks size={18} className="text-blue-600" />
+                    <div className="p-2 bg-orchid-blue-10 rounded-lg">
+                      <IconBooks size={18} className="text-orchid-blue-60" />
                     </div>
                     <div>
                       <h2 className="text-sm font-semibold text-gray-800">
@@ -140,7 +140,7 @@ function Academy() {
                     </div>
                   </div>
                   {selectedClassroom && (
-                    <span className="hidden sm:inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-700">
+                    <span className="hidden sm:inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-orchid-blue-10 text-orchid-blue-70 border border-orchid-blue-30">
                       {selectedClassroom.identificador}
                     </span>
                   )}

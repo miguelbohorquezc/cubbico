@@ -267,7 +267,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
               placeholder="Buscar usuario..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-72 bg-white shadow-sm"
+              className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orchid-blue-30 focus:border-orchid-blue-60 w-full sm:w-72 bg-white shadow-sm"
             />
           </div>
         </div>
@@ -327,7 +327,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                       <div className="flex items-center gap-3">
                         <div className={`
                           w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold
-                          ${role === 'Coordinador' ? 'bg-magenta-500' : 'bg-blue-500'}
+                          ${role === 'Coordinador' ? 'bg-magenta-ds' : 'bg-orchid-blue-60'}
                         `}>
                           {initial}
                         </div>
@@ -341,12 +341,12 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                     {/* Rol */}
                     <td className="px-6 py-4">
                       <span className={`
-                        inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+                        inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border
                         ${role === 'Coordinador'
-                          ? 'bg-magenta-100 text-magenta-800'
+                          ? 'bg-magenta-ds/10 text-magenta-cc border-magenta-ds/30'
                           : role === 'Docente'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-orchid-blue-10 text-orchid-blue-70 border-orchid-blue-30'
+                          : 'bg-gray-100 text-gray-800 border-gray-200'
                         }
                       `}>
                         {role === 'Coordinador' && (
@@ -379,7 +379,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                         <Tooltip text="Editar nombre" position="top">
                           <button
                             onClick={() => openEditModal(user.id!, firstName, lastName)}
-                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-gray-500 hover:text-orchid-blue-60 hover:bg-orchid-blue-10 rounded-lg transition-colors"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -405,7 +405,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                         <Tooltip text="Cambiar rol" position="top">
                           <button
                             onClick={() => openConfirmModal('role', user.id!, displayName, role)}
-                            className="p-2 text-gray-500 hover:text-magenta-600 hover:bg-magenta-50 rounded-lg transition-colors"
+                            className="p-2 text-gray-500 hover:text-magenta-cc hover:bg-magenta-ds/10 rounded-lg transition-colors"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -465,12 +465,12 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
             {/* Header con color contextual */}
             <div className={`px-6 py-4 ${
               confirmModal.type === 'delete'
-                ? 'bg-magenta'
+                ? 'bg-magenta-ds'
                 : confirmModal.type === 'toggle'
                 ? confirmModal.currentValue
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500'
-                  : 'bg-tosca'
-                : 'bg-gradient-to-r from-purple-500 to-orchid-blue-500'
+                  : 'bg-tosca-ds'
+                : 'bg-magenta-ds'
             }`}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
@@ -538,7 +538,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                     ? confirmModal.currentValue
                       ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200'
                       : 'bg-green-600 hover:bg-green-700 shadow-green-200'
-                    : 'bg-magenta-600 hover:bg-magenta-700 shadow-purple-200'
+                    : 'bg-magenta-ds hover:bg-magenta-cc'
                 }`}
               >
                 {actionLoading && (
@@ -563,7 +563,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-lg max-w-md w-full shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Header */}
-            <div className="px-6 py-4 bg-orchid-blue-50">
+            <div className="px-6 py-4 bg-orchid-blue-60">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -582,7 +582,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                   type="text"
                   value={editModal.firstName}
                   onChange={(e) => setEditModal({ ...editModal, firstName: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orchid-blue-30 focus:border-orchid-blue-60 bg-gray-50 focus:bg-white transition-colors"
                   placeholder="Ingrese el nombre"
                 />
               </div>
@@ -592,7 +592,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                   type="text"
                   value={editModal.lastName}
                   onChange={(e) => setEditModal({ ...editModal, lastName: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orchid-blue-30 focus:border-orchid-blue-60 bg-gray-50 focus:bg-white transition-colors"
                   placeholder="Ingrese el apellido"
                 />
               </div>
@@ -610,7 +610,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
               <button
                 onClick={handleEditSubmit}
                 disabled={actionLoading}
-                className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm shadow-blue-200"
+                className="px-5 py-2.5 bg-orchid-blue-60 text-white rounded-lg hover:bg-orchid-blue-70 transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm"
               >
                 {actionLoading && (
                   <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">

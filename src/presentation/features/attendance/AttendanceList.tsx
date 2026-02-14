@@ -339,7 +339,7 @@ export default function AttendanceList() {
                 <IconArrowBack size={13} /> Volver
               </button>
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 bg-orchid-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-9 h-9 bg-orchid-blue-60 rounded-lg flex items-center justify-center flex-shrink-0">
                   <IconDoor size={18} className="text-white" />
                 </div>
                 <div>
@@ -354,7 +354,7 @@ export default function AttendanceList() {
             </div>
             <button
               onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/report/${salonId}/${profesorId}/${areaId}/${horaDecoded}`)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-orchid-blue-600 bg-orchid-blue-50 border border-indigo-200 rounded-lg hover:bg-orchid-blue-100 transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-orchid-blue-60 border border-orchid-blue-30 rounded-lg hover:bg-orchid-blue-70 transition-all shadow-sm hover:shadow"
             >
               <IconFileAnalytics size={13} /> Informe
             </button>
@@ -409,12 +409,12 @@ export default function AttendanceList() {
                         <th
                           key={day.iso}
                           className={`px-1 py-2 text-center font-bold border-b border-gray-200 text-[10px] ${
-                            isToday ? 'bg-orchid-blue-50 text-orchid-blue-700' : 'text-gray-500'
+                            isToday ? 'bg-orchid-blue-10 text-orchid-blue-70' : 'text-gray-500'
                           }`}
                           style={{ minWidth: '36px' }}
                         >
                           <div>{pad(day.date.getDate())}</div>
-                          {isToday && <span className="inline-block mt-0.5 px-1 rounded-full bg-orchid-blue-500 text-white text-[8px] font-bold">Hoy</span>}
+                          {isToday && <span className="inline-block mt-0.5 px-1 rounded-full bg-orchid-blue-60 text-white text-[8px] font-bold">Hoy</span>}
                         </th>
                       );
                     })}

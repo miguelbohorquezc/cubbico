@@ -53,16 +53,16 @@ import {
 // ============================================
 
 const BADGE_COLORS = [
-  'bg-red-100 text-red-700 border-red-200',
-  'bg-amber-100 text-amber-700 border-amber-200',
-  'bg-tosca/20 text-tosca-700 border-tosca-200',
-  'bg-blue-100 text-blue-700 border-blue-200',
-  'bg-magenta-100 text-magenta-700 border-purple-200',
-  'bg-pink-100 text-pink-700 border-pink-200',
-  'bg-orange-100 text-orange-700 border-orange-200',
-  'bg-orchid-blue-100 text-orchid-blue-700 border-indigo-200',
-  'bg-teal-100 text-teal-700 border-teal-200',
-  'bg-cyan-100 text-cyan-700 border-cyan-200',
+  'bg-magenta-ds/10 text-magenta-cc border border-magenta-ds/30',
+  'bg-peach-ds/10 text-peach-cc border border-peach-ds/30',
+  'bg-yellow-ds/10 text-yellow-cc border border-yellow-ds/30',
+  'bg-tosca-ds/10 text-tosca-cc border border-tosca-ds/30',
+  'bg-orchid-blue-10 text-orchid-blue-70 border border-orchid-blue-30',
+  'bg-magenta-ds/20 text-magenta-cc border border-magenta-ds/40',
+  'bg-peach-ds/20 text-peach-cc border border-peach-ds/40',
+  'bg-yellow-ds/20 text-yellow-cc border border-yellow-ds/40',
+  'bg-tosca-ds/20 text-tosca-cc border border-tosca-ds/40',
+  'bg-orchid-blue-20 text-orchid-blue-70 border border-orchid-blue-30',
 ];
 
 function hashString(s: string): number {
@@ -329,7 +329,7 @@ export default function ScheduleEditor() {
           {/* ── Top bar ── */}
           <div className="print:hidden flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg shadow-lg shadow-orchid-blue-20">
+              <div className="flex items-center justify-center w-10 h-10 bg-orchid-blue-60 rounded-lg">
                 <IconCalendar size={20} className="text-white" />
               </div>
               <div>

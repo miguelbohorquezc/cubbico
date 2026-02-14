@@ -65,7 +65,7 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
         style={popoverStyle}
       >
         {/* Header compacto */}
-        <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-orchid-blue-50">
+        <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-gray-5 rounded-t-lg">
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-bold text-gray-900 truncate">
               {activity.courseName}
@@ -73,7 +73,7 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="ml-2 p-1 hover:bg-white rounded transition-colors flex-shrink-0"
+            className="ml-2 p-1 hover:bg-white rounded-lg transition-colors flex-shrink-0"
           >
             <IconX size={14} className="text-gray-400" />
           </button>
@@ -112,14 +112,14 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
         </div>
 
         {/* Actions compactos */}
-        <div className="flex items-center gap-1 px-2 py-2 border-t border-gray-100 bg-gray-50">
+        <div className="flex items-center gap-1 px-2 py-2 border-t border-gray-100 bg-gray-5 rounded-b-lg">
           {onEdit && (
             <button
               onClick={() => {
                 onEdit();
                 onClose();
               }}
-              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-orchid-blue-700 bg-orchid-blue-50 hover:bg-orchid-blue-100 rounded transition-colors"
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-orchid-blue-70 bg-orchid-blue-10 hover:bg-orchid-blue-20 rounded-lg transition-colors border border-orchid-blue-30"
             >
               <IconEdit size={12} />
               <span>Editar</span>
@@ -131,7 +131,7 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
                 onDelete();
                 onClose();
               }}
-              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded transition-colors"
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-magenta-cc bg-magenta-ds/10 hover:bg-magenta-ds/20 rounded-lg transition-colors border border-magenta-ds/30"
             >
               <IconTrash size={12} />
               <span>Eliminar</span>

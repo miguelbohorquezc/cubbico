@@ -133,7 +133,7 @@ const StudentList = () => {
             text-xs font-semibold rounded-lg border
             ${isAjustes
               ? 'bg-orchid-blue-10 text-orchid-blue-70 border-orchid-blue-30'
-              : 'bg-orchid-blue-10 text-orchid-blue-70 border-orchid-blue-30'
+              : 'bg-yellow-ds/10 text-yellow-cc border border-yellow-ds/30'
             }
           `}>
             {isAjustes ? (
@@ -156,7 +156,7 @@ const StudentList = () => {
       render: (row: Student) => {
         const status = row.status || 'activo';
         const colorMap = {
-          activo: 'bg-green-50 text-green-700 border-green-200',
+          activo: 'bg-tosca-ds/10 text-tosca-cc border-tosca-ds/30',
           retirado: 'bg-gray-50 text-gray-700 border-gray-200',
           expulsado: 'bg-red-50 text-red-700 border-red-200',
           inactivo: 'bg-yellow-50 text-yellow-700 border-yellow-200',

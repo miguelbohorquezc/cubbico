@@ -5,10 +5,10 @@ import DataTable from "../../components/datatable/DataTable";
 /**
  * Badge de nivel académico con Tailwind
  */
-const NIVEL_BADGES: Record<string, { bg: string; text: string; label: string }> = {
-  primaria: { bg: 'bg-tosca/10', text: 'text-tosca-700', label: 'Primaria' },
-  preescolar: { bg: 'bg-magenta-50', text: 'text-magenta-700', label: 'Preescolar' },
-  secundaria: { bg: 'bg-blue-50', text: 'text-blue-700', label: 'Secundaria' },
+const NIVEL_BADGES: Record<string, { bg: string; text: string; label: string; border: string }> = {
+  primaria: { bg: 'bg-magenta-ds/10', text: 'text-magenta-cc', border: 'border-magenta-ds/30', label: 'Primaria' },
+  preescolar: { bg: 'bg-tosca-ds/10', text: 'text-tosca-cc', border: 'border-tosca-ds/30', label: 'Preescolar' },
+  secundaria: { bg: 'bg-yellow-ds/10', text: 'text-yellow-cc', border: 'border-yellow-ds/30', label: 'Secundaria' },
 };
 
 const TeacherAreas = () => {
@@ -48,7 +48,7 @@ const TeacherAreas = () => {
       key: "area",
       label: "Área",
       render: (row: any) => (
-        <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-orchid-blue-50 text-orchid-blue-700">
+        <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-tosca-ds/10 text-tosca-cc border border-tosca-ds/30">
           {row.area}
         </span>
       )
@@ -58,13 +58,13 @@ const TeacherAreas = () => {
       label: "Nivel",
       render: (row: any) => {
         const nivel = row.nivel?.toLowerCase() || '';
-        const badge = NIVEL_BADGES[nivel] || { bg: 'bg-gray-50', text: 'text-gray-700', label: row.nivel };
+        const badge = NIVEL_BADGES[nivel] || { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', label: row.nivel };
 
         return (
           <span className={`
             inline-flex items-center px-2.5 py-1
-            text-xs font-medium rounded-full
-            ${badge.bg} ${badge.text}
+            text-xs font-medium rounded-full border
+            ${badge.bg} ${badge.text} ${badge.border}
           `}>
             {badge.label}
           </span>
@@ -81,10 +81,10 @@ const TeacherAreas = () => {
               onClick={() => handleSelectNotes(area.id)}
               className="
                 p-2 rounded-lg
-                text-gray-500 hover:text-blue-600
-                hover:bg-blue-50
+                text-gray-500 hover:text-orchid-blue-70
+                hover:bg-orchid-blue-10
                 transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-blue-200
+                focus:outline-none focus:ring-2 focus:ring-orchid-blue-30
               "
               title="Gestionar notas"
               aria-label="Gestionar notas"
@@ -101,10 +101,10 @@ const TeacherAreas = () => {
                 onClick={handleSelectPreschoolNotes}
                 className="
                   p-2 rounded-lg
-                  text-gray-500 hover:text-magenta-600
-                  hover:bg-magenta-50
+                  text-gray-500 hover:text-magenta-cc
+                  hover:bg-magenta-ds/10
                   transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-purple-200
+                  focus:outline-none focus:ring-2 focus:ring-magenta-ds/30
                 "
                 title="Propósitos"
                 aria-label="Propósitos"
@@ -117,10 +117,10 @@ const TeacherAreas = () => {
                 onClick={handleSelectIndicadores}
                 className="
                   p-2 rounded-lg
-                  text-gray-500 hover:text-amber-600
-                  hover:bg-amber-50
+                  text-gray-500 hover:text-yellow-cc
+                  hover:bg-yellow-ds/10
                   transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-yellow/30
+                  focus:outline-none focus:ring-2 focus:ring-yellow-ds/30
                 "
                 title="Indicadores"
                 aria-label="Indicadores"
@@ -133,10 +133,10 @@ const TeacherAreas = () => {
                 onClick={handleSelectStudents}
                 className="
                   p-2 rounded-lg
-                  text-gray-500 hover:text-teal-600
-                  hover:bg-teal-50
+                  text-gray-500 hover:text-tosca-cc
+                  hover:bg-tosca-ds/10
                   transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-teal-200
+                  focus:outline-none focus:ring-2 focus:ring-tosca-ds/30
                 "
                 title="Estudiantes"
                 aria-label="Estudiantes"

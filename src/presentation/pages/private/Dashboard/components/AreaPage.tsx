@@ -123,7 +123,7 @@ function AreaPage() {
               </button>
 
               {/* Icono y título */}
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-magenta rounded-lg shadow-lg">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-60 rounded-lg">
                 <IconBooks size={20} className="text-white" />
               </div>
               <div>
@@ -142,12 +142,11 @@ function AreaPage() {
               className="
                 inline-flex items-center gap-2
                 px-4 py-2.5 text-sm font-medium
-                bg-magenta
+                bg-orchid-blue-60
                 text-white rounded-lg
-                hover:bg-magenta-cc
+                hover:bg-orchid-blue-70
                 transition-all duration-200
-                shadow-md hover:shadow-lg
-                focus:outline-none focus:ring-2 focus:ring-magenta/30
+                focus:outline-none focus:ring-2 focus:ring-orchid-blue-20
               "
             >
               <IconPlus size={18} />

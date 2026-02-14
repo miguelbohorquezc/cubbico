@@ -166,12 +166,12 @@ function DataTable<T>({
                 inline-flex items-center gap-2
                 px-3 py-2
                 text-sm font-medium text-white
-                bg-tosca
+                bg-orchid-blue-60
                 rounded-lg
                 transition-all duration-200
-                hover:bg-orchid-blue-60
+                hover:bg-orchid-blue-70
                 hover:shadow-md
-                focus:outline-none focus:ring-2 focus:ring-tosca/30
+                focus:outline-none focus:ring-2 focus:ring-orchid-blue-20
               "
               title="Exportar a CSV"
             >

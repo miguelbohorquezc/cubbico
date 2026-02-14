@@ -19,20 +19,28 @@ const NIVELES: NivelDragDrop[] = ['primaria', 'secundaria'];
 /**
  * Configuración de colores por nivel
  */
-const NIVEL_CONFIG: Record<string, { bg: string; bgActive: string; text: string; border: string; label: string }> = {
+const NIVEL_CONFIG: Record<string, { bg: string; bgActive: string; text: string; border: string; label: string; alertBg: string; alertBorder: string; alertIcon: string; alertText: string }> = {
   'primaria': {
-    bg: 'bg-tosca/10',
-    bgActive: 'bg-tosca/100',
-    text: 'text-tosca-700',
-    border: 'border-tosca-200',
-    label: 'Primaria'
+    bg: 'bg-tosca-ds/10',
+    bgActive: 'bg-tosca-ds',
+    text: 'text-tosca-cc',
+    border: 'border-tosca-ds/30',
+    label: 'Primaria',
+    alertBg: 'bg-yellow-ds/10',
+    alertBorder: 'border-yellow-ds/30',
+    alertIcon: 'text-yellow-cc',
+    alertText: 'text-yellow-cc'
   },
   'secundaria': {
-    bg: 'bg-magenta-50',
-    bgActive: 'bg-magenta-500',
-    text: 'text-magenta-700',
-    border: 'border-magenta-200',
-    label: 'Secundaria'
+    bg: 'bg-magenta-ds/10',
+    bgActive: 'bg-magenta-ds',
+    text: 'text-magenta-cc',
+    border: 'border-magenta-ds/30',
+    label: 'Secundaria',
+    alertBg: 'bg-magenta-ds/10',
+    alertBorder: 'border-magenta-ds/30',
+    alertIcon: 'text-magenta-cc',
+    alertText: 'text-magenta-cc'
   }
 };
 
@@ -175,7 +183,7 @@ const AreaListDragDrop = () => {
                 transition-all duration-200
                 focus:outline-none focus:ring-2 focus:ring-offset-2
                 ${isActive
-                  ? `${config.bgActive} text-white shadow-md focus:ring-${nivel === 'primaria' ? 'emerald' : 'violet'}-300`
+                  ? `${config.bgActive} text-white shadow-md`
                   : `${config.bg} ${config.text} hover:shadow-sm focus:ring-gray-200`
                 }
               `}
@@ -183,7 +191,7 @@ const AreaListDragDrop = () => {
               {config.label}
               <span className={`
                 px-2 py-0.5 rounded-full text-xs font-semibold
-                ${isActive ? 'bg-white/20' : config.border + ' border'}
+                ${isActive ? 'bg-white/20 text-white' : `${config.bg} ${config.text} border ${config.border}`}
               `}>
                 {count}
               </span>
@@ -193,9 +201,9 @@ const AreaListDragDrop = () => {
       </div>
 
       {/* Instrucciones */}
-      <div className="flex items-start gap-3 px-4 py-3 bg-blue-50 border border-blue-100 rounded-lg">
-        <IconInfoCircle size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
-        <div className="text-sm text-blue-800">
+      <div className={`flex items-start gap-3 px-4 py-3 ${NIVEL_CONFIG[selectedNivel].alertBg} border ${NIVEL_CONFIG[selectedNivel].alertBorder} rounded-lg`}>
+        <IconInfoCircle size={20} className={`${NIVEL_CONFIG[selectedNivel].alertIcon} flex-shrink-0 mt-0.5`} />
+        <div className={`text-sm ${NIVEL_CONFIG[selectedNivel].alertText}`}>
           <span className="font-medium">Instrucciones:</span> Arrastra las asignaturas para cambiar su orden.
           El orden define cómo aparecerán en los informes académicos.
         </div>

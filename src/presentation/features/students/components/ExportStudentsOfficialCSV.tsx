@@ -118,7 +118,7 @@ export default function ExportStudentsOfficialCSV({
       </svg>
       Exportar Listado Oficial (.CSV)
       {students && students.length > 0 && (
-        <span className="ml-1 px-2 py-0.5 bg-orchid-blue-20 text-orchid-blue-70 rounded-full text-xs font-semibold">
+        <span className="ml-1 px-2 py-0.5 bg-orchid-blue-5 text-orchid-blue-70 rounded-full text-xs font-semibold">
           {students.length}
         </span>
       )}

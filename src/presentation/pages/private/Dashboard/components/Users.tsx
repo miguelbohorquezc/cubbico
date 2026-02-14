@@ -77,7 +77,7 @@ function User() {
           {/* Header de la página */}
           <div className="flex items-center justify-between mb-4 flex-shrink-0">
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg shadow-lg">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-60 rounded-lg">
                 <IconUsers size={20} className="text-white" />
               </div>
               <div>
@@ -94,9 +94,9 @@ function User() {
               className="
                 inline-flex items-center gap-2
                 px-3 py-2 text-sm font-medium
-                bg-orchid-blue-50
+                bg-orchid-blue-60
                 text-white rounded-lg
-                hover:bg-orchid-blue-60
+                hover:bg-orchid-blue-70
                 transition-all duration-200
                 shadow-md hover:shadow-lg
               "

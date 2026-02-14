@@ -12,6 +12,24 @@ import { useCargarEstudiantesYNotas } from './useCargarEstudiantesYNotas';
 import { useConstruirYEnviarLote } from './useConstruirYEnviarLote';
 import { Student, CampoCalificacion } from './types';
 
+/**
+ * Obtiene el color del promedio según el rango
+ * 0-2.9: Magenta DS, 3-4: Yellow DS, 4.1+: Tosca DS
+ */
+const getPromedioColor = (promedio: string): { bg: string; text: string } => {
+  const num = parseFloat(promedio);
+  if (isNaN(num) || promedio === '0.00') {
+    return { bg: 'bg-gray-100', text: 'text-gray-500' };
+  }
+  if (num < 3) {
+    return { bg: 'bg-magenta-ds/10', text: 'text-magenta-cc' };
+  }
+  if (num <= 4) {
+    return { bg: 'bg-yellow-ds/10', text: 'text-yellow-cc' };
+  }
+  return { bg: 'bg-tosca-ds/10', text: 'text-tosca-cc' };
+};
+
 const GradeManager: React.FC = () => {
   const { periodId, classroomId, areaId } = useParams<{
     periodId: string;
@@ -70,7 +88,7 @@ const GradeManager: React.FC = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <IconLoader2 size={32} className="text-blue-500 animate-spin mb-3" />
+        <IconLoader2 size={32} className="text-orchid-blue-60 animate-spin mb-3" />
         <p className="text-sm text-gray-600">Cargando estudiantes...</p>
       </div>
     );
@@ -109,16 +127,16 @@ const GradeManager: React.FC = () => {
               <th className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider min-w-[200px]">
                 Estudiante
               </th>
-              <th className="px-2 py-3 text-center text-xs font-semibold text-blue-600 uppercase tracking-wider w-20">
+              <th className="px-2 py-3 text-center text-xs font-semibold text-orchid-blue-60 uppercase tracking-wider w-20">
                 L1
               </th>
-              <th className="px-2 py-3 text-center text-xs font-semibold text-blue-600 uppercase tracking-wider w-20">
+              <th className="px-2 py-3 text-center text-xs font-semibold text-orchid-blue-60 uppercase tracking-wider w-20">
                 L2
               </th>
-              <th className="px-2 py-3 text-center text-xs font-semibold text-blue-600 uppercase tracking-wider w-20">
+              <th className="px-2 py-3 text-center text-xs font-semibold text-orchid-blue-60 uppercase tracking-wider w-20">
                 L3
               </th>
-              <th className="px-2 py-3 text-center text-xs font-semibold text-tosca-600 uppercase tracking-wider w-20">
+              <th className="px-2 py-3 text-center text-xs font-semibold text-orchid-blue-60 uppercase tracking-wider w-20">
                 Prom.
               </th>
               <th className="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider" colSpan={2}>
@@ -163,9 +181,15 @@ const GradeManager: React.FC = () => {
 
                     {/* Promedio */}
                     <td className="px-2 py-4 text-center">
-                      <span className="inline-flex items-center justify-center w-12 h-8 text-sm font-bold text-tosca-700 bg-tosca/10 rounded-lg">
-                        {calcularPromedio(g.l1, g.l2, g.l3)}
-                      </span>
+                      {(() => {
+                        const promedio = calcularPromedio(g.l1, g.l2, g.l3);
+                        const colors = getPromedioColor(promedio);
+                        return (
+                          <span className={`inline-flex items-center justify-center w-12 h-8 text-sm font-bold ${colors.text} ${colors.bg} rounded-lg`}>
+                            {promedio}
+                          </span>
+                        );
+                      })()}
                     </td>
 
                     {/* Informe de período */}
@@ -173,7 +197,7 @@ const GradeManager: React.FC = () => {
                       {permissions.canViewAllReports ? (
                         <Link
                           to={`/private/dashboard/${PrivateRoutes.REPORT}/${classroom?.nivel}/${periodId}/${classroom?.directorGrupo}/${student.id}/${anioActual}`}
-                          className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-orchid-blue-60 hover:bg-orchid-blue-10 rounded-lg transition-colors"
                           title="Ver informe de período"
                         >
                           <IconFileDescription size={18} />
@@ -227,11 +251,11 @@ const GradeManager: React.FC = () => {
           className="
             inline-flex items-center gap-2 px-6 py-2.5
             text-sm font-semibold text-white
-            bg-tosca
+            bg-orchid-blue-60
             rounded-lg shadow-sm
             transition-all duration-200
-            hover:bg-orchid-blue-60 hover:shadow-md
-            focus:outline-none focus:ring-2 focus:ring-tosca/30
+            hover:bg-orchid-blue-70 hover:shadow-md
+            focus:outline-none focus:ring-2 focus:ring-orchid-blue-30
             disabled:opacity-60 disabled:cursor-not-allowed
           "
         >
@@ -247,8 +271,8 @@ const GradeManager: React.FC = () => {
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
             {/* Header */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-tosca/20 rounded-full flex items-center justify-center">
-                <IconCheck size={20} className="text-tosca-600" />
+              <div className="w-10 h-10 bg-orchid-blue-10 rounded-full flex items-center justify-center">
+                <IconCheck size={20} className="text-orchid-blue-60" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">Confirmar guardado</h3>
@@ -315,10 +339,10 @@ const GradeManager: React.FC = () => {
                 className="
                   flex-1 px-4 py-2.5
                   text-sm font-semibold text-white
-                  bg-tosca
+                  bg-orchid-blue-60
                   rounded-lg
                   transition-all duration-200
-                  hover:bg-orchid-blue-60
+                  hover:bg-orchid-blue-70
                   disabled:opacity-60
                 "
               >

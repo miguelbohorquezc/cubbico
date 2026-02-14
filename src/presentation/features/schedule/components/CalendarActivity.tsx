@@ -42,40 +42,42 @@ export interface CalendarActivityProps {
 // ============================================
 
 /**
- * Genera un color determinístico basado en el ID del curso.
- * Siempre devuelve el mismo color para el mismo curso.
+ * Genera un color basado en el nombre del salón (nivel educativo)
  */
-function getColorForCourse(courseId: string): {
+function getColorForClassroom(classroomName: string): {
   bg: string;
   border: string;
   text: string;
 } {
-  // Hash simple del courseId para generar un índice
-  let hash = 0;
-  for (let i = 0; i < courseId.length; i++) {
-    hash = courseId.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % COURSE_COLORS.length;
-
-  return COURSE_COLORS[index];
+  const nivel = getNivelFromClassroom(classroomName);
+  return NIVEL_COLORS[nivel] || NIVEL_COLORS['primaria'];
 }
 
 /**
- * Paleta de colores moderna para actividades.
- * Colores más saturados y vibrantes con buen contraste.
+ * Colores por nivel educativo usando COLORS.md
  */
-const COURSE_COLORS = [
-  { bg: 'bg-blue-200', border: 'border-blue-500', text: 'text-blue-950' },
-  { bg: 'bg-emerald-200', border: 'border-tosca-500', text: 'text-tosca-950' },
-  { bg: 'bg-magenta-200', border: 'border-purple-500', text: 'text-magenta-950' },
-  { bg: 'bg-amber-200', border: 'border-amber-500', text: 'text-amber-950' },
-  { bg: 'bg-pink-200', border: 'border-pink-500', text: 'text-pink-950' },
-  { bg: 'bg-orchid-blue-200', border: 'border-indigo-500', text: 'text-orchid-blue-950' },
-  { bg: 'bg-teal-200', border: 'border-teal-500', text: 'text-teal-950' },
-  { bg: 'bg-orange-200', border: 'border-orange-500', text: 'text-orange-950' },
-  { bg: 'bg-cyan-200', border: 'border-cyan-500', text: 'text-cyan-950' },
-  { bg: 'bg-rose-200', border: 'border-rose-500', text: 'text-rose-950' },
-];
+const NIVEL_COLORS: Record<string, { bg: string; border: string; text: string }> = {
+  'preescolar': { bg: 'bg-tosca-ds/20', border: 'border-tosca-ds', text: 'text-tosca-cc' },
+  'primaria': { bg: 'bg-magenta-ds/20', border: 'border-magenta-ds', text: 'text-magenta-cc' },
+  'secundaria': { bg: 'bg-yellow-ds/20', border: 'border-yellow-ds', text: 'text-yellow-cc' },
+};
+
+/**
+ * Determina el nivel educativo basándose en el nombre del salón
+ */
+function getNivelFromClassroom(classroomName: string): string {
+  const name = classroomName.toLowerCase();
+  if (name.includes('preescolar') || name.includes('pre-escolar') || name.includes('jardín') || name.includes('párvulos') || name.includes('nursery') || name.includes('kinder') || name.includes('transición')) {
+    return 'preescolar';
+  }
+  if (name.includes('primaria') || /^(primero|segundo|tercero|cuarto|quinto)/.test(name)) {
+    return 'primaria';
+  }
+  if (name.includes('secundaria') || name.includes('bachillerato') || /^(sexto|séptimo|octavo|noveno|décimo|undécimo)/.test(name)) {
+    return 'secundaria';
+  }
+  return 'primaria'; // default
+}
 
 // ============================================
 // Componente
@@ -96,7 +98,7 @@ export const CalendarActivity: React.FC<CalendarActivityProps> = ({
   onResizeStart,
   style,
 }) => {
-  const colors = getColorForCourse(activity.courseId);
+  const colors = getColorForClassroom(activity.classroomName);
 
   // Calcular altura en pixels - usar previewDuration durante resize para feedback instantáneo
   const effectiveDuration = previewDuration ?? activity.durationMinutes;

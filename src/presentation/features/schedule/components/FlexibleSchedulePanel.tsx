@@ -42,16 +42,16 @@ export interface FlexibleSchedulePanelProps {
 // ============================================
 
 const BADGE_COLORS = [
-  'bg-red-100 text-red-700 border-red-200',
-  'bg-amber-100 text-amber-700 border-amber-200',
-  'bg-tosca/20 text-tosca-700 border-tosca-200',
-  'bg-blue-100 text-blue-700 border-blue-200',
-  'bg-magenta-100 text-magenta-700 border-purple-200',
-  'bg-pink-100 text-pink-700 border-pink-200',
-  'bg-orange-100 text-orange-700 border-orange-200',
-  'bg-orchid-blue-100 text-orchid-blue-700 border-indigo-200',
-  'bg-teal-100 text-teal-700 border-teal-200',
-  'bg-cyan-100 text-cyan-700 border-cyan-200',
+  'bg-magenta-ds/10 text-magenta-cc border border-magenta-ds/30',
+  'bg-peach-ds/10 text-peach-cc border border-peach-ds/30',
+  'bg-yellow-ds/10 text-yellow-cc border border-yellow-ds/30',
+  'bg-tosca-ds/10 text-tosca-cc border border-tosca-ds/30',
+  'bg-orchid-blue-10 text-orchid-blue-70 border border-orchid-blue-30',
+  'bg-magenta-ds/20 text-magenta-cc border border-magenta-ds/40',
+  'bg-peach-ds/20 text-peach-cc border border-peach-ds/40',
+  'bg-yellow-ds/20 text-yellow-cc border border-yellow-ds/40',
+  'bg-tosca-ds/20 text-tosca-cc border border-tosca-ds/40',
+  'bg-orchid-blue-20 text-orchid-blue-70 border border-orchid-blue-30',
 ];
 
 function hashString(s: string): number {
@@ -81,12 +81,12 @@ export const FlexibleSchedulePanel: React.FC<FlexibleSchedulePanelProps> = ({
   return (
     <div className="print:hidden w-48 flex-shrink-0 overflow-y-auto space-y-3 pr-1">
       {/* Instrucciones */}
-      <div className="bg-orchid-blue-50 rounded-lg border border-blue-200 p-3 shadow-sm">
-        <div className="text-xs font-bold text-blue-900 mb-1.5 flex items-center gap-1.5">
-          <IconBulb size={14} className="text-blue-600" />
+      <div className="bg-yellow-ds/10 rounded-lg border border-yellow-ds/30 p-3 shadow-sm">
+        <div className="text-xs font-bold text-yellow-cc mb-1.5 flex items-center gap-1.5">
+          <IconBulb size={14} className="text-yellow-cc" />
           <span>Cómo crear clases</span>
         </div>
-        <ol className="text-[10px] text-blue-800 space-y-1 list-decimal list-inside">
+        <ol className="text-[10px] text-yellow-cc space-y-1 list-decimal list-inside">
           <li>Selecciona un <strong>profesor</strong></li>
           <li>Selecciona un <strong>salón</strong></li>
           <li><strong>Arrastra</strong> una asignatura al horario</li>

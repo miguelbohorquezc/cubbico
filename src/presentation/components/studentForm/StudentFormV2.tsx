@@ -332,17 +332,13 @@ const StudentFormV2: React.FC<StudentFormV2Props> = ({
       </div>
     </form>
 
-    {/* Modal de confirmación - Portal independiente con z-index alto */}
+    {/* Modal de confirmación - Cubre exactamente el modal padre */}
     {modalConfirmOpen && (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ margin: 0 }}>
-        {/* Backdrop - sin blur para evitar doble blur con el modal padre */}
-        <div
-          className="fixed inset-0 bg-black/60"
-          onClick={() => !isSubmitting && setModalConfirmOpen(false)}
-        />
+      <div className="fixed inset-0 z-[60] overflow-y-auto">
+        {/* Modal centrado con mismo tamaño que el padre */}
+        <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+          <div className="relative w-full max-w-xl bg-white rounded-lg shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] transform transition-all">
 
-        {/* Modal Container */}
-        <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden animate-slide-up">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -383,19 +379,19 @@ const StudentFormV2: React.FC<StudentFormV2Props> = ({
         {/* Steps */}
         <div className="flex items-center justify-center gap-2 py-1">
           <div className="flex items-center gap-1.5">
-            <div className="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center">
+            <div className="w-7 h-7 bg-tosca-ds rounded-full flex items-center justify-center">
               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-gray-700">Formulario</span>
+            <span className="text-sm font-medium text-tosca-cc">Formulario</span>
           </div>
           <div className="w-16 h-0.5 bg-gray-300"></div>
           <div className="flex items-center gap-1.5">
-            <div className="w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center">
+            <div className="w-7 h-7 bg-yellow-ds rounded-full flex items-center justify-center">
               <span className="text-sm font-bold text-white">2</span>
             </div>
-            <span className="text-sm font-medium text-blue-600">Confirmar</span>
+            <span className="text-sm font-medium text-yellow-cc">Confirmar</span>
           </div>
         </div>
 
@@ -431,8 +427,8 @@ const StudentFormV2: React.FC<StudentFormV2Props> = ({
 
             {/* Información académica */}
             <div className="flex items-start gap-3">
-              <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-9 h-9 bg-yellow-ds/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-yellow-cc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
@@ -455,8 +451,8 @@ const StudentFormV2: React.FC<StudentFormV2Props> = ({
 
             {/* Modo de evaluación */}
             <div className="flex items-start gap-3">
-              <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-9 h-9 bg-tosca-ds/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-tosca-cc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
@@ -472,47 +468,38 @@ const StudentFormV2: React.FC<StudentFormV2Props> = ({
 
         {/* Botones */}
         <div className="flex justify-end gap-2.5 pt-1">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => {
               setModalConfirmOpen(false);
               setErrorDuplicado(null);
             }}
             disabled={isSubmitting}
-            className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 transition-all"
           >
             Cancelar
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="primary"
             onClick={handleModalConfirm}
+            loading={isSubmitting}
             disabled={isSubmitting || !!errorDuplicado}
-            className="px-6 py-2.5 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 disabled:opacity-50 transition-all flex items-center gap-2"
+            leftIcon={!isSubmitting ? (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            ) : undefined}
           >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Guardando...
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Confirmar
-              </>
-            )}
-          </button>
-            </div>
+            {isSubmitting ? 'Guardando...' : 'Confirmar'}
+          </Button>
+        </div>
             </div>
           </div>
         </div>
       </div>
+      </div>
     )}
-
 
     {/* Toast notification */}
     <Toast

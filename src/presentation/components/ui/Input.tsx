@@ -116,7 +116,7 @@ const Input: React.FC<InputProps> = ({
     ${
       error
         ? 'border-error-500 focus:border-error-500 focus:ring-error-200'
-        : 'border-light-gray-300 focus:border-medium-blue-500 focus:ring-medium-blue-200'
+        : 'border-light-gray-300 focus:border-orchid-blue-60 focus:ring-orchid-blue-20'
     }
   `.replace(/\s+/g, ' ').trim();
 

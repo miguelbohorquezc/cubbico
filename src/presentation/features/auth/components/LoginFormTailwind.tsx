@@ -172,7 +172,7 @@ const LoginFormTailwind = () => {
                   disabled:opacity-50 disabled:cursor-not-allowed
                   ${errors.email
                     ? 'border-error bg-error-light/10 focus:border-error focus:ring-error/20'
-                    : 'border-light-gray-300 bg-white focus:border-medium-blue focus:ring-medium-blue/20'
+                    : 'border-light-gray-300 bg-white focus:border-orchid-blue-60 focus:ring-orchid-blue-30'
                   }
                 `}
               />
@@ -205,7 +205,7 @@ const LoginFormTailwind = () => {
                   type="button"
                   onClick={handleTogglePassword}
                   disabled={isAuthenticating}
-                  className="text-xs text-medium-blue hover:text-deep-blue transition-colors disabled:opacity-50"
+                  className="text-xs text-orchid-blue-60 hover:text-orchid-blue-70 transition-colors disabled:opacity-50"
                   aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 >
                   {showPassword ? 'Ocultar' : 'Mostrar'}
@@ -230,7 +230,7 @@ const LoginFormTailwind = () => {
                   disabled:opacity-50 disabled:cursor-not-allowed
                   ${errors.password
                     ? 'border-error bg-error-light/10 focus:border-error focus:ring-error/20'
-                    : 'border-light-gray-300 bg-white focus:border-medium-blue focus:ring-medium-blue/20'
+                    : 'border-light-gray-300 bg-white focus:border-orchid-blue-60 focus:ring-orchid-blue-30'
                   }
                 `}
               />
@@ -258,7 +258,7 @@ const LoginFormTailwind = () => {
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                   disabled={isAuthenticating}
-                  className="w-4 h-4 rounded border-light-gray-400 text-medium-blue focus:ring-2 focus:ring-medium-blue/20 disabled:opacity-50 cursor-pointer"
+                  className="w-4 h-4 rounded border-light-gray-400 text-orchid-blue-60 focus:ring-2 focus:ring-orchid-blue-30 disabled:opacity-50 cursor-pointer"
                   aria-label="Recordar mi cuenta"
                 />
                 <span className="text-gray-600 group-hover:text-deep-blue transition-colors">
@@ -269,7 +269,7 @@ const LoginFormTailwind = () => {
               <button
                 type="button"
                 onClick={() => setShowForgotModal(true)}
-                className="text-medium-blue hover:text-deep-blue hover:underline transition-colors font-medium"
+                className="text-orchid-blue-60 hover:text-orchid-blue-70 hover:underline transition-colors font-medium"
               >
                 ¿Olvidaste tu contraseña?
               </button>
@@ -315,9 +315,9 @@ const LoginFormTailwind = () => {
               aria-busy={isAuthenticating}
               className="
                 w-full py-3 px-4 rounded-lg font-medium text-white
-                bg-gradient-to-r bg-orchid-blue-50
-                hover:bg-orchid-blue-60
-                focus:outline-none focus:ring-2 focus:ring-medium-blue/50 focus:ring-offset-2
+                bg-orchid-blue-60
+                hover:bg-orchid-blue-70
+                focus:outline-none focus:ring-2 focus:ring-orchid-blue-30 focus:ring-offset-2
                 disabled:opacity-70 disabled:cursor-not-allowed
                 transition-all duration-200
                 shadow-md hover:shadow-lg
@@ -364,7 +364,7 @@ const LoginFormTailwind = () => {
               ¿No tienes una cuenta?{' '}
               <a
                 href="/register"
-                className="text-medium-blue hover:text-deep-blue font-medium hover:underline transition-colors"
+                className="text-orchid-blue-60 hover:text-orchid-blue-70 font-medium hover:underline transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
                   // TODO: Navegar a página de registro

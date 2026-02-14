@@ -20,7 +20,7 @@ const AchievementForm = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4">
-        <IconLoader2 size={32} className="text-blue-500 animate-spin mb-3" />
+        <IconLoader2 size={32} className="text-orchid-blue-60 animate-spin mb-3" />
         <p className="text-sm text-gray-600">Cargando configuración de logros...</p>
       </div>
     );
@@ -31,14 +31,14 @@ const AchievementForm = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <IconTargetArrow size={18} className="text-blue-600" />
+          <div className="p-2 bg-orchid-blue-10 rounded-lg">
+            <IconTargetArrow size={18} className="text-orchid-blue-60" />
           </div>
           <span className="text-sm font-semibold text-gray-800">
             {docId ? 'Editar Logros' : 'Nuevos Logros'}
           </span>
         </div>
-        <span className="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-700">
+        <span className="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-orchid-blue-10 text-orchid-blue-70 border border-orchid-blue-30">
           Periodo {periodId}
         </span>
       </div>
@@ -104,7 +104,7 @@ const AchievementForm = () => {
                   resize-none
                   ${hasError
                     ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
-                    : 'border-gray-200 focus:ring-blue-200 focus:border-blue-400 hover:border-gray-300'
+                    : 'border-gray-200 focus:ring-orchid-blue-30 focus:border-orchid-blue-60 hover:border-gray-300'
                   }
                 `}
               />
@@ -127,11 +127,11 @@ const AchievementForm = () => {
           className={`
             w-full py-2.5 px-4
             text-sm font-semibold text-white
-            bg-gradient-to-r from-blue-500 to-indigo-600
+            bg-orchid-blue-60
             rounded-lg shadow-sm
             transition-all duration-200
-            hover:from-blue-600 hover:to-indigo-700 hover:shadow-md
-            focus:outline-none focus:ring-2 focus:ring-blue-300
+            hover:bg-orchid-blue-70 hover:shadow-md
+            focus:outline-none focus:ring-2 focus:ring-orchid-blue-30
             disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-sm
             flex items-center justify-center gap-2
           `}

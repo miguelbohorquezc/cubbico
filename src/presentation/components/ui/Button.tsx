@@ -136,12 +136,12 @@ const Button: React.FC<ButtonProps> = ({
   // Variant classes
   const variantClasses: Record<ButtonVariant, string> = {
     primary: `
-      bg-orchid-blue-50
+      bg-orchid-blue-60
       text-white
       border
-      border-orchid-blue-50
-      hover:bg-orchid-blue-60
-      hover:border-orchid-blue-60
+      border-orchid-blue-60
+      hover:bg-orchid-blue-70
+      hover:border-orchid-blue-70
       active:bg-orchid-blue-70
       focus:ring-orchid-blue-20
       disabled:bg-orchid-blue-20
@@ -178,9 +178,9 @@ const Button: React.FC<ButtonProps> = ({
       bg-transparent
       text-orchid-blue-70
       border-2
-      border-orchid-blue-50
+      border-orchid-blue-60
       hover:bg-orchid-blue-5
-      hover:border-orchid-blue-60
+      hover:border-orchid-blue-70
       active:bg-orchid-blue-10
       focus:ring-orchid-blue-20
       disabled:text-orchid-blue-20

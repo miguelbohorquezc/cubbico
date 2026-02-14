@@ -83,7 +83,7 @@ function StudentsPage() {
           {/* Page Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-60 rounded-lg">
                 <IconUsers size={20} className="text-white" />
               </div>
               <div>

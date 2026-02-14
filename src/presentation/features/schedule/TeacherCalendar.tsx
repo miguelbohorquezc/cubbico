@@ -94,7 +94,7 @@ export default function TeacherCalendar() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 flex-shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 bg-orchid-blue-500 rounded-lg">
+          <div className="flex items-center justify-center w-8 h-8 bg-orchid-blue-60 rounded-lg">
             <IconCalendar size={16} className="text-white" />
           </div>
           <div>
@@ -118,74 +118,81 @@ export default function TeacherCalendar() {
         />
       </div>
 
-      {/* Modal de confirmación */}
+      {/* Toast de confirmación */}
       {selectedActivity && (
         <>
-          {/* Backdrop con blur */}
+          {/* Overlay transparente */}
+          <div className="fixed inset-0 z-40" onClick={() => setSelectedActivity(null)} />
+
+          {/* Toast compacto */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] animate-fade-in"
-            onClick={() => setSelectedActivity(null)}
-          />
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-lg shadow-2xl border border-gray-200 w-72 animate-scaleIn"
+          >
+            {/* Header compacto */}
+            <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-gray-5 rounded-t-lg">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-bold text-gray-900 truncate">
+                  {selectedActivity.courseName}
+                </h3>
+              </div>
+              <button
+                onClick={() => setSelectedActivity(null)}
+                className="ml-2 p-1 hover:bg-white rounded-lg transition-colors flex-shrink-0"
+              >
+                <IconX size={14} className="text-gray-400" />
+              </button>
+            </div>
 
-          {/* Modal */}
-          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
-            <div className="bg-white rounded-lg shadow-2xl max-w-md w-full pointer-events-auto animate-scale-in">
-              {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-orchid-blue-500 rounded-lg flex items-center justify-center">
-                    <IconClipboardCheck size={20} className="text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-900">Pasar Asistencia</h3>
-                    <p className="text-xs text-gray-500">Confirma para continuar</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setSelectedActivity(null)}
-                  className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <IconX size={18} />
-                </button>
+            {/* Content compacto */}
+            <div className="p-3 space-y-2 text-xs">
+              {/* Horario */}
+              <div className="flex items-center gap-2">
+                <IconCalendar size={14} className="text-orchid-blue-60 flex-shrink-0" />
+                <span className="text-gray-700">
+                  {selectedActivity.startTime} - {selectedActivity.endTime}
+                </span>
               </div>
 
-              {/* Content */}
-              <div className="px-6 py-5 space-y-4">
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Asignatura</p>
-                  <p className="text-sm font-medium text-gray-900">{selectedActivity.courseName}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Hora</p>
-                    <p className="text-sm font-medium text-gray-900">
-                      {selectedActivity.startTime} - {selectedActivity.endTime}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Salón</p>
-                    <p className="text-sm font-medium text-gray-900">{selectedActivity.classroomName}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 rounded-b-2xl">
-                <button
-                  onClick={() => setSelectedActivity(null)}
-                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleConfirmAttendance}
-                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-orchid-blue-600 rounded-lg hover:bg-orchid-blue-700 transition-all shadow-sm hover:shadow-md"
-                >
-                  Pasar Lista
-                </button>
+              {/* Salón */}
+              <div className="flex items-center gap-2">
+                <IconClipboardCheck size={14} className="text-tosca-ds flex-shrink-0" />
+                <span className="text-gray-700 truncate">{selectedActivity.classroomName}</span>
               </div>
             </div>
+
+            {/* Actions compactos */}
+            <div className="flex items-center gap-1.5 px-2 py-2 border-t border-gray-100 bg-gray-5 rounded-b-lg">
+              <button
+                onClick={() => setSelectedActivity(null)}
+                className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 rounded-lg transition-colors border border-gray-200"
+              >
+                <span>Cancelar</span>
+              </button>
+              <button
+                onClick={handleConfirmAttendance}
+                className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-orchid-blue-60 hover:bg-orchid-blue-70 rounded-lg transition-colors border border-orchid-blue-30"
+              >
+                <IconClipboardCheck size={12} />
+                <span>Pasar Lista</span>
+              </button>
+            </div>
           </div>
+
+          <style>{`
+            @keyframes scaleIn {
+              from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.95);
+              }
+              to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+              }
+            }
+            .animate-scaleIn {
+              animation: scaleIn 0.15s ease-out;
+            }
+          `}</style>
         </>
       )}
     </div>

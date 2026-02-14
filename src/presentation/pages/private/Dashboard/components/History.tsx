@@ -268,12 +268,12 @@ function History() {
                 placeholder="Buscar estudiante o salón..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full mb-4 px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full mb-4 px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orchid-blue-30 focus:border-orchid-blue-60 transition-all"
               />
 
               {studentsLoading ? (
                 <div className="flex items-center justify-center h-64">
-                  <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-10 h-10 border-4 border-orchid-blue-60 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : (
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -290,7 +290,7 @@ function History() {
                         <tr
                           key={student.id}
                           onClick={() => setSelected({ id: student.id, name: student.name, lastName: student.lastName })}
-                          className={`cursor-pointer hover:bg-blue-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}
+                          className={`cursor-pointer hover:bg-orchid-blue-10 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}
                         >
                           <td className="px-4 py-3 text-sm font-medium text-gray-800">
                             {student.name} {student.lastName}
@@ -319,7 +319,7 @@ function History() {
 
               <button
                 onClick={() => { setSelected(null); setSearch(''); }}
-                className="text-sm text-blue-600 hover:text-blue-800 mb-5 flex items-center gap-1"
+                className="text-sm text-orchid-blue-60 hover:text-orchid-blue-70 mb-5 flex items-center gap-1 font-medium"
               >
                 ← Volver a lista
               </button>
@@ -327,7 +327,7 @@ function History() {
               {/* Estado de carga */}
               {historyLoading && (
                 <div className="flex items-center justify-center h-48">
-                  <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-10 h-10 border-4 border-orchid-blue-60 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               )}
 
@@ -352,12 +352,12 @@ function History() {
                 <div key={yr.year} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-4">
 
                   {/* Encabezado del año */}
-                  <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-orchid-blue-50 to-blue-50 border-b border-gray-200">
+                  <div className="flex items-center justify-between px-5 py-4 bg-orchid-blue-10 border-b border-orchid-blue-30">
                     <div>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-bold text-orchid-blue-700">{yr.year}</span>
+                        <span className="text-lg font-bold text-orchid-blue-70">{yr.year}</span>
                         {yr.nombreGrado && (
-                          <span className="text-sm font-medium text-orchid-blue-600">
+                          <span className="text-sm font-medium text-orchid-blue-60">
                             {yr.nombreGrado}
                           </span>
                         )}
@@ -370,7 +370,7 @@ function History() {
                     </div>
                     <Link
                       to={`/private/dashboard/final-report/${selected.id}/${yr.year}`}
-                      className="text-xs font-semibold text-white bg-orchid-blue-600 hover:bg-orchid-blue-700 px-3 py-1.5 rounded-lg transition-colors"
+                      className="text-xs font-semibold text-white bg-orchid-blue-60 hover:bg-orchid-blue-70 px-3 py-1.5 rounded-lg transition-colors shadow-sm hover:shadow"
                     >
                       Informe Final
                     </Link>
@@ -390,12 +390,12 @@ function History() {
                             key={pId}
                             className="border border-gray-200 rounded-lg p-3 flex flex-col items-center gap-2"
                           >
-                            <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
+                            <span className="inline-flex items-center justify-center w-8 h-8 bg-orchid-blue-60 text-white rounded-full text-sm font-bold">
                               P{pId}
                             </span>
                             <Link
                               to={reportLink}
-                              className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                              className="text-xs text-orchid-blue-60 hover:text-orchid-blue-70 font-medium underline"
                             >
                               Ver Informe
                             </Link>

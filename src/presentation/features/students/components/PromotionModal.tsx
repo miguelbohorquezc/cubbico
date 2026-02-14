@@ -145,26 +145,26 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
       {/* Modal */}
       <div className="absolute inset-4 sm:inset-6 lg:inset-10 bg-white rounded-lg shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-light-gray-200 bg-orchid-blue-50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-light-gray-200 bg-gray-5">
           <div>
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-semibold text-gray-90">
               Promoción de Estudiantes
             </h2>
             <div className="flex items-center gap-2 mt-1">
-              <span className="px-2 py-0.5 text-xs font-medium bg-white/20 text-white rounded">
+              <span className="px-2 py-0.5 text-xs font-medium bg-orchid-blue-10 text-orchid-blue-70 rounded border border-orchid-blue-30">
                 {config.sourceClassName}
               </span>
-              <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-gray-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-              <span className="px-2 py-0.5 text-xs font-medium bg-green-400/30 text-white rounded">
+              <span className="px-2 py-0.5 text-xs font-medium bg-tosca-ds/10 text-tosca-cc rounded border border-tosca-ds/30">
                 Año {config.targetYear}
               </span>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            className="p-2 text-gray-60 hover:text-gray-90 hover:bg-gray-20 rounded-lg transition-colors"
             aria-label="Cerrar"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -269,7 +269,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               </span>
               <button
                 onClick={() => setSelectedStudentsStatus('promover')}
-                className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
+                className="px-2 py-1 text-xs bg-tosca-ds/10 text-tosca-cc rounded hover:bg-tosca-ds/20 transition-colors"
               >
                 Promover
               </button>
@@ -281,7 +281,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               </button>
               <button
                 onClick={() => setSelectedStudentsStatus('retirado')}
-                className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                className="px-2 py-1 text-xs bg-peach-ds/10 text-peach-cc rounded hover:bg-peach-ds/20 transition-colors"
               >
                 Retirado
               </button>
@@ -361,7 +361,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
           </div>
 
           {/* Summary Sidebar */}
-          <div className="lg:w-80 border-t lg:border-t-0 lg:border-l border-light-gray-200 bg-light-gray-50 p-4 overflow-y-auto">
+          <div className="lg:w-80 border-t lg:border-t-0 lg:border-l border-light-gray-200 bg-gray-5 p-4 overflow-y-auto">
             <h3 className="text-sm font-semibold text-deep-blue-800 mb-4">Resumen</h3>
             <PromotionSummary
               summary={summary}
@@ -374,7 +374,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-light-gray-200 bg-light-gray-50">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-light-gray-200 bg-gray-5">
           <p className="text-xs text-light-gray-500">
             {summary.toPromote} estudiante(s) serán promovidos a {destinationClassName || 'destino no seleccionado'}
           </p>
