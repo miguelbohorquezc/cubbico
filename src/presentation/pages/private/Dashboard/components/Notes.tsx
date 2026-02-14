@@ -79,7 +79,7 @@ function Notes() {
           {/* Page Header con acciones */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg shadow-blue-200">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg shadow-lg shadow-blue-200">
                 <IconClipboardList size={20} className="text-white" />
               </div>
               <div>
@@ -105,7 +105,7 @@ function Notes() {
 
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg hover:from-blue-600 hover:to-indigo-700 shadow-sm hover:shadow-md transition-all duration-200"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-orchid-blue-50 rounded-lg hover:bg-orchid-blue-60 shadow-sm hover:shadow-md transition-all duration-200"
                 title="Crear / Editar logros"
               >
                 <IconPlus size={18} />
@@ -114,7 +114,7 @@ function Notes() {
 
               <Link
                 to={`/private/dashboard/${PrivateRoutes.REPORT}/${classroom?.id}/${periodId}/${classroom?.nivel}/${anioActual}`}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 hover:border-emerald-300 transition-all duration-200"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-tosca-700 bg-tosca/10 border border-tosca-200 rounded-lg hover:bg-tosca/20 hover:border-tosca-300 transition-all duration-200"
                 title={`Ver informe general periodo ${periodId}`}
               >
                 <IconFileDescription size={18} />
@@ -135,7 +135,7 @@ function Notes() {
               {permissions.canViewAllReports && (
                 <Link
                   to={`/private/dashboard/${PrivateRoutes.BULKPRINT}/${periodId}/${classroomId}`}
-                  className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-purple-700 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 hover:border-purple-300 transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-magenta-700 bg-magenta-50 border border-purple-200 rounded-lg hover:bg-magenta-100 hover:border-purple-300 transition-all duration-200"
                   title="Impresión masiva de informes"
                 >
                   <IconPrinter size={18} />
@@ -159,7 +159,7 @@ function Notes() {
           {/* Content */}
           <div className="space-y-6">
             {/* Logros */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden">
               <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
                 <h2 className="text-sm font-semibold text-gray-800">Logros del Período</h2>
                 <p className="text-xs text-gray-500">Logros académicos definidos para esta asignatura</p>
@@ -170,7 +170,7 @@ function Notes() {
             </div>
 
             {/* Tabla de calificaciones */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden">
               <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
                 <h2 className="text-sm font-semibold text-gray-800">Calificaciones</h2>
                 <p className="text-xs text-gray-500">Registra las notas de los estudiantes</p>

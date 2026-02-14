@@ -194,7 +194,7 @@ export default function AttendanceReport() {
   // Badge de porcentaje con color según valor
   function RateBadge({ rate }: { rate: number }) {
     const color =
-      rate >= 90 ? 'bg-emerald-100 text-emerald-700' :
+      rate >= 90 ? 'bg-tosca/20 text-tosca-700' :
       rate >= 75 ? 'bg-amber-100 text-amber-700'   :
                    'bg-red-100 text-red-700';
     return (
@@ -242,7 +242,7 @@ export default function AttendanceReport() {
 
           {/* ── Error ── */}
           {error && (
-            <div className="print:hidden mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+            <div className="print:hidden mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               <IconAlertCircle size={16} className="text-red-500 flex-shrink-0" /> {error}
             </div>
           )}
@@ -250,7 +250,7 @@ export default function AttendanceReport() {
           {/* ══════════════════════════════════════════════
               DOCUMENTO EJECUTIVO
               ══════════════════════════════════════════════ */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none" style={{ maxWidth: '816px', margin: '0 auto' }}>
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none" style={{ maxWidth: '816px', margin: '0 auto' }}>
 
             {/* ── Header institucional ── */}
             <table className="w-full border-collapse">
@@ -305,7 +305,7 @@ export default function AttendanceReport() {
               <div className="flex-1 min-w-[160px] max-w-[260px]">
                 <div className="flex rounded-full overflow-hidden h-2.5 bg-gray-300">
                   {totalMarks > 0 && <>
-                    <div className="bg-emerald-500 h-full" style={{ width: `${(totalP / totalMarks) * 100}%` }} />
+                    <div className="bg-tosca/100 h-full" style={{ width: `${(totalP / totalMarks) * 100}%` }} />
                     <div className="bg-amber-400 h-full" style={{ width: `${(totalJ / totalMarks) * 100}%` }} />
                     <div className="bg-red-500 h-full" style={{ width: `${(totalU / totalMarks) * 100}%` }} />
                   </>}

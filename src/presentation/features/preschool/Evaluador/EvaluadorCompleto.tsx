@@ -61,8 +61,8 @@ const EvaluadorCompleto = (props: Props) => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 bg-light-gray-50 rounded-lg border border-light-gray-200">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <BookOpenIcon className="w-5 h-5 text-purple-600" />
+                  <div className="w-10 h-10 bg-magenta-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <BookOpenIcon className="w-5 h-5 text-magenta-600" />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase text-light-gray-500 mb-1 tracking-wide">Grado</p>

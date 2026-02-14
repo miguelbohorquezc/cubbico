@@ -21,17 +21,17 @@ const NIVELES: NivelDragDrop[] = ['primaria', 'secundaria'];
  */
 const NIVEL_CONFIG: Record<string, { bg: string; bgActive: string; text: string; border: string; label: string }> = {
   'primaria': {
-    bg: 'bg-emerald-50',
-    bgActive: 'bg-emerald-500',
-    text: 'text-emerald-700',
-    border: 'border-emerald-200',
+    bg: 'bg-tosca/10',
+    bgActive: 'bg-tosca/100',
+    text: 'text-tosca-700',
+    border: 'border-tosca-200',
     label: 'Primaria'
   },
   'secundaria': {
-    bg: 'bg-violet-50',
-    bgActive: 'bg-violet-500',
-    text: 'text-violet-700',
-    border: 'border-violet-200',
+    bg: 'bg-magenta-50',
+    bgActive: 'bg-magenta-500',
+    text: 'text-magenta-700',
+    border: 'border-magenta-200',
     label: 'Secundaria'
   }
 };
@@ -134,14 +134,14 @@ const AreaListDragDrop = () => {
     <div className="space-y-4">
       {/* Mensajes de feedback */}
       {successMessage && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl animate-fade-in">
+        <div className="flex items-center gap-3 px-4 py-3 bg-tosca/10 border border-tosca-200 text-tosca-800 rounded-lg animate-fade-in">
           <IconCheck size={20} className="flex-shrink-0" />
           <span className="text-sm font-medium">{successMessage}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 text-red-800 rounded-xl animate-fade-in">
+        <div className="flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 text-red-800 rounded-lg animate-fade-in">
           <IconAlertCircle size={20} className="flex-shrink-0" />
           <span className="text-sm font-medium">{errorMessage}</span>
         </div>
@@ -170,7 +170,7 @@ const AreaListDragDrop = () => {
               }}
               className={`
                 inline-flex items-center gap-2
-                px-4 py-2.5 rounded-xl
+                px-4 py-2.5 rounded-lg
                 text-sm font-medium
                 transition-all duration-200
                 focus:outline-none focus:ring-2 focus:ring-offset-2
@@ -193,7 +193,7 @@ const AreaListDragDrop = () => {
       </div>
 
       {/* Instrucciones */}
-      <div className="flex items-start gap-3 px-4 py-3 bg-blue-50 border border-blue-100 rounded-xl">
+      <div className="flex items-start gap-3 px-4 py-3 bg-blue-50 border border-blue-100 rounded-lg">
         <IconInfoCircle size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
         <div className="text-sm text-blue-800">
           <span className="font-medium">Instrucciones:</span> Arrastra las asignaturas para cambiar su orden.
@@ -203,7 +203,7 @@ const AreaListDragDrop = () => {
 
       {/* Barra de acciones - cambios pendientes */}
       {hasChanges && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl animate-fade-in">
+        <div className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg animate-fade-in">
           <IconAlertTriangle size={20} className="text-amber-600 flex-shrink-0" />
           <span className="text-sm text-amber-800 flex-1 font-medium">
             Tienes cambios pendientes por guardar
@@ -229,8 +229,8 @@ const AreaListDragDrop = () => {
             className="
               inline-flex items-center gap-2
               px-4 py-1.5 text-sm font-medium
-              bg-violet-500 text-white rounded-lg
-              hover:bg-violet-600
+              bg-magenta-500 text-white rounded-lg
+              hover:bg-magenta-600
               disabled:opacity-50
               transition-colors
             "

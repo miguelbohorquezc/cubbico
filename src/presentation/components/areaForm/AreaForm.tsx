@@ -45,7 +45,7 @@ const InputField = ({ label, name, type, value, placeholder, error, onChange, on
         focus:outline-none focus:ring-2
         ${error
           ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
-          : 'border-gray-200 hover:border-gray-300 focus:ring-violet-200 focus:border-violet-400'
+          : 'border-gray-200 hover:border-gray-300 focus:ring-magenta/30 focus:border-magenta-400'
         }
       `}
     />
@@ -92,7 +92,7 @@ const SelectField = ({ label, name, value, options, error, onChange, onBlur }: S
           focus:outline-none focus:ring-2
           ${error
             ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
-            : 'border-gray-200 hover:border-gray-300 focus:ring-violet-200 focus:border-violet-400'
+            : 'border-gray-200 hover:border-gray-300 focus:ring-magenta/30 focus:border-magenta-400'
           }
         `}
       >
@@ -185,12 +185,12 @@ const AreaForm = ({ initialData, onSubmit, existingAreas }: AreaFormProps) => {
               w-full flex items-center justify-center gap-2
               px-4 py-2.5
               text-sm font-semibold text-white
-              rounded-xl
+              rounded-lg
               transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-offset-2
               ${isSubmitting
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 focus:ring-violet-300 shadow-md hover:shadow-lg'
+                : 'bg-magenta hover:bg-orchid-blue-60 focus:ring-magenta/30 shadow-md hover:shadow-lg'
               }
             `}
           >

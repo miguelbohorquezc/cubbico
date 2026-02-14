@@ -100,12 +100,12 @@ const ClassRoomForm = ({ initialData }: ClassRoomFormProps) => {
               w-full flex items-center justify-center gap-2
               px-4 py-2.5
               text-sm font-semibold text-white
-              rounded-xl
+              rounded-lg
               transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-offset-2
               ${isSubmitting
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 focus:ring-emerald-300 shadow-md hover:shadow-lg'
+                : 'bg-tosca hover:bg-orchid-blue-60 focus:ring-tosca/30 shadow-md hover:shadow-lg'
               }
             `}
           >

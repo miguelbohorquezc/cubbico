@@ -47,12 +47,12 @@ const SubmenuItem: React.FC<SubmenuItemProps> = ({ item, isActive, onClick }) =>
     text-sm
     rounded-lg mx-2
     transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-1
+    focus:outline-none focus:ring-2 focus:ring-yellow/30 focus:ring-offset-1
   `;
 
   // Clases según estado
   const stateClasses = isActive
-    ? 'text-gold-700 font-medium'
+    ? 'text-yellow-cc font-medium'
     : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50';
 
   return (
@@ -62,13 +62,12 @@ const SubmenuItem: React.FC<SubmenuItemProps> = ({ item, isActive, onClick }) =>
       className={`${baseClasses} ${stateClasses}`}
       role="menuitem"
       aria-current={isActive ? 'page' : undefined}
-      title={description}
     >
       {/* Indicador de punto */}
       <span
         className={`
           mr-3 transition-colors duration-200
-          ${isActive ? 'text-gold-500' : 'text-gray-300 group-hover:text-gray-400'}
+          ${isActive ? 'text-yellow' : 'text-gray-300 group-hover:text-gray-400'}
         `}
       >
         <PointIcon size={8} fill="currentColor" />
@@ -83,7 +82,7 @@ const SubmenuItem: React.FC<SubmenuItemProps> = ({ item, isActive, onClick }) =>
           className={`
             ml-2 px-1.5 py-0.5
             text-xs font-medium rounded
-            ${isActive ? 'bg-gold-200 text-gold-800' : 'bg-gray-100 text-gray-600'}
+            ${isActive ? 'bg-yellow/20 text-black' : 'bg-gray-100 text-gray-600'}
           `}
         >
           {badge.value}

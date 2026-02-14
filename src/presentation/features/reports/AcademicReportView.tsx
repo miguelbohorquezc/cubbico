@@ -175,7 +175,7 @@ export default function AcademicReportView() {
 
           {/* ── Error ── */}
           {error && (
-            <div className="print:hidden mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+            <div className="print:hidden mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               <IconAlertCircle size={16} className="text-red-500 flex-shrink-0" /> {error}
             </div>
           )}
@@ -183,7 +183,7 @@ export default function AcademicReportView() {
           {/* ══════════════════════════════════════════════
               DOCUMENTO DEL INFORME
               ══════════════════════════════════════════════ */}
-          <div className="report-container bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none font-['Nunito',sans-serif]" style={{ maxWidth: '816px', margin: '0 auto', padding: '1.25rem' }}>
+          <div className="report-container bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none font-['Nunito',sans-serif]" style={{ maxWidth: '816px', margin: '0 auto', padding: '1.25rem' }}>
 
             {/* ── Header institucional ── */}
             <table className="w-full border-collapse thead-header-info">

@@ -300,7 +300,7 @@ export default function TimeBlockManager() {
         <SidebarV2 />
         <div className={`flex-1 flex items-center justify-center transition-all duration-300 ${isSidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
           <div className="flex items-center gap-3 text-gray-500">
-            <IconLoader size={24} className="animate-spin text-purple-500" />
+            <IconLoader size={24} className="animate-spin text-magenta-500" />
             <span className="text-sm font-medium">Cargando configuración...</span>
           </div>
         </div>
@@ -315,7 +315,7 @@ export default function TimeBlockManager() {
         <div className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
           <HeaderV2 />
           <main className="p-6">
-            <div className="bg-white border border-red-200 rounded-xl p-6">
+            <div className="bg-white border border-red-200 rounded-lg p-6">
               <div className="flex items-center text-red-600">
                 <IconAlertCircle className="w-5 h-5 mr-2" />
                 <p className="text-sm font-medium">{error}</p>
@@ -342,7 +342,7 @@ export default function TimeBlockManager() {
             {/* Header con selector de año */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 bg-purple-500 rounded-full">
+                <div className="flex items-center justify-center w-10 h-10 bg-magenta-500 rounded-full">
                   <IconClock size={20} className="text-white" />
                 </div>
                 <div>
@@ -391,7 +391,7 @@ export default function TimeBlockManager() {
                   onClick={() => setActiveView('default')}
                   className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                     activeView === 'default'
-                      ? 'text-purple-600 bg-purple-50 border-b-2 border-purple-500'
+                      ? 'text-magenta-600 bg-magenta-50 border-b-2 border-purple-500'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
@@ -404,7 +404,7 @@ export default function TimeBlockManager() {
                   onClick={() => setActiveView('special')}
                   className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
                     activeView === 'special'
-                      ? 'text-purple-600 bg-purple-50 border-b-2 border-purple-500'
+                      ? 'text-magenta-600 bg-magenta-50 border-b-2 border-purple-500'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
@@ -425,9 +425,9 @@ export default function TimeBlockManager() {
             {/* Grid principal */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Columna izquierda: Formulario */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="flex items-center justify-center w-10 h-10 bg-purple-500 rounded-full">
+                  <div className="flex items-center justify-center w-10 h-10 bg-magenta-500 rounded-full">
                     {isEditing ? <IconEdit size={18} className="text-white" /> : <IconPlus size={18} className="text-white" />}
                   </div>
                   <h2 className="text-lg font-semibold text-gray-900">
@@ -473,7 +473,7 @@ export default function TimeBlockManager() {
                           onClick={() => setFormData({ ...formData, duration: d })}
                           className={`px-3 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
                             formData.duration === d
-                              ? 'bg-purple-500 text-white'
+                              ? 'bg-magenta-500 text-white'
                               : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
                           }`}
                         >
@@ -517,7 +517,7 @@ export default function TimeBlockManager() {
                           }}
                           className={`px-3 py-2.5 text-xs font-semibold rounded-lg transition-colors ${
                             formData.daysOfWeek.includes(index)
-                              ? 'bg-purple-500 text-white'
+                              ? 'bg-magenta-500 text-white'
                               : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
                           }`}
                         >
@@ -536,7 +536,7 @@ export default function TimeBlockManager() {
                       onChange={(e) =>
                         setFormData({ ...formData, isBreak: e.target.checked })
                       }
-                      className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                      className="w-4 h-4 text-magenta-600 border-gray-300 rounded focus:ring-purple-500"
                     />
                     <label
                       htmlFor="isBreak"
@@ -548,8 +548,8 @@ export default function TimeBlockManager() {
 
                   {/* Vista previa */}
                   {formData.startTime && (
-                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                      <p className="text-xs font-medium text-purple-900 mb-2">
+                    <div className="bg-magenta-50 border border-purple-200 rounded-lg p-4">
+                      <p className="text-xs font-medium text-magenta-900 mb-2">
                         Vista previa del bloque
                       </p>
                       <div className="flex items-center gap-3">
@@ -562,7 +562,7 @@ export default function TimeBlockManager() {
                         <span className="text-2xl font-bold text-gray-900">
                           {getBlockEndTime(formData as TimeBlock)}
                         </span>
-                        <span className="ml-auto text-xs font-semibold text-purple-600 bg-white px-2.5 py-1 rounded-full">
+                        <span className="ml-auto text-xs font-semibold text-magenta-600 bg-white px-2.5 py-1 rounded-full">
                           {formData.duration} min
                         </span>
                       </div>
@@ -573,7 +573,7 @@ export default function TimeBlockManager() {
                   <div className="flex gap-2 pt-2">
                     <button
                       onClick={handleSubmitBlock}
-                      className="flex-1 inline-flex items-center justify-center gap-2 bg-purple-500 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-purple-600 transition-colors"
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-magenta-500 text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-magenta-600 transition-colors"
                     >
                       {isEditing ? (
                         <>
@@ -600,17 +600,17 @@ export default function TimeBlockManager() {
               </div>
 
               {/* Columna derecha: Lista de bloques */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-10 h-10 bg-purple-500 rounded-full">
+                    <div className="flex items-center justify-center w-10 h-10 bg-magenta-500 rounded-full">
                       <IconCalendar size={18} className="text-white" />
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Bloques Configurados
                     </h2>
                   </div>
-                  <span className="inline-flex items-center justify-center min-w-[2rem] h-8 bg-purple-100 text-purple-700 rounded-full px-2.5 text-sm font-semibold">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] h-8 bg-magenta-100 text-magenta-700 rounded-full px-2.5 text-sm font-semibold">
                     {blocksToShow.length}
                   </span>
                 </div>
@@ -642,7 +642,7 @@ export default function TimeBlockManager() {
                               <span className="text-base font-bold text-gray-700">
                                 {getBlockEndTime(block)}
                               </span>
-                              <span className="ml-auto text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full">
+                              <span className="ml-auto text-xs font-semibold text-magenta-600 bg-magenta-100 px-2 py-0.5 rounded-full">
                                 {block.duration}min
                               </span>
                             </div>
@@ -692,10 +692,10 @@ export default function TimeBlockManager() {
             </div>
 
             {/* Vista previa semanal */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
               <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
                 <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <IconCalendar size={18} className="text-purple-500" />
+                  <IconCalendar size={18} className="text-magenta-500" />
                   Vista Previa Semanal
                 </h2>
                 <p className="text-sm text-gray-600 mt-1">Visualización completa de todos los bloques configurados</p>
@@ -733,7 +733,7 @@ export default function TimeBlockManager() {
                                       {cell.label}
                                     </div>
                                   )}
-                                  <div className="inline-block text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded">
+                                  <div className="inline-block text-xs font-semibold text-magenta-600 bg-magenta-50 px-2 py-0.5 rounded">
                                     {cell.duration} min
                                   </div>
                                 </div>

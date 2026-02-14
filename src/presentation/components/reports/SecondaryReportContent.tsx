@@ -40,7 +40,7 @@ const calculateAverage = (l1: number, l2: number, l3: number) => {
 
 const getGradeCategory = (average: number) => {
   if (average >= 4.6) return { text: 'Superior', bgClass: 'bg-blue-100', textClass: 'text-blue-700' };
-  if (average >= 4.0) return { text: 'Alto', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' };
+  if (average >= 4.0) return { text: 'Alto', bgClass: 'bg-tosca/20', textClass: 'text-tosca-700' };
   if (average >= 3.0) return { text: 'Básico', bgClass: 'bg-amber-100', textClass: 'text-amber-700' };
   return { text: 'Bajo', bgClass: 'bg-red-100', textClass: 'text-red-700' };
 };
@@ -114,7 +114,7 @@ const GradeScaleTable: React.FC = () => (
               <span className="text-gray-700">Superior: 4.6 - 5.0</span>
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <span className="w-3 h-3 rounded-full bg-tosca/100"></span>
               <span className="text-gray-700">Alto: 4.0 - 4.5</span>
             </span>
             <span className="inline-flex items-center gap-2">

@@ -6,8 +6,8 @@
 /* ========== ESTILOS EXISTENTES PRESERVADOS ========== */
 
 #root{
-  --background-sidebar-color: #fdfdfd;
-  --btn-hover-primary: #6880a8;
+  --background-sidebar-color: #FFFFFF;
+  --btn-hover-primary: #1F4CC0;
 }
 
 body {
@@ -87,17 +87,17 @@ h4{
 }
 
 :root {
-  /* Paleta de colores basada en tu esquema */
-  --deep-blue: #001D38;
-  --medium-blue: #00386B;
+  /* Paleta oficial - Orchid Blue */
+  --deep-blue: #0f1c42;
+  --medium-blue: #1F4CC0;
   --light-gray: #CFD1D0;
   --gold: #FFD600;
   --off-white: #F5F5F5;
-  
+
   /* Colores para estados */
-  --deep-blue-hover: #00152c;
-  --medium-blue-hover: #002c59;
-  --gold-hover: #e6c100;
+  --deep-blue-hover: #1A3C57;
+  --medium-blue-hover: #4272B7;
+  --gold-hover: #F4B527;
   
   /* Transiciones */
   --transition-speed: 0.25s;

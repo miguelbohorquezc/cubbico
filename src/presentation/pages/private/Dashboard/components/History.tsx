@@ -276,7 +276,7 @@ function History() {
                   <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                   <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
@@ -340,7 +340,7 @@ function History() {
 
               {/* Sin datos */}
               {!historyLoading && !historyError && years.length === 0 && (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
                   <p className="text-gray-400 text-sm">
                     No se encontró historial académico para este estudiante
                   </p>
@@ -349,15 +349,15 @@ function History() {
 
               {/* Tarjetas por año */}
               {!historyLoading && !historyError && years.map(yr => (
-                <div key={yr.year} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-4">
+                <div key={yr.year} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-4">
 
                   {/* Encabezado del año */}
-                  <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-gray-200">
+                  <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-orchid-blue-50 to-blue-50 border-b border-gray-200">
                     <div>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-lg font-bold text-indigo-700">{yr.year}</span>
+                        <span className="text-lg font-bold text-orchid-blue-700">{yr.year}</span>
                         {yr.nombreGrado && (
-                          <span className="text-sm font-medium text-indigo-600">
+                          <span className="text-sm font-medium text-orchid-blue-600">
                             {yr.nombreGrado}
                           </span>
                         )}
@@ -370,7 +370,7 @@ function History() {
                     </div>
                     <Link
                       to={`/private/dashboard/final-report/${selected.id}/${yr.year}`}
-                      className="text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg transition-colors"
+                      className="text-xs font-semibold text-white bg-orchid-blue-600 hover:bg-orchid-blue-700 px-3 py-1.5 rounded-lg transition-colors"
                     >
                       Informe Final
                     </Link>

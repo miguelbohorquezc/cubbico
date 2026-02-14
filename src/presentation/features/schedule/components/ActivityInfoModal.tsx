@@ -65,7 +65,7 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
         style={popoverStyle}
       >
         {/* Header compacto */}
-        <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-purple-50">
+        <div className="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-orchid-blue-50">
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-bold text-gray-900 truncate">
               {activity.courseName}
@@ -83,7 +83,7 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
         <div className="p-3 space-y-2 text-xs">
           {/* Día y horario */}
           <div className="flex items-center gap-2">
-            <IconCalendar size={14} className="text-indigo-500 flex-shrink-0" />
+            <IconCalendar size={14} className="text-orchid-blue-500 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <span className="font-semibold text-gray-900">{dayName}</span>
               <span className="text-gray-500 ml-1">
@@ -100,13 +100,13 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
 
           {/* Profesor */}
           <div className="flex items-center gap-2">
-            <IconUser size={14} className="text-purple-500 flex-shrink-0" />
+            <IconUser size={14} className="text-magenta-500 flex-shrink-0" />
             <span className="text-gray-700 truncate">{activity.teacherName}</span>
           </div>
 
           {/* Salón */}
           <div className="flex items-center gap-2">
-            <IconDoor size={14} className="text-emerald-500 flex-shrink-0" />
+            <IconDoor size={14} className="text-tosca-500 flex-shrink-0" />
             <span className="text-gray-700 truncate">{activity.classroomName}</span>
           </div>
         </div>
@@ -119,7 +119,7 @@ export const ActivityInfoModal: React.FC<ActivityInfoModalProps> = ({
                 onEdit();
                 onClose();
               }}
-              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded transition-colors"
+              className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-orchid-blue-700 bg-orchid-blue-50 hover:bg-orchid-blue-100 rounded transition-colors"
             >
               <IconEdit size={12} />
               <span>Editar</span>

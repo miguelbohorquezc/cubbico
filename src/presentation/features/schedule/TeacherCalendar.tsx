@@ -94,7 +94,7 @@ export default function TeacherCalendar() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 flex-shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 bg-indigo-500 rounded-lg">
+          <div className="flex items-center justify-center w-8 h-8 bg-orchid-blue-500 rounded-lg">
             <IconCalendar size={16} className="text-white" />
           </div>
           <div>
@@ -129,11 +129,11 @@ export default function TeacherCalendar() {
 
           {/* Modal */}
           <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full pointer-events-auto animate-scale-in">
+            <div className="bg-white rounded-lg shadow-2xl max-w-md w-full pointer-events-auto animate-scale-in">
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-orchid-blue-500 rounded-lg flex items-center justify-center">
                     <IconClipboardCheck size={20} className="text-white" />
                   </div>
                   <div>
@@ -173,13 +173,13 @@ export default function TeacherCalendar() {
               <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 rounded-b-2xl">
                 <button
                   onClick={() => setSelectedActivity(null)}
-                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleConfirmAttendance}
-                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md"
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-orchid-blue-600 rounded-lg hover:bg-orchid-blue-700 transition-all shadow-sm hover:shadow-md"
                 >
                   Pasar Lista
                 </button>

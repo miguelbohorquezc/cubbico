@@ -50,7 +50,7 @@ const DirectorSelector = ({
     return (
       <div className="w-full">
         <div className="flex items-center gap-2 px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50">
-          <IconLoader2 size={16} className="animate-spin text-emerald-600" />
+          <IconLoader2 size={16} className="animate-spin text-tosca-600" />
           <span className="text-gray-500 text-sm">Cargando usuarios...</span>
         </div>
       </div>
@@ -101,7 +101,7 @@ const DirectorSelector = ({
             ${disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : ''}
             ${error
               ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
-              : 'border-gray-200 hover:border-gray-300 focus:ring-emerald-200 focus:border-emerald-400'
+              : 'border-gray-200 hover:border-gray-300 focus:ring-tosca/30 focus:border-tosca-400'
             }
             focus:outline-none focus:ring-2
           `}

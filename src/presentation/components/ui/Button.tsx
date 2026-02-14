@@ -136,82 +136,82 @@ const Button: React.FC<ButtonProps> = ({
   // Variant classes
   const variantClasses: Record<ButtonVariant, string> = {
     primary: `
-      bg-deep-blue-700
+      bg-orchid-blue-50
       text-white
       border
-      border-deep-blue-700
-      hover:bg-deep-blue-800
-      hover:border-deep-blue-800
-      active:bg-deep-blue-900
-      focus:ring-deep-blue-300
-      disabled:bg-deep-blue-400
-      disabled:border-deep-blue-400
+      border-orchid-blue-50
+      hover:bg-orchid-blue-60
+      hover:border-orchid-blue-60
+      active:bg-orchid-blue-70
+      focus:ring-orchid-blue-20
+      disabled:bg-orchid-blue-20
+      disabled:border-orchid-blue-20
     `.replace(/\s+/g, ' ').trim(),
 
     secondary: `
-      bg-medium-blue-600
+      bg-orchid-blue-30
       text-white
       border
-      border-medium-blue-600
-      hover:bg-medium-blue-700
-      hover:border-medium-blue-700
-      active:bg-medium-blue-800
-      focus:ring-medium-blue-300
-      disabled:bg-medium-blue-300
-      disabled:border-medium-blue-300
+      border-orchid-blue-30
+      hover:bg-orchid-blue-40
+      hover:border-orchid-blue-40
+      active:bg-orchid-blue-50
+      focus:ring-orchid-blue-10
+      disabled:bg-orchid-blue-10
+      disabled:border-orchid-blue-10
     `.replace(/\s+/g, ' ').trim(),
 
     accent: `
-      bg-gold-500
-      text-deep-blue-900
+      bg-yellow
+      text-black
       border
-      border-gold-500
-      hover:bg-gold-600
-      hover:border-gold-600
-      active:bg-gold-700
-      focus:ring-gold-300
-      disabled:bg-gold-200
-      disabled:border-gold-200
+      border-yellow
+      hover:bg-yellow-cc
+      hover:border-yellow-cc
+      active:bg-yellow-cc
+      focus:ring-yellow/30
+      disabled:bg-yellow/50
+      disabled:border-yellow/50
     `.replace(/\s+/g, ' ').trim(),
 
     outline: `
       bg-transparent
-      text-deep-blue-700
+      text-orchid-blue-70
       border-2
-      border-deep-blue-700
-      hover:bg-deep-blue-50
-      hover:border-deep-blue-800
-      active:bg-deep-blue-100
-      focus:ring-deep-blue-300
-      disabled:text-deep-blue-300
-      disabled:border-deep-blue-300
+      border-orchid-blue-50
+      hover:bg-orchid-blue-5
+      hover:border-orchid-blue-60
+      active:bg-orchid-blue-10
+      focus:ring-orchid-blue-20
+      disabled:text-orchid-blue-20
+      disabled:border-orchid-blue-20
       disabled:bg-transparent
     `.replace(/\s+/g, ' ').trim(),
 
     ghost: `
       bg-transparent
-      text-deep-blue-700
+      text-orchid-blue-70
       border
       border-transparent
-      hover:bg-light-gray-100
-      hover:text-deep-blue-800
-      active:bg-light-gray-200
-      focus:ring-light-gray-300
+      hover:bg-orchid-blue-5
+      hover:text-orchid-blue-60
+      active:bg-orchid-blue-10
+      focus:ring-orchid-blue-10
       disabled:text-light-gray-400
       disabled:bg-transparent
     `.replace(/\s+/g, ' ').trim(),
 
     danger: `
-      bg-error-600
+      bg-magenta
       text-white
       border
-      border-error-600
-      hover:bg-error-700
-      hover:border-error-700
-      active:bg-error-800
-      focus:ring-error-300
-      disabled:bg-error-300
-      disabled:border-error-300
+      border-magenta
+      hover:bg-magenta-cc
+      hover:border-magenta-cc
+      active:bg-magenta-cc
+      focus:ring-magenta/30
+      disabled:bg-magenta/50
+      disabled:border-magenta/50
     `.replace(/\s+/g, ' ').trim(),
   };
 

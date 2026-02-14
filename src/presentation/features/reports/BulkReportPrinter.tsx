@@ -117,7 +117,7 @@ const StudentReportCard: React.FC<{
 
   const getGradeCategory = (average: number) => {
     if (average >= 4.6) return { text: 'Superior', bgClass: 'bg-blue-100', textClass: 'text-blue-700' };
-    if (average >= 4.0) return { text: 'Alto', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' };
+    if (average >= 4.0) return { text: 'Alto', bgClass: 'bg-tosca/20', textClass: 'text-tosca-700' };
     if (average >= 3.0) return { text: 'Básico', bgClass: 'bg-amber-100', textClass: 'text-amber-700' };
     return { text: 'Bajo', bgClass: 'bg-red-100', textClass: 'text-red-700' };
   };
@@ -473,7 +473,7 @@ const BulkReportPrinter: React.FC = () => {
   if (!permissions.canViewAllReports) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
           <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
             <IconLock size={32} className="text-red-500" />
           </div>
@@ -520,10 +520,10 @@ const BulkReportPrinter: React.FC = () => {
       <div className="min-h-screen bg-gray-50 p-4 lg:p-8 print:hidden">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-xl">
+              <div className="p-3 bg-blue-100 rounded-lg">
                 <IconPrinter size={24} className="text-blue-600" />
               </div>
               <div>
@@ -542,7 +542,7 @@ const BulkReportPrinter: React.FC = () => {
             </Link>
           </div>
 
-          <div className="flex items-center gap-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="flex items-center gap-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <IconFileTypePdf size={20} className="text-blue-600 flex-shrink-0" />
             <p className="text-sm text-blue-800">
               Se generará un documento único con todos los informes. Podrás imprimirlo o guardarlo como PDF.
@@ -551,7 +551,7 @@ const BulkReportPrinter: React.FC = () => {
         </div>
 
         {/* Contenido */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
           {/* Toolbar */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50">
             <div className="flex items-center gap-4">
@@ -579,7 +579,7 @@ const BulkReportPrinter: React.FC = () => {
             <button
               onClick={generateReports}
               disabled={selectedStudents.size === 0 || loading || generating}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-sm transition-all duration-200 hover:from-blue-600 hover:to-indigo-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-orchid-blue-50 rounded-lg shadow-sm transition-all duration-200 hover:bg-orchid-blue-60 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {generating ? (
                 <>
@@ -650,7 +650,7 @@ const BulkReportPrinter: React.FC = () => {
       {/* Modal de previsualización */}
       {showPreview && (
         <div className="bulk-preview-scroll fixed inset-0 z-50 overflow-y-auto flex items-start justify-center p-4 py-8">
-          <div className="bulk-preview-shell bg-white rounded-2xl shadow-2xl w-full max-w-6xl relative">
+          <div className="bulk-preview-shell bg-white rounded-lg shadow-2xl w-full max-w-6xl relative">
             {/* Header modal */}
             <div className="bulk-preview-header sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-5 py-3 rounded-t-2xl flex items-center justify-between">
               <div>

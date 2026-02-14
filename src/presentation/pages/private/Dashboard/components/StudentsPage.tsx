@@ -83,7 +83,7 @@ function StudentsPage() {
           {/* Page Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-emerald-600 rounded-xl">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg">
                 <IconUsers size={20} className="text-white" />
               </div>
               <div>
@@ -102,9 +102,9 @@ function StudentsPage() {
                 className="
                   inline-flex items-center gap-2
                   px-4 py-2.5 text-sm font-medium
-                  bg-emerald-600
-                  text-white rounded-xl
-                  hover:bg-emerald-700
+                  bg-orchid-blue-60
+                  text-white rounded-lg
+                  hover:bg-orchid-blue-70
                   transition-all duration-200
                 "
               >
@@ -115,7 +115,7 @@ function StudentsPage() {
           </div>
 
           {/* Student List */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 p-4 lg:p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 p-4 lg:p-6">
             <StudentList />
           </div>
         </main>

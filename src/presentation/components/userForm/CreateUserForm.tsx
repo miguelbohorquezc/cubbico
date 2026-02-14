@@ -198,18 +198,18 @@ const CreateUserForm = () => {
 
       {/* Checkbox "¿Dará clases?" para Coordinador */}
       {form.role === 'Coordinador' && (
-        <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+        <div className="p-4 bg-magenta-50 border border-purple-200 rounded-lg">
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
               checked={form.willTeach}
               onChange={handleWillTeachChange}
               disabled={loading}
-              className="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              className="w-5 h-5 rounded border-gray-300 text-magenta-600 focus:ring-purple-500"
             />
-            <span className="font-medium text-purple-900">¿Dara clases?</span>
+            <span className="font-medium text-magenta-900">¿Dara clases?</span>
           </label>
-          <p className="mt-1 text-sm text-purple-700 ml-8">
+          <p className="mt-1 text-sm text-magenta-700 ml-8">
             Marque esta opcion si el coordinador tambien impartira clases
           </p>
         </div>
@@ -220,14 +220,14 @@ const CreateUserForm = () => {
         <div className="space-y-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           {/* Nota para Coordinadores */}
           {form.role === 'Coordinador' && form.willTeach && (
-            <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg mb-4">
+            <div className="p-3 bg-magenta-50 border border-purple-200 rounded-lg mb-4">
               <div className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-magenta-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
                 <div>
-                  <p className="font-medium text-purple-900 text-sm">Acceso automático para Coordinadores</p>
-                  <p className="mt-1 text-xs text-purple-700">
+                  <p className="font-medium text-magenta-900 text-sm">Acceso automático para Coordinadores</p>
+                  <p className="mt-1 text-xs text-magenta-700">
                     Al seleccionar niveles, se asignarán automáticamente todas las áreas y salones.
                     Para preescolar solo se asignan salones (las asignaturas son internas).
                   </p>
@@ -369,7 +369,7 @@ const CreateUserForm = () => {
         className="
           w-full py-3 px-4 rounded-lg font-medium text-white
           bg-gradient-to-r from-blue-600 to-blue-700
-          hover:from-blue-700 hover:to-blue-800
+          hover:bg-orchid-blue-60
           focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2
           disabled:opacity-70 disabled:cursor-not-allowed
           transition-all duration-200 shadow-md hover:shadow-lg

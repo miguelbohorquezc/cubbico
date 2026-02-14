@@ -98,7 +98,7 @@ const Badge: React.FC<BadgeProps> = ({
     items-center
     gap-1.5
     font-medium
-    rounded-md
+    rounded-lg
     transition-colors
     duration-150
     whitespace-nowrap
@@ -121,38 +121,38 @@ const Badge: React.FC<BadgeProps> = ({
     `.replace(/\s+/g, ' ').trim(),
 
     success: `
-      bg-green-50
-      text-green-700
+      bg-tosca/10
+      text-tosca-ds
       border
-      border-green-200
+      border-tosca/30
     `.replace(/\s+/g, ' ').trim(),
 
     warning: `
-      bg-yellow-50
-      text-yellow-700
+      bg-yellow/10
+      text-yellow-cc
       border
-      border-yellow-200
+      border-yellow/30
     `.replace(/\s+/g, ' ').trim(),
 
     error: `
-      bg-red-50
-      text-red-700
+      bg-magenta/10
+      text-magenta-cc
       border
-      border-red-200
+      border-magenta/30
     `.replace(/\s+/g, ' ').trim(),
 
     info: `
-      bg-blue-50
-      text-blue-700
+      bg-orchid-blue-5
+      text-orchid-blue-70
       border
-      border-blue-200
+      border-orchid-blue-20
     `.replace(/\s+/g, ' ').trim(),
 
     purple: `
-      bg-purple-50
-      text-purple-700
+      bg-orchid-blue-10
+      text-orchid-blue-60
       border
-      border-purple-200
+      border-orchid-blue-30
     `.replace(/\s+/g, ' ').trim(),
 
     blue: `
@@ -166,11 +166,11 @@ const Badge: React.FC<BadgeProps> = ({
   // Dot color classes
   const dotColorClasses: Record<BadgeVariant, string> = {
     default: 'bg-light-gray-400',
-    success: 'bg-green-500',
-    warning: 'bg-yellow-500',
-    error: 'bg-red-500',
-    info: 'bg-blue-500',
-    purple: 'bg-purple-500',
+    success: 'bg-tosca-ds',
+    warning: 'bg-yellow',
+    error: 'bg-magenta',
+    info: 'bg-orchid-blue-50',
+    purple: 'bg-orchid-blue-60',
     blue: 'bg-medium-blue-500',
   };
 

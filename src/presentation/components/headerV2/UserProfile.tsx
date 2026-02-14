@@ -35,13 +35,13 @@ const AVATAR_SIZES = {
 };
 
 const AVATAR_COLORS = [
-  'bg-amber-500',
-  'bg-blue-500',
-  'bg-green-500',
-  'bg-purple-500',
-  'bg-pink-500',
-  'bg-indigo-500',
-  'bg-teal-500',
+  'bg-orchid-blue-50',
+  'bg-tosca',
+  'bg-peach',
+  'bg-magenta',
+  'bg-yellow',
+  'bg-orchid-blue-60',
+  'bg-medium-blue-500',
 ];
 
 // ============================================
@@ -308,7 +308,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       className="
         w-64
         bg-white
-        rounded-xl
+        rounded-lg
         shadow-lg
         border border-gray-100
         overflow-hidden
@@ -379,11 +379,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({
             flex items-center gap-3
             ${layoutClasses[layout]}
             px-2 py-1.5
-            rounded-xl
+            rounded-lg
             transition-all duration-200
             hover:bg-gray-100
             focus:outline-none
-            focus:ring-2 focus:ring-amber-200
+            focus:ring-2 focus:ring-orchid-blue-20
             ${isOpen ? 'bg-gray-100' : ''}
           `}
           aria-expanded={isOpen}

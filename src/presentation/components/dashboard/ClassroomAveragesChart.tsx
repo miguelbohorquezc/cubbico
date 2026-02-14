@@ -245,7 +245,7 @@ export const ClassroomAveragesChart: React.FC<ClassroomAveragesChartProps & { em
   // Clases del contenedor
   const containerClass = embedded
     ? className
-    : `bg-white rounded-xl p-6 shadow-sm border border-gray-100 ${className}`;
+    : `bg-white rounded-lg p-6 shadow-sm border border-gray-100 ${className}`;
 
   // Estados de UI
   if (isLoading) {
@@ -266,7 +266,7 @@ export const ClassroomAveragesChart: React.FC<ClassroomAveragesChartProps & { em
           style={{ height }}
         >
           <div className="text-center px-4">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-slate-100 to-gray-200 rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-orchid-blue-50 rounded-lg flex items-center justify-center">
               <svg
                 className="h-8 w-8 text-slate-400"
                 fill="none"

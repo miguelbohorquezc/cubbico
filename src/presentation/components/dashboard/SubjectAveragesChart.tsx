@@ -289,7 +289,7 @@ export const SubjectAveragesChart: React.FC<SubjectAveragesChartProps & { embedd
   // Clases del contenedor
   const containerClass = embedded
     ? className
-    : `bg-white rounded-xl p-6 shadow-sm border border-gray-100 ${className}`;
+    : `bg-white rounded-lg p-6 shadow-sm border border-gray-100 ${className}`;
 
   // Loading state
   if (isLoading) {

@@ -162,8 +162,8 @@ const PromotionManager: React.FC = () => {
     if (!config) return { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700' };
 
     const colors: Record<string, { bg: string; border: string; text: string }> = {
-      purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700' },
-      emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700' },
+      purple: { bg: 'bg-magenta-50', border: 'border-purple-200', text: 'text-magenta-700' },
+      emerald: { bg: 'bg-tosca/10', border: 'border-tosca-200', text: 'text-tosca-700' },
       blue: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700' },
     };
 
@@ -265,7 +265,7 @@ const PromotionManager: React.FC = () => {
                       <div
                         key={classroom.id}
                         className={`
-                          relative p-4 rounded-xl border-2 transition-all duration-200
+                          relative p-4 rounded-lg border-2 transition-all duration-200
                           ${isCompleted
                             ? 'bg-green-50 border-green-300'
                             : `${colors.bg} ${colors.border} hover:shadow-md`

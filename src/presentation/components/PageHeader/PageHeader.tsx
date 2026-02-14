@@ -30,7 +30,7 @@ export const PageHeader = ({
               {crumb.path ? (
                 <Link
                   to={crumb.path}
-                  className="text-emerald-600 hover:text-emerald-700 transition-colors"
+                  className="text-tosca-600 hover:text-tosca-700 transition-colors"
                 >
                   {crumb.label}
                 </Link>
@@ -51,7 +51,7 @@ export const PageHeader = ({
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           {/* Ícono circular */}
-          <div className="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-14 h-14 bg-tosca/100 rounded-full flex items-center justify-center flex-shrink-0">
             <div className="text-white">
               {icon}
             </div>

@@ -119,7 +119,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                 <div
                   key={line.minutes}
                   className={`absolute text-xs text-gray-500 -translate-y-2 px-1 font-medium ${
-                    onHourClick ? 'cursor-pointer hover:text-indigo-600 hover:font-semibold transition-all' : ''
+                    onHourClick ? 'cursor-pointer hover:text-orchid-blue-600 hover:font-semibold transition-all' : ''
                   }`}
                   style={{ top: `${top}px` }}
                   onClick={onHourClick ? () => onHourClick(line.label) : undefined}

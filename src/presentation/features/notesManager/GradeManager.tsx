@@ -118,7 +118,7 @@ const GradeManager: React.FC = () => {
               <th className="px-2 py-3 text-center text-xs font-semibold text-blue-600 uppercase tracking-wider w-20">
                 L3
               </th>
-              <th className="px-2 py-3 text-center text-xs font-semibold text-emerald-600 uppercase tracking-wider w-20">
+              <th className="px-2 py-3 text-center text-xs font-semibold text-tosca-600 uppercase tracking-wider w-20">
                 Prom.
               </th>
               <th className="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider" colSpan={2}>
@@ -163,7 +163,7 @@ const GradeManager: React.FC = () => {
 
                     {/* Promedio */}
                     <td className="px-2 py-4 text-center">
-                      <span className="inline-flex items-center justify-center w-12 h-8 text-sm font-bold text-emerald-700 bg-emerald-50 rounded-lg">
+                      <span className="inline-flex items-center justify-center w-12 h-8 text-sm font-bold text-tosca-700 bg-tosca/10 rounded-lg">
                         {calcularPromedio(g.l1, g.l2, g.l3)}
                       </span>
                     </td>
@@ -193,7 +193,7 @@ const GradeManager: React.FC = () => {
                       {permissions.canViewAllReports ? (
                         <Link
                           to={`/private/dashboard/${PrivateRoutes.FINALREPORT}/${student.id}/${anioActual}`}
-                          className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                          className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-tosca-600 hover:bg-tosca/10 rounded-lg transition-colors"
                           title="Ver informe final"
                         >
                           <IconFileDescription size={18} />
@@ -227,11 +227,11 @@ const GradeManager: React.FC = () => {
           className="
             inline-flex items-center gap-2 px-6 py-2.5
             text-sm font-semibold text-white
-            bg-gradient-to-r from-emerald-500 to-teal-600
+            bg-tosca
             rounded-lg shadow-sm
             transition-all duration-200
-            hover:from-emerald-600 hover:to-teal-700 hover:shadow-md
-            focus:outline-none focus:ring-2 focus:ring-emerald-300
+            hover:bg-orchid-blue-60 hover:shadow-md
+            focus:outline-none focus:ring-2 focus:ring-tosca/30
             disabled:opacity-60 disabled:cursor-not-allowed
           "
         >
@@ -244,11 +244,11 @@ const GradeManager: React.FC = () => {
       {showConfirmModal && (
         <Portal>
           <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 animate-fade-in">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
             {/* Header */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                <IconCheck size={20} className="text-emerald-600" />
+              <div className="w-10 h-10 bg-tosca/20 rounded-full flex items-center justify-center">
+                <IconCheck size={20} className="text-tosca-600" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">Confirmar guardado</h3>
@@ -315,10 +315,10 @@ const GradeManager: React.FC = () => {
                 className="
                   flex-1 px-4 py-2.5
                   text-sm font-semibold text-white
-                  bg-gradient-to-r from-emerald-500 to-teal-600
+                  bg-tosca
                   rounded-lg
                   transition-all duration-200
-                  hover:from-emerald-600 hover:to-teal-700
+                  hover:bg-orchid-blue-60
                   disabled:opacity-60
                 "
               >

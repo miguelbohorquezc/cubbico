@@ -219,7 +219,7 @@ const InformePreescolar: React.FC = () => {
           </div>
 
           {/* Documento del informe */}
-          <div className="report-container bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none font-['Nunito',sans-serif]" style={{ maxWidth: '816px', margin: '0 auto', padding: '1.25rem' }}>
+          <div className="report-container bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none font-['Nunito',sans-serif]" style={{ maxWidth: '816px', margin: '0 auto', padding: '1.25rem' }}>
 
             {/* Header institucional */}
             <table className="w-full border-collapse thead-header-info">

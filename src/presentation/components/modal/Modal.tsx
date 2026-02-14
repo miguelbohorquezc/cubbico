@@ -67,7 +67,7 @@ const Modal: React.FC<ModalProps> = ({
         <div
           className={`
             relative w-full ${sizeClasses[size]}
-            bg-white rounded-2xl shadow-2xl
+            bg-white rounded-lg shadow-2xl
             transform transition-all
             animate-slide-up
           `}
@@ -91,7 +91,7 @@ const Modal: React.FC<ModalProps> = ({
                 p-2 -mr-2
                 text-gray-400 hover:text-gray-600
                 hover:bg-gray-100
-                rounded-xl
+                rounded-lg
                 transition-all duration-200
                 focus:outline-none focus:ring-2 focus:ring-gray-200
               "

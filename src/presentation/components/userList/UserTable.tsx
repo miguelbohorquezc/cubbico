@@ -173,7 +173,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 h-full flex flex-col overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 flex-1 h-full flex flex-col overflow-hidden">
         {/* Header skeleton */}
         <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -181,7 +181,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
               <div className="h-5 bg-gray-200 rounded-lg w-36 animate-pulse"></div>
               <div className="h-3 bg-gray-100 rounded w-28 animate-pulse"></div>
             </div>
-            <div className="h-10 bg-gray-100 rounded-xl w-72 animate-pulse"></div>
+            <div className="h-10 bg-gray-100 rounded-lg w-72 animate-pulse"></div>
           </div>
         </div>
 
@@ -229,7 +229,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
 
   if (error) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 h-full flex items-center justify-center p-6">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 flex-1 h-full flex items-center justify-center p-6">
         <div className="text-center max-w-sm">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,7 +240,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
           <p className="text-gray-500 text-sm mb-6">{error}</p>
           <button
             onClick={() => dispatch(fetchUsers())}
-            className="px-5 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium shadow-sm"
+            className="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium shadow-sm"
           >
             Reintentar
           </button>
@@ -250,7 +250,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col flex-1 h-full">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex flex-col flex-1 h-full">
       {/* Header con búsqueda */}
       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -267,7 +267,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
               placeholder="Buscar usuario..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-72 bg-white shadow-sm"
+              className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-72 bg-white shadow-sm"
             />
           </div>
         </div>
@@ -327,7 +327,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                       <div className="flex items-center gap-3">
                         <div className={`
                           w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold
-                          ${role === 'Coordinador' ? 'bg-purple-500' : 'bg-blue-500'}
+                          ${role === 'Coordinador' ? 'bg-magenta-500' : 'bg-blue-500'}
                         `}>
                           {initial}
                         </div>
@@ -343,7 +343,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                       <span className={`
                         inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
                         ${role === 'Coordinador'
-                          ? 'bg-purple-100 text-purple-800'
+                          ? 'bg-magenta-100 text-magenta-800'
                           : role === 'Docente'
                           ? 'bg-blue-100 text-blue-800'
                           : 'bg-gray-100 text-gray-800'
@@ -392,7 +392,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                           <Tooltip text="Editar asignaciones" position="top">
                             <button
                               onClick={() => openEditAssignmentsModal(user.id!, displayName, role)}
-                              className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                              className="p-2 text-gray-500 hover:text-orchid-blue-600 hover:bg-orchid-blue-50 rounded-lg transition-colors"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -405,7 +405,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                         <Tooltip text="Cambiar rol" position="top">
                           <button
                             onClick={() => openConfirmModal('role', user.id!, displayName, role)}
-                            className="p-2 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                            className="p-2 text-gray-500 hover:text-magenta-600 hover:bg-magenta-50 rounded-lg transition-colors"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -461,19 +461,19 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
       {/* Modal de confirmación - Mejorado UI/UX */}
       {confirmModal.isOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-lg max-w-md w-full shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Header con color contextual */}
             <div className={`px-6 py-4 ${
               confirmModal.type === 'delete'
-                ? 'bg-gradient-to-r from-red-500 to-red-600'
+                ? 'bg-magenta'
                 : confirmModal.type === 'toggle'
                 ? confirmModal.currentValue
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500'
-                  : 'bg-gradient-to-r from-green-500 to-emerald-500'
-                : 'bg-gradient-to-r from-purple-500 to-indigo-500'
+                  : 'bg-tosca'
+                : 'bg-gradient-to-r from-purple-500 to-orchid-blue-500'
             }`}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                   {confirmModal.type === 'delete' ? (
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -510,7 +510,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
 
               {/* Warning para eliminar */}
               {confirmModal.type === 'delete' && (
-                <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-2">
+                <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg flex items-start gap-2">
                   <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                   </svg>
@@ -524,21 +524,21 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
               <button
                 onClick={closeConfirmModal}
                 disabled={actionLoading}
-                className="px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 font-medium shadow-sm"
+                className="px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 font-medium shadow-sm"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConfirmAction}
                 disabled={actionLoading}
-                className={`px-5 py-2.5 text-white rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm ${
+                className={`px-5 py-2.5 text-white rounded-lg transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm ${
                   confirmModal.type === 'delete'
                     ? 'bg-red-600 hover:bg-red-700 shadow-red-200'
                     : confirmModal.type === 'toggle'
                     ? confirmModal.currentValue
                       ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200'
                       : 'bg-green-600 hover:bg-green-700 shadow-green-200'
-                    : 'bg-purple-600 hover:bg-purple-700 shadow-purple-200'
+                    : 'bg-magenta-600 hover:bg-magenta-700 shadow-purple-200'
                 }`}
               >
                 {actionLoading && (
@@ -561,11 +561,11 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
       {/* Modal de edición - Mejorado UI/UX */}
       {editModal.isOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-lg max-w-md w-full shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Header */}
-            <div className="px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600">
+            <div className="px-6 py-4 bg-orchid-blue-50">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
@@ -582,7 +582,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                   type="text"
                   value={editModal.firstName}
                   onChange={(e) => setEditModal({ ...editModal, firstName: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
                   placeholder="Ingrese el nombre"
                 />
               </div>
@@ -592,7 +592,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
                   type="text"
                   value={editModal.lastName}
                   onChange={(e) => setEditModal({ ...editModal, lastName: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-colors"
                   placeholder="Ingrese el apellido"
                 />
               </div>
@@ -603,14 +603,14 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
               <button
                 onClick={closeEditModal}
                 disabled={actionLoading}
-                className="px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 font-medium shadow-sm"
+                className="px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 font-medium shadow-sm"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleEditSubmit}
                 disabled={actionLoading}
-                className="px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm shadow-blue-200"
+                className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm shadow-blue-200"
               >
                 {actionLoading && (
                   <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">

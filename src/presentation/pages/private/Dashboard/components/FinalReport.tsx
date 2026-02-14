@@ -257,7 +257,7 @@ async function fetchStudentYearHistoryAsFinalReport(
 function getGradeCategory(average: number | null) {
   if (average === null) return { text: 'N/A', bgClass: 'bg-gray-100', textClass: 'text-gray-500' };
   if (average >= 4.6) return { text: 'Superior', bgClass: 'bg-blue-100', textClass: 'text-blue-700' };
-  if (average >= 4.0) return { text: 'Alto', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' };
+  if (average >= 4.0) return { text: 'Alto', bgClass: 'bg-tosca/20', textClass: 'text-tosca-700' };
   if (average >= 3.0) return { text: 'Básico', bgClass: 'bg-amber-100', textClass: 'text-amber-700' };
   return { text: 'Bajo', bgClass: 'bg-red-100', textClass: 'text-red-700' };
 }
@@ -464,7 +464,7 @@ export default function FinalReport() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md">
+        <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -552,7 +552,7 @@ export default function FinalReport() {
             <span className="text-gray-700">Superior: 4.6 - 5.0</span>
           </span>
           <span className="inline-flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+            <span className="w-3 h-3 rounded-full bg-tosca/100"></span>
             <span className="text-gray-700">Alto: 4.0 - 4.5</span>
           </span>
           <span className="inline-flex items-center gap-2">

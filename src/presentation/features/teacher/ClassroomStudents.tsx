@@ -5,7 +5,8 @@ import { HeaderV2 } from '../../components/headerV2';
 import { fetchActiveStudentsByClassroom } from '../../../infrastructure/student.service';
 import { Student } from '../../../presentation/components/notes/types';
 import { SearchInput, Badge, Card, EmptyState } from '../../components/ui';
-import { UserIcon, PencilIcon, DocumentIcon, ChevronLeftIcon } from '../../components/icons';
+import { UserIcon, PencilIcon, DocumentIcon } from '../../components/icons';
+import { ChevronLeftIcon } from '../../components/icons/SidebarIcons';
 import { IconFiles } from '@tabler/icons-react';
 
 const SIDEBAR_STORAGE_KEY = 'cubbico-sidebar-collapsed';

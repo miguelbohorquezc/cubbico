@@ -344,7 +344,7 @@ export const FlexibleCalendar: React.FC<FlexibleCalendarProps> = ({
               {/* Preview de drop - muestra dónde caerá la actividad */}
               {dropPreview && dropPreview.day === dayOfWeek && (
                 <div
-                  className="absolute left-0 right-0 bg-indigo-200 border-2 border-dashed border-indigo-500 rounded opacity-50 pointer-events-none z-20"
+                  className="absolute left-0 right-0 bg-orchid-blue-200 border-2 border-dashed border-indigo-500 rounded opacity-50 pointer-events-none z-20"
                   style={{
                     top: `${dropPreview.topPx}px`,
                     height: `${dropPreview.heightPx}px`,

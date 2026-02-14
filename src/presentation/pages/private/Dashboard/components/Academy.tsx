@@ -73,7 +73,7 @@ function Academy() {
           {/* Page Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg shadow-emerald-200">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg">
                 <IconSchool size={20} className="text-white" />
               </div>
               <div>
@@ -93,7 +93,7 @@ function Academy() {
             {periodId && (
               <>
                 <IconChevronRight size={14} className="text-gray-400" />
-                <span className="text-emerald-600 font-medium">Período {periodId}</span>
+                <span className="text-tosca-600 font-medium">Período {periodId}</span>
               </>
             )}
             {selectedClassroom && (
@@ -107,10 +107,10 @@ function Academy() {
           {/* Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Classrooms Card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
-              <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <IconSchool size={18} className="text-emerald-600" />
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden">
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-white">
+                <div className="p-2 bg-tosca/20 rounded-lg">
+                  <IconSchool size={18} className="text-tosca-600" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold text-gray-800">Mis Salones</h2>
@@ -124,8 +124,8 @@ function Academy() {
 
             {/* Areas Card - Only show when classroom is selected */}
             {classroomId && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-white">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-100 rounded-lg">
                       <IconBooks size={18} className="text-blue-600" />
@@ -153,7 +153,7 @@ function Academy() {
 
             {/* Empty state when no classroom selected */}
             {!classroomId && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden flex items-center justify-center min-h-[300px]">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden flex items-center justify-center min-h-[300px]">
                 <div className="text-center p-8">
                   <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
                     <IconBooks size={32} className="text-gray-400" />

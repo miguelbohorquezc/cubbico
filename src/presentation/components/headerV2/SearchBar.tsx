@@ -201,15 +201,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             ${sizeClasses.input}
             bg-gray-50
             border border-gray-200
-            rounded-xl
+            rounded-lg
             text-gray-900
             placeholder:text-gray-400
             transition-all duration-200
             outline-none
             focus:bg-white
-            focus:border-amber-400
+            focus:border-orchid-blue-50
             focus:ring-2
-            focus:ring-amber-100
+            focus:ring-orchid-blue-5
             hover:border-gray-300
             hover:bg-gray-100
             disabled:opacity-50
@@ -233,7 +233,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               transition-all duration-200
               focus:outline-none
               focus:ring-2
-              focus:ring-amber-300
+              focus:ring-orchid-blue-20
             `}
             aria-label="Limpiar búsqueda"
           >

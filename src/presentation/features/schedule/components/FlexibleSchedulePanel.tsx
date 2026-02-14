@@ -44,12 +44,12 @@ export interface FlexibleSchedulePanelProps {
 const BADGE_COLORS = [
   'bg-red-100 text-red-700 border-red-200',
   'bg-amber-100 text-amber-700 border-amber-200',
-  'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'bg-tosca/20 text-tosca-700 border-tosca-200',
   'bg-blue-100 text-blue-700 border-blue-200',
-  'bg-purple-100 text-purple-700 border-purple-200',
+  'bg-magenta-100 text-magenta-700 border-purple-200',
   'bg-pink-100 text-pink-700 border-pink-200',
   'bg-orange-100 text-orange-700 border-orange-200',
-  'bg-indigo-100 text-indigo-700 border-indigo-200',
+  'bg-orchid-blue-100 text-orchid-blue-700 border-indigo-200',
   'bg-teal-100 text-teal-700 border-teal-200',
   'bg-cyan-100 text-cyan-700 border-cyan-200',
 ];
@@ -81,7 +81,7 @@ export const FlexibleSchedulePanel: React.FC<FlexibleSchedulePanelProps> = ({
   return (
     <div className="print:hidden w-48 flex-shrink-0 overflow-y-auto space-y-3 pr-1">
       {/* Instrucciones */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-3 shadow-sm">
+      <div className="bg-orchid-blue-50 rounded-lg border border-blue-200 p-3 shadow-sm">
         <div className="text-xs font-bold text-blue-900 mb-1.5 flex items-center gap-1.5">
           <IconBulb size={14} className="text-blue-600" />
           <span>Cómo crear clases</span>
@@ -108,7 +108,7 @@ export const FlexibleSchedulePanel: React.FC<FlexibleSchedulePanelProps> = ({
               onClick={() => onSelectProf(selectedProfId === p.id ? null : p.id)}
               className={`px-2.5 py-0.5 rounded-md text-xs font-semibold border transition-all ${
                 selectedProfId === p.id
-                  ? 'bg-indigo-500 text-white border-indigo-500 shadow-sm shadow-indigo-200'
+                  ? 'bg-orchid-blue-500 text-white border-indigo-500 shadow-sm shadow-orchid-blue-20'
                   : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
               }`}
             >
@@ -133,8 +133,8 @@ export const FlexibleSchedulePanel: React.FC<FlexibleSchedulePanelProps> = ({
               onClick={() => onSelectRoom(selectedRoomId === r.id ? null : r.id)}
               className={`px-2.5 py-0.5 rounded-md text-xs font-semibold border transition-all ${
                 selectedRoomId === r.id
-                  ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm shadow-emerald-200'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-300'
+                  ? 'bg-tosca/100 text-white border-tosca-500 shadow-sm shadow-tosca/20'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-tosca-300'
               }`}
             >
               {r.nombreSalon}
@@ -208,11 +208,11 @@ export const FlexibleSchedulePanel: React.FC<FlexibleSchedulePanelProps> = ({
         </span>
         <div className="mt-1.5 space-y-1 text-[10px] text-gray-500">
           <div className="flex items-center gap-1.5">
-            <span className="inline-block w-3 h-3 rounded-sm bg-emerald-50 border border-emerald-200" />{' '}
+            <span className="inline-block w-3 h-3 rounded-sm bg-tosca/10 border border-tosca-200" />{' '}
             Celda disponible
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="inline-block w-3 h-3 rounded-sm bg-indigo-50 border border-indigo-200" />{' '}
+            <span className="inline-block w-3 h-3 rounded-sm bg-orchid-blue-50 border border-indigo-200" />{' '}
             Clase del profesor seleccionado
           </div>
           <div className="flex items-center gap-1.5">

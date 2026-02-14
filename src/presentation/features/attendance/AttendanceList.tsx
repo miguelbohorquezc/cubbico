@@ -106,7 +106,7 @@ function useSidebarCollapsed(): boolean {
 
 function statusStyle(status: AttendanceStatus | null): string {
   switch (status) {
-    case 'present':     return 'bg-emerald-100 border-emerald-300 text-emerald-700';
+    case 'present':     return 'bg-tosca/20 border-tosca-300 text-tosca-700';
     case 'justified':   return 'bg-amber-100 border-amber-300 text-amber-700';
     case 'unjustified': return 'bg-red-100 border-red-300 text-red-700';
     default:            return 'bg-gray-50 border-gray-200 text-gray-400';
@@ -339,7 +339,7 @@ export default function AttendanceList() {
                 <IconArrowBack size={13} /> Volver
               </button>
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-9 h-9 bg-orchid-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                   <IconDoor size={18} className="text-white" />
                 </div>
                 <div>
@@ -354,7 +354,7 @@ export default function AttendanceList() {
             </div>
             <button
               onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/report/${salonId}/${profesorId}/${areaId}/${horaDecoded}`)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-orchid-blue-600 bg-orchid-blue-50 border border-indigo-200 rounded-lg hover:bg-orchid-blue-100 transition-all"
             >
               <IconFileAnalytics size={13} /> Informe
             </button>
@@ -362,14 +362,14 @@ export default function AttendanceList() {
 
           {/* ── Error ── */}
           {error && (
-            <div className="mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+            <div className="mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               <IconAlertCircle size={16} className="text-red-500 flex-shrink-0" />
               {error}
             </div>
           )}
 
           {/* ── Contexto + Mes nav ── */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 mb-3">
+          <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-3 mb-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap gap-2 text-[11px] text-gray-600">
                 <span className="px-2 py-0.5 bg-gray-100 rounded-full font-semibold">Hora {horaDecoded}</span>
@@ -387,7 +387,7 @@ export default function AttendanceList() {
 
               {/* Leyenda */}
               <div className="flex items-center gap-3 text-[10px] font-bold text-gray-500">
-                <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 rounded border bg-emerald-100 border-emerald-300 text-center text-emerald-700 leading-4">✓</span> Presente</span>
+                <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 rounded border bg-tosca/20 border-tosca-300 text-center text-tosca-700 leading-4">✓</span> Presente</span>
                 <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 rounded border bg-red-100 border-red-300 text-center text-red-700 leading-4">✕</span> Injust.</span>
                 <span className="flex items-center gap-1"><span className="inline-block w-4 h-4 rounded border bg-amber-100 border-amber-300 text-center text-amber-700 leading-4">J</span> Just.</span>
               </div>
@@ -395,7 +395,7 @@ export default function AttendanceList() {
           </div>
 
           {/* ── Grid mensual ── */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
             <div className="overflow-auto" style={{ maxHeight: '65vh' }}>
               <table className="border-collapse text-[11px]" style={{ minWidth: `${240 + activeDays.length * 38}px` }}>
                 <thead className="sticky top-0 z-10">
@@ -409,12 +409,12 @@ export default function AttendanceList() {
                         <th
                           key={day.iso}
                           className={`px-1 py-2 text-center font-bold border-b border-gray-200 text-[10px] ${
-                            isToday ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500'
+                            isToday ? 'bg-orchid-blue-50 text-orchid-blue-700' : 'text-gray-500'
                           }`}
                           style={{ minWidth: '36px' }}
                         >
                           <div>{pad(day.date.getDate())}</div>
-                          {isToday && <span className="inline-block mt-0.5 px-1 rounded-full bg-indigo-500 text-white text-[8px] font-bold">Hoy</span>}
+                          {isToday && <span className="inline-block mt-0.5 px-1 rounded-full bg-orchid-blue-500 text-white text-[8px] font-bold">Hoy</span>}
                         </th>
                       );
                     })}

@@ -60,7 +60,7 @@ export const UnifiedReportLayout: React.FC<UnifiedReportLayoutProps> = ({
 
       {/* Contenedor principal del informe */}
       <div
-        className={`bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none ${className}`}
+        className={`bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none ${className}`}
         style={{ maxWidth: '816px', margin: '0 auto' }}
       >
         {/* Header institucional */}

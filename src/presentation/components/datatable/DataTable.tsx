@@ -94,7 +94,7 @@ function DataTable<T>({
 
   return (
     <div
-      className="relative bg-white rounded-xl shadow-sm border border-gray-200 animate-fade-in"
+      className="relative bg-white rounded-lg shadow-sm border border-gray-200 animate-fade-in"
       style={{
         width: tableSize.width,
         height: tableSize.height,
@@ -166,12 +166,12 @@ function DataTable<T>({
                 inline-flex items-center gap-2
                 px-3 py-2
                 text-sm font-medium text-white
-                bg-gradient-to-r from-emerald-500 to-teal-600
+                bg-tosca
                 rounded-lg
                 transition-all duration-200
-                hover:from-emerald-600 hover:to-teal-700
+                hover:bg-orchid-blue-60
                 hover:shadow-md
-                focus:outline-none focus:ring-2 focus:ring-emerald-300
+                focus:outline-none focus:ring-2 focus:ring-tosca/30
               "
               title="Exportar a CSV"
             >
@@ -203,7 +203,7 @@ function DataTable<T>({
                   <div className="flex items-center gap-1.5">
                     {col.label}
                     {sortColumn === col.key && (
-                      <span className="text-emerald-600">
+                      <span className="text-tosca-600">
                         {sortOrder === "asc" ? (
                           <IconChevronUp size={16} />
                         ) : (
@@ -285,7 +285,7 @@ function DataTable<T>({
                 p-2 rounded-md
                 text-gray-600
                 transition-all duration-200
-                hover:bg-white hover:text-emerald-600 hover:shadow-sm
+                hover:bg-white hover:text-tosca-600 hover:shadow-sm
                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:hover:shadow-none
               "
               title="Primera página"
@@ -299,7 +299,7 @@ function DataTable<T>({
                 p-2 rounded-md
                 text-gray-600
                 transition-all duration-200
-                hover:bg-white hover:text-emerald-600 hover:shadow-sm
+                hover:bg-white hover:text-tosca-600 hover:shadow-sm
                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:hover:shadow-none
               "
               title="Página anterior"
@@ -318,7 +318,7 @@ function DataTable<T>({
                 p-2 rounded-md
                 text-gray-600
                 transition-all duration-200
-                hover:bg-white hover:text-emerald-600 hover:shadow-sm
+                hover:bg-white hover:text-tosca-600 hover:shadow-sm
                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:hover:shadow-none
               "
               title="Página siguiente"
@@ -332,7 +332,7 @@ function DataTable<T>({
                 p-2 rounded-md
                 text-gray-600
                 transition-all duration-200
-                hover:bg-white hover:text-emerald-600 hover:shadow-sm
+                hover:bg-white hover:text-tosca-600 hover:shadow-sm
                 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-600 disabled:hover:shadow-none
               "
               title="Última página"

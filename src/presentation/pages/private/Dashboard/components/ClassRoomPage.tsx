@@ -88,11 +88,11 @@ function ClassRoomPage() {
               <button
                 onClick={() => navigate(-1)}
                 className="
-                  p-2 rounded-xl
+                  p-2 rounded-lg
                   text-gray-500 hover:text-gray-700
                   hover:bg-gray-100
                   transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-amber-200
+                  focus:outline-none focus:ring-2 focus:ring-orchid-blue-20
                 "
                 aria-label="Volver atrás"
               >
@@ -100,7 +100,7 @@ function ClassRoomPage() {
               </button>
 
               {/* Icono y título */}
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg shadow-emerald-200">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-tosca rounded-lg shadow-lg">
                 <IconDoor size={20} className="text-white" />
               </div>
               <div>
@@ -119,12 +119,12 @@ function ClassRoomPage() {
               className="
                 inline-flex items-center gap-2
                 px-4 py-2.5 text-sm font-medium
-                bg-gradient-to-r from-emerald-500 to-teal-600
-                text-white rounded-xl
-                hover:from-emerald-600 hover:to-teal-700
+                bg-tosca
+                text-white rounded-lg
+                hover:bg-tosca-cc
                 transition-all duration-200
-                shadow-md hover:shadow-lg shadow-emerald-200
-                focus:outline-none focus:ring-2 focus:ring-emerald-300
+                shadow-md hover:shadow-lg
+                focus:outline-none focus:ring-2 focus:ring-tosca/30
               "
             >
               <IconPlus size={18} />
@@ -133,7 +133,7 @@ function ClassRoomPage() {
           </div>
 
           {/* Lista de salones */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden">
             <ClassRoomList key={refreshKey} />
           </div>
         </main>

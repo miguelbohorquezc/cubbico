@@ -55,12 +55,12 @@ import {
 const BADGE_COLORS = [
   'bg-red-100 text-red-700 border-red-200',
   'bg-amber-100 text-amber-700 border-amber-200',
-  'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'bg-tosca/20 text-tosca-700 border-tosca-200',
   'bg-blue-100 text-blue-700 border-blue-200',
-  'bg-purple-100 text-purple-700 border-purple-200',
+  'bg-magenta-100 text-magenta-700 border-purple-200',
   'bg-pink-100 text-pink-700 border-pink-200',
   'bg-orange-100 text-orange-700 border-orange-200',
-  'bg-indigo-100 text-indigo-700 border-indigo-200',
+  'bg-orchid-blue-100 text-orchid-blue-700 border-indigo-200',
   'bg-teal-100 text-teal-700 border-teal-200',
   'bg-cyan-100 text-cyan-700 border-cyan-200',
 ];
@@ -329,7 +329,7 @@ export default function ScheduleEditor() {
           {/* ── Top bar ── */}
           <div className="print:hidden flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-200">
+              <div className="flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg shadow-lg shadow-orchid-blue-20">
                 <IconCalendar size={20} className="text-white" />
               </div>
               <div>
@@ -375,8 +375,8 @@ export default function ScheduleEditor() {
 
               {/* Estado de guardado */}
               <div className="flex items-center gap-1 text-xs text-gray-400">
-                {saveStatus === 'saving' && <><IconLoader size={14} className="animate-spin text-indigo-500" /> <span>Guardando…</span></>}
-                {saveStatus === 'saved'  && <><IconCheck size={14} className="text-emerald-500" /> <span className="text-emerald-600">Guardado</span></>}
+                {saveStatus === 'saving' && <><IconLoader size={14} className="animate-spin text-orchid-blue-500" /> <span>Guardando…</span></>}
+                {saveStatus === 'saved'  && <><IconCheck size={14} className="text-tosca-500" /> <span className="text-tosca-600">Guardado</span></>}
                 {saveStatus === 'error'  && <><IconAlertCircle size={14} className="text-red-500" /> <span className="text-red-500">Error</span></>}
               </div>
             </div>
@@ -384,7 +384,7 @@ export default function ScheduleEditor() {
 
           {/* ── Alerta de conflicto ── */}
           {conflict && (
-            <div className="print:hidden flex items-center gap-2 px-3.5 py-2 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 flex-shrink-0">
+            <div className="print:hidden flex items-center gap-2 px-3.5 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex-shrink-0">
               <IconAlertCircle size={16} className="text-red-500 flex-shrink-0" />
               {conflict}
             </div>
@@ -394,8 +394,8 @@ export default function ScheduleEditor() {
           <div className="hidden print:block flex-shrink-0 text-center pb-3 border-b border-gray-200 mb-2">
             <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Institución Educativa</p>
             <h2 className="text-[18px] font-black text-gray-900 mt-0.5">Colina Campestre School</h2>
-            <div className="mx-auto w-10 h-0.5 bg-indigo-500 rounded-full mt-1.5 mb-1.5" />
-            <p className="text-[12px] font-bold text-indigo-700">Horario Semanal {year}</p>
+            <div className="mx-auto w-10 h-0.5 bg-orchid-blue-500 rounded-full mt-1.5 mb-1.5" />
+            <p className="text-[12px] font-bold text-orchid-blue-700">Horario Semanal {year}</p>
             <p className="text-[10px] text-gray-500 mt-0.5">{filterViewLabel}</p>
           </div>
 
@@ -418,7 +418,7 @@ export default function ScheduleEditor() {
               {isLoading ? (
                 <div className="flex items-center justify-center h-96 bg-gray-50 rounded-lg">
                   <div className="text-center">
-                    <IconLoader size={32} className="animate-spin text-indigo-500 mx-auto mb-4" />
+                    <IconLoader size={32} className="animate-spin text-orchid-blue-500 mx-auto mb-4" />
                     <p className="text-gray-600">Cargando horario...</p>
                   </div>
                 </div>

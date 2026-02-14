@@ -7,8 +7,8 @@ import { IconSchoolOff } from "@tabler/icons-react";
  * Badge de nivel académico con Tailwind
  */
 const NIVEL_BADGES: Record<string, { bg: string; text: string; label: string }> = {
-  primaria: { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Primaria' },
-  preescolar: { bg: 'bg-purple-50', text: 'text-purple-700', label: 'Preescolar' },
+  primaria: { bg: 'bg-tosca/10', text: 'text-tosca-700', label: 'Primaria' },
+  preescolar: { bg: 'bg-magenta-50', text: 'text-magenta-700', label: 'Preescolar' },
   secundaria: { bg: 'bg-blue-50', text: 'text-blue-700', label: 'Secundaria' },
 };
 
@@ -20,7 +20,7 @@ const TeacherClassrooms = () => {
   /** Determina si un salón está seleccionado actualmente */
   const getRowClassName = (row: { id?: string }) => {
     if (row.id === classroomId) {
-      return 'bg-emerald-50 border-l-4 border-l-emerald-500';
+      return 'bg-tosca/10 border-l-4 border-l-emerald-500';
     }
     return '';
   };
@@ -74,10 +74,10 @@ const TeacherClassrooms = () => {
           onClick={() => handleSelectClassRoom(classroom.id, classroom.nivel)}
           className="
             p-2 rounded-lg
-            text-gray-500 hover:text-emerald-600
-            hover:bg-emerald-50
+            text-gray-500 hover:text-tosca-600
+            hover:bg-tosca/10
             transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-emerald-200
+            focus:outline-none focus:ring-2 focus:ring-tosca/30
           "
           title="Ver asignaturas"
           aria-label="Ver asignaturas"

@@ -598,7 +598,7 @@ function ConfirmacionMatriculaModal({
         )}
 
         {/* Grado con gradiente */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-4 text-white">
+        <div className="bg-orchid-blue-50 rounded-lg p-4 text-white">
           <p className="text-sm font-medium opacity-90">Grado solicitado</p>
           <p className="text-2xl font-bold mt-1">{g(data.grado)}</p>
         </div>

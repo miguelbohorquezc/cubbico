@@ -32,12 +32,12 @@ const EditAssignmentsModal = ({ userId, userName, userRole, onClose, onSuccess }
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl max-w-3xl w-full shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg max-w-3xl w-full shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600">
+        <div className="px-6 py-4 bg-orchid-blue-50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
@@ -69,14 +69,14 @@ const EditAssignmentsModal = ({ userId, userName, userRole, onClose, onSuccess }
             <form onSubmit={onSubmit} className="space-y-5">
               {/* Nota para Coordinadores */}
               {isCoordinador && (
-                <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                <div className="p-4 bg-magenta-50 border border-purple-200 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-magenta-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <div>
-                      <p className="font-medium text-purple-900 text-sm">Acceso automático para Coordinadores</p>
-                      <p className="mt-1 text-sm text-purple-700">
+                      <p className="font-medium text-magenta-900 text-sm">Acceso automático para Coordinadores</p>
+                      <p className="mt-1 text-sm text-magenta-700">
                         Al seleccionar niveles, se asignarán automáticamente todas las áreas y salones.
                         Para preescolar solo se asignan salones (las asignaturas son internas).
                       </p>
@@ -221,14 +221,14 @@ const EditAssignmentsModal = ({ userId, userName, userRole, onClose, onSuccess }
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 font-medium shadow-sm"
+            className="px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 font-medium shadow-sm"
           >
             Cancelar
           </button>
           <button
             onClick={onSubmit}
             disabled={loading || initializing}
-            className="px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm shadow-blue-200"
+            className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 flex items-center gap-2 font-medium shadow-sm shadow-blue-200"
           >
             {loading && (
               <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">

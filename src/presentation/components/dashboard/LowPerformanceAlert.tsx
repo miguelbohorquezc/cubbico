@@ -138,9 +138,9 @@ const StudentRow: React.FC<{
 
   // Color del avatar según severidad - más suaves y modernos
   const avatarConfig = {
-    critical: { bg: 'bg-gradient-to-br from-rose-400 to-red-500', ring: 'ring-rose-200' },
-    warning: { bg: 'bg-gradient-to-br from-orange-400 to-amber-500', ring: 'ring-orange-200' },
-    watch: { bg: 'bg-gradient-to-br from-amber-300 to-yellow-500', ring: 'ring-amber-200' },
+    critical: { bg: 'bg-orchid-blue-50 ring: 'ring-rose-200' },
+    warning: { bg: 'bg-orchid-blue-50 ring: 'ring-orange-200' },
+    watch: { bg: 'bg-orchid-blue-50 ring: 'ring-amber-200' },
   }[student.severity];
 
   return (
@@ -148,7 +148,7 @@ const StudentRow: React.FC<{
       onClick={() => onClick?.(student.studentId)}
       className={`
         flex items-center gap-3 p-3
-        hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent
+        hover:bg-gradient-to-r hover:bg-orchid-blue-60
         border-b border-gray-100/80 last:border-b-0
         transition-all duration-200
         ${onClick ? 'cursor-pointer' : ''}
@@ -160,7 +160,7 @@ const StudentRow: React.FC<{
         className={`
           flex-shrink-0 w-9 h-9
           ${avatarConfig.bg}
-          rounded-xl ring-2 ${avatarConfig.ring}
+          rounded-lg ring-2 ${avatarConfig.ring}
           flex items-center justify-center
           text-white text-xs font-bold
           shadow-sm
@@ -262,12 +262,12 @@ export const LowPerformanceAlert: React.FC<LowPerformanceAlertProps & { embedded
   // Clases del contenedor
   const containerClass = embedded
     ? className
-    : `bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden ${className}`;
+    : `bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden ${className}`;
 
   // Loading state
   if (isLoading) {
     return (
-      <div className={embedded ? className : `bg-white rounded-xl p-6 shadow-sm border border-gray-100 ${className}`}>
+      <div className={embedded ? className : `bg-white rounded-lg p-6 shadow-sm border border-gray-100 ${className}`}>
         {!embedded && <div className="h-6 w-48 bg-gray-200 rounded animate-pulse mb-4" />}
         <LoadingSkeleton />
       </div>
@@ -277,15 +277,15 @@ export const LowPerformanceAlert: React.FC<LowPerformanceAlertProps & { embedded
   // Estado vacío
   if (!data || data.totalAlerts === 0) {
     return (
-      <div className={embedded ? className : `bg-white rounded-xl p-6 shadow-sm border border-gray-100 ${className}`}>
+      <div className={embedded ? className : `bg-white rounded-lg p-6 shadow-sm border border-gray-100 ${className}`}>
         {!embedded && (
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Alertas de Rendimiento
           </h3>
         )}
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-green-200 rounded-2xl flex items-center justify-center mb-4 shadow-sm">
-            <IconUsers size={36} className="text-emerald-600" />
+          <div className="w-20 h-20 bg-orchid-blue-50 rounded-lg flex items-center justify-center mb-4 shadow-sm">
+            <IconUsers size={36} className="text-tosca-600" />
           </div>
           <p className="text-gray-800 font-semibold">Todo en orden</p>
           <p className="text-sm text-gray-500 mt-1 max-w-[200px]">

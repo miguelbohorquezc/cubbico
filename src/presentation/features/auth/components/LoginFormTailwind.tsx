@@ -315,8 +315,8 @@ const LoginFormTailwind = () => {
               aria-busy={isAuthenticating}
               className="
                 w-full py-3 px-4 rounded-lg font-medium text-white
-                bg-gradient-to-r from-medium-blue to-deep-blue
-                hover:from-medium-blue-600 hover:to-deep-blue-600
+                bg-gradient-to-r bg-orchid-blue-50
+                hover:bg-orchid-blue-60
                 focus:outline-none focus:ring-2 focus:ring-medium-blue/50 focus:ring-offset-2
                 disabled:opacity-70 disabled:cursor-not-allowed
                 transition-all duration-200

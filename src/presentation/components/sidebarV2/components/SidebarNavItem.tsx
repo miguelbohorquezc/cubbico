@@ -46,7 +46,7 @@ const ItemBadge: React.FC<{ badge: NavBadge }> = ({ badge }) => {
     success: 'bg-green-500 text-white',
     warning: 'bg-orange-500 text-white',
     error: 'bg-red-500 text-white',
-    info: 'bg-sky-500 text-white',
+    info: 'bg-orchid-blue-500 text-white',
     neutral: 'bg-gray-500 text-white',
   };
 
@@ -82,7 +82,7 @@ const ItemIcon: React.FC<{
       className={`
         flex-shrink-0 flex items-center justify-center
         transition-colors duration-200
-        ${isActive ? 'text-amber-500' : 'text-gray-600 group-hover:text-gray-700'}
+        ${isActive ? 'text-orchid-blue-50' : 'text-gray-600 group-hover:text-gray-700'}
         ${isCollapsed ? '' : 'mr-3'}
       `}
     >
@@ -120,12 +120,12 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     rounded-lg
     text-sm font-medium
     transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-1
+    focus:outline-none focus:ring-2 focus:ring-orchid-blue-20 focus:ring-offset-1
   `;
 
   // Clases según estado
   const stateClasses = isActive
-    ? 'bg-amber-50 text-amber-600'
+    ? 'bg-orchid-blue-5 text-orchid-blue-70'
     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900';
 
   // Clases para modo colapsado
@@ -183,7 +183,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
           className={`
             flex-shrink-0 transition-transform duration-300 ease-out
             ${isExpanded ? 'rotate-180' : 'rotate-0'}
-            ${isActive ? 'text-amber-500' : 'text-gray-400 group-hover:text-gray-600'}
+            ${isActive ? 'text-orchid-blue-50' : 'text-gray-400 group-hover:text-gray-600'}
           `}
         >
           <ChevronDownIcon size={18} />
@@ -192,7 +192,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
 
       {/* Flecha indicadora de activo (estilo Cubbico) */}
       {!isCollapsed && isActive && !hasSubmenu && (
-        <span className="flex-shrink-0 text-amber-500">
+        <span className="flex-shrink-0 text-orchid-blue-50">
           <ChevronRightIcon size={18} />
         </span>
       )}
@@ -208,7 +208,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
         className={itemClasses}
         aria-current={isActive ? 'page' : undefined}
         aria-disabled={disabled}
-        title={isCollapsed ? label : undefined}
+        aria-label={isCollapsed ? label : undefined}
       >
         {itemContent}
       </NavLink>
@@ -224,7 +224,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       aria-expanded={hasSubmenu ? isExpanded : undefined}
       aria-haspopup={hasSubmenu ? 'menu' : undefined}
       aria-disabled={disabled}
-      title={isCollapsed ? label : undefined}
+      aria-label={isCollapsed ? label : undefined}
     >
       {itemContent}
     </button>

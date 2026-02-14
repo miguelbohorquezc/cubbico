@@ -175,7 +175,7 @@ export default function AttendanceOverview() {
           {/* ── Top bar ── */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-200">
+              <div className="flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg shadow-lg shadow-orchid-blue-20">
                 <IconFileAnalytics size={20} className="text-white" />
               </div>
               <div>
@@ -202,14 +202,14 @@ export default function AttendanceOverview() {
 
           {/* ── Error ── */}
           {error && (
-            <div className="mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+            <div className="mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
               <IconAlertCircle size={16} className="text-red-500 flex-shrink-0" /> {error}
             </div>
           )}
 
           {/* ── Sin datos ── */}
           {salonGroups.length === 0 && !error && (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-10 text-center">
+            <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-10 text-center">
               <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
                 <IconFileAnalytics size={22} className="text-gray-400" />
               </div>
@@ -230,7 +230,7 @@ export default function AttendanceOverview() {
           {/* ── Lista de salones ── */}
           <div className="space-y-3">
             {salonGroups.map((group) => (
-              <div key={group.room.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              <div key={group.room.id} className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
                 {/* Cabecera del salón */}
                 <div className="flex items-center gap-3 px-4 py-2.5 bg-gray-50 border-b border-gray-100">
                   <span className="text-[18px]">🏫</span>
@@ -248,11 +248,11 @@ export default function AttendanceOverview() {
                     <button
                       key={cls.key}
                       onClick={() => goToReport(group.room.id, cls.profesorId, cls.areaId, cls.hora)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-indigo-50 transition-colors group"
+                      className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-orchid-blue-50 transition-colors group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-indigo-50 border border-indigo-100">
-                          <IconBook size={13} className="text-indigo-500" />
+                        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-orchid-blue-50 border border-indigo-100">
+                          <IconBook size={13} className="text-orchid-blue-500" />
                         </div>
                         <div className="text-left">
                           <div className="flex items-center gap-2">
@@ -263,8 +263,8 @@ export default function AttendanceOverview() {
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-[10px] font-semibold text-indigo-500">Ver informe</span>
-                        <IconChevronRight size={13} className="text-indigo-500" />
+                        <span className="text-[10px] font-semibold text-orchid-blue-500">Ver informe</span>
+                        <IconChevronRight size={13} className="text-orchid-blue-500" />
                       </div>
                     </button>
                   ))}

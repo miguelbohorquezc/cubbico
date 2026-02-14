@@ -111,7 +111,7 @@ const ProposedSection: React.FC<{ proposito: ProposedData; index: number }> = ({
           {/* Columna Indicadores */}
           <td className="p-4 bg-white">
             <h4 className="text-xs font-semibold uppercase text-gray-700 mb-3 tracking-wide flex items-center gap-2">
-              <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
+              <span className="w-1 h-4 bg-tosca/100 rounded-full"></span>
               Indicadores de Desempeño
             </h4>
             <div className="space-y-2">
@@ -121,7 +121,7 @@ const ProposedSection: React.FC<{ proposito: ProposedData; index: number }> = ({
                   className="border border-gray-200 rounded-lg px-3 py-2.5 bg-white hover:bg-gray-50/50 transition-colors"
                 >
                   <p className="text-xs text-gray-800 leading-relaxed">
-                    <span className="inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span>
+                    <span className="inline-block w-1.5 h-1.5 bg-tosca/100 rounded-full mr-2"></span>
                     {ind.texto}
                   </p>
                 </div>

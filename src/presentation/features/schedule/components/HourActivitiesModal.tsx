@@ -73,9 +73,9 @@ export const HourActivitiesModal: React.FC<HourActivitiesModalProps> = ({
         className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-lg shadow-2xl border border-gray-200 w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col animate-scaleIn"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-purple-50 flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-orchid-blue-50 flex-shrink-0">
           <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-8 h-8 bg-indigo-500 rounded-lg">
+            <div className="flex items-center justify-center w-8 h-8 bg-orchid-blue-500 rounded-lg">
               <IconClock size={16} className="text-white" />
             </div>
             <div>
@@ -125,7 +125,7 @@ export const HourActivitiesModal: React.FC<HourActivitiesModalProps> = ({
                           <div className="grid grid-cols-3 gap-3 text-xs">
                             {/* Asignatura */}
                             <div className="flex items-center gap-2">
-                              <IconBook size={14} className="text-indigo-500 flex-shrink-0" />
+                              <IconBook size={14} className="text-orchid-blue-500 flex-shrink-0" />
                               <div className="min-w-0">
                                 <p className="font-semibold text-gray-900 truncate">
                                   {activity.courseName}
@@ -138,13 +138,13 @@ export const HourActivitiesModal: React.FC<HourActivitiesModalProps> = ({
 
                             {/* Profesor */}
                             <div className="flex items-center gap-2">
-                              <IconUser size={14} className="text-purple-500 flex-shrink-0" />
+                              <IconUser size={14} className="text-magenta-500 flex-shrink-0" />
                               <p className="text-gray-700 truncate">{activity.teacherName}</p>
                             </div>
 
                             {/* Salón */}
                             <div className="flex items-center gap-2">
-                              <IconDoor size={14} className="text-emerald-500 flex-shrink-0" />
+                              <IconDoor size={14} className="text-tosca-500 flex-shrink-0" />
                               <p className="text-gray-700 truncate">{activity.classroomName}</p>
                             </div>
                           </div>

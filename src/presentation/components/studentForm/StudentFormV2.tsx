@@ -335,14 +335,14 @@ const StudentFormV2: React.FC<StudentFormV2Props> = ({
     {/* Modal de confirmación - Portal independiente con z-index alto */}
     {modalConfirmOpen && (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ margin: 0 }}>
-        {/* Backdrop */}
+        {/* Backdrop - sin blur para evitar doble blur con el modal padre */}
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/60"
           onClick={() => !isSubmitting && setModalConfirmOpen(false)}
         />
 
         {/* Modal Container */}
-        <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden animate-slide-up">
+        <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden animate-slide-up">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">

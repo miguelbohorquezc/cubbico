@@ -307,7 +307,7 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
             <button
               onClick={handleCopyClick}
               disabled={copiando}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-magenta-600 rounded-lg hover:bg-magenta-700 transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
               title={`Copiar configuración del año ${Number(year) - 1}`}
             >
               {copiando ? (

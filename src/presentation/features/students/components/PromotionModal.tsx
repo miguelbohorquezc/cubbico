@@ -143,9 +143,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="absolute inset-4 sm:inset-6 lg:inset-10 bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden">
+      <div className="absolute inset-4 sm:inset-6 lg:inset-10 bg-white rounded-lg shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-light-gray-200 bg-gradient-to-r from-medium-blue-600 to-medium-blue-700">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-light-gray-200 bg-orchid-blue-50">
           <div>
             <h2 className="text-lg font-semibold text-white">
               Promoción de Estudiantes
@@ -396,7 +396,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
         {/* Confirmation Dialog */}
         {showConfirmation && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
               <h3 className="text-lg font-semibold text-deep-blue-800 mb-2">
                 Confirmar Promoción
               </h3>

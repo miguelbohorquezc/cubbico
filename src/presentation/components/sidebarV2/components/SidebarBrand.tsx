@@ -13,6 +13,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '../../icons/SidebarIcons';
 import type { SidebarBrandConfig } from '../../../../shared/types/layoutTypes';
+import Logo from '../../../../assets/logo/Logo.svg';
 
 // ============================================
 // Types
@@ -113,28 +114,20 @@ export const SidebarBrand: React.FC<SidebarBrandProps> = ({
           flex items-center gap-2.5
           transition-all duration-300
           hover:opacity-80
-          focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2
+          focus:outline-none focus:ring-2 focus:ring-yellow/30 focus:ring-offset-2
           rounded-lg p-1 -ml-1
           ${isCollapsed ? 'justify-center w-full ml-0' : ''}
         `}
         aria-label={`${name} - Ir al inicio`}
       >
         {/* Logo */}
-        {logo && !isCollapsed ? (
-          <img
-            src={logo}
-            alt={logoAlt || name}
-            className="w-7 h-7 object-contain"
-          />
-        ) : logoCollapsed && isCollapsed ? (
-          <img
-            src={logoCollapsed}
-            alt={logoAlt || name}
-            className="w-7 h-7 object-contain"
-          />
-        ) : (
-          <CubbicoLogo size={28} />
-        )}
+        <img
+          src={Logo}
+          alt={logoAlt || name || 'Cubbico Logo'}
+          className={`object-contain transition-all duration-300 ${
+            isCollapsed ? 'w-8 h-8' : 'w-10 h-10'
+          }`}
+        />
 
         {/* Nombre de la aplicación */}
         {!isCollapsed && (
@@ -154,7 +147,7 @@ export const SidebarBrand: React.FC<SidebarBrandProps> = ({
             text-gray-400 hover:text-gray-600
             hover:bg-gray-100
             transition-colors duration-200
-            focus:outline-none focus:ring-2 focus:ring-amber-400
+            focus:outline-none focus:ring-2 focus:ring-yellow/30
           "
           aria-label="Colapsar menú lateral"
           aria-expanded={true}
@@ -175,7 +168,7 @@ export const SidebarBrand: React.FC<SidebarBrandProps> = ({
             text-gray-400 hover:text-gray-600
             shadow-sm hover:shadow
             transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-amber-400
+            focus:outline-none focus:ring-2 focus:ring-yellow/30
             z-10
           "
           aria-label="Expandir menú lateral"

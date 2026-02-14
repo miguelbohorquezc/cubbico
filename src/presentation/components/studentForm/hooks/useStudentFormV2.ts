@@ -274,7 +274,7 @@ export const useStudentFormV2 = ({
     const mappedLevel = levelMapping[formData.classRoom] || formData.classRoom.toLowerCase();
 
     return classrooms
-      .filter((classroom) => classroom.nivel.toLowerCase() === mappedLevel)
+      .filter((classroom) => classroom.nivel.toLowerCase().trim() === mappedLevel)
       .map((classroom) => ({
         value: classroom.nombreSalon,
         label: classroom.nombreSalon,

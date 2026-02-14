@@ -6,8 +6,8 @@ import DataTable from "../../components/datatable/DataTable";
  * Badge de nivel académico con Tailwind
  */
 const NIVEL_BADGES: Record<string, { bg: string; text: string; label: string }> = {
-  primaria: { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Primaria' },
-  preescolar: { bg: 'bg-purple-50', text: 'text-purple-700', label: 'Preescolar' },
+  primaria: { bg: 'bg-tosca/10', text: 'text-tosca-700', label: 'Primaria' },
+  preescolar: { bg: 'bg-magenta-50', text: 'text-magenta-700', label: 'Preescolar' },
   secundaria: { bg: 'bg-blue-50', text: 'text-blue-700', label: 'Secundaria' },
 };
 
@@ -48,7 +48,7 @@ const TeacherAreas = () => {
       key: "area",
       label: "Área",
       render: (row: any) => (
-        <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-indigo-50 text-indigo-700">
+        <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-orchid-blue-50 text-orchid-blue-700">
           {row.area}
         </span>
       )
@@ -101,8 +101,8 @@ const TeacherAreas = () => {
                 onClick={handleSelectPreschoolNotes}
                 className="
                   p-2 rounded-lg
-                  text-gray-500 hover:text-purple-600
-                  hover:bg-purple-50
+                  text-gray-500 hover:text-magenta-600
+                  hover:bg-magenta-50
                   transition-all duration-200
                   focus:outline-none focus:ring-2 focus:ring-purple-200
                 "
@@ -120,7 +120,7 @@ const TeacherAreas = () => {
                   text-gray-500 hover:text-amber-600
                   hover:bg-amber-50
                   transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-amber-200
+                  focus:outline-none focus:ring-2 focus:ring-yellow/30
                 "
                 title="Indicadores"
                 aria-label="Indicadores"

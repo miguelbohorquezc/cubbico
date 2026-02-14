@@ -69,7 +69,7 @@ export default function JustificationModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/55 p-4">
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_24px_64px_rgba(0,0,0,.18)] w-full max-w-[520px] overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-[0_24px_64px_rgba(0,0,0,.18)] w-full max-w-[520px] overflow-hidden">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-gray-100 bg-gray-50 px-4 py-3.5">
@@ -108,19 +108,19 @@ export default function JustificationModal({
               onChange={(e) => { setMotivo(e.target.value); if (e.target.value.trim()) setError(false); }}
               placeholder="Ej: El estudiante presenta excusa por enfermedad. Se adjunta soporte documental…"
               rows={3}
-              className={`w-full resize-y rounded-xl border px-3 py-2 text-[12px] text-gray-700 outline-none transition-all focus:ring-2 focus:ring-indigo-200 ${
+              className={`w-full resize-y rounded-lg border px-3 py-2 text-[12px] text-gray-700 outline-none transition-all focus:ring-2 focus:ring-indigo-200 ${
                 error ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white focus:border-indigo-300'
               }`}
             />
           </div>
 
           {/* Con soporte / excusa */}
-          <label className="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-all">
+          <label className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-all">
             <input
               type="checkbox"
               checked={conExcusa}
               onChange={(e) => setConExcusa(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-indigo-500 focus:ring-indigo-200"
+              className="w-4 h-4 rounded border-gray-300 text-orchid-blue-500 focus:ring-indigo-200"
             />
             <div>
               <span className="text-[12px] font-semibold text-gray-700">Con soporte documental</span>

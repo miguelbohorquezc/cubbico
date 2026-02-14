@@ -111,11 +111,11 @@ function AreaPage() {
               <button
                 onClick={() => navigate(-1)}
                 className="
-                  p-2 rounded-xl
+                  p-2 rounded-lg
                   text-gray-500 hover:text-gray-700
                   hover:bg-gray-100
                   transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-amber-200
+                  focus:outline-none focus:ring-2 focus:ring-orchid-blue-20
                 "
                 aria-label="Volver atrás"
               >
@@ -123,7 +123,7 @@ function AreaPage() {
               </button>
 
               {/* Icono y título */}
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl shadow-lg shadow-violet-200">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-magenta rounded-lg shadow-lg">
                 <IconBooks size={20} className="text-white" />
               </div>
               <div>
@@ -142,12 +142,12 @@ function AreaPage() {
               className="
                 inline-flex items-center gap-2
                 px-4 py-2.5 text-sm font-medium
-                bg-gradient-to-r from-violet-500 to-purple-600
-                text-white rounded-xl
-                hover:from-violet-600 hover:to-purple-700
+                bg-magenta
+                text-white rounded-lg
+                hover:bg-magenta-cc
                 transition-all duration-200
-                shadow-md hover:shadow-lg shadow-violet-200
-                focus:outline-none focus:ring-2 focus:ring-violet-300
+                shadow-md hover:shadow-lg
+                focus:outline-none focus:ring-2 focus:ring-magenta/30
               "
             >
               <IconPlus size={18} />
@@ -156,7 +156,7 @@ function AreaPage() {
           </div>
 
           {/* Lista de asignaturas con drag & drop */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden p-4 lg:p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100/80 overflow-hidden p-4 lg:p-6">
             <AreaListDragDrop key={refreshKey} />
           </div>
         </main>

@@ -52,7 +52,7 @@ const DraggableAreaRow = ({
   // Badge de nivel
   const nivelBadgeClasses = {
     'primaria': 'bg-green-100 text-green-800',
-    'secundaria': 'bg-purple-100 text-purple-800',
+    'secundaria': 'bg-magenta-100 text-magenta-800',
     'preescolar': 'bg-orange-100 text-orange-800'
   }[area.nivel] || 'bg-gray-100 text-gray-800';
 

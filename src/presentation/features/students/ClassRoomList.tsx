@@ -14,8 +14,8 @@ import { PromotionConfig, PromotionResult } from "../../../shared/types/studentM
  * Configuración de badges por nivel académico
  */
 const NIVEL_BADGES: Record<string, string> = {
-  preescolar: "bg-purple-100 text-purple-700 border-purple-200",
-  primaria: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  preescolar: "bg-magenta-100 text-magenta-700 border-purple-200",
+  primaria: "bg-tosca/20 text-tosca-700 border-tosca-200",
   secundaria: "bg-blue-100 text-blue-700 border-blue-200",
 };
 

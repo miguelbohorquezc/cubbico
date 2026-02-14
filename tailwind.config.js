@@ -82,6 +82,41 @@ export default {
           900: '#C1C1C1',
         },
 
+        // Orchid Blue - Accent Color (Paleta oficial)
+        'orchid-blue': {
+          DEFAULT: '#0F2358',
+          70: '#0F2358',
+          60: '#1A3C57',
+          50: '#1F4CC0',
+          40: '#4272B7',
+          30: '#65A8BF',
+          20: '#A4B0F0',
+          10: '#CAC9FF',
+          5: '#E4F0FF',
+        },
+
+        // Additional Colors - The Short Rainbow
+        'magenta': {
+          DEFAULT: '#F12E78',
+          ds: '#F12E78',
+          cc: '#A52C5F',
+        },
+        'peach': {
+          DEFAULT: '#FF5B36',
+          ds: '#FF5B36',
+          cc: '#FF5C3F',
+        },
+        'yellow': {
+          DEFAULT: '#FFD600',
+          ds: '#FFD600',
+          cc: '#F4B527',
+        },
+        'tosca': {
+          DEFAULT: '#0FCDC8',
+          ds: '#0FCDC8',
+          cc: '#0FCDC8',
+        },
+
         // Colores de estado (semánticos)
         success: {
           light: '#D4EDDA',

@@ -66,11 +66,11 @@ function getColorForCourse(courseId: string): {
  */
 const COURSE_COLORS = [
   { bg: 'bg-blue-200', border: 'border-blue-500', text: 'text-blue-950' },
-  { bg: 'bg-emerald-200', border: 'border-emerald-500', text: 'text-emerald-950' },
-  { bg: 'bg-purple-200', border: 'border-purple-500', text: 'text-purple-950' },
+  { bg: 'bg-emerald-200', border: 'border-tosca-500', text: 'text-tosca-950' },
+  { bg: 'bg-magenta-200', border: 'border-purple-500', text: 'text-magenta-950' },
   { bg: 'bg-amber-200', border: 'border-amber-500', text: 'text-amber-950' },
   { bg: 'bg-pink-200', border: 'border-pink-500', text: 'text-pink-950' },
-  { bg: 'bg-indigo-200', border: 'border-indigo-500', text: 'text-indigo-950' },
+  { bg: 'bg-orchid-blue-200', border: 'border-indigo-500', text: 'text-orchid-blue-950' },
   { bg: 'bg-teal-200', border: 'border-teal-500', text: 'text-teal-950' },
   { bg: 'bg-orange-200', border: 'border-orange-500', text: 'text-orange-950' },
   { bg: 'bg-cyan-200', border: 'border-cyan-500', text: 'text-cyan-950' },

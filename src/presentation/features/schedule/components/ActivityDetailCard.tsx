@@ -157,8 +157,8 @@ export const ActivityDetailCard: React.FC<ActivityDetailCardProps> = ({
 
           {/* Profesor */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-              <span className="text-purple-600">👨‍🏫</span>
+            <div className="w-8 h-8 bg-magenta-100 rounded-lg flex items-center justify-center">
+              <span className="text-magenta-600">👨‍🏫</span>
             </div>
             <div>
               <p className="text-xs text-gray-500">Profesor</p>

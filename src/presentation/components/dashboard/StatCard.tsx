@@ -72,7 +72,7 @@ const COLOR_VARIANTS: Record<
     hoverBorder: 'hover:border-red-200',
   },
   info: {
-    iconBg: 'bg-sky-100',
+    iconBg: 'bg-orchid-blue-100',
     iconColor: 'text-sky-600',
     hoverBorder: 'hover:border-sky-200',
   },
@@ -143,13 +143,13 @@ const TrendArrow: React.FC<{ direction: TrendDirection }> = ({ direction }) => {
  */
 const StatCardSkeleton: React.FC = () => (
   <div
-    className="bg-white rounded-xl border border-gray-100 p-5 animate-pulse"
+    className="bg-white rounded-lg border border-gray-100 p-5 animate-pulse"
     aria-label="Cargando estadística"
     role="status"
   >
     <div className="flex items-start gap-4">
       {/* Icon skeleton */}
-      <div className="w-12 h-12 bg-gray-200 rounded-xl flex-shrink-0" />
+      <div className="w-12 h-12 bg-gray-200 rounded-lg flex-shrink-0" />
 
       {/* Content skeleton */}
       <div className="flex-1 min-w-0 space-y-2">
@@ -238,7 +238,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   // Clases del contenedor
   const containerClasses = [
     // Base
-    'bg-white rounded-xl border border-gray-100 p-5',
+    'bg-white rounded-lg border border-gray-100 p-5',
     'transition-all duration-200 ease-in-out',
     // Sombra
     'shadow-card hover:shadow-card-hover',
@@ -266,7 +266,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         {/* Icono con fondo de color */}
         <div
           className={`
-            w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0
+            w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0
             ${colorStyles.iconBg} ${colorStyles.iconColor}
             transition-transform duration-200
             ${isClickable ? 'group-hover:scale-110' : ''}

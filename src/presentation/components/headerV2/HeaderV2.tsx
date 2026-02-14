@@ -78,13 +78,13 @@ const NotificationButton: React.FC<NotificationButtonProps> = ({
       className="
         relative
         p-2
-        rounded-xl
+        rounded-lg
         text-gray-500
         hover:text-gray-700
         hover:bg-gray-100
         transition-all duration-200
         focus:outline-none
-        focus:ring-2 focus:ring-amber-200
+        focus:ring-2 focus:ring-orchid-blue-20
       "
       aria-label={`Notificaciones${count > 0 ? ` (${count} nuevas)` : ''}`}
     >
@@ -248,7 +248,7 @@ export const HeaderV2: React.FC<HeaderV2Props> = ({
               className="
                 md:hidden
                 p-2
-                rounded-xl
+                rounded-lg
                 text-gray-500
                 hover:text-gray-700
                 hover:bg-gray-100
