@@ -35,9 +35,7 @@ const DraggableAreaRow = ({
   };
 
   const handleDeleteClick = () => {
-    if (window.confirm(`¿Estás seguro de eliminar "${area.asignatura}"?`)) {
-      onDelete(area.id);
-    }
+    onDelete(area.id);
   };
 
   // Clases dinámicas según estado

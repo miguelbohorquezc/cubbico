@@ -52,6 +52,18 @@ const AreaListDragDrop = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Estados para modales de confirmación
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; areaId: string; areaName: string }>({
+    isOpen: false,
+    areaId: '',
+    areaName: ''
+  });
+  const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({
+    isOpen: false,
+    type: 'success',
+    message: ''
+  });
+
   // Hook de drag & drop
   const {
     orderedAreas,
@@ -91,16 +103,34 @@ const AreaListDragDrop = () => {
     loadAreas();
   }, []);
 
-  const handleDelete = async (areaId: string) => {
+  const handleDeleteClick = (areaId: string) => {
+    const area = areas.find(a => a.id === areaId);
+    setDeleteConfirm({
+      isOpen: true,
+      areaId,
+      areaName: area ? area.asignatura : 'esta área'
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const { areaId } = deleteConfirm;
+    setDeleteConfirm({ isOpen: false, areaId: '', areaName: '' });
+
     try {
       await deleteArea(areaId);
       setAreas(prev => prev.filter(a => a.id !== areaId));
-      setSuccessMessage('Asignatura eliminada correctamente');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setNotification({
+        isOpen: true,
+        type: 'success',
+        message: 'Asignatura eliminada con éxito'
+      });
     } catch (error) {
       console.error('Error al eliminar:', error);
-      setErrorMessage('Error al eliminar la asignatura');
-      setTimeout(() => setErrorMessage(null), 5000);
+      setNotification({
+        isOpen: true,
+        type: 'error',
+        message: 'Error al eliminar la asignatura. Por favor intente de nuevo.'
+      });
     }
   };
 
@@ -139,7 +169,8 @@ const AreaListDragDrop = () => {
     areas.filter(a => a.nivel === nivel).length;
 
   return (
-    <div className="space-y-4">
+    <>
+      <div className="space-y-4">
       {/* Mensajes de feedback */}
       {successMessage && (
         <div className="flex items-center gap-3 px-4 py-3 bg-tosca/10 border border-tosca-200 text-tosca-800 rounded-lg animate-fade-in">
@@ -280,11 +311,12 @@ const AreaListDragDrop = () => {
               index={index}
               handlers={handlers}
               onEdit={handleEdit}
-              onDelete={handleDelete}
+              onDelete={handleDeleteClick}
             />
           ))}
         </div>
       )}
+      </div>
 
       {/* Modal de edición */}
       <Modal
@@ -306,7 +338,100 @@ const AreaListDragDrop = () => {
           />
         )}
       </Modal>
-    </div>
+
+      {/* Modal de Confirmación de Eliminación */}
+      {deleteConfirm.isOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-lg max-w-md w-full shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="px-6 py-4 bg-magenta-ds">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Confirmar Eliminación</h3>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              <p className="text-gray-700">
+                ¿Estás seguro de que deseas eliminar la asignatura <strong>{deleteConfirm.areaName}</strong>?
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                Esta acción no se puede deshacer.
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+              <button
+                onClick={() => setDeleteConfirm({ isOpen: false, areaId: '', areaName: '' })}
+                className="px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium shadow-sm"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                className="px-5 py-2.5 bg-magenta-ds text-white rounded-lg hover:bg-magenta-cc transition-all duration-200 font-medium shadow-sm"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Notificación */}
+      {notification.isOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-lg max-w-md w-full shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className={`px-6 py-4 ${notification.type === 'success' ? 'bg-tosca-ds' : 'bg-magenta-ds'}`}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                  {notification.type === 'success' ? (
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    {notification.type === 'success' ? 'Éxito' : 'Error'}
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              <p className="text-gray-700">{notification.message}</p>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+              <button
+                onClick={() => setNotification({ isOpen: false, type: 'success', message: '' })}
+                className={`px-5 py-2.5 text-white rounded-lg transition-all duration-200 font-medium shadow-sm ${
+                  notification.type === 'success' ? 'bg-tosca-ds hover:bg-tosca-cc' : 'bg-orchid-blue-60 hover:bg-orchid-blue-70'
+                }`}
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

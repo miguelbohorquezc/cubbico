@@ -9,6 +9,8 @@ import {
   selectUsersError
 } from '../../../app/store/states/user.slice';
 import { toggleUserStatus, updateUserRole, updateUserNames } from '../../../infrastructure/user.service';
+import { fetchTeacherData } from '../../../infrastructure/teacher.service';
+import { teacherActions } from '../../../app/store/states/teacher.slice';
 import Tooltip from '../toolTip/Tooltip';
 import EditAssignmentsModal from '../userForm/EditAssignmentsModal';
 
@@ -44,6 +46,7 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
   const users = useSelector(selectAllUsers);
   const loading = useSelector(selectUsersLoading);
   const error = useSelector(selectUsersError);
+  const currentUser = useSelector((state: any) => state.user);
 
   const [confirmModal, setConfirmModal] = useState<ConfirmModalState>({
     isOpen: false,
@@ -632,8 +635,36 @@ const UserTable = ({ currentUserId }: UserTableProps) => {
           userName={editAssignmentsModal.userName}
           userRole={editAssignmentsModal.userRole}
           onClose={closeEditAssignmentsModal}
-          onSuccess={() => {
+          onSuccess={async () => {
+            console.log('🎯 Modal onSuccess triggered');
+            console.log('👤 Current user UID:', currentUser?.uid);
+            console.log('📝 Edited user ID:', editAssignmentsModal.userId);
+
+            // Recargar lista de usuarios
             dispatch(fetchUsers());
+
+            // Si el usuario editado es el mismo que está logueado, recargar sus datos de profesor
+            if (currentUser?.uid && editAssignmentsModal.userId === currentUser.uid) {
+              console.log('✅ Same user! Reloading teacher data...');
+              try {
+                dispatch(teacherActions.setLoading(true));
+                const teacherData = await fetchTeacherData(currentUser.uid);
+                console.log('📚 Teacher data loaded:', {
+                  areasCount: teacherData.areas.length,
+                  classroomsCount: teacherData.classrooms.length
+                });
+                dispatch(teacherActions.setClassrooms(teacherData.classrooms));
+                dispatch(teacherActions.setAreas(teacherData.areas));
+                dispatch(teacherActions.setAchievements(teacherData.achievements));
+                console.log('✅ Teacher data reloaded successfully');
+              } catch (error) {
+                console.error('❌ Error reloading teacher data:', error);
+              } finally {
+                dispatch(teacherActions.setLoading(false));
+              }
+            } else {
+              console.log('⚠️ Different user or no current user - not reloading teacher data');
+            }
           }}
         />
       )}

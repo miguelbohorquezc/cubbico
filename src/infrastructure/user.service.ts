@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, setDoc, deleteDoc, query, where, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Area } from "../domain/entities/area";
@@ -150,12 +150,15 @@ export const updateUserAssignments = async (
   }
 ): Promise<void> => {
   try {
-    await setDoc(doc(db, "users", userId), {
+    // Usar updateDoc para reemplazar completamente los campos de areas y salones
+    // sin hacer merge, esto asegura que los items desmarcados se eliminen
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, {
       areas: assignments.areas,
       salones: assignments.salones,
       nivelesEducativos: assignments.nivelesEducativos,
       updatedAt: new Date()
-    }, { merge: true });
+    });
   } catch (error) {
     throw new Error("Error al actualizar asignaciones del usuario: " + error);
   }

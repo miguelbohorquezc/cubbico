@@ -11,8 +11,9 @@ export const fetchTeacherData = async (userId: string) => {
     const userDoc = await getDoc(doc(db, "users", userId));
     const userData = userDoc.data();
 
-    const salonesKeys = Object.keys(userData?.salones || {});
-    const areasKeys = Object.keys(userData?.areas || {});
+    // Filtrar solo los salones y áreas que tienen valor true (asignados)
+    const salonesKeys = Object.keys(userData?.salones || {}).filter(key => userData.salones[key] === true);
+    const areasKeys = Object.keys(userData?.areas || {}).filter(key => userData.areas[key] === true);
 
     // Obtener salones (solo si hay salones asignados)
     let classroomsSnapshot: any = { docs: [] };

@@ -36,27 +36,30 @@ export const useClassRoomForm = (initialData?: SalonFormState) => {
     setError(prev => ({ ...prev, directorGrupo: '' }));
   }, []);
 
-  const handleSubmit = useCallback(async (e: FormEvent) => {
+  // Validar el formulario (sin enviar)
+  const handleSubmit = useCallback((e: FormEvent): boolean => {
     e.preventDefault();
+    const errors = validationsForm(form);
+    if (Object.keys(errors).length > 0) {
+      setError(errors);
+      return false;
+    }
+    return true;
+  }, [form]);
+
+  // Enviar el formulario (después de confirmación)
+  const submitForm = useCallback(async () => {
     setIsSubmitting(true);
-    
+
     try {
-      const errors = validationsForm(form);
-      if (Object.keys(errors).length > 0) {
-        setError(errors);
-        return;
-      }
-      
       if (form.id) {
         // Modo edición - actualizar
         await updateClassroom(form.id, form);
-        alert('Salón actualizado exitosamente!');
       } else {
         // Modo creación - nuevo
         await addClassroom(form);
-        alert('Salón creado exitosamente!');
       }
-      
+
       setForm(initialData || {
         id: '',
         identificador: Date.now().toString(),
@@ -64,16 +67,24 @@ export const useClassRoomForm = (initialData?: SalonFormState) => {
         nombreSalon: '',
         nivel: ''
       });
-      
-      return true; // Para manejar cierre modal
+
+      return true;
     } catch (error) {
       console.error('Error:', error);
-      alert(`Error al ${form.id ? 'actualizar' : 'crear'} el salón`);
-      return false;
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
-  }, [form]);
+  }, [form, initialData]);
 
-  return { form, error, handleChange, handleBlur, handleSubmit, isSubmitting, handleDirectorChange };
+  return {
+    form,
+    error,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    submitForm,
+    isSubmitting,
+    handleDirectorChange
+  };
 };

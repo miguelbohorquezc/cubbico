@@ -30,17 +30,17 @@ export const FormField = ({
 }: FormFieldProps) => {
   // Clases base compartidas entre input y select
   const baseClasses = `
-    w-full px-3 py-2.5
-    text-sm text-gray-700
+    w-full px-4 py-3
+    text-base text-deep-blue-900
     bg-white border rounded-lg
     transition-all duration-200
-    ${disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : ''}
+    ${disabled ? 'bg-light-gray-50 text-light-gray-400 cursor-not-allowed border-light-gray-200' : ''}
     ${error
-      ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
-      : 'border-gray-200 hover:border-gray-300 focus:ring-emerald-200 focus:border-emerald-400'
+      ? 'border-error-500 focus:ring-error-200 focus:border-error-500'
+      : 'border-light-gray-300 hover:border-gray-300 focus:ring-orchid-blue-20 focus:border-orchid-blue-60'
     }
     focus:outline-none focus:ring-2
-    placeholder:text-gray-400
+    placeholder:text-light-gray-400
   `;
 
   return (
@@ -84,10 +84,10 @@ export const FormField = ({
       )}
 
       {error && (
-        <p className="mt-1.5 text-sm text-red-600 flex items-center gap-1">
-          <IconAlertCircle size={14} />
-          {error}
-        </p>
+        <div className="flex items-start gap-1.5 text-sm text-error-600 mt-1.5" role="alert" aria-live="polite">
+          <IconAlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+          <span>{error}</span>
+        </div>
       )}
     </div>
   );

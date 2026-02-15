@@ -14,6 +14,7 @@ export const useEditAssignments = (userId: string, userRole: string) => {
   const [classRooms, setClassRooms] = useState<ClassRoom[]>([]);
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedLevels, setSelectedLevels] = useState<('Preescolar' | 'Primaria' | 'Secundaria')[]>([]);
   const [form, setForm] = useState<EditAssignmentsData>({
     areas: {},
@@ -91,32 +92,36 @@ export const useEditAssignments = (userId: string, userRole: string) => {
     );
   }, [classRooms, selectedLevels]);
 
-  // Auto-seleccionar todo para Coordinadores
+  // Limpiar asignaciones que ya no están en los niveles seleccionados
   useEffect(() => {
-    if (isCoordinador && selectedLevels.length > 0) {
-      const newAreas: Record<string, boolean> = {};
-      const newSalones: Record<string, boolean> = {};
+    if (selectedLevels.length === 0) return;
 
-      // Para áreas: NO incluir las de preescolar
-      filteredAreas.forEach(area => {
-        const isPreschoolArea = area.nivel.toLowerCase().includes('preescolar');
-        if (!isPreschoolArea) {
-          newAreas[area.id] = true;
-        }
-      });
+    const filteredAreaIds = new Set(filteredAreas.map(a => a.id));
+    const filteredSalonIds = new Set(filteredClassRooms.map(s => s.id));
 
-      // Para salones: incluir TODOS (incluido preescolar)
-      filteredClassRooms.forEach(salon => {
-        newSalones[salon.id] = true;
-      });
+    setForm(prev => {
+      // Filtrar solo las áreas que están en los niveles seleccionados
+      const cleanedAreas = Object.fromEntries(
+        Object.entries(prev.areas).filter(([id]) => filteredAreaIds.has(id))
+      );
 
-      setForm(prev => ({
+      // Filtrar solo los salones que están en los niveles seleccionados
+      const cleanedSalones = Object.fromEntries(
+        Object.entries(prev.salones).filter(([id]) => filteredSalonIds.has(id))
+      );
+
+      console.log('🧹 Cleaning form - Removed areas:',
+        Object.keys(prev.areas).filter(id => !filteredAreaIds.has(id)));
+      console.log('🧹 Cleaning form - Removed salones:',
+        Object.keys(prev.salones).filter(id => !filteredSalonIds.has(id)));
+
+      return {
         ...prev,
-        areas: newAreas,
-        salones: newSalones
-      }));
-    }
-  }, [isCoordinador, selectedLevels, filteredAreas, filteredClassRooms]);
+        areas: cleanedAreas,
+        salones: cleanedSalones
+      };
+    });
+  }, [selectedLevels, filteredAreas, filteredClassRooms]);
 
   const toggleNivelEducativo = (nivel: 'Preescolar' | 'Primaria' | 'Secundaria') => {
     setSelectedLevels(prev =>
@@ -129,19 +134,25 @@ export const useEditAssignments = (userId: string, userRole: string) => {
   const handleCheckboxChange = (type: 'areas' | 'salones') =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, checked } = e.target;
-      setForm(prev => ({
-        ...prev,
-        [type]: { ...prev[type], [name]: checked }
-      }));
+      console.log(`🔲 Checkbox change - Type: ${type}, ID: ${name}, Checked: ${checked}`);
+      setForm(prev => {
+        const newForm = {
+          ...prev,
+          [type]: { ...prev[type], [name]: checked }
+        };
+        console.log('📝 New form state:', newForm);
+        return newForm;
+      });
     };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Limpiar errores previos
 
     // Validar que haya al menos un nivel seleccionado
     if (selectedLevels.length === 0) {
-      alert('Debe seleccionar al menos un nivel educativo');
-      return;
+      setError('Debe seleccionar al menos un nivel educativo');
+      return false;
     }
 
     // Validar que haya al menos una asignación
@@ -149,20 +160,24 @@ export const useEditAssignments = (userId: string, userRole: string) => {
     const hasSalones = Object.values(form.salones).some(v => v);
 
     if (!hasAreas && !hasSalones) {
-      alert('Debe seleccionar al menos un área o salón');
-      return;
+      setError('Debe seleccionar al menos un área o salón');
+      return false;
     }
 
     setLoading(true);
     try {
-      // Filtrar solo las asignaciones seleccionadas, excluyendo claves vacías
+      // Enviar TODAS las asignaciones (incluyendo false) para sobrescribir correctamente en Firebase
+      // Esto asegura que los items desmarcados se guarden como false
       const areasToSend = Object.fromEntries(
-        Object.entries(form.areas).filter(([key, value]) => key && key.trim() && value)
+        Object.entries(form.areas).filter(([key]) => key && key.trim())
       );
 
       const salonesToSend = Object.fromEntries(
-        Object.entries(form.salones).filter(([key, value]) => key && key.trim() && value)
+        Object.entries(form.salones).filter(([key]) => key && key.trim())
       );
+
+      console.log('💾 Saving to Firebase - Areas:', areasToSend);
+      console.log('💾 Saving to Firebase - Salones:', salonesToSend);
 
       await updateUserAssignments(userId, {
         areas: areasToSend,
@@ -173,7 +188,7 @@ export const useEditAssignments = (userId: string, userRole: string) => {
       return true; // Éxito
     } catch (error) {
       console.error("Error updating assignments:", error);
-      alert('Error al actualizar asignaciones: ' + error);
+      setError('Error al actualizar asignaciones. Por favor intente de nuevo.');
       return false;
     } finally {
       setLoading(false);
@@ -184,6 +199,7 @@ export const useEditAssignments = (userId: string, userRole: string) => {
     form,
     loading,
     initializing,
+    error,
     areas: filteredAreas,
     classRooms: filteredClassRooms,
     selectedLevels,

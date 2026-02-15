@@ -73,25 +73,25 @@ export const HourActivitiesModal: React.FC<HourActivitiesModalProps> = ({
         className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-lg shadow-2xl border border-gray-200 w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col animate-scaleIn"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-orchid-blue-50 flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-orchid-blue-60 flex-shrink-0">
           <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-8 h-8 bg-orchid-blue-500 rounded-lg">
+            <div className="flex items-center justify-center w-8 h-8 bg-white/20 rounded-lg">
               <IconClock size={16} className="text-white" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-gray-900">
+              <h3 className="text-sm font-bold text-white">
                 Clases a las {hour}
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-white/80">
                 {activeActivities.length} {activeActivities.length === 1 ? 'clase activa' : 'clases activas'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 hover:bg-white rounded-lg transition-colors"
+            className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
           >
-            <IconX size={18} className="text-gray-400" />
+            <IconX size={18} className="text-white" />
           </button>
         </div>
 
@@ -125,7 +125,7 @@ export const HourActivitiesModal: React.FC<HourActivitiesModalProps> = ({
                           <div className="grid grid-cols-3 gap-3 text-xs">
                             {/* Asignatura */}
                             <div className="flex items-center gap-2">
-                              <IconBook size={14} className="text-orchid-blue-500 flex-shrink-0" />
+                              <IconBook size={14} className="text-orchid-blue-60 flex-shrink-0" />
                               <div className="min-w-0">
                                 <p className="font-semibold text-gray-900 truncate">
                                   {activity.courseName}
@@ -165,7 +165,7 @@ export const HourActivitiesModal: React.FC<HourActivitiesModalProps> = ({
           </p>
           <button
             onClick={onClose}
-            className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded hover:bg-gray-50 transition-colors"
+            className="px-3 py-1.5 text-xs font-medium text-white bg-orchid-blue-60 rounded hover:bg-orchid-blue-70 transition-colors"
           >
             Cerrar
           </button>

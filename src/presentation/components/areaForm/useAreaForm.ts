@@ -70,45 +70,49 @@ export const useAreaForm = ({ initialData, onSubmit, existingAreas = [] }: UseAr
       }));
     }, [form]);
 
-    const handleSubmit = useCallback(async (e: FormEvent) => {
-      e.preventDefault();
-      setIsSubmitting(true);
-      
-      try {
-        const errors = validationsForm(form);
-        if (Object.keys(errors).length > 0) {
-          setError(errors);
-          return false;
-        }
-    
-        const areaData = parseAreaData(form);
-        
-        if (form.id) {
-          // Modo edición
-          if (onSubmit) {
-            return await onSubmit(areaData);
-          }
-          await updateArea(form.id, areaData);
-          alert('Área actualizada exitosamente!');
+  // Validar el formulario (sin enviar)
+  const handleSubmit = useCallback((e: FormEvent): boolean => {
+    e.preventDefault();
+    const errors = validationsForm(form);
+    if (Object.keys(errors).length > 0) {
+      setError(errors);
+      return false;
+    }
+    return true;
+  }, [form]);
+
+  // Enviar el formulario (después de confirmación)
+  const submitForm = useCallback(async () => {
+    setIsSubmitting(true);
+
+    try {
+      const areaData = parseAreaData(form);
+
+      if (form.id) {
+        // Modo edición
+        if (onSubmit) {
+          await onSubmit(areaData);
         } else {
-          // Modo creación
-          if (onSubmit) {
-            return await onSubmit(areaData);
-          }
-          await addArea(areaData);
-          alert('Área creada exitosamente!');
-          setForm(initialFormState); // Resetear solo en creación
+          await updateArea(form.id, areaData);
         }
-        
-        return true;
-      } catch (error) {
-        console.error('Error:', error);
-        alert(`Error al ${form.id ? 'actualizar' : 'crear'} el área`);
-        return false;
-      } finally {
-        setIsSubmitting(false);
+      } else {
+        // Modo creación
+        if (onSubmit) {
+          await onSubmit(areaData);
+        } else {
+          await addArea(areaData);
+        }
+        setForm(initialFormState); // Resetear solo en creación
       }
-    }, [form, parseAreaData, onSubmit]);
+
+      return true;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [form, parseAreaData, onSubmit]);
 
   // Función para cargar datos en modo edición
   const loadAreaForEdit = useCallback((area: AreaServiceData) => {
@@ -122,13 +126,14 @@ export const useAreaForm = ({ initialData, onSubmit, existingAreas = [] }: UseAr
     });
   }, []);
 
-  return { 
-    form, 
-    error, 
-    handleChange, 
-    handleBlur, 
-    handleSubmit, 
-    isSubmitting, 
-    loadAreaForEdit 
+  return {
+    form,
+    error,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    submitForm,
+    isSubmitting,
+    loadAreaForEdit
   };
 };
