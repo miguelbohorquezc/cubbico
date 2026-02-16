@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './Navbar.css';
 import { useSelector } from 'react-redux';
 import { useUserForm } from '../userForm/useUserForm';
+import { NotificationBell } from '../notificationBell/NotificationBell';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -21,17 +22,22 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-content">
+      <div className="navbar-content flex items-center justify-between gap-4">
         {/* Breadcrumb */}
         <div className="breadcrumb">
-          
+
           <span className="breadcrumb-item">Colina Campestre School</span>
           <span className="breadcrumb-separator"></span>
           <span className="breadcrumb-item active">{}</span>
         </div>
 
-        {/* Menú de usuario */}
-        <div className="user-menu-container">
+        {/* Sección derecha: Notificaciones + Usuario */}
+        <div className="flex items-center gap-2">
+          {/* Notificaciones */}
+          <NotificationBell />
+
+          {/* Menú de usuario */}
+          <div className="user-menu-container">
           <button className="user-menu-toggle" onClick={toggleDropdown}>
             <span className="user-avatar-color">{}</span>
             <span className="user-name">{userEmail}</span>
@@ -54,6 +60,7 @@ const Navbar = () => {
               </button>
             </div>
           )}
+          </div>
         </div>
       </div>
     </nav>

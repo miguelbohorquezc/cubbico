@@ -20,9 +20,10 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { IconBell, IconCalendar } from '@tabler/icons-react';
+import { IconCalendar } from '@tabler/icons-react';
 import { SearchBar } from './SearchBar';
 import { UserProfile } from './UserProfile';
+import { NotificationBell } from '../notificationBell/NotificationBell';
 import { formatHeaderDate } from '../../../shared/types/headerTypes';
 import type { HeaderV2Props } from '../../../shared/types/layoutTypes';
 
@@ -56,59 +57,6 @@ const DateDisplay: React.FC<DateDisplayProps> = ({
       <IconCalendar size={16} stroke={1.5} className="text-gray-400" />
       <span className="text-sm">{formattedDate}</span>
     </div>
-  );
-};
-
-/**
- * Botón de notificaciones
- */
-interface NotificationButtonProps {
-  count?: number;
-  onClick?: () => void;
-}
-
-const NotificationButton: React.FC<NotificationButtonProps> = ({
-  count = 0,
-  onClick,
-}) => {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="
-        relative
-        p-2
-        rounded-lg
-        text-gray-500
-        hover:text-gray-700
-        hover:bg-gray-100
-        transition-all duration-200
-        focus:outline-none
-        focus:ring-2 focus:ring-orchid-blue-20
-      "
-      aria-label={`Notificaciones${count > 0 ? ` (${count} nuevas)` : ''}`}
-    >
-      <IconBell size={22} stroke={1.5} />
-
-      {/* Badge de notificaciones */}
-      {count > 0 && (
-        <span
-          className="
-            absolute -top-0.5 -right-0.5
-            min-w-[18px] h-[18px]
-            flex items-center justify-center
-            px-1
-            text-[10px] font-bold
-            text-white
-            bg-red-500
-            rounded-full
-            border-2 border-white
-          "
-        >
-          {count > 99 ? '99+' : count}
-        </span>
-      )}
-    </button>
   );
 };
 
@@ -190,14 +138,6 @@ export const HeaderV2: React.FC<HeaderV2Props> = ({
     navigate('/private/dashboard/user');
   };
 
-  /**
-   * Handler de notificaciones
-   */
-  const handleNotifications = () => {
-    // TODO: Implementar panel de notificaciones
-    console.log('Abrir notificaciones');
-  };
-
   return (
     <header
       className={`
@@ -273,7 +213,7 @@ export const HeaderV2: React.FC<HeaderV2Props> = ({
           )}
 
           {/* Notificaciones */}
-          <NotificationButton count={3} onClick={handleNotifications} />
+          <NotificationBell />
 
           {/* Separador */}
           <div className="hidden lg:block w-px h-8 bg-gray-200" />
