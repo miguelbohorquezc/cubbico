@@ -112,7 +112,7 @@ export default function AttendanceReport() {
           ),
         ]);
         if (cancelled) return;
-        setStudents(studs);
+        setStudents(studs.filter(s => s.status === 'activo'));
         setRecords(recs);
       } catch {
         if (!cancelled) setError('Error al cargar datos del informe.');
@@ -327,7 +327,7 @@ export default function AttendanceReport() {
                     <th className="text-left pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide">Estudiante</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">P</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">J</th>
-                    <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">U</th>
+                    <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-14">I</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-16">Total</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-16">Asist.</th>
                     <th className="text-center pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wide w-12">⚠</th>
@@ -387,7 +387,7 @@ export default function AttendanceReport() {
             {/* ── Footer ── */}
             <div className="px-8 py-3 bg-gray-50 print:bg-white border-t border-gray-100 text-center">
               <p className="text-[9px] text-gray-400">
-                Informe generado el {generatedAt} · Hora {horaDecoded} · {monthLabelCap} · Sistema Cubbico
+                Informe generado el {generatedAt} · Hora {horaDecoded} · {monthLabelCap} · SIA Colina Campestre
               </p>
             </div>
           </div>

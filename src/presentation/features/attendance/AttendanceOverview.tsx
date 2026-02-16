@@ -21,6 +21,7 @@ import {
   IconFileAnalytics,
   IconChevronRight,
   IconBook,
+  IconDoor,
 } from '@tabler/icons-react';
 
 // ============================================
@@ -143,6 +144,12 @@ export default function AttendanceOverview() {
     );
   }
 
+  function goToConsolidatedReport(salonId: string) {
+    navigate(
+      `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/consolidado/${salonId}`
+    );
+  }
+
   const totalClasses = salonGroups.reduce((sum, g) => sum + g.classes.length, 0);
 
   // ══════════════════════════════════════════════
@@ -165,36 +172,49 @@ export default function AttendanceOverview() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Sidebar */}
       <SidebarV2 />
 
+      {/* Contenido principal */}
       <div className="flex-1 flex flex-col min-w-0">
-        <HeaderV2 title="Informes de Asistencia" isSidebarCollapsed={isSidebarCollapsed} />
+        {/* Header */}
+        <HeaderV2
+          title="Informes de Asistencia"
+          isSidebarCollapsed={isSidebarCollapsed}
+        />
+
+        {/* Spacer para el header fixed */}
         <div className="h-16 flex-shrink-0" />
 
-        <main className="flex-1 overflow-auto min-h-0 p-4 lg:p-5">
-          {/* ── Top bar ── */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-orchid-blue-50 rounded-lg shadow-lg shadow-orchid-blue-20">
+        {/* Body */}
+        <main className="flex-1 p-4 lg:p-6 overflow-auto min-h-0">
+          {/* Page Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 bg-orchid-blue-60 rounded-lg">
                 <IconFileAnalytics size={20} className="text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-gray-900">Informes de Asistencia</h1>
-                <p className="text-xs text-gray-500">Selecciona una clase para ver su informe mensual · {currentYear}</p>
+                <h1 className="text-xl font-bold text-gray-900">
+                  Informes de Asistencia
+                </h1>
+                <p className="text-xs text-gray-500">
+                  Selecciona una clase para ver su informe mensual o el reporte consolidado del salón · {currentYear}
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <select
                 value={filterProf}
                 onChange={(e) => setFilterProf(e.target.value)}
-                className="h-8 px-2.5 text-xs font-medium bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-indigo-300"
+                className="px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-orchid-blue-30 focus:border-orchid-blue-60 transition-all"
               >
                 <option value="all">Todos los profesores</option>
                 {professors.map((p) => (
                   <option key={p.id} value={p.id}>{p.nombre}</option>
                 ))}
               </select>
-              <span className="text-[11px] font-semibold text-gray-400">
+              <span className="text-xs text-gray-500">
                 {salonGroups.length} salón{salonGroups.length !== 1 ? 'es' : ''} · {totalClasses} clase{totalClasses !== 1 ? 's' : ''}
               </span>
             </div>
@@ -209,62 +229,73 @@ export default function AttendanceOverview() {
 
           {/* ── Sin datos ── */}
           {salonGroups.length === 0 && !error && (
-            <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-10 text-center">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                <IconFileAnalytics size={22} className="text-gray-400" />
+            <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-12 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-50 flex items-center justify-center">
+                <IconFileAnalytics size={28} className="text-gray-400" />
               </div>
               {filterProf === 'all' ? (
                 <>
-                  <p className="text-sm font-semibold text-gray-500">No hay clases en el horario</p>
-                  <p className="text-xs text-gray-400 mt-1">Revisa que el horario esté configurado en el Editor de Horarios.</p>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1">No hay clases en el horario</h3>
+                  <p className="text-sm text-gray-500">Revisa que el horario esté configurado en el Editor de Horarios.</p>
                 </>
               ) : (
                 <>
-                  <p className="text-sm font-semibold text-gray-500">No hay clases para este profesor</p>
-                  <p className="text-xs text-gray-400 mt-1">Selecciona otro profesor o "Todos los profesores".</p>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1">No hay clases para este profesor</h3>
+                  <p className="text-sm text-gray-500">Selecciona otro profesor o "Todos los profesores".</p>
                 </>
               )}
             </div>
           )}
 
           {/* ── Lista de salones ── */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {salonGroups.map((group) => (
-              <div key={group.room.id} className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+              <div key={group.room.id} className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                 {/* Cabecera del salón */}
-                <div className="flex items-center gap-3 px-4 py-2.5 bg-gray-50 border-b border-gray-100">
-                  <span className="text-[18px]">🏫</span>
-                  <div>
-                    <h3 className="text-[13px] font-bold text-gray-800">{group.room.nombreSalon}</h3>
-                    <p className="text-[10px] text-gray-400">{group.classes.length} clase{group.classes.length !== 1 ? 's' : ''}</p>
+                <div className="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-orchid-blue-60 flex items-center justify-center">
+                      <IconDoor size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-900">{group.room.nombreSalon}</h3>
+                      <p className="text-xs text-gray-500">{group.classes.length} clase{group.classes.length !== 1 ? 's' : ''} programadas</p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => goToConsolidatedReport(group.room.id)}
+                    className="px-4 py-2 text-xs font-semibold text-white bg-orchid-blue-60 hover:bg-orchid-blue-70 rounded-lg transition-all shadow-sm hover:shadow flex items-center gap-2"
+                  >
+                    <IconFileAnalytics size={16} />
+                    <span>Reporte Consolidado</span>
+                  </button>
                 </div>
 
                 {/* Clases del salón */}
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-gray-100">
                   {group.classes
                     .sort((a, b) => a.hora.localeCompare(b.hora) || a.areaNombre.localeCompare(b.areaNombre))
                     .map((cls) => (
                     <button
                       key={cls.key}
                       onClick={() => goToReport(group.room.id, cls.profesorId, cls.areaId, cls.hora)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-orchid-blue-50 transition-colors group"
+                      className="w-full flex items-center justify-between px-5 py-3 hover:bg-orchid-blue-10 transition-all group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-orchid-blue-50 border border-indigo-100">
-                          <IconBook size={13} className="text-orchid-blue-500" />
+                        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-orchid-blue-10 border border-orchid-blue-20">
+                          <IconBook size={16} className="text-orchid-blue-60" />
                         </div>
                         <div className="text-left">
                           <div className="flex items-center gap-2">
-                            <span className="text-[12px] font-semibold text-gray-800">{cls.areaNombre}</span>
-                            <span className="text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">Hora {cls.hora}</span>
+                            <span className="text-sm font-semibold text-gray-900">{cls.areaNombre}</span>
+                            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Hora {cls.hora}</span>
                           </div>
-                          <p className="text-[10px] text-gray-400 mt-0.5">{cls.profesorNombre}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{cls.profesorNombre}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-[10px] font-semibold text-orchid-blue-500">Ver informe</span>
-                        <IconChevronRight size={13} className="text-orchid-blue-500" />
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-xs font-medium text-orchid-blue-60">Ver informe</span>
+                        <IconChevronRight size={16} className="text-orchid-blue-60" />
                       </div>
                     </button>
                   ))}

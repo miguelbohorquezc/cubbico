@@ -135,7 +135,7 @@ export const navItems: NavItem[] = [
         id: 'horario-asistencias',
         label: 'Informes de Asistencia',
         path: buildPath(`${PrivateRoutes.ASISTENCIA}/overview`),
-        description: 'Ver informes por salón',
+        description: 'Ver informes y reportes consolidados por salón',
       },
     ],
   },

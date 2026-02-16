@@ -25,6 +25,7 @@ import ScheduleEditor from "../../../features/schedule/ScheduleEditor"
 import TimeBlockManager from "../../../features/schedule/TimeBlockManager"
 import AttendanceList from "../../../features/attendance/AttendanceList"
 import AttendanceReport from "../../../features/attendance/AttendanceReport"
+import AttendanceConsolidatedReport from "../../../features/attendance/AttendanceConsolidatedReport"
 import AttendanceOverview from "../../../features/attendance/AttendanceOverview"
 import UnifiedReport from "../../../features/reports/UnifiedReport"
 import AcademicReportView from "../../../features/reports/AcademicReportView"
@@ -86,6 +87,7 @@ function Dashboard() {
         {/* Asistencias */}
         <Route path={`${PrivateRoutes.ASISTENCIA}/:salonId/:profesorId/:areaId/:fecha/:hora`} element={<AttendanceList />} />
         <Route path={`${PrivateRoutes.ASISTENCIA}/report/:salonId/:profesorId/:areaId/:hora`} element={<AttendanceReport />} />
+        <Route path={`${PrivateRoutes.ASISTENCIA}/consolidado/:salonId/:mes?`} element={<AttendanceConsolidatedReport />} />
 
         {/* Notas */}
         <Route path={`${PrivateRoutes.NOTES}/:periodId/:classroomId/:areaId`} element={<Notes/>}/>
