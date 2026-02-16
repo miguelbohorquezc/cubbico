@@ -18,6 +18,7 @@ import {
   EvaluationIcon,
   AspirantIcon,
   EnrollmentIcon,
+  TechAssetsIcon,
   SettingsIcon,
   LogoutIcon,
 } from '../../icons/SidebarIcons';
@@ -186,6 +187,14 @@ export const navItems: NavItem[] = [
     path: buildPath(PrivateRoutes.USER),
     icon: UsersIcon,
     description: 'Gestión de usuarios del sistema',
+    allowedRoles: ['Coordinador'],
+  },
+  {
+    id: 'tech-assets',
+    label: 'Activos Tecnológicos',
+    path: buildPath(PrivateRoutes.TECHASSETS),
+    icon: TechAssetsIcon,
+    description: 'Gestión de activos tecnológicos y asignaciones',
     allowedRoles: ['Coordinador'],
   },
 ];

@@ -29,6 +29,7 @@ import AttendanceOverview from "../../../features/attendance/AttendanceOverview"
 import UnifiedReport from "../../../features/reports/UnifiedReport"
 import AcademicReportView from "../../../features/reports/AcademicReportView"
 import ClassroomBulkReportView from "../../../features/reports/ClassroomBulkReportView"
+import TechAssetsPage from "./components/TechAssetsPage"
 
 /**
  * Dashboard - Rutas del panel principal
@@ -57,6 +58,8 @@ function Dashboard() {
         <Route path={PrivateRoutes.CREATESTUDENT} element={<StudentsPage/>}/>
         <Route path={PrivateRoutes.ASPIRANTS} element={<AspirantesAdminPage />} />
         <Route path={PrivateRoutes.PROMOTIONS} element={<PromotionManager />} />
+        {/* Gestión de activos tecnológicos */}
+        <Route path={PrivateRoutes.TECHASSETS} element={<TechAssetsPage />} />
         {/* Horario docente */}
         <Route path={PrivateRoutes.HORARIO} element={<ScheduleEditor />} />
         {/* Configuración de bloques horarios */}

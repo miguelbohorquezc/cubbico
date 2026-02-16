@@ -383,7 +383,7 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
       </div>
 
       {/* Columna lateral - Panel de gestión */}
-      <div className="w-[400px] flex-shrink-0">
+      <div className="w-[600px] flex-shrink-0">
         <Card elevation="md" className="sticky top-6">
           <Card.Header icon={<ClipboardIcon />}>
             Gestión de Indicadores
@@ -409,8 +409,8 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
                 </button>
               </div>
             ) : (
-              <div className="p-6 space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-light-gray-200">
+              <div className="p-8 space-y-6">
+                <div className="flex items-center justify-between pb-4 border-b border-light-gray-200">
                   <div className="flex items-center gap-2">
                     {indicadorEditando ? (
                       <PencilIcon className="w-4 h-4 text-deep-blue-600" />
@@ -561,7 +561,7 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
                   <button
                     type="button"
                     onClick={guardarIndicador}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-orchid-blue-60 rounded-lg hover:bg-orchid-blue-70 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
                   >
                     <CheckCircleIcon className="w-4 h-4" />
                     {indicadorEditando ? 'Actualizar' : 'Guardar'}

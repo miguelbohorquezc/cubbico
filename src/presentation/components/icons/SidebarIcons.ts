@@ -41,6 +41,9 @@ export { IconUserPlus as AspirantIcon } from '@tabler/icons-react';
 /** Icono de Matrícula */
 export { IconId as EnrollmentIcon } from '@tabler/icons-react';
 
+/** Icono de Activos Tecnológicos */
+export { IconDeviceLaptop as TechAssetsIcon } from '@tabler/icons-react';
+
 // ============================================
 // Iconos de Acciones
 // ============================================

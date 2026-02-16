@@ -28,5 +28,6 @@ export const PrivateRoutes = {
     PROMOTIONS:                 'promotions',
     HORARIO:                    'horario',
     ASISTENCIA:                 'asistencia',
-    TIMEBLOCKS:                 'time-blocks'
+    TIMEBLOCKS:                 'time-blocks',
+    TECHASSETS:                 'tech-assets'
 }
