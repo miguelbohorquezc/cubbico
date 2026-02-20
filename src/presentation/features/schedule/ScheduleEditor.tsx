@@ -8,7 +8,6 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '../../components/sidebarV2';
 import { HeaderV2 } from '../../components/headerV2';
 import { FlexibleSchedulePanel } from './components/FlexibleSchedulePanel';
@@ -18,14 +17,13 @@ import { fetchDocentes } from '../../../infrastructure/user.service';
 import { fetchClassrooms } from '../../../infrastructure/classRoom.service';
 import { getAreas } from '../../../infrastructure/user.service';
 import type { FlexibleScheduleActivity } from '../../../domain/entities/schedule';
-import { TIME_SLOTS, DAYS_OF_WEEK, minutesToTime, timeToMinutes, detectActivityOverlap } from '../../../domain/entities/schedule';
+import { TIME_SLOTS, minutesToTime, detectActivityOverlap } from '../../../domain/entities/schedule';
 import { fetchTimeBlockConfig } from '../../../infrastructure/timeBlock.service';
 import type { TimeBlockConfiguration } from '../../../domain/entities/timeBlock';
-import { blockToHoraString, getBlockEndTime } from '../../../domain/entities/timeBlock';
+import { blockToHoraString } from '../../../domain/entities/timeBlock';
 import type { DocenteOption } from '../../../shared/types/classRoomTypes';
 import type { ClassRoom } from '../../../domain/entities/classRoom';
 import type { Area } from '../../../domain/entities/area';
-import { PrivateRoutes } from '../../../app/routes/routes';
 import { useAppDispatch, useAppSelector } from '../../../app/store/store';
 import {
   selectAllActivities,
@@ -36,45 +34,13 @@ import {
 } from '../../../app/store/states/flexibleSchedule.slice';
 import {
   IconCalendar,
-  IconDeviceFloppy,
   IconCheck,
   IconAlertCircle,
-  IconUsers,
-  IconBook,
-  IconX,
   IconLoader,
   IconPrinter,
-  IconFileAnalytics,
-  IconClock,
 } from '@tabler/icons-react';
 
 // ============================================
-// Colores deterministicos por asignatura
-// ============================================
-
-const BADGE_COLORS = [
-  'bg-magenta-ds/10 text-magenta-cc border border-magenta-ds/30',
-  'bg-peach-ds/10 text-peach-cc border border-peach-ds/30',
-  'bg-yellow-ds/10 text-yellow-cc border border-yellow-ds/30',
-  'bg-tosca-ds/10 text-tosca-cc border border-tosca-ds/30',
-  'bg-orchid-blue-10 text-orchid-blue-70 border border-orchid-blue-30',
-  'bg-magenta-ds/20 text-magenta-cc border border-magenta-ds/40',
-  'bg-peach-ds/20 text-peach-cc border border-peach-ds/40',
-  'bg-yellow-ds/20 text-yellow-cc border border-yellow-ds/40',
-  'bg-tosca-ds/20 text-tosca-cc border border-tosca-ds/40',
-  'bg-orchid-blue-20 text-orchid-blue-70 border border-orchid-blue-30',
-];
-
-function hashString(s: string): number {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-  return Math.abs(h);
-}
-
-function getBadgeColor(name: string): string {
-  return BADGE_COLORS[hashString(name) % BADGE_COLORS.length];
-}
-
 // ============================================
 // Hook: sincronizar estado del sidebar
 // ============================================
@@ -104,7 +70,6 @@ function useSidebarCollapsed(): boolean {
 
 export default function ScheduleEditor() {
   const isSidebarCollapsed = useSidebarCollapsed();
-  const navigate = useNavigate();
   const currentYear = String(new Date().getFullYear());
 
   // ── Redux ──────────────────────────────────────
@@ -123,8 +88,8 @@ export default function ScheduleEditor() {
   const [isLoading, setIsLoading]             = useState(true);
   const [saveStatus, setSaveStatus]           = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [conflict, setConflict]               = useState<string | null>(null);
-  const [timeBlockConfig, setTimeBlockConfig] = useState<TimeBlockConfiguration | null>(null);
-  const [useCustomBlocks, setUseCustomBlocks] = useState(false);
+  const [_timeBlockConfig, setTimeBlockConfig] = useState<TimeBlockConfiguration | null>(null);
+  const [_useCustomBlocks, setUseCustomBlocks] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<FlexibleScheduleActivity | null>(null);
   const [clickPosition, setClickPosition] = useState<{ x: number; y: number } | undefined>(undefined);
 
@@ -403,7 +368,7 @@ export default function ScheduleEditor() {
           <div className="flex gap-4 flex-1 min-h-0">
             {/* Panel lateral (R2: Extraído a componente) */}
             <FlexibleSchedulePanel
-              professors={professors}
+              professors={professors as any}
               classrooms={classrooms}
               areas={areas}
               selectedProfId={selectedProfId}

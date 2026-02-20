@@ -25,7 +25,7 @@ import {
   ValidationResult,
   AuthOptions,
 } from '../../../../domain/entities/auth.types';
-import { FirebaseUser } from '../../../../domain/entities/FirebaseUser';
+import { FirebaseUser } from '../../../../domain/entities/firebaseUser';
 
 // ========================================
 // VALIDACIÓN (FUNCIÓN PURA)
@@ -319,7 +319,7 @@ export const useAuth = (
         // Extraer datos del usuario
         const userData: FirebaseUser = {
           uid: userCredential.user.uid,
-          email: userCredential.user.email,
+          email: userCredential.user.email ?? undefined,
           displayName: userCredential.user.displayName,
           emailVerified: userCredential.user.emailVerified,
           photoURL: userCredential.user.photoURL,

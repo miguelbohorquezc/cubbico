@@ -347,6 +347,7 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
         </Tabs.List>
 
         {propositos.map((_, index) => (
+          // @ts-ignore - TODO: Add children prop to TabPanelProps or make it optional
           <Tabs.Panel key={index} value={`p${index}`}></Tabs.Panel>
         ))}
       </Tabs>

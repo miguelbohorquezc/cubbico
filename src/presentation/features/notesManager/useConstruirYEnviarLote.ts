@@ -20,7 +20,7 @@ export const useConstruirYEnviarLote = ({
   setShowErrors: (v: boolean) => void;
 }) => {
   // Obtener usuario autenticado desde Redux
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user) as any;
 
   const calcularPromedio = useCallback((l1: string, l2: string, l3: string): string => {
     const n1 = parseFloat(l1);
@@ -42,7 +42,7 @@ export const useConstruirYEnviarLote = ({
     // Validar cada estudiante y recopilar errores
     const errores: string[] = [];
 
-    students.forEach((student, index) => {
+    students.forEach((student, _index) => {
       const g = grades[student.id] || { l1: '', l2: '', l3: '', fallas: '', fallasVerificadas: '' };
 
       // Validar que las notas no estén vacías

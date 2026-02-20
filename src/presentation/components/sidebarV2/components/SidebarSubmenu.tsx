@@ -38,7 +38,7 @@ export interface SubmenuItemProps {
  * Item individual del submenú
  */
 const SubmenuItem: React.FC<SubmenuItemProps> = ({ item, isActive, onClick }) => {
-  const { label, path, description, badge } = item;
+  const { label, path, description: _description, badge } = item;
 
   // Clases base
   const baseClasses = `

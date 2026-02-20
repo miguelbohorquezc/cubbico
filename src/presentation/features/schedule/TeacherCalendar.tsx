@@ -23,7 +23,7 @@ import { PrivateRoutes } from '../../../app/routes/routes';
 import { IconCalendar, IconX, IconClipboardCheck } from '@tabler/icons-react';
 
 export default function TeacherCalendar() {
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user) as any;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const year = String(new Date().getFullYear());

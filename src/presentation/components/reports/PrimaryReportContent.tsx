@@ -65,7 +65,7 @@ const StudentInfoTable: React.FC<{
         </td>
         <td className="px-4 py-2 text-[11pt] font-bold text-gray-900 border border-gray-100">
           {studentInfo ?
-            studentInfo.className.toUpperCase() :
+            (studentInfo.historicClassName || studentInfo.className).toUpperCase() :
             'Cargando...'}
         </td>
         <td className="px-4 py-2 text-[11pt] font-bold text-gray-900 border border-gray-100">{periodId}</td>

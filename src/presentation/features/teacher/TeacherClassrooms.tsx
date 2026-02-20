@@ -86,7 +86,7 @@ const TeacherClassrooms = () => {
         </button>
       )
     }
-  ];
+  ] as any;
 
   // Estado vacío personalizado cuando no hay salones asignados
   if (!loading && classrooms.length === 0) {

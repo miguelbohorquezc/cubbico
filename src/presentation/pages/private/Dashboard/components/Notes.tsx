@@ -9,7 +9,7 @@ import TeacherAchievements from '../../../../features/teacher/TeacherAchivement'
 import { PrivateRoutes } from '../../../../../app/routes/routes';
 import { useAppSelector } from '../../../../../app/store/store';
 import { usePermissions } from '../../../../hooks/usePermissions';
-import { IconArrowLeft, IconPlus, IconFileDescription, IconClipboardList, IconChevronRight, IconPrinter, IconFiles } from '@tabler/icons-react';
+import { IconArrowLeft, IconPlus, IconFileDescription, IconClipboardList, IconChevronRight } from '@tabler/icons-react';
 
 // Key del localStorage usada por useSidebarV2
 const SIDEBAR_STORAGE_KEY = 'cubbico-sidebar-collapsed';
@@ -47,7 +47,7 @@ function Notes() {
 
   const { classroomId, periodId, areaId } = useParams();
   const navigate = useNavigate();
-  const { permissions } = usePermissions();
+  const { permissions: _permissions } = usePermissions();
   const anioActual = new Date().getFullYear().toString();
 
   const classroom = useAppSelector(state =>

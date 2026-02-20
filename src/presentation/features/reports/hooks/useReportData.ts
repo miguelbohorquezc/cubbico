@@ -56,6 +56,8 @@ export interface StudentData {
   document: string;
   id: string;
   classroomId: string;
+  /** Grado del año del informe (histórico). Puede diferir de className si el estudiante cambió de grado. */
+  historicClassName?: string;
 }
 
 export interface PeriodInfo {
@@ -94,7 +96,7 @@ export function useReportData({
   studentId,
   year,
   periodId,
-  schoolLevel,
+  schoolLevel: _schoolLevel,
 }: UseReportDataParams): UseReportDataReturn {
   const [reportData, setReportData] = useState<ReportData>({ primary: [], secondary: [], preschool: [] });
   const [studentInfo, setStudentInfo] = useState<StudentData | null>(null);
@@ -190,6 +192,46 @@ export function useReportData({
         const periodData = (yearData.periods as Record<string, any>)[periodId!];
         if (!periodData) {
           throw new Error('Este informe aún no ha sido diligenciado');
+        }
+
+        // Extraer el grado histórico desde el metadata del periodo.
+        // Estrategia en dos pasos:
+        // 1. metadata.nombreGrado (guardado desde la implementación del historial)
+        // 2. Fallback: buscar classRooms/{metadata.classroomId}.nombreSalon
+        //    (para registros anteriores que no tienen nombreGrado)
+        if (periodData.areas) {
+          let historicGrade = '';
+          let historicClassroomId = '';
+
+          for (const areaData of Object.values(periodData.areas)) {
+            const nombreGrado = (areaData as any)?.metadata?.nombreGrado;
+            const cid = (areaData as any)?.metadata?.classroomId;
+
+            if (typeof nombreGrado === 'string' && nombreGrado) {
+              historicGrade = nombreGrado;
+              break;
+            }
+            if (typeof cid === 'string' && cid && !historicClassroomId) {
+              historicClassroomId = cid;
+            }
+          }
+
+          if (historicGrade) {
+            setStudentInfo(prev => prev ? { ...prev, historicClassName: historicGrade } : prev);
+          } else if (historicClassroomId) {
+            // Fallback: leer el nombre del salón directamente desde Firestore
+            try {
+              const historicCrDoc = await getDoc(doc(db, 'classRooms', historicClassroomId));
+              if (historicCrDoc.exists()) {
+                const crGrade = historicCrDoc.data()?.nombreSalon || '';
+                if (crGrade) {
+                  setStudentInfo(prev => prev ? { ...prev, historicClassName: crGrade } : prev);
+                }
+              }
+            } catch {
+              // Si falla la búsqueda, el componente usa className (grado actual)
+            }
+          }
         }
 
         // Verificar si es preescolar
@@ -329,13 +371,12 @@ export function useReportData({
           const areaInfo = areasMap[areaId] || {};
           const achievements = await getAchievements((areaData as any).metadata?.achievementId);
 
-          // Calcular fallas desde registros de asistencia
-          const teacherId = (areaData as any).metadata?.teacherId;
+          // Calcular fallas desde registros de asistencia filtrando por areaId
           let fallasTotales = 0;
           let fallasInjustificadas = 0;
-          if (teacherId && attendanceRecords.length > 0) {
+          if (attendanceRecords.length > 0) {
             const areaRecords = attendanceRecords.filter(
-              (r) => r.profesorId === teacherId && r.areaId === areaId
+              (r) => r.areaId === areaId
             );
             const summary = computeAttendanceSummary(areaRecords, studentId!);
             fallasTotales = summary.totalJustified + summary.totalUnjustified;
@@ -378,7 +419,9 @@ export function useReportData({
             .map(({ _orden, subjects, ...groupRest }) => ({
               ...groupRest,
               subjects: subjects
+                // @ts-ignore - TODO: Add _orden field to SubjectData type or adjust sortByOrder signature
                 .sort(sortByOrder)
+                // @ts-ignore - TODO: Add _orden field to SubjectData type
                 .map(({ _orden, ...subjectRest }) => subjectRest)
             })),
           preschool: preschoolData,

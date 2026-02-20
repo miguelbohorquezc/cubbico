@@ -1,17 +1,10 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import DataTable from "../../components/datatable/DataTable";
 import { useNavigate } from "react-router-dom";
 import { Student } from "../../../presentation/components/notes/types";
 import { fetchStudents, deleteStudent } from "../../../infrastructure/student.service";
 import Modal from "../../components/modal/Modal";
 import StudentFormV2 from "../../components/studentForm/StudentFormV2";
-import { EvaluationMode } from "../../../shared/types/studentManagementTypes";
-
-/**
- * Evaluation mode filter options
- */
-type EvaluationFilter = 'all' | EvaluationMode;
-
 const StudentList = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);

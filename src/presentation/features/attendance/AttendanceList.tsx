@@ -127,7 +127,7 @@ function statusLabel(status: AttendanceStatus | null): string {
 // ============================================
 
 export default function AttendanceList() {
-  const params = useParams<RouteParams>() as RouteParams;
+  const params = useParams() as unknown as RouteParams;
   const { salonId, profesorId, areaId, fecha, hora } = params;
   const horaDecoded = decodeURIComponent(hora);
   const navigate = useNavigate();

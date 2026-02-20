@@ -85,8 +85,8 @@ function getNivelFromClassroom(classroomName: string): string {
 
 export const CalendarActivity: React.FC<CalendarActivityProps> = ({
   activity,
-  onEdit,
-  onDelete,
+  onEdit: _onEdit,
+  onDelete: _onDelete,
   onClick,
   isDragging = false,
   isResizing = false,
@@ -124,20 +124,6 @@ export const CalendarActivity: React.FC<CalendarActivityProps> = ({
     e.stopPropagation();
     if (onClick) {
       onClick(activity, { x: e.clientX, y: e.clientY });
-    }
-  };
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onEdit) {
-      onEdit(activity);
-    }
-  };
-
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onDelete) {
-      onDelete(activity.id);
     }
   };
 

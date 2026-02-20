@@ -195,7 +195,7 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
 // ============================================
 
 export default function ClassroomBulkReportView() {
-  const params = useParams<RouteParams>() as RouteParams;
+  const params = useParams() as unknown as RouteParams;
   const { nivel, periodId, classroomId, year } = params;
   const navigate = useNavigate();
   const isSidebarCollapsed = useSidebarCollapsed();

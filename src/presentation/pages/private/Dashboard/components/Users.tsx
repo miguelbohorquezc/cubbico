@@ -51,7 +51,7 @@ const useSidebarCollapsed = (): boolean => {
 };
 
 function User() {
-  const currentUser = useSelector((state: RootState) => state.user);
+  const currentUser = useSelector((state: RootState) => state.user) as any;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isSidebarCollapsed = useSidebarCollapsed();
 

@@ -11,7 +11,6 @@ import type {
 } from '../../../domain/entities/schedule';
 import {
   fetchFlexibleSchedule,
-  saveFlexibleSchedule,
   addFlexibleActivity,
   updateFlexibleActivity,
   deleteFlexibleActivity,

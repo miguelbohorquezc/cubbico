@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../../infrastructure/firebase/firebase';
@@ -174,25 +174,6 @@ function useStudentHistory(studentId: string | null) {
 
         // Años más recientes primero
         records.sort((a, b) => Number(b.year) - Number(a.year));
-
-        // CORRECCIÓN GLOBAL: Usar el nivel del salón ACTUAL del estudiante para TODOS los años
-        // Esto evita problemas cuando los metadatos históricos tienen nivel incorrecto
-        if (currentStudentData?.classroomId) {
-          try {
-            const currentClassroomSnap = await getDoc(doc(db, 'classRooms', currentStudentData.classroomId));
-            if (currentClassroomSnap.exists()) {
-              const currentClassroom = currentClassroomSnap.data();
-              const correctNivel = currentClassroom?.nivel || 'primaria';
-
-              // Actualizar el nivel en TODOS los registros de años
-              records.forEach(record => {
-                record.nivel = correctNivel;
-              });
-            }
-          } catch (error) {
-            console.warn('No se pudo obtener el salón actual del estudiante, usando metadatos históricos', error);
-          }
-        }
 
         if (!alive) return;
         setYears(records);

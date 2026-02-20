@@ -59,11 +59,11 @@ export interface UsePermissionsReturn {
  */
 export const usePermissions = (): UsePermissionsReturn => {
   // Obtener usuario del store
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user) as any;
 
   // Extraer datos relevantes
   const userUid = user?.uid || user?.id;
-  const userRole = (user as { role?: string })?.role as UserRole | undefined;
+  const userRole = (user as { role?: string } | null)?.role as UserRole | undefined;
   const isAuthenticated = Boolean(userUid);
   const isCoordinator = isCoordinatorRole(userRole);
 

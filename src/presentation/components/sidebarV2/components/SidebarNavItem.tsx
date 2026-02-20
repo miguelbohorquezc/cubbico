@@ -108,9 +108,9 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   isCollapsed,
   onClick,
   onToggleSubmenu,
-  level = 0,
+  level: _level = 0,
 }) => {
-  const { id, label, path, icon, badge, submenu, disabled } = item;
+  const { id: _id, label, path, icon, badge, submenu, disabled } = item;
   const hasSubmenu = submenu && submenu.length > 0;
 
   // Clases base del item

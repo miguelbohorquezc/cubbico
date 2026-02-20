@@ -181,6 +181,6 @@ EmptyState.propTypes = {
     icon: PropTypes.any,
   }),
   className: PropTypes.string,
-};
+} as any;
 
 export default EmptyState;

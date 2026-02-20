@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '../../../../app/store/store';
 import { moveActivity, selectAllActivities } from '../../../../app/store/states/flexibleSchedule.slice';
 import type { FlexibleScheduleActivity } from '../../../../domain/entities/schedule';
 import {
-  timeToMinutes,
   minutesToTime,
   validateActivityTime,
   detectActivityOverlap,

@@ -52,7 +52,7 @@ export function useMatriculaForm() {
         node[parts[i]] = {...node[parts[i]]};
         node = node[parts[i]];
       }
-      node[parts.at(-1)!] = value;
+      node[parts[parts.length - 1]] = value;
       return clone;
     });
   }

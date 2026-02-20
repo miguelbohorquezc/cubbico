@@ -42,7 +42,7 @@ const GradeManager: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   // Permisos del usuario
-  const { isCoordinator, permissions } = usePermissions();
+  const { isCoordinator: _isCoordinator, permissions } = usePermissions();
 
   // classroom para el link de informe (idéntico a tu código)
   // @ts-ignore

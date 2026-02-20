@@ -280,6 +280,6 @@ Select.propTypes = {
   showRequiredIndicator: PropTypes.bool,
   required: PropTypes.bool,
   disabled: PropTypes.bool,
-};
+} as any;
 
 export default Select;

@@ -114,8 +114,8 @@ const transformAbsencesData = (
  */
 const transformSubjectData = (
   stats: SubjectStatistics[],
-  currentYear: string,
-  previousYear: string
+  _currentYear: string,
+  _previousYear: string
 ): SubjectAveragesChartData => {
   // Ya vienen ordenadas por promedio ascendente (las peores primero)
   // Pero para el gráfico mostramos las 15 primeras máximo

@@ -78,7 +78,7 @@ export const useUserForm = (initialForm: FormValues, validations: ValidationRule
       // Mapear AuthUser a FirebaseUser para compatibilidad con Redux legacy
       const userData: FirebaseUser = {
         uid: user.uid,
-        email: user.email,
+        email: user.email ?? undefined,
         displayName: user.displayName,
         emailVerified: user.emailVerified,
         photoURL: user.photoURL,

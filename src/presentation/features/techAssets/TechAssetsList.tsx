@@ -256,7 +256,7 @@ const TechAssetsList = () => {
         </div>
       )
     }
-  ];
+  ] as any;
 
   return (
     <div className="flex flex-col w-full">

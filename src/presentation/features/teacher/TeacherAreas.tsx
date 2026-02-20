@@ -48,7 +48,7 @@ const TeacherAreas = () => {
       key: "area",
       label: "Área",
       render: (row: any) => (
-        <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-tosca-ds/10 text-tosca-cc border border-tosca-ds/30">
+        <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-md bg-tosca-ds/10 text-tosca-cc border border-tosca-ds/30 break-words">
           {row.area}
         </span>
       )

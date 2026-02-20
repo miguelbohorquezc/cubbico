@@ -49,7 +49,7 @@ export function useAspiranteFormulario(){
     setFormulario(prev=>{
       const parts=ruta.split('.'); const copy:any={...prev}; let node:any=copy;
       for(let i=0;i<parts.length-1;i++){ node[parts[i]]={...node[parts[i]]}; node=node[parts[i]]; }
-      node[parts.at(-1)!]=valor; return copy;
+      node[parts[parts.length - 1]]=valor; return copy;
     });
   }
 

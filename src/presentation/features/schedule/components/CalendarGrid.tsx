@@ -55,7 +55,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   minorLineInterval = 5,
   pixelsPerMinute = 2,
   children,
-  onCellClick,
+  onCellClick: _onCellClick,
   onHourClick,
 }) => {
   const startMinutes = timeToMinutes(startTime);
@@ -74,16 +74,6 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
       isMajor,
     });
   }
-
-  const handleCellClick = (dayOfWeek: number, offsetY: number) => {
-    if (!onCellClick) return;
-
-    // Convertir offsetY a minutos, redondeando al snap más cercano
-    const clickedMinutes = Math.round(offsetY / pixelsPerMinute / minorLineInterval) * minorLineInterval;
-    const absoluteMinutes = startMinutes + clickedMinutes;
-
-    onCellClick(dayOfWeek, absoluteMinutes);
-  };
 
   return (
     <div className="flex flex-col bg-white border border-gray-100 overflow-hidden h-full">

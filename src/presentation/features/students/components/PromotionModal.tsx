@@ -5,8 +5,6 @@ import StudentPromotionRow from './StudentPromotionRow';
 import PromotionSummary from './PromotionSummary';
 import {
   PromotionModalProps,
-  PromotionStatus,
-  EvaluationMode,
   PromotionFilters,
 } from '../../../../shared/types/studentManagementTypes';
 

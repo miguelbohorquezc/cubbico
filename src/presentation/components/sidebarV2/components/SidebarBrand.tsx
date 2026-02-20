@@ -33,49 +33,6 @@ export interface SidebarBrandProps {
 }
 
 // ============================================
-// Componente Logo
-// ============================================
-
-/**
- * Logo de Cubbico como SVG inline
- * Diseño: cuadrado amarillo con esquinas redondeadas
- */
-const CubbicoLogo: React.FC<{ size?: number; className?: string }> = ({
-  size = 28,
-  className = '',
-}) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    aria-hidden="true"
-  >
-    {/* Cuadrado principal amarillo */}
-    <rect
-      x="2"
-      y="2"
-      width="28"
-      height="28"
-      rx="6"
-      fill="#ffbf0e"
-    />
-    {/* Detalle interno */}
-    <rect
-      x="8"
-      y="8"
-      width="16"
-      height="16"
-      rx="3"
-      fill="#f2a306"
-      fillOpacity="0.5"
-    />
-  </svg>
-);
-
-// ============================================
 // Componente Principal
 // ============================================
 
@@ -92,7 +49,7 @@ export const SidebarBrand: React.FC<SidebarBrandProps> = ({
   showCollapseButton = true,
   className = '',
 }) => {
-  const { name, logo, logoCollapsed, logoAlt, onLogoClick } = config;
+  const { name, logo: _logo, logoCollapsed: _logoCollapsed, logoAlt, onLogoClick } = config;
 
   // Ruta por defecto al hacer click en el logo
   const homePath = '/private/dashboard/history';

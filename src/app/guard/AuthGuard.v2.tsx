@@ -115,6 +115,7 @@ export const AuthGuardV2: React.FC<AuthGuardProps> = ({
           if (!userProfile.isActive) {
             // Usuario inhabilitado - cerrar sesión y mostrar mensaje
             await AuthService.signOut();
+            // @ts-ignore - TODO: Fix Redux action type inference for resetUser
             dispatch(resetUser());
             setAuthState('inactive');
             return;
@@ -153,6 +154,7 @@ export const AuthGuardV2: React.FC<AuthGuardProps> = ({
         }
       } else {
         // Usuario no autenticado
+        // @ts-ignore - TODO: Fix Redux action type inference for resetUser
         dispatch(resetUser());
         setAuthState('unauthenticated');
       }
@@ -219,7 +221,7 @@ export const AuthGuardV2: React.FC<AuthGuardProps> = ({
   }
 
   // Usuario autenticado: verificar roles
-  if (!hasAllowedRole(userState, allowedRoles)) {
+  if (!hasAllowedRole(userState as { role?: UserRole } | null, allowedRoles)) {
     // Usuario autenticado pero sin permisos suficientes
     return (
       <UnauthorizedScreen

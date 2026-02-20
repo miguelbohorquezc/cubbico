@@ -13,7 +13,7 @@ import TechAssetForm from '../../../../features/techAssets/components/TechAssetF
 import AssetAssignmentForm from '../../../../features/techAssets/components/AssetAssignmentForm';
 import ExportAssetsCSV from '../../../../features/techAssets/components/ExportAssetsCSV';
 import ExportAssignmentsCSV from '../../../../features/techAssets/components/ExportAssignmentsCSV';
-import { IconDeviceLaptop, IconUsers, IconPlus, IconFileExport } from '@tabler/icons-react';
+import { IconDeviceLaptop, IconUsers, IconPlus } from '@tabler/icons-react';
 import { fetchTechAssets, fetchAvailableAssets } from '../../../../../infrastructure/techAsset.service';
 import { fetchAssignments } from '../../../../../infrastructure/assetAssignment.service';
 import { TechAsset } from '../../../../../domain/entities/techAsset';

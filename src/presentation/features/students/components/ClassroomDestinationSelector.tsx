@@ -82,7 +82,7 @@ const LEVEL_ORDER = ['preescolar', 'primaria', 'secundaria'];
 const ClassroomDestinationSelector: React.FC<ClassroomDestinationSelectorProps> = ({
   currentClassName,
   currentClassroomId,
-  currentLevel,
+  currentLevel: _currentLevel,
   classrooms,
   value,
   onChange,

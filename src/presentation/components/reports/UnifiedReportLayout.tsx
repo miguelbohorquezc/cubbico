@@ -29,7 +29,7 @@ export interface UnifiedReportLayoutProps {
 // ============================================
 
 export const UnifiedReportLayout: React.FC<UnifiedReportLayoutProps> = ({
-  nivel,
+  nivel: _nivel,
   children,
   className = '',
 }) => {

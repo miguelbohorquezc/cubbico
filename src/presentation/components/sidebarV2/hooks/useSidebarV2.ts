@@ -22,8 +22,6 @@ import type {
 } from '../../../../shared/types/layoutTypes';
 import {
   getLayoutMode,
-  getCurrentBreakpoint,
-  BREAKPOINTS,
 } from '../../../../shared/types/layoutTypes';
 
 // ============================================

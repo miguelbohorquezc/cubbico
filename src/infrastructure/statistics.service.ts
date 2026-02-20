@@ -13,7 +13,7 @@
  * @version 1.0.0
  */
 
-import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from './firebase/firebase';
 import type {
   ClassroomStatistics,
@@ -22,7 +22,6 @@ import type {
   StudentAbsences,
   SubjectStatistics,
   DashboardStatistics,
-  StudentGrades,
 } from '../shared/types/statisticsTypes';
 import {
   calculateAverage,
@@ -329,7 +328,7 @@ export const fetchClassroomStatistics = async (
       let totalAbsences = 0;
       const previousAverages: number[] = [];
 
-      histories.forEach((history, index) => {
+      histories.forEach((history, _index) => {
         // Año actual
         const currentStats = calculateStudentYearAverage(history, year, areas);
         if (currentStats.average > 0) {

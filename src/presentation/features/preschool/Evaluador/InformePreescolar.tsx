@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEvaluadorPreescolar } from './useEvaluadorPreescolar';
-import logo from '../../../../assets/logo/logotipo.jpg';
 import logoPreschool from '../../../../assets/logo/logoPreschool.svg';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../infrastructure/firebase/firebase';
@@ -11,9 +10,6 @@ import { SidebarV2 } from '../../../components/sidebarV2';
 import { HeaderV2 } from '../../../components/headerV2';
 import { PreschoolReportContent, ProposedData } from '../../../components/reports/PreschoolReportContent';
 import { usePrintSetup, PrintControls } from '../../../components/PrintableReport';
-
-import firmOne from "../../../../assets/firm/01.jpg";
-import firmTwo from "../../../../assets/firm/02.jpg";
 
 type Params = {
   classroomId: string;

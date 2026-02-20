@@ -88,7 +88,7 @@ function useSidebarCollapsed(): boolean {
 // ============================================
 
 export default function AttendanceConsolidatedReport() {
-  const params = useParams<RouteParams>() as RouteParams;
+  const params = useParams() as unknown as RouteParams;
   const { salonId } = params;
   const navigate = useNavigate();
   const isSidebarCollapsed = useSidebarCollapsed();

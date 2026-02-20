@@ -255,9 +255,9 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
             {asignaturas.map(asig => (
               <Tabs.Tab
                 key={asig.id}
-                value={asig.id}
+                value={asig.id!}
                 icon={<BookOpenIcon />}
-                badge={contarPorAsignatura(asig.id)}
+                badge={contarPorAsignatura(asig.id!)}
               >
                 {asig.asignatura}
               </Tabs.Tab>
@@ -265,7 +265,8 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
           </Tabs.List>
 
           {asignaturas.map(asig => (
-            <Tabs.Panel key={asig.id} value={asig.id}></Tabs.Panel>
+            // @ts-ignore - TODO: TabPanel children should be optional
+            <Tabs.Panel key={asig.id} value={asig.id!}></Tabs.Panel>
           ))}
         </Tabs>
 

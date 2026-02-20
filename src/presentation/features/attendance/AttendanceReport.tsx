@@ -76,7 +76,7 @@ function useSidebarCollapsed(): boolean {
 // ============================================
 
 export default function AttendanceReport() {
-  const params = useParams<RouteParams>() as RouteParams;
+  const params = useParams() as unknown as RouteParams;
   const { salonId, profesorId, areaId, hora } = params;
   const horaDecoded = decodeURIComponent(hora);
   const navigate = useNavigate();

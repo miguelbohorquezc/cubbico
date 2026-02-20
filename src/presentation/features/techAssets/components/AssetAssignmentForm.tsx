@@ -176,7 +176,7 @@ const AssetAssignmentForm: React.FC<AssetAssignmentFormProps> = ({
 
     // Si cambia el tipo de usuario, limpiar el usuario seleccionado
     if (name === 'userType') {
-      setFormData(prev => ({ ...prev, [name]: value, userId: '' }));
+      setFormData(prev => ({ ...prev, [name]: value as "" | "estudiante" | "profesor", userId: '' }));
     } else if (name === 'assetId') {
       // Guardar el activo seleccionado
       const asset = availableAssets.find(a => a.id === value);

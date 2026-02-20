@@ -62,15 +62,6 @@ const getBarColor = (average: number): string => {
   return COLORS.currentYear.low;
 };
 
-/**
- * Obtiene el color del borde según el promedio
- */
-const getBorderColor = (average: number): string => {
-  if (average >= 4.0) return COLORS.border.high;
-  if (average >= 3.5) return COLORS.border.medium;
-  return COLORS.border.low;
-};
-
 // ============================================
 // Componente de Loading
 // ============================================

@@ -8,6 +8,7 @@ import logo from "../../../../../assets/logo/logotipo.jpg";
 import firmOne from "../../../../../assets/firm/01.jpg";
 import firmTwo from "../../../../../assets/firm/02.jpg";
 import { usePrintSetup } from "../../../../components/PrintableReport";
+import { fetchPeriodConfig, formatFechaEntrega } from "../../../../../infrastructure/periodConfig.service";
 
 // ---------- Tipos ----------
 type AreaPeriodGrades = {
@@ -185,13 +186,48 @@ async function fetchStudentYearHistoryAsFinalReport(
   studentId: string,
   year: string,
   opts?: { periods?: string[] }
-): Promise<{ report: FinalReportData; historyPeriodsObj: any }> {
+): Promise<{ report: FinalReportData; historyPeriodsObj: any; historicCurso: string }> {
   const ref = doc(db as any, "history", studentId);
   const snap = await getDoc(ref);
   if (!snap.exists()) throw new Error("No existe historial para este estudiante.");
 
   const years = (snap.data() as any)?.years ?? {};
-  const periodsObj = years?.[year]?.periods ?? {};
+  const yearObj = years?.[year] ?? {};
+  const periodsObj = yearObj?.periods ?? {};
+
+  // Extraer el grado histórico desde metadata del año.
+  // Paso 1: metadata.nombreGrado (disponible desde la impl. del historial)
+  // Paso 2: fallback a classRooms/{metadata.classroomId}.nombreSalon
+  let historicCurso = '';
+  let historicClassroomId = '';
+
+  for (const pKey of Object.keys(periodsObj)) {
+    const areas = periodsObj[pKey]?.areas ?? {};
+    for (const aKey of Object.keys(areas)) {
+      const nombreGrado = areas[aKey]?.metadata?.nombreGrado;
+      const cid = areas[aKey]?.metadata?.classroomId;
+      if (typeof nombreGrado === 'string' && nombreGrado) {
+        historicCurso = nombreGrado;
+        break;
+      }
+      if (typeof cid === 'string' && cid && !historicClassroomId) {
+        historicClassroomId = cid;
+      }
+    }
+    if (historicCurso) break;
+  }
+
+  // Fallback: leer nombre del salón histórico desde Firestore
+  if (!historicCurso && historicClassroomId) {
+    try {
+      const crSnap = await getDoc(doc(db, 'classRooms', historicClassroomId));
+      if (crSnap.exists()) {
+        historicCurso = crSnap.data()?.nombreSalon || '';
+      }
+    } catch {
+      // Si falla, se usará el nombre del salón actual más adelante
+    }
+  }
   const periodKeys =
     opts?.periods ??
     (Object.keys(periodsObj).sort((a, b) => Number(a) - Number(b)) || [
@@ -250,7 +286,7 @@ async function fetchStudentYearHistoryAsFinalReport(
     generalAverage,
   };
 
-  return { report, historyPeriodsObj: periodsObj };
+  return { report, historyPeriodsObj: periodsObj, historicCurso };
 }
 
 // ---------- Helper para categoría de nota ----------
@@ -392,6 +428,7 @@ export default function FinalReport() {
   const [areaLabels, setAreaLabels] = React.useState<Record<string, string>>({});
   const [areaOrder, setAreaOrder] = React.useState<Record<string, number>>({});
   const [directorName, setDirectorName] = React.useState<string | undefined>(undefined);
+  const [fechaEntrega, setFechaEntrega] = React.useState<string>('');
 
   React.useEffect(() => {
     let alive = true;
@@ -399,7 +436,7 @@ export default function FinalReport() {
       try {
         setLoading(true);
 
-        const { report, historyPeriodsObj } =
+        const { report, historyPeriodsObj, historicCurso } =
           await fetchStudentYearHistoryAsFinalReport(studentId, String(year), {
             periods: ["1", "2", "3", "4"],
           });
@@ -426,10 +463,20 @@ export default function FinalReport() {
           meta: {
             ...report.meta,
             studentName: fullName || report.meta.studentId,
-            classroom: classroomMeta.name || sInfo.classroomName,
+            classroom: historicCurso || classroomMeta.name || sInfo.classroomName,
             classroomId,
           },
         });
+
+        // Fecha del informe final = fechaEntrega del periodo 4 del año
+        try {
+          const period4Config = await fetchPeriodConfig('4', String(year));
+          if (period4Config?.fechaEntrega) {
+            setFechaEntrega(formatFechaEntrega(period4Config.fechaEntrega));
+          }
+        } catch {
+          // Si no hay config, la fecha queda vacía y se usa el fallback en el render
+        }
 
         setAreaLabels(areasMeta.labels);
         setAreaOrder(areasMeta.order);
@@ -529,7 +576,7 @@ export default function FinalReport() {
               {(data.meta.classroom || "—").toUpperCase()}
             </td>
             <td className="px-4 py-3 text-[11pt] font-bold text-gray-900 border border-gray-200">
-              {formatDateShort(new Date())}
+              {fechaEntrega || formatDateShort(new Date(parseInt(year), 11, 31))}
             </td>
           </tr>
         </tbody>

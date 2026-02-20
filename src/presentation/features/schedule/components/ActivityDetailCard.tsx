@@ -4,8 +4,8 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import { useAppDispatch } from '../../../app/store/store';
-import { removeActivity } from '../../../app/store/states/flexibleSchedule.slice';
+import { useAppDispatch } from '../../../../app/store/store';
+import { removeActivity } from '../../../../app/store/states/flexibleSchedule.slice';
 import type { FlexibleScheduleActivity } from '../../../../domain/entities/schedule';
 import { DAYS_OF_WEEK } from '../../../../domain/entities/schedule';
 

@@ -3,9 +3,9 @@
  * @module presentation/features/schedule/components/ActivityForm
  */
 
-import React, { useState, useEffect } from 'react';
-import { useAppDispatch } from '../../../app/store/store';
-import { saveActivity, updateActivity } from '../../../app/store/states/flexibleSchedule.slice';
+import React, { useState } from 'react';
+import { useAppDispatch } from '../../../../app/store/store';
+import { saveActivity, updateActivity } from '../../../../app/store/states/flexibleSchedule.slice';
 import type { FlexibleScheduleActivity } from '../../../../domain/entities/schedule';
 import {
   DAYS_OF_WEEK,

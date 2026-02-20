@@ -3,7 +3,7 @@
  * @module presentation/features/techAssets/components/TechAssetForm
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Input, Select, Button } from '../../../components/ui';
 import { AssetType, AssetStatus } from '../../../../domain/entities/techAsset';
 import {

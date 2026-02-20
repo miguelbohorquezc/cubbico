@@ -3,9 +3,7 @@ import {
   StudentPromotionData,
   PromotionStatus,
   EvaluationMode,
-  PROMOTION_STATUS_LABELS,
   PROMOTION_STATUS_COLORS,
-  EVALUATION_MODE_LABELS,
   EVALUATION_MODE_COLORS,
 } from '../../../../shared/types/studentManagementTypes';
 

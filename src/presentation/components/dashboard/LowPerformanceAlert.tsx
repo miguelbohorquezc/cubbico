@@ -22,7 +22,7 @@ import {
   IconUsers,
 } from '@tabler/icons-react';
 import type { LowPerformanceAlertProps, LowPerformanceStudent, AlertSeverity, PerformanceTrend } from '../../../shared/types/statisticsTypes';
-import { formatAverage, getSeverityBgClass } from '../../../shared/types/statisticsTypes';
+import { formatAverage } from '../../../shared/types/statisticsTypes';
 
 // ============================================
 // Constantes
@@ -138,9 +138,9 @@ const StudentRow: React.FC<{
 
   // Color del avatar según severidad - más suaves y modernos
   const avatarConfig = {
-    critical: { bg: 'bg-orchid-blue-50 ring: 'ring-rose-200' },
-    warning: { bg: 'bg-orchid-blue-50 ring: 'ring-orange-200' },
-    watch: { bg: 'bg-orchid-blue-50 ring: 'ring-amber-200' },
+    critical: { bg: 'bg-orchid-blue-50', ring: 'ring-rose-200' },
+    warning: { bg: 'bg-orchid-blue-50', ring: 'ring-orange-200' },
+    watch: { bg: 'bg-orchid-blue-50', ring: 'ring-amber-200' },
   }[student.severity];
 
   return (

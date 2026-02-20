@@ -11,7 +11,6 @@ import {
   updateAssignment
 } from '../../../infrastructure/assetAssignment.service';
 import { updateTechAsset } from '../../../infrastructure/techAsset.service';
-import Modal from '../../components/modal/Modal';
 
 /**
  * Componente de lista de asignaciones de activos tecnológicos
@@ -19,7 +18,6 @@ import Modal from '../../components/modal/Modal';
 const AssetAssignmentsList = () => {
   const [assignments, setAssignments] = useState<AssetAssignment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAssignment, setSelectedAssignment] = useState<AssetAssignment | null>(null);
 
   // Estados para modales
   const [returnConfirm, setReturnConfirm] = useState<{
@@ -312,7 +310,7 @@ const AssetAssignmentsList = () => {
         </div>
       )
     }
-  ];
+  ] as any;
 
   return (
     <div className="flex flex-col w-full">

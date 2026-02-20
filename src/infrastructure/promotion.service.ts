@@ -20,13 +20,10 @@ import {
 import { db } from './firebase/firebase';
 import {
   StudentPromotionData,
-  PromotionConfig,
   PromotionResult,
   ExecutePromotionPayload,
-  EvaluationMode,
   UpdateStudentClassroomParams,
   UpdateEvaluationModeParams,
-  PromotionRecord,
 } from '../shared/types/studentManagementTypes';
 
 /**

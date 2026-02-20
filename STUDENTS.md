@@ -641,3 +641,131 @@ Los archivos más críticos para implementar este plan son:
 **Fecha de creación**: 2026-02-12
 **Agente ID para continuar**: a2b7e35
 **Estado**: ✅ PLAN COMPLETO - LISTO PARA IMPLEMENTACIÓN
+
+---
+---
+
+# PLAN DE CORRECCIONES: Asistencias, Informes y UI
+
+**Fecha**: 2026-02-20
+**Agente**: Arquitecto
+**Estado**: ✅ COMPLETADO - 6/6 microtareas completadas (100%)
+**Total Microtareas**: 6
+
+---
+
+## 🎯 Objetivo General
+
+Corregir 4 bugs identificados en: columnas F/FI en informes de asistencia, badge circular en tabla de asignaturas, grado incorrecto en informes de periodo y final, y nivel incorrecto en historial académico.
+
+---
+
+## 📋 MICROTAREAS
+
+### MT-1: Corregir filtrado de asistencias (F y FI siempre en 0)
+**Estado**: ✅ COMPLETADO
+**Prioridad**: 🔴 Alta
+
+**Objetivo**: Eliminar dependencia de `teacherId` en el filtrado de registros de asistencia para que F y FI muestren valores correctos.
+
+**Root cause**: En `useReportData.ts`, el guard `if (teacherId && attendanceRecords.length > 0)` hace que si `metadata?.teacherId` es `undefined`/`null`, las fallas queden siempre en 0. El filtro posterior `r.profesorId === teacherId` también falla si teacherId es inválido. La solución es filtrar solo por `r.areaId === areaId`.
+
+**Archivos a modificar**:
+1. `src/presentation/features/reports/hooks/useReportData.ts` — Cambiar bloque líneas 333-343: eliminar guard de `teacherId`, filtrar solo por `r.areaId === areaId`.
+
+**Definición de done**: En el informe de salón (`/private/dashboard/informe/salon/...`), las columnas F y FI muestran valores correctos (no siempre 0) cuando existen registros de asistencia.
+
+---
+
+### MT-2: Corregir badge circular en columna Área de TeacherAreas
+**Estado**: ✅ COMPLETADO
+**Prioridad**: 🟡 Media
+
+**Objetivo**: Cambiar `rounded-full` a `rounded-md` en el badge de la columna Área.
+
+**Root cause**: `rounded-full` en Tailwind fuerza bordes totalmente circulares. Con texto largo al reducir pantalla, el elemento se deforma.
+
+**Archivos a modificar**:
+1. `src/presentation/features/teacher/TeacherAreas.tsx` — En columna `key: "area"` (línea ~51), cambiar `rounded-full` por `rounded-md`.
+
+**Definición de done**: En `/private/dashboard/academy/1`, al reducir el ancho de pantalla, el badge de área no se deforma circularmente.
+
+---
+
+### MT-3: Exponer grado histórico (`historicClassName`) en useReportData
+**Estado**: ✅ COMPLETADO
+**Prioridad**: 🔴 Alta
+**Prerequisito de**: MT-4
+
+**Objetivo**: Agregar campo `historicClassName` a `StudentData` y popularlo con `yearData.curso` (el grado del año del informe, no el actual).
+
+**Root cause**: `setStudentInfo` usa `studentData.className` (grado actual de Firestore). El historial ya guarda `yearData.curso` con el grado histórico correcto pero no se expone en `StudentData`.
+
+**Archivos a modificar**:
+1. `src/presentation/features/reports/hooks/useReportData.ts` — (a) Agregar `historicClassName?: string` a interfaz `StudentData`. (b) En `setStudentInfo` agregar `historicClassName: yearData.curso || studentData.className || ''`.
+
+**Definición de done**: El hook retorna `studentInfo.historicClassName` con el grado del año del informe (ej: "SEPTIMO" para 2025 aunque el estudiante esté en OCTAVO ahora).
+
+---
+
+### MT-4: Usar grado histórico en informes de primaria y secundaria
+**Estado**: ✅ COMPLETADO
+**Prioridad**: 🔴 Alta
+**Depende de**: MT-3
+
+**Objetivo**: Que los informes de periodo muestren el grado del año histórico en la celda GRADO.
+
+**Archivos a modificar**:
+1. `src/presentation/components/reports/SecondaryReportContent.tsx` — En `StudentInfoTable`, cambiar celda GRADO a `(studentInfo.historicClassName || studentInfo.className).toUpperCase()`.
+2. `src/presentation/components/reports/PrimaryReportContent.tsx` — Mismo cambio en su `StudentInfoTable`.
+
+**Definición de done**: El informe de periodo de un estudiante que estuvo en SEPTIMO en 2025 muestra "SEPTIMO" en GRADO, no "OCTAVO".
+
+---
+
+### MT-5: Corregir grado histórico en FinalReport
+**Estado**: ✅ COMPLETADO
+**Prioridad**: 🔴 Alta
+
+**Objetivo**: El informe final muestra el grado del año del informe, no el grado actual del estudiante.
+
+**Root cause**: `FinalReport.tsx` usa `classroomMeta.name` (nombre del salón actual) para la celda GRADO. El historial tiene `years[year]?.curso` con el grado histórico correcto.
+
+**Archivos a modificar**:
+1. `src/presentation/pages/private/Dashboard/components/FinalReport.tsx` — En la función de carga del historial, extraer `curso` de `years[year]` y usarlo para `meta.classroom` en lugar del nombre del salón actual.
+
+**Definición de done**: En `/private/dashboard/final-report/:studentId/2025`, la celda GRADO muestra el grado de 2025 según el historial, no el grado actual.
+
+---
+
+### MT-6: Eliminar "CORRECCIÓN GLOBAL" de nivel en History.tsx
+**Estado**: ✅ COMPLETADO
+**Prioridad**: 🟡 Media
+
+**Objetivo**: Eliminar el bloque que sobreescribe el nivel de TODOS los años con el nivel del salón actual.
+
+**Root cause**: Líneas ~178-195 de `History.tsx` contienen una "CORRECCIÓN GLOBAL" que itera todos los `records` y pisa el `nivel` histórico con el nivel actual. Esto hace que los enlaces de "Ver Informe" usen el nivel incorrecto para años pasados.
+
+**Archivos a modificar**:
+1. `src/presentation/pages/private/Dashboard/components/History.tsx` — Eliminar el bloque "CORRECCIÓN GLOBAL" (líneas 178-195). El nivel ya se extrae correctamente de `meta?.nivel` en el bucle previo.
+
+**Definición de done**: Los enlaces de "Ver Informe" por período generados en el historial apuntan al nivel correcto de cada año histórico (no siempre al nivel actual del estudiante).
+
+---
+
+## 🔄 Secuencia de Ejecución
+
+```
+MT-1 → Independiente (F/FI en informes)
+MT-2 → Independiente (badge circular)
+MT-3 → MT-4 dependiente (grado histórico)
+MT-5 → Independiente (grado en final report)
+MT-6 → Independiente (nivel en historial)
+```
+
+**Orden recomendado**: MT-1 → MT-3 → MT-4 → MT-5 → MT-6 → MT-2
+
+---
+
+**Fecha de creación**: 2026-02-20
+**Estado**: 🟡 EN PROGRESO

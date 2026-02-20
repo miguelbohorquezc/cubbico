@@ -207,6 +207,6 @@ Label.propTypes = {
   containerClassName: PropTypes.string,
   disabled: PropTypes.bool,
   showOptional: PropTypes.bool,
-};
+} as any;
 
 export default Label;

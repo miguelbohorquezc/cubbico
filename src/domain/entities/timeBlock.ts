@@ -75,17 +75,6 @@ export function getBlockEndTime(block: TimeBlock): string {
 }
 
 /**
- * Convierte minutos totales desde medianoche a formato HH:mm
- * @param minutes - Minutos totales desde medianoche
- * @returns String en formato HH:mm
- */
-function minutesToTimeString(minutes: number): string {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-}
-
-/**
  * Convierte string HH:mm a minutos desde medianoche
  * @param timeString - String en formato HH:mm
  * @returns Minutos desde medianoche

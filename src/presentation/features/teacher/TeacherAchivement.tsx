@@ -7,7 +7,7 @@ import { loadTeacherAchievements } from "../../../app/store/states/teacher.slice
 const TeacherAchievements = () => {
   const dispatch = useAppDispatch();
   const { achievements, loading } = useAppSelector((state) => state.teacherData);
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user) as any;
   const { periodId, classroomId, areaId } = useParams();
 
   // ✅ Cargar achievements automáticamente cuando cambian los parámetros

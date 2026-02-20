@@ -96,7 +96,7 @@ export const FlexibleCalendar: React.FC<FlexibleCalendarProps> = ({
   // Hooks de interacción
   const {
     handleDragStart,
-    handleDragOver,
+    handleDragOver: _handleDragOver,
     handleDrop,
     handleDragEnd,
     draggingActivity,

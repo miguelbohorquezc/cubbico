@@ -63,7 +63,7 @@ function useSidebarCollapsed(): boolean {
 // ============================================
 
 export default function AcademicReportView() {
-  const params = useParams<RouteParams>() as RouteParams;
+  const params = useParams() as unknown as RouteParams;
   const { nivel, periodId: initialPeriodId, studentId, year } = params;
   const navigate = useNavigate();
   const isSidebarCollapsed = useSidebarCollapsed();

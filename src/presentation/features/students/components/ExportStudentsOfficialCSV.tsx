@@ -1,4 +1,3 @@
-import React from "react";
 import { Student } from "../../../components/notes/types";
 
 /**

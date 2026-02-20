@@ -449,12 +449,13 @@ export const formatHeaderDate = (
     return '';
   }
 
-  const options: Intl.DateTimeFormatOptions = {
-    short: { day: 'numeric', month: 'short' },
-    medium: { weekday: 'short', day: 'numeric', month: 'short' },
-    long: { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' },
-    full: { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' },
-  }[format];
+  const optionsMap = {
+    short: { day: 'numeric', month: 'short' } as const,
+    medium: { weekday: 'short', day: 'numeric', month: 'short' } as const,
+    long: { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' } as const,
+    full: { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' } as const,
+  };
+  const options: Intl.DateTimeFormatOptions = optionsMap[format];
 
   try {
     const formatted = date.toLocaleDateString(locale, options);

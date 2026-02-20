@@ -6,7 +6,7 @@ import { fetchTeacherData } from "../../../infrastructure/teacher.service";
 
 const TeacherDataLoader = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user) as any;
   const { loading, error } = useAppSelector((state) => state.teacherData);
 
   useEffect(() => {

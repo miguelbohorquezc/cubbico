@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { VALID_DURATIONS } from '../../../../domain/entities/schedule';
-import type { DurationMinutes } from '../../../../domain/entities/schedule';
 
 // ============================================
 // Tipos

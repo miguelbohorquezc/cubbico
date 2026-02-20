@@ -11,9 +11,13 @@ export const fetchTeacherData = async (userId: string) => {
     const userDoc = await getDoc(doc(db, "users", userId));
     const userData = userDoc.data();
 
+    if (!userData) {
+      return { classrooms: [], areas: [], achievements: [] };
+    }
+
     // Filtrar solo los salones y áreas que tienen valor true (asignados)
-    const salonesKeys = Object.keys(userData?.salones || {}).filter(key => userData.salones[key] === true);
-    const areasKeys = Object.keys(userData?.areas || {}).filter(key => userData.areas[key] === true);
+    const salonesKeys = Object.keys(userData.salones || {}).filter(key => userData.salones[key] === true);
+    const areasKeys = Object.keys(userData.areas || {}).filter(key => userData.areas[key] === true);
 
     // Obtener salones (solo si hay salones asignados)
     let classroomsSnapshot: any = { docs: [] };

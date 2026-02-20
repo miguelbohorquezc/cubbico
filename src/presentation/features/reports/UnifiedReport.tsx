@@ -6,7 +6,6 @@
  * utilizando el layout común y los componentes de contenido específicos.
  */
 
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { UnifiedReportLayout } from '../../components/reports/UnifiedReportLayout';
 import { PrimaryReportContent } from '../../components/reports/PrimaryReportContent';
@@ -29,7 +28,7 @@ interface RouteParams {
 // ============================================
 
 export default function UnifiedReport() {
-  const { nivel, periodId, studentId, year } = useParams<RouteParams>() as RouteParams;
+  const { nivel, periodId, studentId, year } = useParams() as unknown as RouteParams;
 
   // Determinar schoolLevel según nivel
   const schoolLevel = nivel === 'secundaria' ? '2' : '1';

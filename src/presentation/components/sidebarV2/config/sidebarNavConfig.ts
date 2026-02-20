@@ -15,8 +15,6 @@ import {
   ClassroomIcon,
   BookIcon,
   CalendarIcon,
-  EvaluationIcon,
-  AspirantIcon,
   EnrollmentIcon,
   TechAssetsIcon,
   SettingsIcon,
@@ -62,7 +60,7 @@ export const brandConfig: SidebarBrandConfig = {
  * - allowedRoles: ['Coordinador']: solo visible para coordinadores
  * - allowedRoles: ['Docente', 'Coordinador']: visible para ambos roles
  */
-export const navItems: NavItem[] = [
+export const navItems = [
   {
     id: 'dashboard',
     label: 'Dashboard',
@@ -197,7 +195,7 @@ export const navItems: NavItem[] = [
     description: 'Gestión de activos tecnológicos y asignaciones',
     allowedRoles: ['Coordinador'],
   },
-];
+] as NavItem[];
 
 // ============================================
 // Items de Acciones (Sección Inferior)
@@ -206,7 +204,7 @@ export const navItems: NavItem[] = [
 /**
  * Items de la sección inferior del sidebar
  */
-export const actionItems: NavItem[] = [
+export const actionItems = [
   {
     id: 'settings',
     label: 'Configuración',
@@ -221,7 +219,7 @@ export const actionItems: NavItem[] = [
     icon: LogoutIcon,
     description: 'Salir del sistema',
   },
-];
+] as NavItem[];
 
 // ============================================
 // Configuración Completa
