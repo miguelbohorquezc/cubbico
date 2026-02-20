@@ -86,7 +86,7 @@ export function PrintControls({
       <div className="w-px h-5 bg-gray-200" />
       <button
         onClick={onPrint}
-        className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-gray-800 rounded-lg hover:bg-gray-900 transition-all duration-200 shadow-sm hover:shadow"
+        className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-orchid-blue-60 rounded-lg hover:bg-orchid-blue-70 transition-all duration-200 shadow-sm hover:shadow"
       >
         <IconPrinter size={14} />
         Imprimir

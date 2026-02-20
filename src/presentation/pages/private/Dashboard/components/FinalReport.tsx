@@ -7,7 +7,7 @@ import { db } from "../../../../../infrastructure/firebase/firebase";
 import logo from "../../../../../assets/logo/logotipo.jpg";
 import firmOne from "../../../../../assets/firm/01.jpg";
 import firmTwo from "../../../../../assets/firm/02.jpg";
-import { usePrintSetup } from "../../../../components/PrintableReport";
+import { usePrintSetup, PrintControls } from "../../../../components/PrintableReport";
 import { fetchPeriodConfig, formatFechaEntrega } from "../../../../../infrastructure/periodConfig.service";
 
 // ---------- Tipos ----------
@@ -117,7 +117,7 @@ async function fetchClassroomMeta(
     const c = cSnap.data() as any;
 
     const name = c?.name || c?.className || c?.grado || c?.grade;
-    const directorName =
+    const rawDirector: string | undefined =
       c?.directorGrupo ||
       c?.director ||
       c?.homeroomTeacher ||
@@ -127,10 +127,41 @@ async function fetchClassroomMeta(
       c?.docenteDirector ||
       undefined;
 
+    // rawDirector puede ser un UID — intentar resolver a nombre desde users
+    let directorName = rawDirector;
+    if (rawDirector) {
+      try {
+        const userSnap = await getDoc(doc(db, "users", rawDirector));
+        if (userSnap.exists()) {
+          const u = userSnap.data() as any;
+          const resolved =
+            u?.displayName ||
+            [u?.name, u?.lastName].filter(Boolean).join(" ") ||
+            u?.email;
+          if (resolved) directorName = resolved;
+        }
+      } catch {
+        // si falla la búsqueda, usar el valor raw como fallback
+      }
+    }
+
     return { name, directorName };
   } catch {
     return {};
   }
+}
+
+// Extrae metadata.nombreDirector guardado en el historial (ya es un nombre, no un UID)
+function extractDirectorFromHistory(periodsObj: any): string | undefined {
+  const pKeys = Object.keys(periodsObj || {});
+  for (const p of pKeys) {
+    const areas = periodsObj[p]?.areas || {};
+    for (const a of Object.keys(areas)) {
+      const nd = areas[a]?.metadata?.nombreDirector;
+      if (typeof nd === "string" && nd) return nd;
+    }
+  }
+  return undefined;
 }
 
 function extractClassroomIdFromHistory(periodsObj: any): string | undefined {
@@ -196,8 +227,6 @@ async function fetchStudentYearHistoryAsFinalReport(
   const periodsObj = yearObj?.periods ?? {};
 
   // Extraer el grado histórico desde metadata del año.
-  // Paso 1: metadata.nombreGrado (disponible desde la impl. del historial)
-  // Paso 2: fallback a classRooms/{metadata.classroomId}.nombreSalon
   let historicCurso = '';
   let historicClassroomId = '';
 
@@ -228,6 +257,7 @@ async function fetchStudentYearHistoryAsFinalReport(
       // Si falla, se usará el nombre del salón actual más adelante
     }
   }
+
   const periodKeys =
     opts?.periods ??
     (Object.keys(periodsObj).sort((a, b) => Number(a) - Number(b)) || [
@@ -325,20 +355,20 @@ function FinalReportTable({
     <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
       <thead>
         <tr className="bg-gradient-to-r from-gray-100 to-gray-50 print:bg-white">
-          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
+          <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700 border-b border-gray-200">
             ÁREA
           </th>
           {pKeys.map((p) => (
             <th
               key={p}
-              className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-20"
+              className="px-2 py-2 text-center text-xs font-semibold text-gray-700 border-b border-gray-200 w-16"
             >
-              <span className="inline-flex items-center justify-center w-8 h-8 bg-gray-200 text-gray-700 rounded-full text-xs font-bold">
+              <span className="inline-flex items-center justify-center w-7 h-7 bg-gray-200 text-gray-700 rounded-full text-[10px] font-bold">
                 P{p}
               </span>
             </th>
           ))}
-          <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-32">
+          <th className="px-3 py-2 text-center text-xs font-semibold text-gray-700 border-b border-gray-200 w-24">
             PROMEDIO
           </th>
         </tr>
@@ -351,31 +381,31 @@ function FinalReportTable({
               key={row.areaId}
               className={`${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-gray-50/30 transition-colors print:bg-white`}
             >
-              <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b border-gray-100">
+              <td className="px-3 py-2 text-xs font-medium text-gray-900 border-b border-gray-100">
                 {areaLabels[row.areaId] ?? row.areaId}
               </td>
               {pKeys.map((p) => {
                 const val = row.periodAverages[p];
                 const pCat = getGradeCategory(val);
                 return (
-                  <td key={p} className="px-3 py-3 text-center border-b border-gray-100">
+                  <td key={p} className="px-2 py-2 text-center border-b border-gray-100">
                     {typeof val === "number" ? (
-                      <span className={`inline-block px-2 py-1 rounded text-sm font-medium ${pCat.bgClass} ${pCat.textClass}`}>
+                      <span className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${pCat.bgClass} ${pCat.textClass}`}>
                         {val.toFixed(2)}
                       </span>
                     ) : (
-                      <span className="text-gray-400 text-sm">N/A</span>
+                      <span className="text-gray-400 text-xs">N/A</span>
                     )}
                   </td>
                 );
               })}
-              <td className="px-4 py-3 text-center border-b border-gray-100">
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-lg font-bold text-gray-900">
+              <td className="px-3 py-2 text-center border-b border-gray-100">
+                <div className="flex flex-col items-center gap-0.5">
+                  <span className="text-sm font-bold text-gray-900">
                     {typeof row.finalAverage === "number" ? row.finalAverage.toFixed(2) : "N/A"}
                   </span>
                   {row.finalAverage !== null && (
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${cat.bgClass} ${cat.textClass}`}>
+                    <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${cat.bgClass} ${cat.textClass}`}>
                       {cat.text}
                     </span>
                   )}
@@ -389,19 +419,19 @@ function FinalReportTable({
         <tr className="bg-gradient-to-r from-gray-100 to-gray-50 print:bg-white">
           <th
             colSpan={pKeys.length + 1}
-            className="px-4 py-4 text-right text-sm font-bold text-gray-700 border-t-2 border-gray-300"
+            className="px-3 py-3 text-right text-xs font-bold text-gray-700 border-t-2 border-gray-300"
           >
             Promedio General Anual
           </th>
-          <th className="px-4 py-4 text-center border-t-2 border-gray-300">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-bold text-gray-900">
+          <th className="px-3 py-3 text-center border-t-2 border-gray-300">
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-base font-bold text-gray-900">
                 {typeof report.generalAverage === "number"
                   ? report.generalAverage.toFixed(2)
                   : "N/A"}
               </span>
               {report.generalAverage !== null && (
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${getGradeCategory(report.generalAverage).bgClass} ${getGradeCategory(report.generalAverage).textClass}`}>
+                <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${getGradeCategory(report.generalAverage).bgClass} ${getGradeCategory(report.generalAverage).textClass}`}>
                   {getGradeCategory(report.generalAverage).text}
                 </span>
               )}
@@ -413,15 +443,8 @@ function FinalReportTable({
   );
 }
 
-// ---------- Página ----------
-export default function FinalReport() {
-  const params = useParams();
-  const studentId =
-    (params as any).studentId || (params as any).id || (params as any).uid;
-  const year = (params as any).year || String(new Date().getFullYear());
-
-  usePrintSetup();
-
+// ---------- Contenido del informe (reutilizable) ----------
+export function FinalReportContent({ studentId, year }: { studentId: string; year: string }) {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [data, setData] = React.useState<FinalReportData | null>(null);
@@ -449,7 +472,10 @@ export default function FinalReport() {
 
         const classroomMeta = await fetchClassroomMeta(classroomId);
 
-        let director = classroomMeta.directorName;
+        // Prioridad: nombre guardado en metadata > nombre del classroom (resuelto) > fallback por teacherId
+        let director =
+          extractDirectorFromHistory(historyPeriodsObj) ||
+          classroomMeta.directorName;
         if (!director) {
           const teacherId = extractTeacherIdFromHistory(historyPeriodsObj);
           director = await fetchTeacherName(teacherId);
@@ -475,7 +501,7 @@ export default function FinalReport() {
             setFechaEntrega(formatFechaEntrega(period4Config.fechaEntrega));
           }
         } catch {
-          // Si no hay config, la fecha queda vacía y se usa el fallback en el render
+          // Si no hay config, usar fallback
         }
 
         setAreaLabels(areasMeta.labels);
@@ -490,34 +516,30 @@ export default function FinalReport() {
         if (alive) setLoading(false);
       }
     })();
-    return () => {
-      alive = false;
-    };
+    return () => { alive = false; };
   }, [studentId, year]);
 
-  // Estado de carga
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="flex items-center justify-center h-48">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Cargando informe final...</p>
+          <div className="w-10 h-10 border-4 border-tosca-ds border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p className="text-sm text-gray-500">Cargando informe final...</p>
         </div>
       </div>
     );
   }
 
-  // Estado de error
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="flex items-center justify-center h-48">
+        <div className="text-center bg-white p-6 rounded-lg shadow-sm max-w-sm">
+          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <p className="text-lg font-semibold text-red-600">{error}</p>
+          <p className="text-sm font-semibold text-red-600">{error}</p>
         </div>
       </div>
     );
@@ -526,25 +548,25 @@ export default function FinalReport() {
   if (!data) return null;
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-5 flex flex-col gap-3 font-['Nunito',sans-serif] bg-white">
+    <div className="w-full max-w-4xl mx-auto p-4 flex flex-col gap-2.5 font-['Nunito',sans-serif] bg-white">
       {/* Header institucional */}
       <table className="w-full border-collapse">
         <tbody>
-          <tr className="h-28">
-            <td className="w-24 p-2 border border-gray-200 align-middle">
-              <img src={logo} alt="logotipo" className="w-20 mx-auto" />
+          <tr className="h-20">
+            <td className="w-20 p-2 border border-gray-200 align-middle">
+              <img src={logo} alt="logotipo" className="w-16 mx-auto" />
             </td>
-            <td className="px-6 py-3 border border-gray-200 text-center">
-              <b className="text-lg font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
-              <p className="text-[10pt] text-gray-600 mt-1 leading-relaxed">
+            <td className="px-5 py-2 border border-gray-200 text-center">
+              <b className="text-sm font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
+              <p className="text-[8pt] text-gray-600 mt-0.5 leading-snug">
                 De Sincelejo, Sucre, con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y
                 Básica Secundaria por parte de Secretaría de Educación Municipal,
                 según resolución No 2747 del 12 de diciembre de 2023. Carrera 34 No 38-158,
                 teléfonos: 2771068-3006781806
               </p>
-              <p className="text-[10pt] text-gray-700 font-semibold">NIT: 901731191-3</p>
+              <p className="text-[8pt] text-gray-700 font-semibold mt-0.5">NIT: 901731191-3</p>
             </td>
-            <td className="w-28 px-3 py-2 border border-gray-200 text-center text-xs text-gray-600 align-middle">
+            <td className="w-24 px-2 py-2 border border-gray-200 text-center text-[8pt] text-gray-600 align-middle">
               DANE 370001038852
             </td>
           </tr>
@@ -552,8 +574,8 @@ export default function FinalReport() {
       </table>
 
       {/* Título del informe */}
-      <h2 className="text-center my-4">
-        <span className="text-lg font-bold text-gray-800">
+      <h2 className="text-center my-2">
+        <span className="text-sm font-bold text-gray-800">
           INFORME FINAL – {data.meta.year}
         </span>
       </h2>
@@ -562,20 +584,20 @@ export default function FinalReport() {
       <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
         <thead className="bg-gray-100 print:bg-white">
           <tr>
-            <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">ESTUDIANTE</td>
-            <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">GRADO</td>
-            <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-200">FECHA</td>
+            <td className="px-3 py-1.5 text-[9pt] font-bold text-gray-700 border border-gray-200">ESTUDIANTE</td>
+            <td className="px-3 py-1.5 text-[9pt] font-bold text-gray-700 border border-gray-200">GRADO</td>
+            <td className="px-3 py-1.5 text-[9pt] font-bold text-gray-700 border border-gray-200">FECHA</td>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td className="px-4 py-3 text-[11pt] font-bold text-gray-900 border border-gray-200">
+            <td className="px-3 py-2 text-[9pt] font-bold text-gray-900 border border-gray-200">
               {(data.meta.studentName || data.meta.studentId || "").toUpperCase()}
             </td>
-            <td className="px-4 py-3 text-[11pt] font-bold text-gray-900 border border-gray-200">
+            <td className="px-3 py-2 text-[9pt] font-bold text-gray-900 border border-gray-200">
               {(data.meta.classroom || "—").toUpperCase()}
             </td>
-            <td className="px-4 py-3 text-[11pt] font-bold text-gray-900 border border-gray-200">
+            <td className="px-3 py-2 text-[9pt] font-bold text-gray-900 border border-gray-200">
               {fechaEntrega || formatDateShort(new Date(parseInt(year), 11, 31))}
             </td>
           </tr>
@@ -591,64 +613,92 @@ export default function FinalReport() {
       />
 
       {/* Escala de valoración */}
-      <div className="bg-gray-50 print:bg-white border border-gray-200 rounded-lg p-4">
-        <p className="text-sm font-semibold text-gray-700 mb-2">ESCALA DE VALORACIÓN</p>
-        <div className="flex flex-wrap gap-4 text-sm">
-          <span className="inline-flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-            <span className="text-gray-700">Superior: 4.6 - 5.0</span>
+      <div className="bg-gray-50 print:bg-white border border-gray-200 rounded-lg p-3">
+        <p className="text-xs font-semibold text-gray-700 mb-1.5">ESCALA DE VALORACIÓN</p>
+        <div className="flex flex-wrap gap-3 text-xs">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+            <span className="text-gray-700">Superior: 4.6 – 5.0</span>
           </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-tosca/100"></span>
-            <span className="text-gray-700">Alto: 4.0 - 4.5</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-tosca-ds flex-shrink-0"></span>
+            <span className="text-gray-700">Alto: 4.0 – 4.5</span>
           </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-amber-500"></span>
-            <span className="text-gray-700">Básico: 3.0 - 3.9</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0"></span>
+            <span className="text-gray-700">Básico: 3.0 – 3.9</span>
           </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red-500"></span>
-            <span className="text-gray-700">Bajo: 1.0 - 2.9</span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>
+            <span className="text-gray-700">Bajo: 1.0 – 2.9</span>
           </span>
         </div>
       </div>
 
       {/* Observaciones */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-100 print:bg-white px-4 py-2">
-          <p className="text-sm font-bold text-gray-700">OBSERVACIONES</p>
+        <div className="bg-gray-100 print:bg-white px-3 py-1.5">
+          <p className="text-xs font-bold text-gray-700">OBSERVACIONES</p>
         </div>
-        <div className="h-16 bg-white"></div>
+        <div className="h-12 bg-white"></div>
       </div>
 
       {/* Firmas */}
       <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
         <tbody>
           <tr>
-            <td className="text-center py-4 border border-gray-200 w-1/3">
-              <div className="flex flex-col items-center mt-8">
-                <img src={firmTwo} alt="firma directora" className="w-28 h-auto" />
-                <p className="text-[10pt] font-medium text-gray-900 mt-2">ANA KARINA GOMEZ BUSTAMANTE</p>
-                <p className="text-[10pt] text-gray-600">Directora</p>
+            <td className="text-center py-3 border border-gray-200 w-1/3">
+              <div className="flex flex-col items-center mt-6">
+                <img src={firmTwo} alt="firma directora" className="w-20 h-auto" />
+                <p className="text-[8pt] font-medium text-gray-900 mt-1">ANA KARINA GOMEZ BUSTAMANTE</p>
+                <p className="text-[8pt] text-gray-600">Directora</p>
               </div>
             </td>
-            <td className="text-center py-4 border border-gray-200 w-1/3">
-              <div className="flex flex-col items-center mt-8">
-                <img src={firmOne} alt="firma coordinadora" className="w-28 h-auto" />
-                <p className="text-[10pt] font-medium text-gray-900 mt-2">NURIA MILENA MONTES SALAS</p>
-                <p className="text-[10pt] text-gray-600">Coordinadora Académica</p>
+            <td className="text-center py-3 border border-gray-200 w-1/3">
+              <div className="flex flex-col items-center mt-6">
+                <img src={firmOne} alt="firma coordinadora" className="w-20 h-auto" />
+                <p className="text-[8pt] font-medium text-gray-900 mt-1">NURIA MILENA MONTES SALAS</p>
+                <p className="text-[8pt] text-gray-600">Coordinadora Académica</p>
               </div>
             </td>
-            <td className="text-center py-4 border border-gray-200 w-1/3">
-              <div className="flex flex-col items-center mt-8">
-                <div className="w-28 h-10 border-b border-gray-400"></div>
-                <p className="text-[10pt] font-medium text-gray-900 mt-2">{directorName || "Director(a) de Grupo"}</p>
-                <p className="text-[10pt] text-gray-600">Director(a) de Grupo</p>
+            <td className="text-center py-3 border border-gray-200 w-1/3">
+              <div className="flex flex-col items-center mt-6">
+                <div className="w-24 h-8 border-b border-gray-400"></div>
+                <p className="text-[8pt] font-medium text-gray-900 mt-1">{directorName || "Director(a) de Grupo"}</p>
+                <p className="text-[8pt] text-gray-600">Director(a) de Grupo</p>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+  );
+}
+
+// ---------- Página standalone ----------
+export default function FinalReport() {
+  const params = useParams();
+  const studentId =
+    (params as any).studentId || (params as any).id || (params as any).uid;
+  const year = (params as any).year || String(new Date().getFullYear());
+
+  const { paperSize, setPaperSize, handlePrint } = usePrintSetup();
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Barra de controles de impresión */}
+      <div className="print:hidden sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center justify-end gap-3">
+        <PrintControls
+          paperSize={paperSize}
+          onPaperSizeChange={setPaperSize}
+          onPrint={handlePrint}
+        />
+      </div>
+
+      {/* Contenido del informe */}
+      <div className="py-6">
+        <FinalReportContent studentId={studentId} year={String(year)} />
+      </div>
     </div>
   );
 }
