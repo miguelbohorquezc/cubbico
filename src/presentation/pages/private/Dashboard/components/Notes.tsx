@@ -47,7 +47,7 @@ function Notes() {
 
   const { classroomId, periodId, areaId } = useParams();
   const navigate = useNavigate();
-  const { permissions: _permissions } = usePermissions();
+  const { isCoordinator } = usePermissions();
   const anioActual = new Date().getFullYear().toString();
 
   const classroom = useAppSelector(state =>
@@ -121,15 +121,17 @@ function Notes() {
                 <span className="hidden sm:inline">Informe de Promedios</span>
               </Link>
 
-              {/* Botón de informes del salón - Vista masiva */}
-              <Link
-                to={`/private/dashboard/informe/salon/${classroom?.nivel}/${periodId}/${classroomId}/${anioActual}`}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-orchid-blue-60 rounded-lg hover:bg-orchid-blue-70 transition-all duration-200"
-                title="Ver informes del salón"
-              >
-                <IconFileDescription size={18} />
-                <span className="hidden sm:inline">Informes del Salón</span>
-              </Link>
+              {/* Botón de informes del salón - solo coordinadores */}
+              {isCoordinator && (
+                <Link
+                  to={`/private/dashboard/informe/salon/${classroom?.nivel}/${periodId}/${classroomId}/${anioActual}`}
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-orchid-blue-60 rounded-lg hover:bg-orchid-blue-70 transition-all duration-200"
+                  title="Ver informes del salón"
+                >
+                  <IconFileDescription size={18} />
+                  <span className="hidden sm:inline">Informes del Salón</span>
+                </Link>
+              )}
             </div>
           </div>
 

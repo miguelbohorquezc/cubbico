@@ -26,6 +26,7 @@ import { UserProfile } from './UserProfile';
 import { NotificationBell } from '../notificationBell/NotificationBell';
 import { formatHeaderDate } from '../../../shared/types/headerTypes';
 import type { HeaderV2Props } from '../../../shared/types/layoutTypes';
+import { useLayoutMode } from '../sidebarV2/hooks/useSidebarV2';
 
 // ============================================
 // Constantes
@@ -91,6 +92,8 @@ export const HeaderV2: React.FC<HeaderV2Props> = ({
   className = '',
 }) => {
   const navigate = useNavigate();
+  const layoutMode = useLayoutMode();
+  const isMobileLayout = layoutMode === 'mobile';
 
   // Obtener datos del usuario desde Redux
   // @ts-ignore - El tipo del state no está definido completamente
@@ -98,10 +101,13 @@ export const HeaderV2: React.FC<HeaderV2Props> = ({
   // @ts-ignore
   const userRole = useSelector((state) => state.user?.role || 'Usuario');
 
-  // Calcular el margin-left según el estado del sidebar
-  const sidebarWidth = isSidebarCollapsed
-    ? SIDEBAR_WIDTH_COLLAPSED
-    : SIDEBAR_WIDTH_EXPANDED;
+  // Calcular el left según el estado del sidebar y el modo de layout
+  // En móvil el sidebar es overlay y no ocupa espacio, por eso left: 0
+  const sidebarWidth = isMobileLayout
+    ? '0px'
+    : isSidebarCollapsed
+      ? SIDEBAR_WIDTH_COLLAPSED
+      : SIDEBAR_WIDTH_EXPANDED;
 
   // Datos del usuario para el perfil
   const userData = useMemo(
@@ -153,7 +159,7 @@ export const HeaderV2: React.FC<HeaderV2Props> = ({
         left: sidebarWidth,
       }}
     >
-      <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-4">
+      <div className="h-full pl-14 pr-4 md:pl-4 lg:px-6 flex items-center justify-between gap-4">
         {/* Sección izquierda: Título y fecha */}
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-3">

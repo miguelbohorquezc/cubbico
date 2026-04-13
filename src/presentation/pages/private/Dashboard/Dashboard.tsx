@@ -22,8 +22,11 @@ import FinalReport from "./components/FinalReport"
 import PromotionManager from "../../../features/students/PromotionManager"
 import BulkReportPrinter from "../../../features/reports/BulkReportPrinter"
 import ScheduleEditor from "../../../features/schedule/ScheduleEditor"
+import QuickScheduleCreator from "../../../features/schedule/QuickScheduleCreatorPage"
 import TimeBlockManager from "../../../features/schedule/TimeBlockManager"
 import AttendanceList from "../../../features/attendance/AttendanceList"
+import AttendancePeriodReport from "../../../features/attendance/AttendancePeriodReport"
+import AttendancePlanilla from "../../../features/attendance/AttendancePlanilla"
 import AttendanceReport from "../../../features/attendance/AttendanceReport"
 import AttendanceConsolidatedReport from "../../../features/attendance/AttendanceConsolidatedReport"
 import AttendanceOverview from "../../../features/attendance/AttendanceOverview"
@@ -63,10 +66,14 @@ function Dashboard() {
         <Route path={PrivateRoutes.TECHASSETS} element={<TechAssetsPage />} />
         {/* Horario docente */}
         <Route path={PrivateRoutes.HORARIO} element={<ScheduleEditor />} />
+        {/* Creador rápido de horario */}
+        <Route path={PrivateRoutes.HORARIO_RAPIDO} element={<QuickScheduleCreator />} />
         {/* Configuración de bloques horarios */}
         <Route path={PrivateRoutes.TIMEBLOCKS} element={<TimeBlockManager />} />
         {/* Panorámica de informes de asistencia */}
         <Route path={`${PrivateRoutes.ASISTENCIA}/overview`} element={<AttendanceOverview />} />
+        {/* Informe de asistencia por período (salón completo) */}
+        <Route path={`${PrivateRoutes.ASISTENCIA_PERIODO}/:salonId/:periodId/:year`} element={<AttendancePeriodReport />} />
         {/* Impresión masiva de informes */}
         <Route path={`${PrivateRoutes.BULKPRINT}/:periodId/:classroomId`} element={<BulkReportPrinter />} />
       </Route>
@@ -86,6 +93,7 @@ function Dashboard() {
 
         {/* Asistencias */}
         <Route path={`${PrivateRoutes.ASISTENCIA}/:salonId/:profesorId/:areaId/:fecha/:hora`} element={<AttendanceList />} />
+        <Route path={`${PrivateRoutes.ASISTENCIA}/planilla/:salonId/:profesorId/:areaId/:fecha/:hora`} element={<AttendancePlanilla />} />
         <Route path={`${PrivateRoutes.ASISTENCIA}/report/:salonId/:profesorId/:areaId/:hora`} element={<AttendanceReport />} />
         <Route path={`${PrivateRoutes.ASISTENCIA}/consolidado/:salonId/:mes?`} element={<AttendanceConsolidatedReport />} />
 

@@ -26,6 +26,10 @@ import {
   IconFileTypePdf
 } from '@tabler/icons-react';
 import { usePrintSetup, PrintControls } from '../../components/PrintableReport';
+import { fetchPeriodConfig } from '../../../infrastructure/periodConfig.service';
+import { fetchAttendanceByClassroom } from '../../../infrastructure/attendance.service';
+import { computeAttendanceSummary } from '../../../domain/entities/attendance';
+import type { AttendanceRecord } from '../../../domain/entities/attendance';
 
 // ============================================
 // Tipos
@@ -411,6 +415,32 @@ const BulkReportPrinter: React.FC = () => {
         return acc;
       }, {} as Record<string, any>);
 
+      // Calcular rango de fechas del período para asistencias
+      let attendanceRecords: AttendanceRecord[] = [];
+      try {
+        const periodCfg = await fetchPeriodConfig(periodId!, year);
+        const fechaFin = periodCfg?.fechaFin || periodCfg?.fechaEntrega || null;
+        let fechaInicio: string | null = null;
+
+        if (periodCfg?.fechaInicio) {
+          fechaInicio = periodCfg.fechaInicio;
+        } else {
+          const pNum = parseInt(periodId!);
+          if (pNum === 1) {
+            fechaInicio = `${year}-01-01`;
+          } else {
+            const prevCfg = await fetchPeriodConfig(String(pNum - 1), year);
+            fechaInicio = prevCfg?.fechaFin || prevCfg?.fechaEntrega || `${year}-01-01`;
+          }
+        }
+
+        if (fechaInicio && fechaFin && classroomId) {
+          attendanceRecords = await fetchAttendanceByClassroom(classroomId, fechaInicio, fechaFin);
+        }
+      } catch {
+        // Sin datos de asistencia: fallas = 0
+      }
+
       const selectedList = students.filter(s => selectedStudents.has(s.id));
       const reports: StudentReportData[] = [];
 
@@ -434,11 +464,25 @@ const BulkReportPrinter: React.FC = () => {
             }
           }
 
+          // Calcular fallas dinámicamente desde asistencias (prioridad sobre history)
+          const historyGrades = (areaData as any).grades || { l1: 0, l2: 0, l3: 0, fallas: 0 };
+          let fallas = historyGrades.fallas || 0;
+          let fallasVerificadas = historyGrades.fallasVerificadas || 0;
+
+          if (attendanceRecords.length > 0) {
+            const areaRecs = attendanceRecords.filter(r => r.areaId === areaId);
+            if (areaRecs.length > 0) {
+              const summary = computeAttendanceSummary(areaRecs, student.id);
+              fallas = summary.totalJustified + summary.totalUnjustified;
+              fallasVerificadas = summary.totalUnjustified;
+            }
+          }
+
           subjects.push({
             areaId,
             asignatura: areaInfo.asignatura || areaId,
             ihs: areaInfo.ihs || 'N/A',
-            grades: (areaData as any).grades || { l1: 0, l2: 0, l3: 0, fallas: 0 },
+            grades: { ...historyGrades, fallas, fallasVerificadas },
             achievements,
             orden: areaInfo.orden || 9999,
             area: areaInfo.area

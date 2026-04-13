@@ -2,7 +2,18 @@
   "permissions": {
     "allow": [
       "Bash(npm run build:*)",
-      "Bash(cut:*)"
+      "Bash(cut:*)",
+      "Bash(npx tsc:*)",
+      "Bash(find \"C:\\\\Users\\\\migue\\\\Desktop\\\\PROYECTOS\\\\cubbico\\\\src\" -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" \\\\\\) -exec grep -l \"asistencia\\\\|attendance\\\\|horario\\\\|planilla\" {} \\\\;)",
+      "Bash(xargs grep:*)",
+      "Bash(grep -E \"\\\\.service\\\\.ts$\")",
+      "Bash(ls src/presentation/features/attendance/*.tsx)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(node:*)",
+      "Bash(node_modules/.bin/tsc --version)",
+      "Bash(timeout 60 node_modules/.bin/tsc --noEmit --skipLibCheck)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(echo \"EXIT_CODE:$?\")"
     ]
   }
 }

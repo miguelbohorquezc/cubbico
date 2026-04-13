@@ -1,42 +1,40 @@
-import { useMemo, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../../../app/store/store";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { IconTargetArrow, IconAlertCircle } from "@tabler/icons-react";
-import { loadTeacherAchievements } from "../../../app/store/states/teacher.slice";
+import { getAchievement } from "../../../infrastructure/achievement.service";
+import type { AchievementData } from "../../../domain/entities/achievementData";
 
 const TeacherAchievements = () => {
-  const dispatch = useAppDispatch();
-  const { achievements, loading } = useAppSelector((state) => state.teacherData);
-  const user = useAppSelector((state) => state.user) as any;
   const { periodId, classroomId, areaId } = useParams();
+  const [achievement, setAchievement] = useState<AchievementData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Cargar achievements automáticamente cuando cambian los parámetros
   useEffect(() => {
-    if (user?.uid && classroomId && areaId && periodId) {
-      console.log('🔄 Cargando achievements para:', { classroomId, areaId, periodId });
-      dispatch(loadTeacherAchievements(user.uid));
-    }
-  }, [dispatch, user?.uid, classroomId, areaId, periodId]);
+    if (!classroomId || !areaId || !periodId) return;
 
-  // Filtrar logros por classroomId y areaId
-  const filteredAchievements = useMemo(() => {
-    console.log('📊 Filtrando achievements:', {
-      total: achievements.length,
-      buscando: { classroomId, areaId, periodId: Number(periodId) },
-      achievements: achievements.map(a => ({
-        id: a.id,
-        classroomId: a.classroomId,
-        areaId: a.areaId,
-        period: a.period
-      }))
-    });
+    let cancelled = false;
+    setLoading(true);
 
-    return achievements.filter(achievement =>
-      achievement.classroomId === classroomId &&
-      achievement.areaId === areaId &&
-      achievement.period === Number(periodId)
-    );
-  }, [achievements, classroomId, areaId, periodId]);
+    getAchievement(classroomId, areaId, Number(periodId))
+      .then((snapshot) => {
+        if (cancelled) return;
+        if (snapshot) {
+          setAchievement({
+            id: snapshot.id,
+            classroomId: classroomId!,
+            areaId: areaId!,
+            period: Number(periodId),
+            logros: snapshot.logros,
+          });
+        } else {
+          setAchievement(null);
+        }
+      })
+      .catch(() => { if (!cancelled) setAchievement(null); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [classroomId, areaId, periodId]);
 
   // Estado de carga
   if (loading) {
@@ -50,7 +48,7 @@ const TeacherAchievements = () => {
   }
 
   // Sin logros registrados
-  if (filteredAchievements.length === 0) {
+  if (!achievement) {
     return (
       <div className="flex flex-col items-center justify-center py-8 px-4">
         <div className="w-12 h-12 mb-3 bg-amber-50 rounded-full flex items-center justify-center">
@@ -63,9 +61,6 @@ const TeacherAchievements = () => {
       </div>
     );
   }
-
-  // Mostrar logros
-  const achievement = filteredAchievements[0];
   const logros = [
     { num: 1, text: achievement.logros?.logro1 },
     { num: 2, text: achievement.logros?.logro2 },

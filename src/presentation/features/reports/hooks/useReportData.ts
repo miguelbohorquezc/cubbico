@@ -313,29 +313,27 @@ export function useReportData({
           periodConfig = await fetchPeriodConfig(periodId!, year);
           if (periodConfig?.fechaEntrega) {
             setFechaEntrega(formatFechaEntrega(periodConfig.fechaEntrega));
-            // Fecha de fin del periodo = fecha de entrega configurada
-            fechaFin = periodConfig.fechaEntrega;
           }
 
-          // Calcular fecha de inicio del periodo
-          const currentPeriodNum = parseInt(periodId!);
+          // Fecha de fin: preferir fechaFin (último día de clases) sobre fechaEntrega (entrega de notas)
+          // Esto asegura que los registros de AttendancePlanilla (que usan fechaFin) sean encontrados
+          fechaFin = periodConfig?.fechaFin || periodConfig?.fechaEntrega || null;
 
-          if (currentPeriodNum === 1) {
-            // Periodo 1: inicia el 1 de enero del año
-            fechaInicio = `${year}-01-01`;
+          // Fecha de inicio: preferir fechaInicio del período (mismo que usa AttendancePlanilla)
+          if (periodConfig?.fechaInicio) {
+            fechaInicio = periodConfig.fechaInicio;
           } else {
-            // Periodos 2, 3, 4: inician en la fecha de entrega del periodo anterior
-            try {
-              const prevPeriodConfig = await fetchPeriodConfig(String(currentPeriodNum - 1), year);
-              if (prevPeriodConfig?.fechaEntrega) {
-                fechaInicio = prevPeriodConfig.fechaEntrega;
-              } else {
-                // Fallback: inicio del año si no hay configuración previa
+            const currentPeriodNum = parseInt(periodId!);
+            if (currentPeriodNum === 1) {
+              fechaInicio = `${year}-01-01`;
+            } else {
+              try {
+                const prevPeriodConfig = await fetchPeriodConfig(String(currentPeriodNum - 1), year);
+                // Usar fechaFin del período anterior como inicio, o fechaEntrega como fallback
+                fechaInicio = prevPeriodConfig?.fechaFin || prevPeriodConfig?.fechaEntrega || `${year}-01-01`;
+              } catch {
                 fechaInicio = `${year}-01-01`;
               }
-            } catch {
-              // Fallback: inicio del año
-              fechaInicio = `${year}-01-01`;
             }
           }
         } catch {
@@ -372,15 +370,21 @@ export function useReportData({
           const achievements = await getAchievements((areaData as any).metadata?.achievementId);
 
           // Calcular fallas desde registros de asistencia filtrando por areaId
-          let fallasTotales = 0;
-          let fallasInjustificadas = 0;
+          // Si no hay registros en asistencias para esta área, conservar los valores de history
+          const histGrades = (areaData as any).grades || { l1: 0, l2: 0, l3: 0 };
+          let fallasTotales: number = histGrades.fallas ?? 0;
+          let fallasInjustificadas: number = histGrades.fallasVerificadas ?? histGrades.fallas_verificadas ?? 0;
+
           if (attendanceRecords.length > 0) {
             const areaRecords = attendanceRecords.filter(
               (r) => r.areaId === areaId
             );
-            const summary = computeAttendanceSummary(areaRecords, studentId!);
-            fallasTotales = summary.totalJustified + summary.totalUnjustified;
-            fallasInjustificadas = summary.totalUnjustified;
+            // Solo sobreescribir si realmente hay registros de asistencia para esta área
+            if (areaRecords.length > 0) {
+              const summary = computeAttendanceSummary(areaRecords, studentId!);
+              fallasTotales = summary.totalJustified + summary.totalUnjustified;
+              fallasInjustificadas = summary.totalUnjustified;
+            }
           }
 
           const subject: SubjectData & { _orden?: string } = {
@@ -388,7 +392,7 @@ export function useReportData({
             asignatura: areaInfo.asignatura || areaId,
             ihs: areaInfo.ihs || 'N/A',
             grades: {
-              ...((areaData as any).grades || { l1: 0, l2: 0, l3: 0 }),
+              ...histGrades,
               fallas: fallasTotales,
               fallasVerificadas: fallasInjustificadas,
             },

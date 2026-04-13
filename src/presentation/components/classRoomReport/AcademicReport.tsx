@@ -6,8 +6,6 @@ import logo from '../../../assets/logo/logotipo.jpg';
 import "./AcademicReport.css";
 import { SubjectData, AreaGroup, StudentData, PeriodInfo } from './AcademicInterface';
 import { fetchPeriodConfig, formatFechaEntrega } from '../../../infrastructure/periodConfig.service';
-import { fetchAttendanceByClassroom } from '../../../infrastructure/attendance.service';
-import { computeAttendanceSummary, AttendanceRecord } from '../../../domain/entities/attendance';
 import { usePrintSetup } from '../../components/PrintableReport';
 
 import firmOne from "../../../assets/firm/01.jpg";
@@ -129,45 +127,21 @@ const AcademicReport = () => {
           // Si no hay configuración, usar fecha actual
         }
 
-        // Cargar registros de asistencia para calcular fallas
-        let attendanceRecords: AttendanceRecord[] = [];
-        if (periodConfig?.fechaInicio && periodConfig?.fechaFin && studentData.classroomId) {
-          try {
-            attendanceRecords = await fetchAttendanceByClassroom(
-              studentData.classroomId,
-              periodConfig.fechaInicio,
-              periodConfig.fechaFin
-            );
-          } catch {
-            // Si no hay datos de asistencia, usar fallas = 0
-          }
-        }
-
         for (const [areaId, areaData] of Object.entries(periodData.areas)) {
           const areaInfo = areasMap[areaId] || {};
           const achievements = await getAchievements((areaData as any).metadata?.achievementId);
 
-          // Calcular fallas desde registros de asistencia
-          const teacherId = (areaData as any).metadata?.teacherId;
-          let fallasTotales = 0;
-          let fallasInjustificadas = 0;
-          if (teacherId && attendanceRecords.length > 0) {
-            const areaRecords = attendanceRecords.filter(
-              (r) => r.profesorId === teacherId && r.areaId === areaId
-            );
-            const summary = computeAttendanceSummary(areaRecords, studentId!);
-            fallasTotales = summary.totalJustified + summary.totalUnjustified;
-            fallasInjustificadas = summary.totalUnjustified;
-          }
+          // Leer fallas directamente desde las notas guardadas por el docente
+          const historyGrades = (areaData as any).grades || { l1: 0, l2: 0, l3: 0, fallas: 0, fallasVerificadas: 0 };
 
           const subject: SubjectData = {
             areaId,
             asignatura: areaInfo.asignatura || areaId,
             ihs: areaInfo.ihs || 'N/A',
             grades: {
-              ...((areaData as any).grades || { l1: 0, l2: 0, l3: 0 }),
-              fallas: fallasTotales,
-              fallasVerificadas: fallasInjustificadas,
+              ...historyGrades,
+              fallas: historyGrades.fallas || 0,
+              fallasVerificadas: historyGrades.fallasVerificadas || 0,
             },
             achievements: achievements || { logro1: 'N/A', logro2: 'N/A', logro3: 'N/A' },
             _orden: areaInfo.orden

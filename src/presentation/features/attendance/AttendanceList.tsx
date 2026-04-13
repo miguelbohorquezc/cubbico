@@ -31,6 +31,7 @@ import {
   IconArrowBack,
   IconFileAnalytics,
   IconDoor,
+  IconLayoutGrid,
 } from '@tabler/icons-react';
 import JustificationModal from './JustificationModal';
 
@@ -220,11 +221,19 @@ export default function AttendanceList() {
     setCurrentMonth(`${d.getFullYear()}-${pad(d.getMonth() + 1)}`);
   }
 
-  // ── Obtener estado de una celda ──────────────────
+  // ── Obtener estado guardado en DB ────────────────
   function getStatus(fechaDia: string, studentId: string): AttendanceStatus | null {
     const record = records[fechaDia];
     if (!record) return null;
     return record.estudiantes[studentId]?.status || null;
+  }
+
+  // ── Estado de display: presente por defecto en días activos pasados ──
+  function getDisplayStatus(fechaDia: string, studentId: string, day: MonthDay): AttendanceStatus | null {
+    const saved = getStatus(fechaDia, studentId);
+    if (saved !== null) return saved;
+    if (day.isActive && !day.isFuture) return 'present';
+    return null;
   }
 
   // ── Aplicar cambio de estado ─────────────────────
@@ -255,13 +264,12 @@ export default function AttendanceList() {
   function handleCellClick(fechaDia: string, student: studentInfo, day: MonthDay) {
     if (!day.isActive || day.isFuture) return;
 
-    const current = getStatus(fechaDia, student.id);
+    // Usar display status: días activos pasados sin registro ya cuentan como "present"
+    const current = getDisplayStatus(fechaDia, student.id, day);
 
-    // Ciclo: null → present → unjustified → justified (modal excusa) → null
-    if (current === null)          { applyStatus(fechaDia, student.id, 'present'); return; }
+    // Ciclo: present (default/guardado) → unjustified → justified (modal) → present (default)
     if (current === 'present')     { applyStatus(fechaDia, student.id, 'unjustified'); return; }
     if (current === 'unjustified') {
-      // Transición a justified: abrir modal para registrar excusa
       setModalData({ fecha: fechaDia, studentId: student.id, studentName: `${student.name} ${student.lastName}` });
       return;
     }
@@ -352,12 +360,20 @@ export default function AttendanceList() {
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/report/${salonId}/${profesorId}/${areaId}/${horaDecoded}`)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-orchid-blue-60 border border-orchid-blue-30 rounded-lg hover:bg-orchid-blue-70 transition-all shadow-sm hover:shadow"
-            >
-              <IconFileAnalytics size={13} /> Informe
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/planilla/${salonId}/${profesorId}/${areaId}/${fecha}/${encodeURIComponent(horaDecoded)}`)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-orchid-blue-60 bg-white border border-orchid-blue-30 rounded-lg hover:bg-orchid-blue-10 transition-all shadow-sm"
+              >
+                <IconLayoutGrid size={13} /> Planilla
+              </button>
+              <button
+                onClick={() => navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DASHBOARD}/${PrivateRoutes.ASISTENCIA}/report/${salonId}/${profesorId}/${areaId}/${horaDecoded}`)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-orchid-blue-60 border border-orchid-blue-30 rounded-lg hover:bg-orchid-blue-70 transition-all shadow-sm hover:shadow"
+              >
+                <IconFileAnalytics size={13} /> Informe
+              </button>
+            </div>
           </div>
 
           {/* ── Error ── */}
@@ -428,7 +444,7 @@ export default function AttendanceList() {
                         <div className="text-[9px] text-gray-400 truncate">{student.document}</div>
                       </td>
                       {activeDays.map((day) => {
-                        const status = getStatus(day.iso, student.id);
+                        const status = getDisplayStatus(day.iso, student.id, day);
                         const disabled = !day.isActive || day.isFuture;
                         return (
                           <td key={day.iso} className="border-b border-gray-100 px-0.5 py-0.5 text-center">
@@ -440,7 +456,7 @@ export default function AttendanceList() {
                                   ? 'opacity-30 cursor-not-allowed bg-gray-100 border-gray-200 text-gray-400'
                                   : `cursor-pointer hover:scale-110 active:scale-95 ${statusStyle(status)}`
                               }`}
-                              title={day.isFuture ? 'Día futuro' : status || 'Sin marca'}
+                              title={day.isFuture ? 'Día futuro' : status === 'present' ? 'Presente (clic para marcar falta)' : status === 'unjustified' ? 'Falta injustificada (clic para justificar)' : status === 'justified' ? 'Falta justificada (clic para limpiar)' : 'Sin clase'}
                             >
                               {statusLabel(status)}
                             </button>

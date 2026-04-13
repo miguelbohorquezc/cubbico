@@ -5,9 +5,8 @@ import { db } from '../../../../../infrastructure/firebase/firebase';
 import { SidebarV2 } from '../../../../components/sidebarV2';
 import { HeaderV2 } from '../../../../components/headerV2';
 import { useStudents } from '../../../../components/datatable/useStudents';
-import { IconClockRecord, IconArrowLeft, IconUser, IconChevronRight, IconFileText, IconAward, IconX } from '@tabler/icons-react';
+import { IconClockRecord, IconArrowLeft, IconUser, IconChevronRight, IconFileText, IconAward, IconX, IconPrinter } from '@tabler/icons-react';
 import { FinalReportContent } from './FinalReport';
-import { usePrintSetup, PrintControls } from '../../../../components/PrintableReport';
 
 // ─── Sincronización con estado del sidebar ───────────────────────────────
 
@@ -72,11 +71,7 @@ function useStudentHistory(studentId: string | null) {
         setError(null);
 
         // Obtener datos actuales del estudiante para usar su nivel/salón correcto
-        const studentSnap = await getDoc(doc(db, 'student', studentId));
-        let currentStudentData = null;
-        if (studentSnap.exists()) {
-          currentStudentData = studentSnap.data();
-        }
+        await getDoc(doc(db, 'student', studentId));
 
         const historySnap = await getDoc(doc(db, 'history', studentId));
         if (!historySnap.exists()) {
@@ -205,7 +200,6 @@ function History() {
 
   const { years, loading: historyLoading, error: historyError } = useStudentHistory(selected?.id || null);
   const [expandedYear, setExpandedYear] = React.useState<string | null>(null);
-  const { paperSize, setPaperSize, handlePrint } = usePrintSetup();
 
   const filtered = useMemo(() => {
     if (!search) return students;
@@ -466,11 +460,13 @@ function History() {
                                 </span>
                               </div>
                               <div className="flex items-center gap-3">
-                                <PrintControls
-                                  paperSize={paperSize}
-                                  onPaperSizeChange={setPaperSize}
-                                  onPrint={handlePrint}
-                                />
+                                <button
+                                  onClick={() => window.open(`/private/dashboard/final-report/${selected.id}/${yr.year}`, '_blank')}
+                                  className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-orchid-blue-60 rounded-lg hover:bg-orchid-blue-70 transition-all duration-200 shadow-sm"
+                                >
+                                  <IconPrinter size={14} />
+                                  Imprimir
+                                </button>
                                 <button
                                   onClick={() => setExpandedYear(null)}
                                   className="flex items-center justify-center w-7 h-7 rounded-md hover:bg-tosca-ds/10 transition-colors"

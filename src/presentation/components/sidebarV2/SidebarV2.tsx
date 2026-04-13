@@ -241,7 +241,7 @@ export const SidebarV2: React.FC<SidebarV2Props> = ({ className = '' }) => {
           type="button"
           onClick={open}
           className="
-            fixed top-4 left-4 z-40
+            fixed top-4 left-4 z-50
             p-2 rounded-lg
             bg-white border border-gray-200
             text-gray-600 hover:text-gray-900

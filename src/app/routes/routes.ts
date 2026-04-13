@@ -27,7 +27,9 @@ export const PrivateRoutes = {
     FINALREPORT:                'final-report',
     PROMOTIONS:                 'promotions',
     HORARIO:                    'horario',
+    HORARIO_RAPIDO:             'horario-rapido',
     ASISTENCIA:                 'asistencia',
+    ASISTENCIA_PERIODO:         'asistencia-periodo',
     TIMEBLOCKS:                 'time-blocks',
     TECHASSETS:                 'tech-assets'
 }

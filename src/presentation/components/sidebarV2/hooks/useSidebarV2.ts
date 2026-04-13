@@ -198,9 +198,9 @@ export const useSidebarV2 = (options: UseSidebarOptions = {}): UseSidebarReturn 
     }
   }, [state, onStateChange]);
 
-  // Persistir estado colapsado
+  // Persistir estado colapsado (desktop y tablet: el sidebar ocupa espacio, no es overlay)
   useEffect(() => {
-    if (persist && state.mode === 'desktop') {
+    if (persist && state.mode !== 'mobile') {
       setStoredCollapsed(storageKey, state.isCollapsed);
     }
   }, [state.isCollapsed, state.mode, persist, storageKey]);

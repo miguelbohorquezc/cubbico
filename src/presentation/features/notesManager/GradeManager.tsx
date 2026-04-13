@@ -4,13 +4,24 @@ import { PrivateRoutes } from '../../../app/routes/routes';
 import { useAppSelector } from '../../../app/store/store';
 import InputField from './InputField';
 import Portal from '../../components/common/Portal';
-import { IconFileDescription, IconLoader2, IconAlertCircle, IconUsersGroup, IconCheck, IconX, IconLock } from '@tabler/icons-react';
+import {
+  IconFileDescription, IconLoader2, IconAlertCircle,
+  IconUsersGroup, IconCheck, IconX, IconLock,
+  IconCircleCheck, IconAlertTriangle,
+} from '@tabler/icons-react';
 import { usePermissions } from '../../hooks/usePermissions';
 
 import { useValidadores } from './useValidadores';
 import { useCargarEstudiantesYNotas } from './useCargarEstudiantesYNotas';
 import { useConstruirYEnviarLote } from './useConstruirYEnviarLote';
 import { Student, CampoCalificacion } from './types';
+
+// ── Estado del modal ───────────────────────────────────────
+type ModalPhase =
+  | { phase: 'confirm' }
+  | { phase: 'saving' }
+  | { phase: 'success' }
+  | { phase: 'error'; message: string };
 
 /**
  * Obtiene el color del promedio según el rango
@@ -37,9 +48,9 @@ const GradeManager: React.FC = () => {
     areaId: string;
   }>();
 
-  // Estado para modal de confirmación
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  // Estado del modal y errores de validación inline
+  const [modalPhase, setModalPhase] = useState<ModalPhase | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   // Permisos del usuario
   const { isCoordinator: _isCoordinator, permissions } = usePermissions();
@@ -136,6 +147,12 @@ const GradeManager: React.FC = () => {
               <th className="px-2 py-3 text-center text-xs font-semibold text-orchid-blue-60 uppercase tracking-wider w-20">
                 L3
               </th>
+              <th className="px-2 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-16">
+                Fallas
+              </th>
+              <th className="px-2 py-3 text-center text-xs font-semibold text-red-500 uppercase tracking-wider w-20">
+                F. Injust.
+              </th>
               <th className="px-2 py-3 text-center text-xs font-semibold text-orchid-blue-60 uppercase tracking-wider w-20">
                 Prom.
               </th>
@@ -178,6 +195,28 @@ const GradeManager: React.FC = () => {
                       </td>
                     ))}
 
+
+                    {/* Fallas totales */}
+                    <td className="px-1 py-4 text-center">
+                      <InputField
+                        type="text"
+                        value={g.fallas}
+                        onChange={(value) => setCampoNota(student.id, 'fallas', value)}
+                        isValid={!showErrors || validarCantidadFallas(g.fallas)}
+                        errorMessage="0-99"
+                      />
+                    </td>
+
+                    {/* Fallas injustificadas */}
+                    <td className="px-1 py-4 text-center">
+                      <InputField
+                        type="text"
+                        value={g.fallasVerificadas || ''}
+                        onChange={(value) => setCampoNota(student.id, 'fallasVerificadas', value)}
+                        isValid={!showErrors || validarCantidadFallas(g.fallasVerificadas || '')}
+                        errorMessage="0-99"
+                      />
+                    </td>
 
                     {/* Promedio */}
                     <td className="px-2 py-4 text-center">
@@ -238,131 +277,185 @@ const GradeManager: React.FC = () => {
         </table>
       </div>
 
-      {/* Botón de guardar */}
-      <div className="flex justify-end pt-4 border-t border-gray-100">
-        <button
-          onClick={async () => {
-            const isValid = await validarTodoAntesDeEnviar();
-            if (isValid) {
-              setShowConfirmModal(true);
-            }
-          }}
-          disabled={loading || isSaving}
-          className="
-            inline-flex items-center gap-2 px-6 py-2.5
-            text-sm font-semibold text-white
-            bg-orchid-blue-60
-            rounded-lg shadow-sm
-            transition-all duration-200
-            hover:bg-orchid-blue-70 hover:shadow-md
-            focus:outline-none focus:ring-2 focus:ring-orchid-blue-30
-            disabled:opacity-60 disabled:cursor-not-allowed
-          "
-        >
-          {(loading || isSaving) && <IconLoader2 size={16} className="animate-spin" />}
-          Guardar Calificaciones
-        </button>
+      {/* Botón de guardar + errores de validación inline */}
+      <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+        {validationErrors.length > 0 && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <IconAlertTriangle size={15} className="text-red-500 flex-shrink-0" />
+              <span className="text-xs font-semibold text-red-700">
+                Corrige {validationErrors.length} {validationErrors.length === 1 ? 'error' : 'errores'} antes de guardar
+              </span>
+            </div>
+            <ul className="space-y-0.5 pl-5 list-disc">
+              {validationErrors.slice(0, 6).map((e, i) => (
+                <li key={i} className="text-xs text-red-600">{e}</li>
+              ))}
+              {validationErrors.length > 6 && (
+                <li className="text-xs text-red-500 font-medium">…y {validationErrors.length - 6} más</li>
+              )}
+            </ul>
+          </div>
+        )}
+
+        <div className="flex justify-end">
+          <button
+            onClick={async () => {
+              setValidationErrors([]);
+              const result = await validarTodoAntesDeEnviar();
+              if (!result.ok) {
+                setValidationErrors(result.errores);
+                return;
+              }
+              setModalPhase({ phase: 'confirm' });
+            }}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-orchid-blue-60 rounded-lg shadow-sm transition-all duration-200 hover:bg-orchid-blue-70 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orchid-blue-30 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading && <IconLoader2 size={16} className="animate-spin" />}
+            Guardar Calificaciones
+          </button>
+        </div>
       </div>
 
-      {/* Modal de confirmación */}
-      {showConfirmModal && (
+      {/* Modal con máquina de estados */}
+      {modalPhase && (
         <Portal>
-          <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orchid-blue-10 rounded-full flex items-center justify-center">
-                <IconCheck size={20} className="text-orchid-blue-60" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">Confirmar guardado</h3>
-                <p className="text-sm text-gray-500">Revisa antes de continuar</p>
-              </div>
-            </div>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
 
-            {/* Contenido */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Asignatura:</span>
-                  <span className="font-medium text-gray-900">{area?.asignatura || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Salón:</span>
-                  <span className="font-medium text-gray-900">{classroom?.nombreSalon || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Período:</span>
-                  <span className="font-medium text-gray-900">{periodId}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Estudiantes:</span>
-                  <span className="font-medium text-gray-900">{students.length}</span>
-                </div>
-              </div>
-            </div>
+              {/* ── CONFIRMAR ── */}
+              {modalPhase.phase === 'confirm' && (
+                <>
+                  <div className="px-6 pt-6 pb-4">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-10 h-10 bg-orchid-blue-10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <IconCheck size={20} className="text-orchid-blue-60" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-gray-900">Confirmar guardado</h3>
+                        <p className="text-xs text-gray-500">Revisa el resumen antes de continuar</p>
+                      </div>
+                    </div>
 
-            <p className="text-sm text-gray-600 mb-6">
-              ¿Estás seguro de guardar las calificaciones? Esta acción registrará las notas de todos los estudiantes.
-            </p>
+                    <div className="bg-gray-50 rounded-lg divide-y divide-gray-100 mb-5 text-sm">
+                      {[
+                        ['Asignatura', area?.asignatura || '—'],
+                        ['Salón', classroom?.nombreSalon || '—'],
+                        ['Período', periodId || '—'],
+                        ['Estudiantes', String(students.length)],
+                      ].map(([label, value]) => (
+                        <div key={label} className="flex justify-between px-4 py-2.5">
+                          <span className="text-gray-500">{label}</span>
+                          <span className="font-medium text-gray-900">{value}</span>
+                        </div>
+                      ))}
+                    </div>
 
-            {/* Botones */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                disabled={isSaving}
-                className="
-                  flex-1 px-4 py-2.5
-                  text-sm font-medium text-gray-700
-                  bg-gray-100 rounded-lg
-                  transition-colors
-                  hover:bg-gray-200
-                  disabled:opacity-50
-                "
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <IconX size={16} />
-                  Cancelar
-                </span>
-              </button>
-              <button
-                onClick={async () => {
-                  setIsSaving(true);
-                  try {
-                    await enviarLote();
-                    setShowConfirmModal(false);
-                  } finally {
-                    setIsSaving(false);
-                  }
-                }}
-                disabled={isSaving}
-                className="
-                  flex-1 px-4 py-2.5
-                  text-sm font-semibold text-white
-                  bg-orchid-blue-60
-                  rounded-lg
-                  transition-all duration-200
-                  hover:bg-orchid-blue-70
-                  disabled:opacity-60
-                "
-              >
-                <span className="flex items-center justify-center gap-2">
-                  {isSaving ? (
-                    <>
-                      <IconLoader2 size={16} className="animate-spin" />
-                      Guardando...
-                    </>
-                  ) : (
-                    <>
-                      <IconCheck size={16} />
-                      Confirmar
-                    </>
-                  )}
-                </span>
-              </button>
+                    <p className="text-xs text-gray-500">
+                      Esta acción guardará las notas de <strong>{students.length}</strong> estudiante{students.length !== 1 ? 's' : ''}. Podrás editarlas después.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3 px-6 pb-6">
+                    <button
+                      onClick={() => setModalPhase(null)}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                      <IconX size={15} /> Cancelar
+                    </button>
+                    <button
+                      onClick={async () => {
+                        setModalPhase({ phase: 'saving' });
+                        try {
+                          await enviarLote();
+                          setModalPhase({ phase: 'success' });
+                        } catch (err) {
+                          setModalPhase({
+                            phase: 'error',
+                            message: err instanceof Error ? err.message : 'Error desconocido al guardar.',
+                          });
+                        }
+                      }}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-orchid-blue-60 rounded-lg hover:bg-orchid-blue-70 transition-all"
+                    >
+                      <IconCheck size={15} /> Confirmar
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* ── GUARDANDO ── */}
+              {modalPhase.phase === 'saving' && (
+                <div className="flex flex-col items-center justify-center px-6 py-12 gap-4">
+                  <div className="w-14 h-14 bg-orchid-blue-10 rounded-full flex items-center justify-center">
+                    <IconLoader2 size={28} className="text-orchid-blue-60 animate-spin" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm font-semibold text-gray-800">Guardando calificaciones…</p>
+                    <p className="text-xs text-gray-500 mt-1">Por favor espera, no cierres esta ventana.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* ── ÉXITO ── */}
+              {modalPhase.phase === 'success' && (
+                <>
+                  <div className="flex flex-col items-center justify-center px-6 pt-10 pb-6 gap-4">
+                    <div className="w-14 h-14 bg-emerald-50 rounded-full flex items-center justify-center">
+                      <IconCircleCheck size={32} className="text-emerald-500" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-base font-semibold text-gray-900">¡Calificaciones guardadas!</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Las notas de <strong>{students.length}</strong> estudiante{students.length !== 1 ? 's' : ''} fueron registradas correctamente.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="px-6 pb-6">
+                    <button
+                      onClick={() => setModalPhase(null)}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 transition-colors"
+                    >
+                      <IconCheck size={15} /> Cerrar
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* ── ERROR ── */}
+              {modalPhase.phase === 'error' && (
+                <>
+                  <div className="flex flex-col items-center justify-center px-6 pt-10 pb-6 gap-4">
+                    <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center">
+                      <IconAlertCircle size={30} className="text-red-500" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-base font-semibold text-gray-900">Error al guardar</p>
+                      <p className="text-xs text-red-600 mt-2 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+                        {modalPhase.message}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 px-6 pb-6">
+                    <button
+                      onClick={() => setModalPhase(null)}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                      <IconX size={15} /> Cerrar
+                    </button>
+                    <button
+                      onClick={() => setModalPhase({ phase: 'confirm' })}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-orchid-blue-60 rounded-lg hover:bg-orchid-blue-70 transition-colors"
+                    >
+                      Reintentar
+                    </button>
+                  </div>
+                </>
+              )}
+
             </div>
           </div>
-        </div>
         </Portal>
       )}
     </div>
