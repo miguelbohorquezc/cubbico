@@ -13,7 +13,9 @@
       "Bash(node_modules/.bin/tsc --version)",
       "Bash(timeout 60 node_modules/.bin/tsc --noEmit --skipLibCheck)",
       "Bash(echo \"EXIT:$?\")",
-      "Bash(echo \"EXIT_CODE:$?\")"
+      "Bash(echo \"EXIT_CODE:$?\")",
+      "Bash(grep -r \"history\\\\|student\\\\|periods\\\\|areas\" /c/Users/migue/Desktop/PROYECTOS/cubbico/src/infrastructure/*.ts)",
+      "Bash(grep -r \"Modal\\\\|modal\\\\|Dialog\\\\|dialog\" /c/Users/migue/Desktop/PROYECTOS/cubbico/src/presentation/pages/private/Dashboard/components/*.tsx)"
     ]
   }
 }

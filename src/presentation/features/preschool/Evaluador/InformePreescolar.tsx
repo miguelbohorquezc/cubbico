@@ -252,6 +252,7 @@ const InformePreescolar: React.FC = () => {
                 periodId={periodId}
                 director={directorGrupo}
                 fechaEntrega={fechaEntrega}
+                year={year}
               />
             </div>
 

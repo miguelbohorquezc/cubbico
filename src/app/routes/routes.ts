@@ -31,5 +31,6 @@ export const PrivateRoutes = {
     ASISTENCIA:                 'asistencia',
     ASISTENCIA_PERIODO:         'asistencia-periodo',
     TIMEBLOCKS:                 'time-blocks',
-    TECHASSETS:                 'tech-assets'
+    TECHASSETS:                 'tech-assets',
+    CATEDRA:                    'catedra'
 }

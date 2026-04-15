@@ -148,6 +148,7 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
               periodId={periodId}
               director={director}
               fechaEntrega={fechaEntrega}
+              year={year}
             />
           )}
 
@@ -158,6 +159,7 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
               periodId={periodId}
               director={director}
               fechaEntrega={fechaEntrega}
+              year={year}
             />
           )}
 
@@ -168,6 +170,7 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
               periodId={periodId}
               director={director}
               fechaEntrega={fechaEntrega}
+              year={year}
             />
           )}
 

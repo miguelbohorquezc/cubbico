@@ -31,7 +31,6 @@ import {
   TIME_SLOTS,
   calculateEndTime,
   detectActivityOverlap,
-  minutesToTime,
   timeToMinutes,
 } from '../../../domain/entities/schedule';
 import type { FlexibleScheduleActivity } from '../../../domain/entities/schedule';

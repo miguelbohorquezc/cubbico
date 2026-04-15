@@ -103,6 +103,7 @@ export default function UnifiedReport() {
             studentInfo={studentInfo}
             periodId={periodId}
             fechaEntrega={fechaEntrega}
+            year={year}
           />
         )}
 
@@ -112,6 +113,7 @@ export default function UnifiedReport() {
             studentInfo={studentInfo}
             periodId={periodId}
             fechaEntrega={fechaEntrega}
+            year={year}
           />
         )}
 

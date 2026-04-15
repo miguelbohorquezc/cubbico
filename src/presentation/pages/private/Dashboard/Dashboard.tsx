@@ -34,6 +34,7 @@ import UnifiedReport from "../../../features/reports/UnifiedReport"
 import AcademicReportView from "../../../features/reports/AcademicReportView"
 import ClassroomBulkReportView from "../../../features/reports/ClassroomBulkReportView"
 import TechAssetsPage from "./components/TechAssetsPage"
+import CatedraSocioemocionalPage from "../../../features/catedra/CatedraSocioemocionalPage"
 
 /**
  * Dashboard - Rutas del panel principal
@@ -76,6 +77,8 @@ function Dashboard() {
         <Route path={`${PrivateRoutes.ASISTENCIA_PERIODO}/:salonId/:periodId/:year`} element={<AttendancePeriodReport />} />
         {/* Impresión masiva de informes */}
         <Route path={`${PrivateRoutes.BULKPRINT}/:periodId/:classroomId`} element={<BulkReportPrinter />} />
+        {/* Cátedra Socio Emocional y Proyectos Transversales */}
+        <Route path={PrivateRoutes.CATEDRA} element={<CatedraSocioemocionalPage />} />
       </Route>
 
       {/* ═══════════════════════════════════════════════════════════════════

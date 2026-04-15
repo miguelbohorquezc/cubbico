@@ -163,7 +163,7 @@ export const HeaderV2: React.FC<HeaderV2Props> = ({
         {/* Sección izquierda: Título y fecha */}
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-gray-900 truncate">{title}</h1>
+            <h1 className="text-m font-bold text-gray-900 truncate">{title}</h1>
             {subtitle && (
               <>
                 <span className="text-gray-300">/</span>

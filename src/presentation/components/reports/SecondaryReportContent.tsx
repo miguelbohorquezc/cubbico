@@ -8,6 +8,7 @@
 
 import React from 'react';
 import type { AreaGroup, StudentData } from '../../../presentation/features/reports/hooks/useReportData';
+import ReportExtraContent from './ReportExtraContent';
 import firmOne from '../../../assets/firm/01.jpg';
 import firmTwo from '../../../assets/firm/02.jpg';
 
@@ -21,6 +22,7 @@ export interface SecondaryReportContentProps {
   periodId?: string;
   director?: string;
   fechaEntrega?: string;
+  year?: string;
 }
 
 // ============================================
@@ -257,7 +259,8 @@ export const SecondaryReportContent: React.FC<SecondaryReportContentProps> = ({
   studentInfo,
   periodId,
   director,
-  fechaEntrega
+  fechaEntrega,
+  year,
 }) => {
   return (
     <div className="secondary-report-content">
@@ -299,6 +302,12 @@ export const SecondaryReportContent: React.FC<SecondaryReportContentProps> = ({
       <div className="mt-4 space-y-2">
         <ConventionsTable />
         <GradeScaleTable />
+        <ReportExtraContent
+          classroomId={studentInfo?.classroomId}
+          year={year}
+          periodId={periodId}
+          showCatedra={true}
+        />
         <ObservationsTable />
         <SignaturesTable periodId={periodId} director={director} />
       </div>

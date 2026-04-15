@@ -8,6 +8,7 @@
 
 import React from 'react';
 import type { StudentData } from '../../features/reports/hooks/useReportData';
+import ReportExtraContent from './ReportExtraContent';
 import firmOne from '../../../assets/firm/01.jpg';
 import firmTwo from '../../../assets/firm/02.jpg';
 
@@ -28,6 +29,7 @@ export interface PreschoolReportContentProps {
   periodId?: string;
   director?: string;
   fechaEntrega?: string;
+  year?: string;
 }
 
 // ============================================
@@ -197,7 +199,8 @@ export const PreschoolReportContent: React.FC<PreschoolReportContentProps> = ({
   studentInfo,
   periodId,
   director,
-  fechaEntrega
+  fechaEntrega,
+  year,
 }) => {
   return (
     <div className="preschool-report-content">
@@ -216,6 +219,12 @@ export const PreschoolReportContent: React.FC<PreschoolReportContentProps> = ({
         </div>
       )}
 
+      <ReportExtraContent
+        classroomId={studentInfo?.classroomId}
+        year={year}
+        periodId={periodId}
+        showCatedra={false}
+      />
       <ObservationsTable />
       <SignaturesTable periodId={periodId} director={director} />
     </div>

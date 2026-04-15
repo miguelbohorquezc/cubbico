@@ -13,6 +13,8 @@ import { db } from '../../../../infrastructure/firebase/firebase';
 import { fetchPeriodConfig, formatFechaEntrega } from '../../../../infrastructure/periodConfig.service';
 import { fetchAttendanceByClassroom } from '../../../../infrastructure/attendance.service';
 import { computeAttendanceSummary, AttendanceRecord } from '../../../../domain/entities/attendance';
+import type { CatedraSocioemocional, ProyectosTransversales } from '../../../../domain/entities/catedraSocioemocional';
+import { getCatedraBySalonYear, getProyectosTransversales } from '../../../../infrastructure/catedraSocioemocional.service';
 
 // ============================================
 // Tipos
@@ -86,6 +88,8 @@ export interface UseReportDataReturn {
   director: string;
   loading: boolean;
   error: string;
+  catedra: CatedraSocioemocional | null;
+  proyectosTransversales: ProyectosTransversales | null;
 }
 
 // ============================================
@@ -104,6 +108,8 @@ export function useReportData({
   const [director, setDirector] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [catedra, setCatedra] = useState<CatedraSocioemocional | null>(null);
+  const [proyectosTransversales, setProyectosTransversales] = useState<ProyectosTransversales | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,13 +130,15 @@ export function useReportData({
           classroomId: studentData.classroomId
         });
 
-        // Obtener director de grupo desde el classroom
+        // Obtener director de grupo, nivel y grado desde el classroom
         if (studentData.classroomId) {
           try {
             const classroomDoc = await getDoc(doc(db, 'classRooms', studentData.classroomId));
             if (classroomDoc.exists()) {
               const classroomData = classroomDoc.data();
               const directorValue = classroomData?.directorGrupo;
+              const nivelSalon: string = classroomData?.nivel || '';
+              const nombreSalon: string = classroomData?.nombreSalon || '';
 
               if (directorValue) {
                 // Intentar buscar como UID primero
@@ -148,9 +156,19 @@ export function useReportData({
                   setDirector(directorValue);
                 }
               }
+
+              // Cargar cátedra socio emocional y proyectos transversales en paralelo
+              const [catedraResult, proyectosResult] = await Promise.all([
+                nivelSalon && nombreSalon
+                  ? getCatedraBySalonYear(nivelSalon, nombreSalon, year)
+                  : Promise.resolve(null),
+                getProyectosTransversales(year),
+              ]);
+              setCatedra(catedraResult);
+              setProyectosTransversales(proyectosResult);
             }
           } catch (error) {
-            console.error('Error cargando director de grupo:', error);
+            console.error('Error cargando datos del classroom:', error);
           }
         }
 
@@ -453,7 +471,9 @@ export function useReportData({
     fechaEntrega,
     director,
     loading,
-    error
+    error,
+    catedra,
+    proyectosTransversales,
   };
 }
 

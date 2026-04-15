@@ -221,6 +221,7 @@ export default function AcademicReportView() {
                   periodId={currentPeriod}
                   director={director}
                   fechaEntrega={fechaEntrega}
+                  year={year}
                 />
               )}
 
@@ -231,6 +232,7 @@ export default function AcademicReportView() {
                   periodId={currentPeriod}
                   director={director}
                   fechaEntrega={fechaEntrega}
+                  year={year}
                 />
               )}
 
@@ -241,6 +243,7 @@ export default function AcademicReportView() {
                   periodId={currentPeriod}
                   director={director}
                   fechaEntrega={fechaEntrega}
+                  year={year}
                 />
               )}
 

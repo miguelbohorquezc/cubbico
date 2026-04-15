@@ -158,6 +158,14 @@ export const navItems = [
     allowedRoles: ['Coordinador'],
   },
   {
+    id: 'catedra',
+    label: 'Cátedra Socio Emocional',
+    path: buildPath(PrivateRoutes.CATEDRA),
+    icon: BookIcon,
+    description: 'Gestión de cátedra socio emocional y proyectos transversales',
+    allowedRoles: ['Coordinador'],
+  },
+  {
     id: 'usuarios',
     label: 'Usuarios',
     path: buildPath(PrivateRoutes.USER),

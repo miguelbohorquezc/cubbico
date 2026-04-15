@@ -8,6 +8,7 @@
 
 import React from 'react';
 import type { SubjectData, StudentData } from '../../../presentation/features/reports/hooks/useReportData';
+import ReportExtraContent from './ReportExtraContent';
 import firmOne from '../../../assets/firm/01.jpg';
 import firmTwo from '../../../assets/firm/02.jpg';
 
@@ -21,6 +22,7 @@ export interface PrimaryReportContentProps {
   periodId?: string;
   director?: string;
   fechaEntrega?: string;
+  year?: string;
 }
 
 // ============================================
@@ -257,7 +259,8 @@ export const PrimaryReportContent: React.FC<PrimaryReportContentProps> = ({
   studentInfo,
   periodId,
   director,
-  fechaEntrega
+  fechaEntrega,
+  year,
 }) => {
   return (
     <div className="primary-report-content">
@@ -284,6 +287,12 @@ export const PrimaryReportContent: React.FC<PrimaryReportContentProps> = ({
 
       <ConventionsTable />
       <GradeScaleTable />
+      <ReportExtraContent
+        classroomId={studentInfo?.classroomId}
+        year={year}
+        periodId={periodId}
+        showCatedra={true}
+      />
       <ObservationsTable />
       <SignaturesTable periodId={periodId} director={director} />
     </div>
