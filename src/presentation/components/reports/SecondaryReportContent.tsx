@@ -23,6 +23,7 @@ export interface SecondaryReportContentProps {
   director?: string;
   fechaEntrega?: string;
   year?: string;
+  filterEmpty?: boolean;
 }
 
 // ============================================
@@ -188,16 +189,16 @@ const SubjectRow: React.FC<{ subject: any; index: number }> = ({ subject, index 
 
   return (
     <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors print:bg-white`}>
-      <td className="px-3 py-3 border-b border-gray-100 text-sm font-medium text-gray-900 align-top">
+      <td className="px-3 py-3 border-b border-gray-100 text-sm font-medium text-black align-top">
         {subject.asignatura}
       </td>
-      <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+      <td className="px-1 py-3 border-b border-gray-100 text-sm text-black text-center align-top">
         {subject.ihs}
       </td>
-      <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+      <td className="px-1 py-3 border-b border-gray-100 text-sm text-black text-center align-top">
         {subject.grades.fallas}
       </td>
-      <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+      <td className="px-1 py-3 border-b border-gray-100 text-sm text-black text-center align-top">
         {subject.grades.fallasVerificadas}
       </td>
       <td className="px-3 py-3 border-b border-gray-100 align-top">
@@ -206,19 +207,19 @@ const SubjectRow: React.FC<{ subject: any; index: number }> = ({ subject, index 
             <span className="flex-shrink-0 w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
               1
             </span>
-            <span className="text-gray-700 leading-relaxed">{subject.achievements.logro1}</span>
+            <span className="text-black leading-relaxed">{subject.achievements.logro1}</span>
           </div>
           <div className="achievement-item flex items-start gap-2 text-sm">
             <span className="flex-shrink-0 w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
               2
             </span>
-            <span className="text-gray-700 leading-relaxed">{subject.achievements.logro2}</span>
+            <span className="text-black leading-relaxed">{subject.achievements.logro2}</span>
           </div>
           <div className="achievement-item flex items-start gap-2 text-sm">
             <span className="flex-shrink-0 w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
               3
             </span>
-            <span className="text-gray-700 leading-relaxed">{subject.achievements.logro3}</span>
+            <span className="text-black leading-relaxed">{subject.achievements.logro3}</span>
           </div>
         </div>
       </td>
@@ -261,7 +262,19 @@ export const SecondaryReportContent: React.FC<SecondaryReportContentProps> = ({
   director,
   fechaEntrega,
   year,
+  filterEmpty = false,
 }) => {
+  const visibleGroups = filterEmpty
+    ? reportData
+        .map(group => ({
+          ...group,
+          subjects: group.subjects.filter(
+            s => (s.grades.l1 || 0) !== 0 || (s.grades.l2 || 0) !== 0 || (s.grades.l3 || 0) !== 0
+          )
+        }))
+        .filter(group => group.subjects.length > 0)
+    : reportData;
+
   return (
     <div className="secondary-report-content">
       <p className="text-center text-lg font-bold text-gray-800 my-4">INFORME DE VALORACIÓN</p>
@@ -269,7 +282,7 @@ export const SecondaryReportContent: React.FC<SecondaryReportContentProps> = ({
       <StudentInfoTable studentInfo={studentInfo} periodId={periodId} fechaEntrega={fechaEntrega} />
 
       {/* Iterar por cada área y mostrar su tabla */}
-      {reportData.map((group, groupIndex) => (
+      {visibleGroups.map((group, groupIndex) => (
         <div key={groupIndex} className="area-group mt-6 w-full">
           {/* Header del área */}
           <h3 className="bg-gray-200 print:bg-white text-gray-900 px-4 py-2.5 rounded-md font-semibold text-sm mb-3">
@@ -279,14 +292,14 @@ export const SecondaryReportContent: React.FC<SecondaryReportContentProps> = ({
           {/* Tabla de asignaturas del área */}
           <table className="report-table w-full border-collapse bg-white rounded-lg overflow-hidden print:overflow-visible shadow-sm print:shadow-none mb-4">
             <thead>
-              <tr className="bg-gray-100 print:bg-white">
-                <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Asignatura</th>
-                <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-10">IHS</th>
-                <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">F</th>
-                <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">FI</th>
-                <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Logros</th>
-                <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Notas</th>
-                <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Promedio</th>
+              <tr className="bg-gray-100 print:bg-gray-100">
+                <th className="px-3 py-3 text-left text-sm font-semibold text-black border-b border-gray-200">Asignatura</th>
+                <th className="px-1 py-3 text-center text-sm font-semibold text-black border-b border-gray-200 w-10">IHS</th>
+                <th className="px-1 py-3 text-center text-sm font-semibold text-black border-b border-gray-200 w-8">F</th>
+                <th className="px-1 py-3 text-center text-sm font-semibold text-black border-b border-gray-200 w-8">FI</th>
+                <th className="px-3 py-3 text-left text-sm font-semibold text-black border-b border-gray-200">Logros</th>
+                <th className="px-3 py-3 text-left text-sm font-semibold text-black border-b border-gray-200 w-24">Notas</th>
+                <th className="px-3 py-3 text-center text-sm font-semibold text-black border-b border-gray-200 w-24">Promedio</th>
               </tr>
             </thead>
             <tbody>

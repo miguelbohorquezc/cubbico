@@ -199,15 +199,15 @@ const StudentReportCard: React.FC<{
               <img src={logo} alt="logotipo" className="w-14 mx-auto" />
             </td>
             <td className="px-3 py-2 border border-gray-200 text-center">
-              <b className="text-sm font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
-              <p className="text-[9pt] text-gray-600 mt-1 leading-tight">
+              <b className="text-sm font-bold text-black">COLINA CAMPESTRE GARABATOS SCHOOL</b>
+              <p className="text-[9pt] text-black mt-1 leading-tight">
                 De Sincelejo, Sucre, con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria
                 por parte de Secretaria de Educación Municipal, según resolución No 2747 del 12 de diciembre de 2023.
                 Carrera 34 No 38-158, teléfonos: 2771068-3006781806
               </p>
-              <p className="text-[9pt] text-gray-700 font-semibold">NIT: 901731191-3</p>
+              <p className="text-[9pt] text-black font-semibold">NIT: 901731191-3</p>
             </td>
-            <td className="w-24 px-2 py-1 border border-gray-200 text-center text-[10px] text-gray-600 align-middle">
+            <td className="w-24 px-2 py-1 border border-gray-200 text-center text-[10px] text-black align-middle">
               DANE 370001038852
             </td>
           </tr>

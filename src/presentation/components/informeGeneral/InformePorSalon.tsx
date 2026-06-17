@@ -201,7 +201,9 @@ const ClassAveragesReport: React.FC = () => {
     );
   }
 
-  const areaIds = subjectsMeta.map(m => m.areaId);
+  const areaIds = subjectsMeta
+    .map(m => m.areaId)
+    .filter(id => studentAverages.some(s => s.averages[id] !== undefined));
   const classAverage = parseFloat(
     (
       studentAverages.reduce((sum, s) => sum + s.generalAverage, 0) /

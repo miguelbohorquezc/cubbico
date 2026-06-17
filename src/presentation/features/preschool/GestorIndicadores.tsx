@@ -29,6 +29,20 @@ interface Props {
 const MAX_CARACTERES = 250;
 const MAX_INDICADORES = 40;
 
+const deduplicarAreasPorNombre = (areas: AreaIhsInfo[]): AreaIhsInfo[] => {
+  const sorted = [...areas].sort((a, b) => {
+    if ((a.orden || 0) !== (b.orden || 0)) return (a.orden || 0) - (b.orden || 0);
+    return (a.id || '').localeCompare(b.id || '');
+  });
+  const seen = new Set<string>();
+  return sorted.filter(area => {
+    const key = area.asignatura.trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
 const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
   const [asignaturas, setAsignaturas] = useState<AreaIhsInfo[]>([]);
   const [indicadores, setIndicadores] = useState<Record<string, Indicador[]>>({});
@@ -54,19 +68,43 @@ const GestorIndicadores = ({ classRoomId, year, periodo }: Props) => {
         setCargando(true);
 
         const query = await getDocs(collection(db, 'areas'));
-        const asignaturasData = query.docs
+        const todasPreescolar = query.docs
           .map(doc => ({ id: doc.id, ...doc.data() } as AreaIhsInfo))
           .filter(a => a.nivel === 'preescolar');
+
+        const asignaturasData = deduplicarAreasPorNombre(todasPreescolar);
         setAsignaturas(asignaturasData);
         setAsignaturaActiva(asignaturasData[0]?.id || '');
+
+        // Mapa de cualquier ID duplicado → ID canónico por nombre de asignatura
+        const canonicalMap = new Map<string, string>();
+        todasPreescolar.forEach(area => {
+          const canonical = asignaturasData.find(
+            ca => ca.asignatura.trim().toLowerCase() === area.asignatura.trim().toLowerCase()
+          );
+          if (canonical?.id) canonicalMap.set(area.id!, canonical.id);
+        });
 
         const docRef = doc(db, 'preschool_indicators', `${classRoomId}_${year}`);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           const indicadoresData = docSnap.data().indicadores || [];
-          const grouped = groupByAsignatura(indicadoresData);
-          setIndicadores(grouped);
+          // Remapear IDs duplicados al canónico, descartar huérfanos y deduplicar por texto
+          const seen = new Map<string, boolean>();
+          const remapped = indicadoresData
+            .map((ind: Indicador) => ({
+              ...ind,
+              asignatura: canonicalMap.get(ind.asignatura) ?? ind.asignatura
+            }))
+            .filter((ind: Indicador) => asignaturasData.some(a => a.id === ind.asignatura))
+            .filter((ind: Indicador) => {
+              const key = `${ind.asignatura}|${ind.texto.trim().toLowerCase()}`;
+              if (seen.has(key)) return false;
+              seen.set(key, true);
+              return true;
+            });
+          setIndicadores(groupByAsignatura(remapped));
         }
       } catch (error) {
         setMensaje({ texto: 'Error al cargar los indicadores', tipo: 'error' });

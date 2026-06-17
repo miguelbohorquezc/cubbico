@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SidebarV2 } from "../../../../components/sidebarV2"
 import { HeaderV2 } from "../../../../components/headerV2"
-import TeacherPlanillaList from '../../../../features/attendance/TeacherPlanillaList';
+import ClassroomReportShortcuts from '../../../../features/reports/ClassroomReportShortcuts';
 import { useAppSelector } from '../../../../../app/store/store';
 
 // Key del localStorage usada por useSidebarV2
@@ -52,9 +52,7 @@ const useSidebarCollapsed = (): boolean => {
 
 function Home() {
   const isSidebarCollapsed = useSidebarCollapsed();
-  const user = useAppSelector((state) => state.user) as { uid?: string; role?: string } | null;
-
-  const userUid = user?.uid || '';
+  const user = useAppSelector((state) => state.user) as { role?: string } | null;
   const userRole = user?.role || 'Docente';
 
   return (
@@ -66,7 +64,7 @@ function Home() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
         <HeaderV2
-          title="Mis Planillas"
+          title={userRole === 'Coordinador' ? 'Informes por Salón' : 'Inicio'}
           showDate
           isSidebarCollapsed={isSidebarCollapsed}
         />
@@ -76,17 +74,7 @@ function Home() {
 
         {/* Body */}
         <main className="flex-1 p-4 lg:p-6 overflow-auto min-h-0">
-          <div className="mb-4">
-            <h1 className="text-lg font-bold text-gray-900">
-              {userRole === 'Coordinador' ? 'Todas las Planillas' : 'Mis Planillas de Asistencia'}
-            </h1>
-            <p className="text-xs text-gray-500 mt-0.5">
-              {userRole === 'Coordinador'
-                ? 'Planillas de todos los docentes agrupadas por período y salón'
-                : 'Selecciona una planilla para registrar asistencia del período'}
-            </p>
-          </div>
-          <TeacherPlanillaList userUid={userUid} userRole={userRole} />
+          {userRole === 'Coordinador' && <ClassroomReportShortcuts />}
         </main>
       </div>
     </div>

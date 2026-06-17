@@ -8,9 +8,10 @@ interface CreateAreaModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  areasExistentes?: string[];
 }
 
-const CreateAreaModal = ({ isOpen, onClose, onSuccess }: CreateAreaModalProps) => {
+const CreateAreaModal = ({ isOpen, onClose, onSuccess, areasExistentes = [] }: CreateAreaModalProps) => {
   const [asignatura, setAsignatura] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -18,6 +19,13 @@ const CreateAreaModal = ({ isOpen, onClose, onSuccess }: CreateAreaModalProps) =
   const validateForm = (): boolean => {
     if (!asignatura.trim()) {
       setError('El nombre de la asignatura es requerido');
+      return false;
+    }
+    const yaExiste = areasExistentes.some(
+      nombre => nombre.trim().toLowerCase() === asignatura.trim().toLowerCase()
+    );
+    if (yaExiste) {
+      setError(`Ya existe una asignatura llamada "${asignatura.trim()}". No se permiten duplicados.`);
       return false;
     }
     setError('');

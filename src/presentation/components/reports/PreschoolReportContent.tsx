@@ -101,9 +101,9 @@ const ProposedSection: React.FC<{ proposito: ProposedData; index: number }> = ({
               {proposito.referentes.map((r, idx) => (
                 <li
                   key={idx}
-                  className="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-xs text-gray-800 leading-relaxed"
+                  className="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-[10pt] text-black leading-relaxed"
                 >
-                  <span className="font-semibold text-blue-600 mr-1">{idx + 1}.</span>
+                  <span className="font-semibold text-black mr-1">{idx + 1}.</span>
                   {r}
                 </li>
               ))}
@@ -122,14 +122,14 @@ const ProposedSection: React.FC<{ proposito: ProposedData; index: number }> = ({
                   key={idx}
                   className="border border-gray-200 rounded-lg px-3 py-2.5 bg-white hover:bg-gray-50/50 transition-colors"
                 >
-                  <p className="text-xs text-gray-800 leading-relaxed">
+                  <p className="text-[10pt] text-black leading-relaxed">
                     <span className="inline-block w-1.5 h-1.5 bg-tosca/100 rounded-full mr-2"></span>
                     {ind.texto}
                   </p>
                 </div>
               ))}
               {proposito.indicadores.length === 0 && (
-                <p className="text-xs italic text-gray-400 px-3 py-2">
+                <p className="text-xs italic text-black px-3 py-2">
                   Sin indicadores evaluados
                 </p>
               )}
@@ -150,7 +150,7 @@ const ObservationsTable: React.FC = () => (
       </h4>
     </div>
     <div className="p-4 bg-white min-h-[60px]">
-      <p className="text-xs text-gray-400 italic">Espacio para observaciones del docente...</p>
+      <p className="text-xs text-gray-400 italic"></p>
     </div>
   </div>
 );

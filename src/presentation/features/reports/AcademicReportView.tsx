@@ -197,15 +197,15 @@ export default function AcademicReportView() {
                     />
                   </td>
                   <td className="px-6 py-3 border border-gray-100 text-center td-header" colSpan={2}>
-                    <b className="text-base font-bold text-gray-900">COLINA CAMPESTRE SCHOOL</b>
-                    <p className="text-[10pt] text-gray-600 mt-1 leading-relaxed">
+                    <b className="text-base font-bold text-black">COLINA CAMPESTRE GARABATOS SCHOOL </b>
+                    <p className="text-[10pt] text-black mt-1 leading-relaxed">
                       De Sincelejo, Sucre, con reconocimiento oficial en los niveles de Preescolar, Básica Primaria y Básica Secundaria
                       por parte de Secretaria de Educación Municipal, según resolución No 2747 del 12 de diciembre de 2023.
                       Carrera 34 No 38-158, teléfonos: 2771068-3006781806
                     </p>
-                    <p className="text-[10pt] text-gray-700 font-semibold">NIT: 901731191-3</p>
+                    <p className="text-[10pt] text-black font-semibold">NIT: 901731191-3</p>
                   </td>
-                  <td className="w-28 px-3 py-2 border border-gray-100 text-center text-xs text-gray-600 align-middle">
+                  <td className="w-28 px-3 py-2 border border-gray-100 text-center text-xs text-black align-middle">
                     DANE 370001038852
                   </td>
                 </tr>
@@ -222,6 +222,7 @@ export default function AcademicReportView() {
                   director={director}
                   fechaEntrega={fechaEntrega}
                   year={year}
+                  filterEmpty
                 />
               )}
 
@@ -233,6 +234,7 @@ export default function AcademicReportView() {
                   director={director}
                   fechaEntrega={fechaEntrega}
                   year={year}
+                  filterEmpty
                 />
               )}
 
@@ -259,10 +261,10 @@ export default function AcademicReportView() {
 
             {/* ── Footer ── */}
             <div className="px-8 py-3 bg-gray-50 print:bg-white border-t border-gray-100 text-center">
-              <p className="text-[9px] text-gray-400">
+              {/* <p className="text-[9px] text-gray-400">
                 Informe generado el {new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} ·
                 Periodo {currentPeriod} · {year} · SIA Colina Campestre
-              </p>
+              </p> */}
             </div>
           </div>
 

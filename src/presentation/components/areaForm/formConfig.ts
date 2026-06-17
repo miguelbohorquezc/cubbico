@@ -22,6 +22,7 @@ const COMMON_SELECT_PROPS = {
       'Humanidades, Lengua Castellana e Idioma Extranjero (Inglés)',
       'Ciencias Naturales y Educación Ambiental',
       'Ciencias Sociales',
+      'Ciencias sociales, historia, geografía, constitución política, democracia y cátedra de la paz.',
       'Educación Ética y Valores Humanos',
       'Educación Religiosa',
       'Educación Artística y Cultural',

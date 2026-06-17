@@ -63,11 +63,24 @@ export function useEvaluadorCompleto({
       try {
         setCargando(true);
 
-        // 1. Áreas
+        // 1. Áreas — construir mapa de IDs duplicados al canónico
         const areasSnap = await getDocs(collection(db, 'areas'));
-        setAreas(
-          areasSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Area[]
-        );
+        const todasAreas = areasSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Area[];
+        setAreas(todasAreas);
+
+        const todasPreescolar = todasAreas.filter((a: any) => a.nivel === 'preescolar');
+        const sorted = [...todasPreescolar].sort((a: any, b: any) => {
+          if ((a.orden || 0) !== (b.orden || 0)) return (a.orden || 0) - (b.orden || 0);
+          return (a.id || '').localeCompare(b.id || '');
+        });
+        const seenNames = new Set<string>();
+        const canonicalMap = new Map<string, string>();
+        sorted.forEach((area: any) => {
+          const key = (area.asignatura || '').trim().toLowerCase();
+          const first = sorted.find((a: any) => (a.asignatura || '').trim().toLowerCase() === key);
+          if (first?.id) canonicalMap.set(area.id, first.id);
+          seenNames.add(key);
+        });
 
         // 2. Configuración, indicadores y selecciones
         const [cfg, indsSnap, selSnap] = await Promise.all([
@@ -78,13 +91,29 @@ export function useEvaluadorCompleto({
           )
         ]);
 
-        setPropositos(cfg.exists() ? cfg.data().propositos || [] : []);
+        const propositosRaw = cfg.exists() ? (cfg.data().propositos || []) : [];
+        setPropositos(
+          propositosRaw.map((p: any) => ({
+            ...p,
+            asignaturas: (p.asignaturas || []).map((id: string) => canonicalMap.get(id) ?? id)
+          }))
+        );
 
+        const seenInds = new Map<string, boolean>();
         const filtrados =
           indsSnap.exists()
-            ? (indsSnap.data().indicadores || []).filter(
-                (i: Indicador) => i.activo && i.periodos.includes(periodo)
-              )
+            ? (indsSnap.data().indicadores || [])
+                .map((i: Indicador) => ({
+                  ...i,
+                  asignatura: canonicalMap.get(i.asignatura) ?? i.asignatura
+                }))
+                .filter((i: Indicador) => {
+                  const key = `${i.asignatura}|${i.texto.trim().toLowerCase()}`;
+                  if (seenInds.has(key)) return false;
+                  seenInds.set(key, true);
+                  return true;
+                })
+                .filter((i: Indicador) => i.activo && i.periodos.includes(periodo))
             : [];
         setIndicadores(filtrados);
         setSelecciones(selSnap.exists() ? selSnap.data().selecciones || {} : {});

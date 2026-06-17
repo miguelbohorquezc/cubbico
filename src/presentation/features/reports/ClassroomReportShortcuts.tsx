@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { IconBook2, IconSchool, IconStar, IconFileReport } from '@tabler/icons-react';
 import { fetchClassrooms } from '../../../infrastructure/classRoom.service';
 import type { ClassRoom } from '../../../domain/entities/classRoom';
 
@@ -8,36 +9,64 @@ const PERIODS = ['1', '2', '3', '4'] as const;
 
 const NIVEL_ORDER: Record<string, number> = { Primaria: 1, Secundaria: 2, Preescolar: 3 };
 
-const NIVEL_COLORS: Record<string, { bg: string; badge: string; text: string; btn: string; btnHover: string }> = {
+interface NivelStyle {
+  section: string;
+  card: string;
+  header: string;
+  icon: string;
+  badge: string;
+  label: string;
+  btn: string;
+  btnText: string;
+  Icon: React.ComponentType<{ size?: number | string; className?: string }>;
+}
+
+const NIVEL_STYLES: Record<string, NivelStyle> = {
   Primaria: {
-    bg: 'bg-blue-50 border-blue-100',
-    badge: 'bg-blue-100 text-blue-700',
-    text: 'text-blue-800',
-    btn: 'bg-blue-600 hover:bg-blue-700 text-white',
-    btnHover: '',
+    section: 'text-orchid-bg-white',
+    card: 'bg-white border border-gray-20 hover:border-orchid-blue-30 hover:shadow-md',
+    header: 'bg-white border-b border-gray-20',
+    icon: 'text-orchid-blue-60',
+    badge: 'bg-tosca-ds/10 text-orchid-blue-70 border border-orchid-blue-30',
+    label: 'text-gray-80',
+    btn: 'bg-orchid-blue-60 hover:bg-orchid-blue-70',
+    btnText: 'text-white',
+    Icon: IconBook2,
   },
   Secundaria: {
-    bg: 'bg-violet-50 border-violet-100',
-    badge: 'bg-violet-100 text-violet-700',
-    text: 'text-violet-800',
-    btn: 'bg-violet-600 hover:bg-violet-700 text-white',
-    btnHover: '',
+    section: 'text-tosca-cc',
+    card: 'bg-white border border-gray-20 hover:border-tosca-ds/40 hover:shadow-md',
+    header: 'bg-tosca-ds/10 border-b border-gray-20',
+    icon: 'text-tosca-cc',
+    badge: 'bg-tosca-ds/10 text-tosca-cc border border-tosca-ds/30',
+    label: 'text-gray-80',
+    btn: 'bg-tosca-cc hover:bg-tosca-ds',
+    btnText: 'text-white',
+    Icon: IconSchool,
   },
   Preescolar: {
-    bg: 'bg-emerald-50 border-emerald-100',
-    badge: 'bg-emerald-100 text-emerald-700',
-    text: 'text-emerald-800',
-    btn: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-    btnHover: '',
+    section: 'text-yellow-cc',
+    card: 'bg-white border border-gray-20 hover:border-yellow-ds/40 hover:shadow-md',
+    header: 'bg-yellow-ds/10 border-b border-gray-20',
+    icon: 'text-yellow-cc',
+    badge: 'bg-yellow-ds/10 text-yellow-cc border border-yellow-ds/30',
+    label: 'text-gray-80',
+    btn: 'bg-yellow-cc hover:bg-yellow-ds',
+    btnText: 'text-white',
+    Icon: IconStar,
   },
 };
 
-const fallback = {
-  bg: 'bg-gray-50 border-gray-100',
-  badge: 'bg-gray-100 text-gray-600',
-  text: 'text-gray-800',
-  btn: 'bg-gray-600 hover:bg-gray-700 text-white',
-  btnHover: '',
+const FALLBACK_STYLE: NivelStyle = {
+  section: 'text-gray-70',
+  card: 'bg-white border border-gray-20 hover:shadow-md',
+  header: 'bg-gray-5 border-b border-gray-20',
+  icon: 'text-gray-60',
+  badge: 'bg-gray-10 text-gray-70 border border-gray-30',
+  label: 'text-gray-80',
+  btn: 'bg-orchid-blue-60 hover:bg-orchid-blue-70',
+  btnText: 'text-white',
+  Icon: IconFileReport,
 };
 
 export default function ClassroomReportShortcuts() {
@@ -49,10 +78,9 @@ export default function ClassroomReportShortcuts() {
     fetchClassrooms()
       .then((rooms) => {
         const sorted = [...rooms].sort((a, b) => {
-          const orderA = NIVEL_ORDER[a.nivel] ?? 9;
-          const orderB = NIVEL_ORDER[b.nivel] ?? 9;
-          if (orderA !== orderB) return orderA - orderB;
-          return a.nombreSalon.localeCompare(b.nombreSalon);
+          const oa = NIVEL_ORDER[a.nivel] ?? 9;
+          const ob = NIVEL_ORDER[b.nivel] ?? 9;
+          return oa !== ob ? oa - ob : a.nombreSalon.localeCompare(b.nombreSalon);
         });
         setClassrooms(sorted);
       })
@@ -67,10 +95,13 @@ export default function ClassroomReportShortcuts() {
 
   if (loading) {
     return (
-      <div className="flex gap-3 mt-2">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-28 flex-1 rounded-xl bg-gray-100 animate-pulse" />
-        ))}
+      <div className="mb-6">
+        <div className="h-4 w-48 bg-gray-10 rounded animate-pulse mb-4" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-28 rounded-xl bg-gray-10 animate-pulse" />
+          ))}
+        </div>
       </div>
     );
   }
@@ -85,45 +116,57 @@ export default function ClassroomReportShortcuts() {
   });
 
   return (
-    <div className="mb-6">
-      <h2 className="text-sm font-semibold text-gray-700 mb-3">
-        Acceso rápido — Informes por salón <span className="font-normal text-gray-400">{YEAR}</span>
-      </h2>
+    <div className="mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <IconFileReport size={18} className="text-gray-60" />
+        <h2 className="text-m font-semibold text-gray-80">
+          Informes por salón
+        </h2>
+        <span className="text-xs text-gray-50 font-normal">· {YEAR}</span>
+      </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         {Object.entries(grouped)
           .sort(([a], [b]) => (NIVEL_ORDER[a] ?? 9) - (NIVEL_ORDER[b] ?? 9))
           .map(([nivel, rooms]) => {
-            const colors = NIVEL_COLORS[nivel] ?? fallback;
+            const s = NIVEL_STYLES[nivel] ?? FALLBACK_STYLE;
+            const { Icon } = s;
             return (
               <div key={nivel}>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
-                  {nivel}
-                </p>
+                {/* Etiqueta de nivel */}
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Icon size={14} className={s.section} />
+                  <p className={`text-xs font-bold uppercase tracking-wider ${s.section}`}>
+                    {nivel}
+                  </p>
+                </div>
+
+                {/* Grid de tarjetas */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                   {rooms.map((classroom) => (
                     <div
                       key={classroom.id}
-                      className={`rounded-xl border p-3 ${colors.bg} flex flex-col gap-2`}
+                      className={`rounded-xl overflow-hidden transition-all duration-200 ${s.card}`}
                     >
-                      {/* Nombre del salón */}
-                      <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${colors.badge}`}>
-                          {nivel}
-                        </span>
-                        <span className={`text-sm font-semibold capitalize truncate ${colors.text}`}>
+                      {/* Header de la tarjeta */}
+                      <div className={`flex items-center gap-2 px-3 py-2.5 ${s.header}`}>
+                        <Icon size={15} className={s.icon} />
+                        <span className={`text-sm font-semibold capitalize truncate ${s.label}`}>
                           {classroom.nombreSalon}
+                        </span>
+                        <span className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${s.badge}`}>
+                          {nivel.slice(0, 3).toUpperCase()}
                         </span>
                       </div>
 
                       {/* Botones de período */}
-                      <div className="grid grid-cols-4 gap-1">
+                      <div className="grid grid-cols-4 gap-1 p-2">
                         {PERIODS.map((p) => (
                           <button
                             key={p}
                             onClick={() => goToReport(classroom, p)}
-                            className={`text-xs font-semibold py-1 rounded-lg transition-colors ${colors.btn}`}
-                            title={`Ver informes período ${p}`}
+                            className={`text-xs font-bold py-1.5 rounded-lg transition-colors ${s.btn} ${s.btnText}`}
+                            title={`Informes período ${p} · ${classroom.nombreSalon}`}
                           >
                             P{p}
                           </button>

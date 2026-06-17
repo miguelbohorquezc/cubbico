@@ -25,6 +25,20 @@ interface Proposito {
 
 const MAX_CARACTERES = 500;
 
+const deduplicarAreasPorNombre = (areas: AreaIhsInfo[]): AreaIhsInfo[] => {
+  const sorted = [...areas].sort((a, b) => {
+    if ((a.orden || 0) !== (b.orden || 0)) return (a.orden || 0) - (b.orden || 0);
+    return (a.id || '').localeCompare(b.id || '');
+  });
+  const seen = new Set<string>();
+  return sorted.filter(area => {
+    const key = area.asignatura.trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
 const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year: string }) => {
   const [propositos, setPropositos] = useState<Proposito[]>([
     { id: 'p1', texto: '', referentes: ['', '', ''], asignaturas: [] },
@@ -43,9 +57,11 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
   // Función para cargar asignaturas
   const cargarAsignaturas = async () => {
     const query = await getDocs(collection(db, 'areas'));
-    const asignaturas = query.docs
-      .map(doc => ({ id: doc.id, ...doc.data() } as AreaIhsInfo))
-      .filter(a => a.nivel === 'preescolar');
+    const asignaturas = deduplicarAreasPorNombre(
+      query.docs
+        .map(doc => ({ id: doc.id, ...doc.data() } as AreaIhsInfo))
+        .filter(a => a.nivel === 'preescolar')
+    );
     setAsignaturasDisponibles(asignaturas);
   };
 
@@ -589,6 +605,7 @@ const InformeConfigurador = ({ classRoomId, year }: { classRoomId: string; year:
         isOpen={showCreateAreaModal}
         onClose={() => setShowCreateAreaModal(false)}
         onSuccess={handleAreaCreated}
+        areasExistentes={asignaturasDisponibles.map(a => a.asignatura)}
       />
 
       {/* Modal de confirmación para copiar configuración */}

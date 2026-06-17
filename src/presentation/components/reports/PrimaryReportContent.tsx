@@ -23,6 +23,7 @@ export interface PrimaryReportContentProps {
   director?: string;
   fechaEntrega?: string;
   year?: string;
+  filterEmpty?: boolean;
 }
 
 // ============================================
@@ -50,7 +51,7 @@ const StudentInfoTable: React.FC<{
   fechaEntrega?: string;
 }> = ({ studentInfo, periodId, fechaEntrega }) => (
   <table className="w-full border-collapse border border-indigo-200 table-student-info mb-4">
-    <thead className="bg-gray-100 print:bg-white">
+    <thead className="bg-gray-100 print:bg-gray-100">
       <tr className="h-10">
         <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-100">ESTUDIANTE</td>
         <td className="px-4 py-2 text-[11pt] font-bold text-gray-700 border border-gray-100">GRADO</td>
@@ -167,9 +168,9 @@ const SignaturesTable: React.FC<{ periodId?: string; director?: string }> = ({ p
           </td>
         )}
         <td className="text-center py-4 border border-gray-100">
-          <div className="firma flex flex-col items-center mt-12">
-            <div className="w-36 h-12 border-b border-gray-400"></div>
-            <p className="text-[10pt] font-medium text-gray-900 mt-2">{director || "Director(a) de Grupo"}</p>
+          <div className="firma flex flex-col items-center mt-2">
+            <div className="w-36 h-6 border-b border-gray-400"></div>
+            <p className="text-[10pt] font-medium text-gray-900 mt-1">{director || "Director(a) de Grupo"}</p>
             <p className="text-[10pt] text-gray-600">Director(a) de Grupo</p>
           </div>
         </td>
@@ -188,16 +189,16 @@ const SubjectRow: React.FC<{ subject: SubjectData; index: number }> = ({ subject
 
   return (
     <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-blue-50/30 transition-colors print:bg-white`}>
-      <td className="px-3 py-3 border-b border-gray-100 text-sm font-medium text-gray-900 align-top">
+      <td className="px-3 py-3 border-b border-gray-100 text-sm font-medium text-black align-top">
         {subject.asignatura}
       </td>
-      <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+      <td className="px-1 py-3 border-b border-gray-100 text-sm text-black text-center align-top">
         {subject.ihs}
       </td>
-      <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+      <td className="px-1 py-3 border-b border-gray-100 text-sm text-black text-center align-top">
         {subject.grades.fallas}
       </td>
-      <td className="px-1 py-3 border-b border-gray-100 text-sm text-gray-600 text-center align-top">
+      <td className="px-1 py-3 border-b border-gray-100 text-sm text-black text-center align-top">
         {subject.grades.fallasVerificadas}
       </td>
       <td className="px-3 py-3 border-b border-gray-100 align-top">
@@ -206,19 +207,19 @@ const SubjectRow: React.FC<{ subject: SubjectData; index: number }> = ({ subject
             <span className="flex-shrink-0 w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
               1
             </span>
-            <span className="text-gray-700 leading-relaxed">{subject.achievements.logro1}</span>
+            <span className="text-black leading-relaxed">{subject.achievements.logro1}</span>
           </div>
           <div className="achievement-item flex items-start gap-2 text-sm">
             <span className="flex-shrink-0 w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
               2
             </span>
-            <span className="text-gray-700 leading-relaxed">{subject.achievements.logro2}</span>
+            <span className="text-black leading-relaxed">{subject.achievements.logro2}</span>
           </div>
           <div className="achievement-item flex items-start gap-2 text-sm">
             <span className="flex-shrink-0 w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-xs font-bold">
               3
             </span>
-            <span className="text-gray-700 leading-relaxed">{subject.achievements.logro3}</span>
+            <span className="text-black leading-relaxed">{subject.achievements.logro3}</span>
           </div>
         </div>
       </td>
@@ -226,15 +227,15 @@ const SubjectRow: React.FC<{ subject: SubjectData; index: number }> = ({ subject
         <div className="grades-container text-sm space-y-1">
           <div className="flex items-center gap-1">
             <span className="text-gray-500 w-7">L1:</span>
-            <span className="font-medium text-gray-800">{subject.grades.l1.toFixed(1)}</span>
+            <span className="font-medium text-black">{subject.grades.l1.toFixed(1)}</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-gray-500 w-7">L2:</span>
-            <span className="font-medium text-gray-800">{subject.grades.l2.toFixed(1)}</span>
+            <span className="font-medium text-black">{subject.grades.l2.toFixed(1)}</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-gray-500 w-7">L3:</span>
-            <span className="font-medium text-gray-800">{subject.grades.l3.toFixed(1)}</span>
+            <span className="font-medium text-black">{subject.grades.l3.toFixed(1)}</span>
           </div>
         </div>
       </td>
@@ -261,25 +262,30 @@ export const PrimaryReportContent: React.FC<PrimaryReportContentProps> = ({
   director,
   fechaEntrega,
   year,
+  filterEmpty = false,
 }) => {
+  const visibleData = filterEmpty
+    ? reportData.filter(s => (s.grades.l1 || 0) !== 0 || (s.grades.l2 || 0) !== 0 || (s.grades.l3 || 0) !== 0)
+    : reportData;
+
   return (
     <div className="primary-report-content">
       <StudentInfoTable studentInfo={studentInfo} periodId={periodId} fechaEntrega={fechaEntrega} />
 
       <table className="report-table w-full border-collapse mt-4 bg-white rounded-lg overflow-hidden print:overflow-visible shadow-sm print:shadow-none mb-4">
         <thead>
-          <tr className="bg-gray-100 print:bg-white">
-            <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Área</th>
+          <tr className="bg-gray-100 print:bg-gray-100">
+            <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">Área</th>
             <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-10">IHS</th>
             <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">F</th>
             <th className="px-1 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-8">FI</th>
             <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Logros</th>
             <th className="px-3 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Notas</th>
-            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-24">Promedio</th>
+            <th className="px-3 py-3 text-center text-sm font-semibold text-gray-700 border-b border-gray-200 w-15">Promedio</th>
           </tr>
         </thead>
         <tbody>
-          {reportData.map((subject, index) => (
+          {visibleData.map((subject, index) => (
             <SubjectRow key={subject.areaId} subject={subject} index={index} />
           ))}
         </tbody>
