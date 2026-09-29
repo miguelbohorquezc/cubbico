@@ -75,9 +75,10 @@ interface SingleReportProps {
   year: string;
   schoolLevel: '1' | '2';
   isLast: boolean;
+  enableBlankPage: boolean;
 }
 
-function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }: SingleReportProps) {
+function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast, enableBlankPage }: SingleReportProps) {
   const { reportData, studentInfo, fechaEntrega, director, loading, error } = useReportData({
     studentId,
     year,
@@ -109,7 +110,8 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
   }
 
   return (
-    <div className={`report-single ${!isLast ? 'page-break-after' : ''}`}>
+    <>
+    <div className={`report-single ${enableBlankPage || !isLast ? 'page-break-after' : ''}`}>
       <div className="report-container bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden print:shadow-none print:rounded-none print:border-none font-['Nunito',sans-serif]" style={{ maxWidth: '816px', margin: '0 auto', padding: '1.25rem', marginBottom: isLast ? '0' : '2rem' }}>
 
         {/* Header institucional */}
@@ -190,6 +192,17 @@ function SingleReport({ studentId, nivel, periodId, year, schoolLevel, isLast }:
         </div> */}
       </div>
     </div>
+
+    {/* Página en blanco al finalizar cada informe (solo impresión) */}
+    {enableBlankPage && (
+      <div
+        className={`report-blank-page hidden print:block ${!isLast ? 'page-break-after' : ''}`}
+        aria-hidden="true"
+      >
+        &nbsp;
+      </div>
+    )}
+    </>
   );
 }
 
@@ -208,6 +221,7 @@ export default function ClassroomBulkReportView() {
   const [classroomName, setClassroomName] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [enableBlankPage, setEnableBlankPage] = useState(true);
 
   const schoolLevel = nivel === 'secundaria' ? '2' : '1';
 
@@ -296,7 +310,16 @@ export default function ClassroomBulkReportView() {
             >
               <IconArrowBack size={13} /> Volver
             </button>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 text-xs font-semibold text-gray-600 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={enableBlankPage}
+                  onChange={(e) => setEnableBlankPage(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                Página en blanco entre informes
+              </label>
               <div className="text-sm text-gray-600 font-medium">
                 {students.length} {students.length === 1 ? 'informe' : 'informes'}
               </div>
@@ -328,6 +351,7 @@ export default function ClassroomBulkReportView() {
               year={year}
               schoolLevel={schoolLevel}
               isLast={index === students.length - 1}
+              enableBlankPage={enableBlankPage}
             />
           ))}
 

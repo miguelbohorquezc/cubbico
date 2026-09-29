@@ -319,6 +319,38 @@ async function fetchStudentYearHistoryAsFinalReport(
   return { report, historyPeriodsObj: periodsObj, historicCurso };
 }
 
+// ---------- Fix provisional: ocultar Álgebra en sexto y séptimo ----------
+// Álgebra solo aplica a octavo. Mientras se corrige el origen de los datos,
+// se filtra del informe final para sexto y séptimo y se recalcula el promedio.
+function normalizeText(s: string): string {
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
+function stripAlgebraForLowerGrades(
+  report: FinalReportData,
+  labels: Record<string, string>,
+  classroomName: string
+): FinalReportData {
+  const grade = normalizeText(classroomName);
+  const isSextoOrSeptimo = grade.includes("sexto") || grade.includes("septimo");
+  if (!isSextoOrSeptimo) return report;
+
+  const filteredAreas = report.areas.filter((row) => {
+    const label = normalizeText(labels[row.areaId] ?? row.areaId);
+    return !label.includes("algebra");
+  });
+
+  if (filteredAreas.length === report.areas.length) return report;
+
+  const finals = filteredAreas
+    .map((r) => r.finalAverage)
+    .filter((v): v is number => v !== null);
+  const generalAverage =
+    finals.length > 0 ? finals.reduce((a, b) => a + b, 0) / finals.length : null;
+
+  return { ...report, areas: filteredAreas, generalAverage };
+}
+
 // ---------- Helper para categoría de nota ----------
 function getGradeCategory(average: number | null) {
   if (average === null) return { text: 'N/A', bgClass: 'bg-gray-100', textClass: 'text-gray-500' };
@@ -484,12 +516,14 @@ export function FinalReportContent({ studentId, year }: { studentId: string; yea
         if (!alive) return;
 
         const fullName = [sInfo.name, sInfo.lastName].filter(Boolean).join(" ").trim();
+        const classroomName = historicCurso || classroomMeta.name || sInfo.classroomName || "";
+        const adjustedReport = stripAlgebraForLowerGrades(report, areasMeta.labels, classroomName);
         setData({
-          ...report,
+          ...adjustedReport,
           meta: {
-            ...report.meta,
-            studentName: fullName || report.meta.studentId,
-            classroom: historicCurso || classroomMeta.name || sInfo.classroomName,
+            ...adjustedReport.meta,
+            studentName: fullName || adjustedReport.meta.studentId,
+            classroom: classroomName,
             classroomId,
           },
         });
